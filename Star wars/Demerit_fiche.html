@@ -1,0 +1,3974 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche de Personnage — Star Wars</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --void-black: #0a0a0f;
+            --deep-space: #0d1117;
+            --hull-gray: #161b22;
+            --metal-gray: #21262d;
+            --silver-chrome: #8b949e;
+            --light-steel: #c9d1d9;
+            --pure-white: #f0f6fc;
+            --saber-blue: #00a8ff;
+            --saber-blue-glow: #4dc3ff;
+            --saber-red: #ff3333;
+            --saber-green: #00ff88;
+            --saber-purple: #b366ff;
+            --saber-yellow: #ffcc00;
+            --saber-cyan: #00ffff;
+            --success-green: #3fb950;
+            --danger-red: #f85149;
+            --card-bg: rgba(22, 27, 34, 0.95);
+            --card-border: rgba(48, 54, 61, 0.8);
+            --registre-neutre: #8b949e;
+            --registre-ardeur: #ff4444;
+            --registre-terreur: #9966ff;
+            --registre-lumiere: #ffcc00;
+            --registre-ombre: #4a5568;
+            --registre-lien: #ff66b2;
+            --registre-mepris: #00cc88;
+            --font-display: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--void-black);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--light-steel);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 15% 25%, rgba(0, 168, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(ellipse at 85% 75%, rgba(107, 63, 160, 0.08) 0%, transparent 40%),
+                radial-gradient(1px 1px at 10% 10%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 50% 60%, rgba(255, 255, 255, 0.15) 0%, transparent 100%),
+                radial-gradient(1px 1px at 80% 80%, rgba(255, 255, 255, 0.25) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1500px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, var(--deep-space) 0%, var(--hull-gray) 100%);
+            border-radius: 4px;
+            box-shadow: 0 0 30px rgba(0, 168, 255, 0.15);
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--hull-gray) 0%, var(--deep-space) 100%);
+            color: var(--pure-white);
+            padding: 24px 32px;
+            position: relative;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--saber-blue), var(--saber-cyan), var(--saber-blue), transparent);
+        }
+
+        .header h1 {
+            font-family: var(--font-display);
+            font-size: 1.8em;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, var(--pure-white), var(--saber-blue-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            background: rgba(0, 168, 255, 0.1);
+            border: 1px solid rgba(0, 168, 255, 0.3);
+            border-radius: 2px;
+            color: var(--saber-blue-glow);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-display);
+            font-weight: 500;
+            font-size: 0.8em;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .nav-tab:hover {
+            background: rgba(0, 168, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 168, 255, 0.3);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, var(--saber-blue), var(--saber-cyan));
+            color: var(--void-black);
+            border-color: var(--saber-cyan);
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.5);
+        }
+
+        .save-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .save-controls button {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--light-steel);
+            border: 1px solid var(--card-border);
+            border-radius: 2px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-controls button:hover {
+            background: rgba(0, 168, 255, 0.2);
+            border-color: var(--saber-blue);
+            color: var(--pure-white);
+        }
+
+        .page {
+            display: none;
+            padding: 28px;
+            min-height: 600px;
+        }
+
+        .page.active {
+            display: grid;
+        }
+
+        .attributes-page,
+        .skills-page,
+        .force-page,
+        .saber-page {
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .objects-page {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 4px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 168, 255, 0.15);
+            border: 1px solid var(--card-border);
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--saber-blue), transparent);
+            opacity: 0.5;
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--saber-blue-glow);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .card-title .icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            background: rgba(0, 168, 255, 0.15);
+            border: 1px solid rgba(0, 168, 255, 0.3);
+        }
+
+        .left-column,
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .profile-image-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: linear-gradient(145deg, var(--hull-gray), var(--metal-gray));
+            box-shadow: 0 0 30px rgba(0, 168, 255, 0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--saber-blue);
+        }
+
+        .profile-image-container:hover {
+            box-shadow: 0 0 40px rgba(0, 168, 255, 0.4);
+        }
+
+        .profile-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5em;
+            color: var(--silver-chrome);
+        }
+
+        .profile-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 168, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--void-black);
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-family: var(--font-display);
+            font-size: 0.8em;
+        }
+
+        .profile-image-container:hover .profile-image-overlay {
+            opacity: 1;
+        }
+
+        .profile-name-input {
+            width: 100%;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 1.4em;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: var(--pure-white);
+            padding: 8px;
+        }
+
+        .profile-name-input:focus {
+            outline: none;
+            background: rgba(0, 168, 255, 0.1);
+        }
+
+        .profile-name-input::placeholder {
+            color: var(--silver-chrome);
+        }
+
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .attribute-item {
+            background: linear-gradient(145deg, rgba(0, 168, 255, 0.08), rgba(0, 168, 255, 0.02));
+            border-radius: 4px;
+            padding: 12px 10px;
+            text-align: center;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+        }
+
+        .attribute-item:hover {
+            background: linear-gradient(145deg, rgba(0, 168, 255, 0.15), rgba(0, 168, 255, 0.05));
+            border-color: var(--saber-blue);
+        }
+
+        .attribute-name {
+            font-family: var(--font-display);
+            font-size: 0.65em;
+            font-weight: 600;
+            color: var(--saber-blue-glow);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 6px;
+        }
+
+        .attribute-value {
+            font-family: var(--font-display);
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--pure-white);
+            margin-bottom: 8px;
+            min-height: 1.5em;
+        }
+
+        .attribute-controls {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .attribute-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 2px;
+            border: 1px solid var(--saber-blue);
+            background: rgba(0, 168, 255, 0.1);
+            color: var(--saber-blue-glow);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .attribute-btn:hover {
+            background: var(--saber-blue);
+            color: var(--void-black);
+        }
+
+        .counters-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .counter-item {
+            background: rgba(0, 168, 255, 0.05);
+            border-radius: 4px;
+            padding: 16px;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+        }
+
+        .counter-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--saber-blue-glow);
+            font-family: var(--font-display);
+            font-size: 0.85em;
+        }
+
+        .counter-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .counter-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 2px;
+            border: 1px solid;
+            font-size: 1.3em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .counter-btn.minus {
+            background: rgba(248, 81, 73, 0.2);
+            border-color: var(--danger-red);
+            color: var(--danger-red);
+        }
+
+        .counter-btn.minus:hover {
+            background: var(--danger-red);
+            color: var(--void-black);
+        }
+
+        .counter-btn.plus {
+            background: rgba(63, 185, 80, 0.2);
+            border-color: var(--success-green);
+            color: var(--success-green);
+        }
+
+        .counter-btn.plus:hover {
+            background: var(--success-green);
+            color: var(--void-black);
+        }
+
+        .counter-value {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .counter-value input {
+            width: 50px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 1.3em;
+            font-weight: 700;
+            border: none;
+            background: transparent;
+            color: var(--pure-white);
+        }
+
+        .counter-separator {
+            font-size: 1.2em;
+            color: var(--silver-chrome);
+        }
+
+        .counter-bar {
+            height: 6px;
+            background: rgba(0, 168, 255, 0.15);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .counter-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .counter-fill.force {
+            background: linear-gradient(90deg, var(--saber-blue), var(--saber-cyan));
+            box-shadow: 0 0 10px rgba(0, 168, 255, 0.5);
+        }
+
+        .elan-section {
+            background: var(--card-bg);
+            border-radius: 4px;
+            padding: 20px;
+            border: 1px solid var(--card-border);
+            border-left: 3px solid var(--danger-red);
+        }
+
+        .elan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .elan-capacity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .elan-capacity-label {
+            font-weight: 600;
+            color: var(--danger-red);
+            font-family: var(--font-display);
+            font-size: 0.85em;
+        }
+
+        .elan-capacity input {
+            width: 60px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 1.1em;
+            font-weight: 700;
+            border: 1px solid var(--danger-red);
+            border-radius: 2px;
+            padding: 4px;
+            background: rgba(248, 81, 73, 0.1);
+            color: var(--pure-white);
+        }
+
+        .elan-used {
+            font-family: var(--font-display);
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--pure-white);
+        }
+
+        .elan-bar {
+            height: 16px;
+            background: rgba(248, 81, 73, 0.15);
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 16px;
+            border: 1px solid rgba(248, 81, 73, 0.3);
+        }
+
+        .elan-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--danger-red), #ff6666);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .elan-bar-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75em;
+            color: var(--pure-white);
+            font-family: var(--font-display);
+        }
+
+        .wounds-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .wound-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: rgba(248, 81, 73, 0.1);
+            border-radius: 2px;
+            border: 1px solid rgba(248, 81, 73, 0.3);
+        }
+
+        .wound-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .wound-name {
+            font-weight: 600;
+            color: var(--pure-white);
+            font-size: 0.9em;
+        }
+
+        .wound-type {
+            font-size: 0.75em;
+            color: var(--silver-chrome);
+        }
+
+        .wound-gravity {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--danger-red);
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .wound-remove {
+            width: 24px;
+            height: 24px;
+            border-radius: 2px;
+            border: 1px solid var(--danger-red);
+            background: transparent;
+            color: var(--danger-red);
+            cursor: pointer;
+        }
+
+        .wound-remove:hover {
+            background: var(--danger-red);
+            color: var(--void-black);
+        }
+
+        .add-wound-section {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .add-wound-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .add-wound-field label {
+            font-size: 0.75em;
+            color: var(--silver-chrome);
+            font-family: var(--font-display);
+        }
+
+        .add-wound-field input {
+            padding: 8px 10px;
+            border: 1px solid var(--card-border);
+            border-radius: 2px;
+            background: var(--metal-gray);
+            color: var(--pure-white);
+            font-family: var(--font-body);
+        }
+
+        .add-wound-field input:focus {
+            outline: none;
+            border-color: var(--saber-blue);
+        }
+
+        .add-wound-btn {
+            padding: 8px 16px;
+            background: rgba(248, 81, 73, 0.2);
+            border: 1px solid var(--danger-red);
+            border-radius: 2px;
+            color: var(--danger-red);
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.8em;
+        }
+
+        .add-wound-btn:hover {
+            background: var(--danger-red);
+            color: var(--void-black);
+        }
+
+        .skills-column {
+            background: var(--card-bg);
+            border-radius: 4px;
+            padding: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .column-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+        }
+
+        .column-icon.skills {
+            background: rgba(63, 185, 80, 0.15);
+            border: 1px solid rgba(63, 185, 80, 0.3);
+            color: var(--success-green);
+        }
+
+        .column-icon.verbs {
+            background: rgba(179, 102, 255, 0.15);
+            border: 1px solid rgba(179, 102, 255, 0.3);
+            color: var(--saber-purple);
+        }
+
+        .column-icon.targets {
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            color: var(--saber-green);
+        }
+
+        .column-title {
+            font-family: var(--font-display);
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--pure-white);
+        }
+
+        .skills-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 2px;
+            border: 1px solid transparent;
+        }
+
+        .skill-item:hover {
+            background: rgba(0, 168, 255, 0.05);
+            border-color: rgba(0, 168, 255, 0.2);
+        }
+
+        .skill-name {
+            flex: 1;
+            font-weight: 500;
+            color: var(--light-steel);
+            font-size: 0.9em;
+        }
+
+        .skill-level {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .skill-level-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 2px;
+            border: 1px solid var(--saber-blue);
+            background: transparent;
+            color: var(--saber-blue);
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .skill-level-btn:hover {
+            background: var(--saber-blue);
+            color: var(--void-black);
+        }
+
+        .skill-level-value {
+            min-width: 70px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.85em;
+            color: var(--pure-white);
+        }
+
+        .skill-renameable {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .skill-renameable:hover {
+            opacity: 0.8;
+        }
+
+        .rename-hint {
+            font-size: 0.75em;
+            opacity: 0;
+            transition: opacity 0.15s;
+            color: var(--accent-gold);
+        }
+
+        .skill-renameable:hover .rename-hint,
+        .skill-name.renaming .rename-hint {
+            opacity: 1;
+        }
+
+        .skill-rename-popup {
+            background: #1a1f2e;
+            border: 1px solid rgba(255, 220, 100, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            min-width: 200px;
+            max-width: 250px;
+        }
+
+        .rename-label {
+            font-size: 0.68em;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 5px;
+            margin-top: 2px;
+        }
+
+        .rename-option {
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.88em;
+            color: var(--pure-white);
+            transition: background 0.15s;
+        }
+
+        .rename-option:hover {
+            background: rgba(255, 220, 100, 0.15);
+            color: var(--accent-gold);
+        }
+
+        .rename-option.active {
+            background: rgba(255, 220, 100, 0.2);
+            color: var(--accent-gold);
+            font-weight: 600;
+        }
+
+        .rename-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 7px 0;
+        }
+
+        .rename-custom-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .rename-custom-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 5px 8px;
+            font-size: 0.85em;
+            color: var(--pure-white);
+            outline: none;
+        }
+
+        .rename-custom-input:focus {
+            border-color: var(--accent-gold);
+        }
+
+        .rename-custom-btn {
+            background: var(--accent-gold);
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: opacity 0.15s;
+        }
+
+        .rename-custom-btn:hover {
+            opacity: 0.85;
+        }
+
+        .registres-section {
+            grid-column: span 2;
+            background: var(--card-bg);
+            border-radius: 4px;
+            padding: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .registres-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .registre-card {
+            padding: 12px 8px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .registre-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .registre-card.active {
+            border-width: 2px;
+            transform: translateY(-3px);
+        }
+
+        .registre-card[data-registre="neutre"] {
+            border-color: var(--registre-neutre);
+        }
+
+        .registre-card[data-registre="neutre"].active {
+            background: rgba(139, 148, 158, 0.2);
+            box-shadow: 0 0 15px rgba(139, 148, 158, 0.3);
+        }
+
+        .registre-card[data-registre="ardeur"] {
+            border-color: var(--registre-ardeur);
+        }
+
+        .registre-card[data-registre="ardeur"].active {
+            background: rgba(255, 68, 68, 0.2);
+            box-shadow: 0 0 15px rgba(255, 68, 68, 0.3);
+        }
+
+        .registre-card[data-registre="terreur"] {
+            border-color: var(--registre-terreur);
+        }
+
+        .registre-card[data-registre="terreur"].active {
+            background: rgba(153, 102, 255, 0.2);
+            box-shadow: 0 0 15px rgba(153, 102, 255, 0.3);
+        }
+
+        .registre-card[data-registre="lumiere"] {
+            border-color: var(--registre-lumiere);
+        }
+
+        .registre-card[data-registre="lumiere"].active {
+            background: rgba(255, 204, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 204, 0, 0.3);
+        }
+
+        .registre-card[data-registre="ombre"] {
+            border-color: var(--registre-ombre);
+        }
+
+        .registre-card[data-registre="ombre"].active {
+            background: rgba(74, 85, 104, 0.3);
+            box-shadow: 0 0 15px rgba(74, 85, 104, 0.3);
+        }
+
+        .registre-card[data-registre="lien"] {
+            border-color: var(--registre-lien);
+        }
+
+        .registre-card[data-registre="lien"].active {
+            background: rgba(255, 102, 178, 0.2);
+            box-shadow: 0 0 15px rgba(255, 102, 178, 0.3);
+        }
+
+        .registre-card[data-registre="mepris"] {
+            border-color: var(--registre-mepris);
+        }
+
+        .registre-card[data-registre="mepris"].active {
+            background: rgba(0, 204, 136, 0.2);
+            box-shadow: 0 0 15px rgba(0, 204, 136, 0.3);
+        }
+
+        .registre-icon {
+            font-size: 1.5em;
+            margin-bottom: 6px;
+        }
+
+        .registre-name {
+            font-family: var(--font-display);
+            font-weight: 600;
+            font-size: 0.75em;
+            margin-bottom: 4px;
+            color: var(--pure-white);
+        }
+
+        .registre-emotions {
+            font-size: 0.65em;
+            color: var(--silver-chrome);
+            margin-bottom: 8px;
+        }
+
+        .registre-effects {
+            font-size: 0.6em;
+        }
+
+        .registre-bonus {
+            color: var(--success-green);
+            margin-bottom: 2px;
+        }
+
+        .registre-malus {
+            color: var(--danger-red);
+        }
+
+        .registre-active-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 12px;
+            background: rgba(0, 168, 255, 0.05);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+        }
+
+        .registre-active-label {
+            font-family: var(--font-display);
+            font-size: 0.9em;
+            color: var(--light-steel);
+        }
+
+        .registre-active-label strong {
+            color: var(--saber-blue-glow);
+        }
+
+        .registre-active-effects {
+            display: flex;
+            gap: 20px;
+            font-size: 0.85em;
+        }
+
+        .roll-section {
+            background: var(--card-bg);
+            border-radius: 4px;
+            padding: 20px;
+            border: 1px solid var(--card-border);
+        }
+
+        .roll-section.skill {
+            border-left: 3px solid var(--success-green);
+        }
+
+        .roll-section.force {
+            border-left: 3px solid var(--saber-purple);
+        }
+
+        .roll-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .roll-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+        }
+
+        .roll-icon.skill {
+            background: rgba(63, 185, 80, 0.15);
+            border: 1px solid rgba(63, 185, 80, 0.3);
+        }
+
+        .roll-icon.force {
+            background: rgba(179, 102, 255, 0.15);
+            border: 1px solid rgba(179, 102, 255, 0.3);
+        }
+
+        .roll-title {
+            font-family: var(--font-display);
+            font-size: 0.95em;
+            font-weight: 600;
+            color: var(--pure-white);
+        }
+
+        .roll-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-label {
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--silver-chrome);
+            font-family: var(--font-display);
+        }
+
+        .form-select {
+            padding: 10px 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 2px;
+            background: var(--metal-gray);
+            color: var(--pure-white);
+            font-family: var(--font-body);
+            cursor: pointer;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: var(--saber-blue);
+        }
+
+        .bonus-input {
+            width: 70px;
+            padding: 10px 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 2px;
+            background: var(--metal-gray);
+            color: var(--pure-white);
+            font-family: var(--font-display);
+            text-align: center;
+        }
+
+        .roll-btn {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 2px;
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 0.9em;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .roll-btn.skill {
+            background: linear-gradient(135deg, var(--success-green), #2ea043);
+            color: var(--void-black);
+        }
+
+        .roll-btn.force {
+            background: linear-gradient(135deg, var(--saber-purple), #9333ea);
+            color: var(--pure-white);
+        }
+
+        .roll-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0, 168, 255, 0.4);
+        }
+
+        .roll-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .roll-info {
+            background: rgba(0, 168, 255, 0.05);
+            border-radius: 4px;
+            padding: 12px;
+            border: 1px solid rgba(0, 168, 255, 0.1);
+        }
+
+        .roll-info-title {
+            font-family: var(--font-display);
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--saber-blue-glow);
+            margin-bottom: 6px;
+        }
+
+        .roll-info-content {
+            font-size: 0.8em;
+            color: var(--silver-chrome);
+            line-height: 1.5;
+        }
+
+        .saber-colors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .saber-color-item {
+            padding: 10px 8px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .saber-color-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .saber-color-item.selected {
+            border-width: 2px;
+            box-shadow: 0 0 20px currentColor;
+        }
+
+        .saber-color-preview {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .saber-color-name {
+            font-family: var(--font-display);
+            font-size: 0.7em;
+            font-weight: 600;
+            color: var(--light-steel);
+        }
+
+        .saber-color-item[data-color="argent"] {
+            --saber-color: #c0c0c0;
+        }
+
+        .saber-color-item[data-color="blanc"] {
+            --saber-color: #ffffff;
+        }
+
+        .saber-color-item[data-color="bleu"] {
+            --saber-color: #0066ff;
+        }
+
+        .saber-color-item[data-color="bleu-clair"] {
+            --saber-color: #66b3ff;
+        }
+
+        .saber-color-item[data-color="cyan"] {
+            --saber-color: #00ffff;
+        }
+
+        .saber-color-item[data-color="indigo"] {
+            --saber-color: #4b0082;
+        }
+
+        .saber-color-item[data-color="jaune"] {
+            --saber-color: #ffcc00;
+        }
+
+        .saber-color-item[data-color="jaune-vert"] {
+            --saber-color: #9acd32;
+        }
+
+        .saber-color-item[data-color="magenta"] {
+            --saber-color: #ff00ff;
+        }
+
+        .saber-color-item[data-color="or"] {
+            --saber-color: #ffd700;
+        }
+
+        .saber-color-item[data-color="orange"] {
+            --saber-color: #ff8c00;
+        }
+
+        .saber-color-item[data-color="rose"] {
+            --saber-color: #ff69b4;
+        }
+
+        .saber-color-item[data-color="rouge"] {
+            --saber-color: #ff0000;
+        }
+
+        .saber-color-item[data-color="vert"] {
+            --saber-color: #00ff00;
+        }
+
+        .saber-color-item[data-color="violet"] {
+            --saber-color: #8a2be2;
+        }
+
+        .saber-color-item[data-color="viridien"] {
+            --saber-color: #40826d;
+        }
+
+        .saber-color-item .saber-color-preview {
+            background: var(--saber-color);
+            box-shadow: 0 0 10px var(--saber-color);
+        }
+
+        .saber-color-item.selected {
+            border-color: var(--saber-color);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+        }
+
+        .saber-selection-display {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+            padding: 12px;
+            background: rgba(0, 168, 255, 0.05);
+            border-radius: 4px;
+            border: 1px solid rgba(0, 168, 255, 0.2);
+        }
+
+        .saber-selected-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .saber-selected-label {
+            font-family: var(--font-display);
+            font-size: 0.7em;
+            color: var(--silver-chrome);
+            margin-bottom: 6px;
+        }
+
+        .saber-selected-color {
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 4px;
+        }
+
+        .saber-selected-name {
+            font-family: var(--font-display);
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--pure-white);
+        }
+
+        .saber-selected-effect {
+            font-size: 0.75em;
+            color: var(--silver-chrome);
+            margin-top: 4px;
+        }
+
+        .saber-types-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .saber-type-item {
+            padding: 12px 8px;
+            border-radius: 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .saber-type-item:hover {
+            transform: translateY(-2px);
+            border-color: var(--saber-purple);
+        }
+
+        .saber-type-item.selected {
+            border-color: var(--saber-purple);
+            background: rgba(179, 102, 255, 0.15);
+            box-shadow: 0 0 15px rgba(179, 102, 255, 0.3);
+        }
+
+        .saber-type-icon {
+            font-size: 1.4em;
+            margin-bottom: 6px;
+        }
+
+        .saber-type-name {
+            font-family: var(--font-display);
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--light-steel);
+        }
+
+        .saber-type-display {
+            padding: 12px;
+            background: rgba(179, 102, 255, 0.1);
+            border-radius: 4px;
+            border: 1px solid rgba(179, 102, 255, 0.3);
+        }
+
+        .saber-type-title {
+            font-family: var(--font-display);
+            font-weight: 700;
+            color: var(--saber-purple);
+            margin-bottom: 6px;
+        }
+
+        .saber-type-desc {
+            font-size: 0.85em;
+            color: var(--light-steel);
+        }
+
+        .crystal-select,
+        .form-select-large {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 2px;
+            background: var(--metal-gray);
+            color: var(--pure-white);
+            font-family: var(--font-body);
+        }
+
+        .crystal-effect-display,
+        .form-effect-display {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 4px;
+        }
+
+        .crystal-effect-display {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .form-effect-display {
+            background: rgba(179, 102, 255, 0.05);
+            border: 1px solid rgba(179, 102, 255, 0.2);
+        }
+
+        .crystal-effect-title {
+            font-family: var(--font-display);
+            font-size: 0.85em;
+            font-weight: 600;
+            color: var(--saber-cyan);
+            margin-bottom: 6px;
+        }
+
+        .crystal-effect-desc {
+            font-size: 0.85em;
+            color: var(--light-steel);
+            line-height: 1.5;
+        }
+
+        .form-effect-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-effect-title {
+            font-family: var(--font-display);
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--saber-purple);
+        }
+
+        .form-effect-attribute {
+            font-family: var(--font-display);
+            font-size: 0.75em;
+            padding: 4px 10px;
+            background: rgba(179, 102, 255, 0.2);
+            border-radius: 2px;
+            color: var(--saber-purple);
+        }
+
+        .form-effect-positive {
+            color: var(--success-green);
+            margin-bottom: 6px;
+            font-size: 0.85em;
+        }
+
+        .form-effect-negative {
+            color: var(--danger-red);
+            font-size: 0.85em;
+        }
+
+        .objects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .object-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 2px;
+            border: 1px solid var(--card-border);
+        }
+
+        .object-item:hover {
+            background: rgba(0, 168, 255, 0.05);
+            border-color: rgba(0, 168, 255, 0.3);
+        }
+
+        .object-name {
+            flex: 1;
+            font-weight: 500;
+            color: var(--light-steel);
+        }
+
+        .object-quality {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--saber-blue-glow);
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .object-remove {
+            width: 26px;
+            height: 26px;
+            border-radius: 2px;
+            border: 1px solid var(--danger-red);
+            background: transparent;
+            color: var(--danger-red);
+            cursor: pointer;
+        }
+
+        .object-remove:hover {
+            background: var(--danger-red);
+            color: var(--void-black);
+        }
+
+        .add-object-section {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .add-object-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .add-object-field label {
+            font-size: 0.75em;
+            color: var(--silver-chrome);
+            font-family: var(--font-display);
+        }
+
+        .add-object-field input {
+            padding: 10px 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 2px;
+            background: var(--metal-gray);
+            color: var(--pure-white);
+            font-family: var(--font-body);
+        }
+
+        .add-object-btn {
+            padding: 10px 20px;
+            background: rgba(0, 168, 255, 0.2);
+            border: 1px solid var(--saber-blue);
+            border-radius: 2px;
+            color: var(--saber-blue);
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-weight: 600;
+        }
+
+        .add-object-btn:hover {
+            background: var(--saber-blue);
+            color: var(--void-black);
+        }
+
+        .modal,
+        .result-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 15, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active,
+        .result-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content,
+        .result-container {
+            background: var(--hull-gray);
+            border-radius: 4px;
+            padding: 28px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid var(--saber-blue);
+            box-shadow: 0 0 40px rgba(0, 168, 255, 0.3);
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--saber-blue-glow);
+            margin-bottom: 16px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--card-border);
+            border-radius: 2px;
+            margin-bottom: 20px;
+            background: var(--metal-gray);
+            color: var(--pure-white);
+            font-family: var(--font-body);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 2px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-size: 0.85em;
+        }
+
+        .modal-btn.cancel {
+            background: var(--metal-gray);
+            border: 1px solid var(--card-border);
+            color: var(--silver-chrome);
+        }
+
+        .modal-btn.confirm {
+            background: var(--saber-blue);
+            border: none;
+            color: var(--void-black);
+        }
+
+        .result-container {
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .result-overlay.active .result-container {
+            transform: scale(1);
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-family: var(--font-display);
+            font-size: 1.4em;
+            font-weight: 700;
+            color: var(--saber-blue-glow);
+            margin-bottom: 8px;
+        }
+
+        .result-subtitle {
+            color: var(--silver-chrome);
+            font-size: 0.9em;
+        }
+
+        .dice-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .die {
+            width: 44px;
+            height: 44px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 1.2em;
+            font-weight: 700;
+            animation: rollDie 0.5s ease-out;
+        }
+
+        .die.success {
+            background: linear-gradient(135deg, var(--success-green), #2ea043);
+            color: var(--void-black);
+            box-shadow: 0 0 15px rgba(63, 185, 80, 0.5);
+        }
+
+        .die.failure {
+            background: var(--metal-gray);
+            color: var(--silver-chrome);
+            border: 1px solid var(--card-border);
+        }
+
+        .die.universal-failure {
+            background: linear-gradient(135deg, var(--danger-red), #da3633);
+            color: var(--pure-white);
+            box-shadow: 0 0 15px rgba(248, 81, 73, 0.5);
+        }
+
+        .die.explosion {
+            background: linear-gradient(135deg, var(--saber-yellow), #e6b800);
+            color: var(--void-black);
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.6);
+        }
+
+        @keyframes rollDie {
+            0% {
+                transform: rotate(0deg) scale(0);
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.15);
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            background: rgba(0, 168, 255, 0.05);
+            padding: 12px;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid rgba(0, 168, 255, 0.1);
+        }
+
+        .stat-label {
+            font-size: 0.7em;
+            color: var(--silver-chrome);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-family: var(--font-display);
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 1.3em;
+            font-weight: 700;
+            color: var(--pure-white);
+        }
+
+        .result-total {
+            background: linear-gradient(135deg, var(--saber-blue), var(--saber-cyan));
+            color: var(--void-black);
+            padding: 18px;
+            border-radius: 4px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 0 30px rgba(0, 168, 255, 0.4);
+        }
+
+        .result-total-label {
+            font-size: 0.85em;
+            margin-bottom: 6px;
+            font-family: var(--font-display);
+        }
+
+        .result-total-value {
+            font-family: var(--font-display);
+            font-size: 2.2em;
+            font-weight: 800;
+        }
+
+        .result-close-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--metal-gray);
+            color: var(--light-steel);
+            border: 1px solid var(--card-border);
+            border-radius: 2px;
+            font-family: var(--font-display);
+            cursor: pointer;
+        }
+
+        .result-close-btn:hover {
+            background: var(--saber-blue);
+            color: var(--void-black);
+            border-color: var(--saber-blue);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--hull-gray);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--silver-chrome);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--saber-blue);
+        }
+
+        @media (max-width: 900px) {
+
+            .attributes-page,
+            .skills-page,
+            .force-page,
+            .saber-page {
+                grid-template-columns: 1fr;
+            }
+
+            .attributes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .registres-section {
+                grid-column: span 1;
+            }
+
+            .registres-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .saber-colors-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .saber-types-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .nav-tabs {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .registres-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .saber-colors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .saber-types-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .notes-section {
+            margin-top: 20px;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            min-height: 200px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: inherit;
+            font-family: inherit;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            padding: 12px;
+            resize: vertical;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: rgba(218, 165, 32, 0.4);
+        }
+
+        .notes-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-style: italic;
+        }
+
+        /* ── RÉSONANCE / CORRUPTION ── */
+        .resonance-card {}
+
+        .resonance-gauge-wrap {
+            margin-bottom: 18px;
+        }
+
+        .resonance-track-outer {
+            position: relative;
+            height: 14px;
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 6px;
+        }
+
+        .resonance-track-center {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .resonance-fill-light {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            border-radius: 0 8px 8px 0;
+            transition: width 0.4s ease, background 0.4s ease;
+        }
+
+        .resonance-fill-dark {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 50%;
+            border-radius: 8px 0 0 8px;
+            transition: width 0.4s ease, background 0.4s ease;
+        }
+
+        .resonance-labels-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.68rem;
+            color: #888;
+        }
+
+        .resonance-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .resonance-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 7px;
+            border: 1.5px solid rgba(150, 150, 200, 0.3);
+            background: rgba(150, 150, 200, 0.08);
+            color: #aaa;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .resonance-btn.light {
+            border-color: rgba(100, 160, 255, 0.4);
+            color: #6ab0ff;
+        }
+
+        .resonance-btn.light:hover:not(:disabled) {
+            background: rgba(100, 160, 255, 0.15);
+        }
+
+        .resonance-btn.dark {
+            border-color: rgba(200, 80, 80, 0.4);
+            color: #e07070;
+        }
+
+        .resonance-btn.dark:hover:not(:disabled) {
+            background: rgba(200, 80, 80, 0.15);
+        }
+
+        .resonance-btn:disabled {
+            opacity: 0.25;
+            cursor: not-allowed;
+        }
+
+        .resonance-delta-wrap {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .resonance-delta-input {
+            width: 52px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(150, 150, 200, 0.3);
+            border-radius: 6px;
+            color: #ccc;
+            font-size: 0.9rem;
+            padding: 4px 6px;
+            text-align: center;
+            font-family: var(--font-display);
+        }
+
+        .resonance-delta-input:focus {
+            outline: none;
+            border-color: rgba(150, 150, 200, 0.6);
+        }
+
+        .resonance-apply-btn {
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(150, 150, 200, 0.3);
+            background: rgba(150, 150, 200, 0.1);
+            color: #bbb;
+            font-size: 0.78rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .resonance-apply-btn:hover {
+            background: rgba(150, 150, 200, 0.2);
+            color: #ddd;
+        }
+
+        .resonance-value-display {
+            min-width: 52px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+
+        .resonance-stage-badge {
+            display: inline-block;
+            padding: 5px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            border: 1.5px solid currentColor;
+            margin-bottom: 16px;
+        }
+
+        .resonance-effects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .resonance-effect-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.81rem;
+            line-height: 1.4;
+            border: 1px solid transparent;
+            transition: opacity 0.3s, filter 0.3s;
+        }
+
+        .resonance-effect-row.inactive {
+            opacity: 0.22;
+            filter: grayscale(0.7);
+        }
+
+        .resonance-effect-icon {
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .resonance-effect-text {
+            flex: 1;
+        }
+
+        .resonance-effect-threshold {
+            font-size: 0.68rem;
+            font-weight: 700;
+            opacity: 0.5;
+            flex-shrink: 0;
+        }
+
+        .resonance-effect-row.updated-tag::after {
+            content: '↑';
+            font-size: 0.72rem;
+            margin-left: 5px;
+            opacity: 0.7;
+        }
+
+        .resonance-no-effects {
+            text-align: center;
+            color: #888;
+            font-size: 0.85rem;
+            padding: 10px 0 4px;
+            font-style: italic;
+        }
+
+        /* ── ONGLETS JETS DE FORCE ── */
+        .force-roll-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .force-roll-tab {
+            flex: 1;
+            padding: 8px 14px;
+            background: rgba(179, 102, 255, 0.06);
+            border: 1px solid rgba(179, 102, 255, 0.2);
+            border-radius: 6px;
+            color: rgba(179, 102, 255, 0.6);
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+
+        .force-roll-tab:hover {
+            background: rgba(179, 102, 255, 0.12);
+            color: rgba(179, 102, 255, 0.9);
+        }
+
+        .force-roll-tab.active {
+            background: rgba(179, 102, 255, 0.18);
+            border-color: rgba(179, 102, 255, 0.5);
+            color: var(--saber-purple);
+        }
+
+        .force-roll-panel {
+            display: none;
+        }
+
+        .force-roll-panel.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚔ Fiche de Personnage ⚔</h1>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchPage('attributes', this)">Personnage</button>
+                <button class="nav-tab" onclick="switchPage('skills', this)">Compétences</button>
+                <button class="nav-tab" onclick="switchPage('force', this)">Force</button>
+                <button class="nav-tab" onclick="switchPage('saber', this)">Sabre Laser</button>
+                <button class="nav-tab" onclick="switchPage('objects', this)">Objets</button>
+            </div>
+            <div class="save-controls">
+                <button onclick="saveToFile()">💾 Sauvegarder</button>
+                <button onclick="loadFromFile()">📂 Charger</button>
+                <input type="file" id="file-input" style="display: none;" accept=".json"
+                    onchange="handleFileLoad(event)">
+            </div>
+        </div>
+
+        <!-- PAGE PERSONNAGE -->
+        <div class="page attributes-page active" id="page-attributes">
+            <div class="left-column">
+                <div class="card">
+                    <div class="profile-section">
+                        <div class="profile-image-container" onclick="changeProfileImage()">
+                            <div id="profile-image-display" class="profile-placeholder">👤</div>
+                            <div class="profile-image-overlay">MODIFIER</div>
+                        </div>
+                        <input type="file" id="profile-image-input" accept="image/*" style="display: none;"
+                            onchange="handleProfileImage(event)">
+                        <input type="text" id="character-name" class="profile-name-input"
+                            placeholder="Nom du personnage" oninput="updateProfile()">
+                    </div>
+                </div>
+                <div class="elan-section">
+                    <div class="card-title" style="color: var(--danger-red);"><span class="icon"
+                            style="background: rgba(248, 81, 73, 0.15); border-color: rgba(248, 81, 73, 0.3); color: var(--danger-red);">♥</span>Élan
+                        & Blessures</div>
+                    <div class="elan-header">
+                        <div class="elan-capacity"><span class="elan-capacity-label">CAPACITÉ :</span><input
+                                type="number" id="elan-max" value="10" min="1" onchange="updateElan()"></div>
+                        <div class="elan-used"><span id="elan-current">10</span> / <span id="elan-total">10</span></div>
+                    </div>
+                    <div class="elan-bar">
+                        <div class="elan-bar-fill" id="elan-bar-fill" style="width: 100%;"></div>
+                        <div class="elan-bar-text" id="elan-bar-text">100%</div>
+                    </div>
+                    <div class="wounds-list" id="wounds-list"></div>
+                    <div class="add-wound-section">
+                        <div class="add-wound-field"><label>NOM</label><input type="text" id="wound-name"
+                                placeholder="Ex: Brûlure laser"></div>
+                        <div class="add-wound-field"><label>TYPE</label><input type="text" id="wound-type"
+                                placeholder="Physique, Mental..." list="wound-type-suggestions"><datalist
+                                id="wound-type-suggestions">
+                                <option value="Physique">
+                                <option value="Mental">
+                                <option value="Stratégique">
+                                <option value="Force">
+                            </datalist></div>
+                        <div class="add-wound-field" style="min-width: 80px; flex: 0;"><label>GRAVITÉ</label><input
+                                type="number" id="wound-gravity" min="1" value="1" style="width: 60px;"></div>
+                        <button class="add-wound-btn" onclick="addWound()">+ AJOUTER</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title"><span class="icon">✧</span>Ressources</div>
+                    <div class="counters-grid">
+                        <div class="counter-item">
+                            <div class="counter-label"><span class="emoji">⚡</span> Points de Force</div>
+                            <div class="counter-controls">
+                                <button class="counter-btn minus" onclick="modifyCounter('force', -1)">−</button>
+                                <div class="counter-value"><input type="number" id="force-current" value="10" min="0"
+                                        onchange="updateCounters()"><span class="counter-separator">/</span><input
+                                        type="number" id="force-max" value="10" min="1" onchange="updateCounters()">
+                                </div>
+                                <button class="counter-btn plus" onclick="modifyCounter('force', 1)">+</button>
+                            </div>
+                            <div class="counter-bar">
+                                <div id="force-bar" class="counter-fill force" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="right-column">
+                <div class="card">
+                    <div class="card-title"><span class="icon">⬡</span>Attributs</div>
+                    <div class="attributes-grid">
+                        <div class="attribute-item">
+                            <div class="attribute-name">Puissance</div>
+                            <div class="attribute-value" id="attr-puissance">5</div>
+                            <div class="attribute-controls"><button class="attribute-btn"
+                                    onclick="modifyAttribute('puissance', -1)">−</button><button class="attribute-btn"
+                                    onclick="modifyAttribute('puissance', 1)">+</button></div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Vivacité</div>
+                            <div class="attribute-value" id="attr-vivacite">5</div>
+                            <div class="attribute-controls"><button class="attribute-btn"
+                                    onclick="modifyAttribute('vivacite', -1)">−</button><button class="attribute-btn"
+                                    onclick="modifyAttribute('vivacite', 1)">+</button></div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Précision</div>
+                            <div class="attribute-value" id="attr-precision">5</div>
+                            <div class="attribute-controls"><button class="attribute-btn"
+                                    onclick="modifyAttribute('precision', -1)">−</button><button class="attribute-btn"
+                                    onclick="modifyAttribute('precision', 1)">+</button></div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Endurance</div>
+                            <div class="attribute-value" id="attr-endurance">5</div>
+                            <div class="attribute-controls"><button class="attribute-btn"
+                                    onclick="modifyAttribute('endurance', -1)">−</button><button class="attribute-btn"
+                                    onclick="modifyAttribute('endurance', 1)">+</button></div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Intelligence</div>
+                            <div class="attribute-value" id="attr-intelligence">5</div>
+                            <div class="attribute-controls"><button class="attribute-btn"
+                                    onclick="modifyAttribute('intelligence', -1)">−</button><button
+                                    class="attribute-btn" onclick="modifyAttribute('intelligence', 1)">+</button></div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Intuition</div>
+                            <div class="attribute-value" id="attr-intuition">5</div>
+                            <div class="attribute-controls"><button class="attribute-btn"
+                                    onclick="modifyAttribute('intuition', -1)">−</button><button class="attribute-btn"
+                                    onclick="modifyAttribute('intuition', 1)">+</button></div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Volonté</div>
+                            <div class="attribute-value" id="attr-volonte">5</div>
+                            <div class="attribute-controls"><button class="attribute-btn"
+                                    onclick="modifyAttribute('volonte', -1)">−</button><button class="attribute-btn"
+                                    onclick="modifyAttribute('volonte', 1)">+</button></div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Présence</div>
+                            <div class="attribute-value" id="attr-presence">5</div>
+                            <div class="attribute-controls"><button class="attribute-btn"
+                                    onclick="modifyAttribute('presence', -1)">−</button><button class="attribute-btn"
+                                    onclick="modifyAttribute('presence', 1)">+</button></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="roll-section skill">
+                    <div class="roll-header">
+                        <div class="roll-icon skill">🎲</div>
+                        <div class="roll-title">Jet Simple</div>
+                    </div>
+                    <div class="roll-form">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group"><label class="form-label">Attribut</label><select
+                                    id="attribute-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                    <option value="puissance">Puissance</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="precision">Précision</option>
+                                    <option value="endurance">Endurance</option>
+                                    <option value="intelligence">Intelligence</option>
+                                    <option value="intuition">Intuition</option>
+                                    <option value="volonte">Volonté</option>
+                                    <option value="presence">Présence</option>
+                                </select></div>
+                            <div class="form-group"><label class="form-label">Compétence</label><select
+                                    id="skill-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                </select></div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group"><label class="form-label">Bonus / Malus</label><input
+                                    id="roll-bonus" class="bonus-input" type="number" value="0"></div>
+                            <div class="form-group"><label class="form-label">Mod. Explosion</label><input
+                                    id="roll-explosion" class="bonus-input" type="number" value="0" min="-4" max="4">
+                            </div>
+                        </div>
+                        <button class="roll-btn skill" id="simple-roll-btn" onclick="rollSimple()" disabled>🎲 LANCER LE
+                            JET</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE COMPÉTENCES -->
+        <div class="page skills-page" id="page-skills">
+            <div class="skills-column">
+                <div class="column-header">
+                    <div class="column-icon skills">⚔</div>
+                    <div class="column-title">Compétences</div>
+                </div>
+                <div class="skills-list" id="skills-list"></div>
+            </div>
+            <div class="roll-section skill">
+                <div class="roll-header">
+                    <div class="roll-icon skill">🎲</div>
+                    <div class="roll-title">Jet de Compétence</div>
+                </div>
+                <div class="roll-form">
+                    <div class="form-group"><label class="form-label">Attribut</label><select
+                            id="skill-page-attr-select" class="form-select" onchange="updateRollButtons()">
+                            <option value="">— Sélectionner —</option>
+                            <option value="puissance">Puissance</option>
+                            <option value="vivacite">Vivacité</option>
+                            <option value="precision">Précision</option>
+                            <option value="endurance">Endurance</option>
+                            <option value="intelligence">Intelligence</option>
+                            <option value="intuition">Intuition</option>
+                            <option value="volonte">Volonté</option>
+                            <option value="presence">Présence</option>
+                        </select></div>
+                    <div class="form-group"><label class="form-label">Compétence</label><select
+                            id="skill-page-skill-select" class="form-select" onchange="updateRollButtons()">
+                            <option value="">— Sélectionner —</option>
+                        </select></div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                        <div class="form-group"><label class="form-label">Bonus / Malus</label><input
+                                id="skill-page-bonus" class="bonus-input" type="number" value="0"></div>
+                        <div class="form-group"><label class="form-label">Mod. Explosion</label><input
+                                id="skill-page-explosion" class="bonus-input" type="number" value="0" min="-4" max="4">
+                        </div>
+                    </div>
+                    <button class="roll-btn skill" id="skill-page-roll-btn" onclick="rollSkillPage()" disabled>🎲 LANCER
+                        LE JET</button>
+                    <div class="roll-info">
+                        <div class="roll-info-title">MÉCANIQUE</div>
+                        <div class="roll-info-content">L'attribut détermine le seuil de réussite sur les d10.<br>La
+                            compétence détermine le nombre de dés lancés.<br>Bonus d'attribut = moitié de l'attribut.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE FORCE -->
+        <div class="page force-page" id="page-force">
+            <!-- Résonance / Corruption -->
+            <div class="card" style="grid-column: span 2;">
+                <div class="card-title">
+                    <span class="icon"
+                        style="background: linear-gradient(135deg, rgba(100,160,255,0.15), rgba(200,80,80,0.15)); color: #b0a0d0;">☯</span>
+                    Résonance &amp; Corruption
+                </div>
+
+                <div class="resonance-gauge-wrap">
+                    <div class="resonance-track-outer">
+                        <div class="resonance-fill-dark" id="res-fill-dark"></div>
+                        <div class="resonance-fill-light" id="res-fill-light"></div>
+                        <div class="resonance-track-center"></div>
+                    </div>
+                    <div class="resonance-labels-row">
+                        <span style="color:#c06060">−90</span>
+                        <span>−60</span><span>−30</span>
+                        <span style="color:#b0a0d0">0</span>
+                        <span>30</span><span>60</span>
+                        <span style="color:#6ab0ff">100</span>
+                    </div>
+                </div>
+
+                <div style="text-align:center; margin-bottom:14px;">
+                    <div class="resonance-value-display" id="res-value">0</div>
+                    <span class="resonance-stage-badge" id="res-stage-badge">Équilibre</span>
+                </div>
+
+                <div class="resonance-controls-row">
+                    <button class="resonance-btn dark" onclick="applyResonanceDelta(-1)" title="−1">−</button>
+                    <div class="resonance-delta-wrap">
+                        <input type="number" class="resonance-delta-input" id="res-delta" value="1" min="1" max="190"
+                            placeholder="Δ">
+                        <button class="resonance-apply-btn dark"
+                            onclick="applyResonanceDelta(-Math.abs(parseInt(document.getElementById('res-delta').value)||1))">−
+                            Corrompre</button>
+                        <button class="resonance-apply-btn light"
+                            onclick="applyResonanceDelta(+Math.abs(parseInt(document.getElementById('res-delta').value)||1))">+
+                            Résonance</button>
+                    </div>
+                    <button class="resonance-btn light" onclick="applyResonanceDelta(+1)" title="+1">+</button>
+                </div>
+
+                <div style="height:16px"></div>
+                <div class="resonance-effects-list" id="res-effects-list"></div>
+                <div class="resonance-no-effects" id="res-no-effects">Aucun effet actif.</div>
+            </div>
+
+            <div class="registres-section">
+                <div class="card-title"><span class="icon"
+                        style="background: rgba(179, 102, 255, 0.15); border-color: rgba(179, 102, 255, 0.3); color: var(--saber-purple);">◈</span>Registres
+                    Émotionnels</div>
+                <div class="registres-grid">
+                    <div class="registre-card active" data-registre="neutre" onclick="setRegistre('neutre')">
+                        <div class="registre-icon">⚖️</div>
+                        <div class="registre-name">Neutre</div>
+                        <div class="registre-emotions">Calme, équilibre</div>
+                        <div class="registre-effects">
+                            <div class="registre-bonus">—</div>
+                            <div class="registre-malus">—</div>
+                        </div>
+                    </div>
+                    <div class="registre-card" data-registre="ardeur" onclick="setRegistre('ardeur')">
+                        <div class="registre-icon">🔥</div>
+                        <div class="registre-name">Ardeur</div>
+                        <div class="registre-emotions">Colère, rage, passion</div>
+                        <div class="registre-effects">
+                            <div class="registre-bonus">+1 Amplifier, Dissiper</div>
+                            <div class="registre-malus">−1 Harmoniser, Protéger</div>
+                        </div>
+                    </div>
+                    <div class="registre-card" data-registre="terreur" onclick="setRegistre('terreur')">
+                        <div class="registre-icon">😱</div>
+                        <div class="registre-name">Terreur</div>
+                        <div class="registre-emotions">Peur, angoisse</div>
+                        <div class="registre-effects">
+                            <div class="registre-bonus">+1 Percevoir, Protéger</div>
+                            <div class="registre-malus">−1 Manifester, Lier</div>
+                        </div>
+                    </div>
+                    <div class="registre-card" data-registre="lumiere" onclick="setRegistre('lumiere')">
+                        <div class="registre-icon">✨</div>
+                        <div class="registre-name">Lumière</div>
+                        <div class="registre-emotions">Joie, espoir</div>
+                        <div class="registre-effects">
+                            <div class="registre-bonus">+1 Harmoniser, Manifester</div>
+                            <div class="registre-malus">−1 Dissiper, Transformer</div>
+                        </div>
+                    </div>
+                    <div class="registre-card" data-registre="ombre" onclick="setRegistre('ombre')">
+                        <div class="registre-icon">🌑</div>
+                        <div class="registre-name">Ombre</div>
+                        <div class="registre-emotions">Tristesse, mélancolie</div>
+                        <div class="registre-effects">
+                            <div class="registre-bonus">+1 Percevoir, Lier</div>
+                            <div class="registre-malus">−1 Amplifier, Manifester</div>
+                        </div>
+                    </div>
+                    <div class="registre-card" data-registre="lien" onclick="setRegistre('lien')">
+                        <div class="registre-icon">💗</div>
+                        <div class="registre-name">Lien</div>
+                        <div class="registre-emotions">Amour, loyauté</div>
+                        <div class="registre-effects">
+                            <div class="registre-bonus">+1 Protéger, Harmoniser</div>
+                            <div class="registre-malus">−1 Dissiper, Transformer</div>
+                        </div>
+                    </div>
+                    <div class="registre-card" data-registre="mepris" onclick="setRegistre('mepris')">
+                        <div class="registre-icon">😤</div>
+                        <div class="registre-name">Mépris</div>
+                        <div class="registre-emotions">Dégoût, dédain</div>
+                        <div class="registre-effects">
+                            <div class="registre-bonus">+1 Dissiper, Mouvoir</div>
+                            <div class="registre-malus">−1 Harmoniser, Lier</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="registre-active-display"><span class="registre-active-label">Registre actif : <strong
+                            id="registre-active-name">Neutre</strong></span>
+                    <div class="registre-active-effects"><span id="registre-active-bonus"
+                            class="registre-bonus"></span><span id="registre-active-malus"
+                            class="registre-malus"></span></div>
+                </div>
+            </div>
+            <div class="skills-column">
+                <div class="column-header">
+                    <div class="column-icon verbs">✦</div>
+                    <div class="column-title">Verbes de Force</div>
+                </div>
+                <div class="skills-list" id="force-verbs-list"></div>
+            </div>
+            <div class="skills-column">
+                <div class="column-header">
+                    <div class="column-icon targets">◇</div>
+                    <div class="column-title">Cibles de Force</div>
+                </div>
+                <div class="skills-list" id="force-targets-list"></div>
+            </div>
+            <div class="roll-section force" style="grid-column: span 2;">
+                <div class="roll-header">
+                    <div class="roll-icon force">⚡</div>
+                    <div class="roll-title">Jets de Force</div>
+                </div>
+
+                <div class="force-roll-tabs">
+                    <button class="force-roll-tab active" onclick="switchForceRollMode('simple', this)">⚡ Force
+                        pure</button>
+                    <button class="force-roll-tab" onclick="switchForceRollMode('couple', this)">⚡⚔ Force +
+                        Compétence</button>
+                </div>
+
+                <!-- JET SIMPLE (Force seule) -->
+                <div id="force-roll-simple" class="force-roll-panel active">
+                    <div class="roll-form">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group"><label class="form-label">Attribut</label>
+                                <select id="force-simple-attr-select" class="form-select"
+                                    onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                    <option value="puissance">Puissance</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="precision">Précision</option>
+                                    <option value="endurance">Endurance</option>
+                                    <option value="intelligence">Intelligence</option>
+                                    <option value="intuition">Intuition</option>
+                                    <option value="volonte">Volonté</option>
+                                    <option value="presence">Présence</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Verbe de Force</label>
+                                <select id="force-simple-verb-select" class="form-select"
+                                    onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Cible de Force</label>
+                                <select id="force-simple-target-select" class="form-select"
+                                    onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Bonus / Malus</label>
+                                <input id="force-simple-bonus" class="bonus-input" type="number" value="0">
+                            </div>
+                        </div>
+                        <button class="roll-btn force" id="force-simple-roll-btn" onclick="rollForceSimple()" disabled
+                            style="margin-top: 16px;">
+                            ⚡ Lancer le jet de Force
+                        </button>
+                    </div>
+                    <div class="roll-info" style="margin-top: 16px;">
+                        <div class="roll-info-title">MÉCANIQUE</div>
+                        <div class="roll-info-content">Dés = Verbe + Cible (max 10). Seuil = 13 − Attribut.<br>
+                            <strong>Le registre émotionnel modifie l'efficacité des verbes.</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- JET COUPLÉ (Force + Compétence) -->
+                <div id="force-roll-couple" class="force-roll-panel">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div class="roll-form">
+                            <div
+                                style="font-weight: 600; color: var(--saber-purple); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(179, 102, 255, 0.2); font-family: var(--font-display);">
+                                ⚡ JET DE FORCE</div>
+                            <div class="form-group"><label class="form-label">Attribut (Force)</label>
+                                <select id="force-attr-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                    <option value="puissance">Puissance</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="precision">Précision</option>
+                                    <option value="endurance">Endurance</option>
+                                    <option value="intelligence">Intelligence</option>
+                                    <option value="intuition">Intuition</option>
+                                    <option value="volonte">Volonté</option>
+                                    <option value="presence">Présence</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Verbe de Force</label>
+                                <select id="force-verb-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Cible de Force</label>
+                                <select id="force-target-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Magnitude du Pouvoir</label>
+                                <input id="power-level" class="bonus-input" type="number" value="1" min="1" max="10">
+                            </div>
+                            <div class="form-group"><label class="form-label">Mod. Puissance</label>
+                                <input id="power-puissance-mod" class="bonus-input" type="number" value="0">
+                            </div>
+                        </div>
+                        <div class="roll-form">
+                            <div
+                                style="font-weight: 600; color: var(--success-green); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(63, 185, 80, 0.2); font-family: var(--font-display);">
+                                ⚔ JET DE COMPÉTENCE</div>
+                            <div class="form-group"><label class="form-label">Attribut (Compétence)</label>
+                                <select id="conjoint-attr-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                    <option value="puissance">Puissance</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="precision">Précision</option>
+                                    <option value="endurance">Endurance</option>
+                                    <option value="intelligence">Intelligence</option>
+                                    <option value="intuition">Intuition</option>
+                                    <option value="volonte">Volonté</option>
+                                    <option value="presence">Présence</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Compétence</label>
+                                <select id="conjoint-skill-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Bonus / Malus Global</label>
+                                <input id="force-bonus" class="bonus-input" type="number" value="0">
+                            </div>
+                            <div class="form-group"><label class="form-label">Mod. Explosion</label>
+                                <input id="force-explosion" class="bonus-input" type="number" value="0" min="-4"
+                                    max="4">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="roll-btn force" id="conjoint-roll-btn" onclick="rollConjoint()" disabled
+                        style="margin-top: 20px;">
+                        ⚡⚔ Lancer le jet Force + Compétence
+                    </button>
+                    <div class="roll-info" style="margin-top: 16px;">
+                        <div class="roll-info-title">MÉCANIQUE</div>
+                        <div class="roll-info-content">Dés de Force = Verbe + Cible (max 10). DC = Magnitude + 1. Si
+                            réussi,
+                            ajoute <strong>Puissance</strong> au jet.<br>Puissance = Magnitude + Mod. Puissance +
+                            Registre.<br><strong>Le registre émotionnel modifie la puissance.</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE SABRE LASER -->
+        <div class="page saber-page" id="page-saber">
+            <div class="card">
+                <div class="card-title" style="color: var(--saber-cyan);"><span class="icon"
+                        style="background: rgba(0, 255, 255, 0.15); border-color: rgba(0, 255, 255, 0.3); color: var(--saber-cyan);">💎</span>Couleurs
+                    de Sabre (max 2)</div>
+                <div class="saber-colors-grid" id="saber-colors-grid"></div>
+                <div class="saber-selection-display" id="saber-selection-display"></div>
+            </div>
+            <div class="card">
+                <div class="card-title" style="color: var(--saber-purple);"><span class="icon"
+                        style="background: rgba(179, 102, 255, 0.15); border-color: rgba(179, 102, 255, 0.3); color: var(--saber-purple);">⚔</span>Type
+                    de Sabre Laser</div>
+                <div class="saber-types-grid" id="saber-types-grid"></div>
+                <div class="saber-type-display" id="saber-type-display" style="display: none;">
+                    <div class="saber-type-title" id="saber-type-name"></div>
+                    <div class="saber-type-desc" id="saber-type-effect"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title" style="color: var(--saber-cyan);"><span class="icon"
+                        style="background: rgba(0, 255, 255, 0.15); border-color: rgba(0, 255, 255, 0.3); color: var(--saber-cyan);">✧</span>Cristal
+                    Kyber</div>
+                <select id="crystal-select" class="crystal-select" onchange="updateCrystal()">
+                    <option value="">— Sélectionner un cristal —</option>
+                </select>
+                <div class="crystal-effect-display" id="crystal-effect-display" style="display: none;">
+                    <div class="crystal-effect-title" id="crystal-name"></div>
+                    <div class="crystal-effect-desc" id="crystal-effect"></div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title" style="color: var(--saber-purple);"><span class="icon"
+                        style="background: rgba(179, 102, 255, 0.15); border-color: rgba(179, 102, 255, 0.3); color: var(--saber-purple);">⚔</span>Forme
+                    de Combat</div>
+                <select id="form-select" class="form-select-large" onchange="updateForm()">
+                    <option value="">— Sélectionner une forme —</option>
+                </select>
+                <div class="form-effect-display" id="form-effect-display" style="display: none;">
+                    <div class="form-effect-header">
+                        <div class="form-effect-title" id="form-name"></div>
+                        <div class="form-effect-attribute" id="form-attribute"></div>
+                    </div>
+                    <div class="form-effect-positive" id="form-positive"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE OBJETS -->
+        <div class="page objects-page" id="page-objects">
+            <div class="card" style="max-width: 800px; margin: 0 auto;">
+                <div class="card-title"><span class="icon">📦</span>Inventaire</div>
+                <div class="objects-list" id="objects-list"></div>
+                <div class="add-object-section">
+                    <div class="add-object-field" style="flex: 2;"><label>NOM DE L'OBJET</label><input type="text"
+                            id="object-name" placeholder="Ex: Blaster DL-44"></div>
+                    <div class="add-object-field" style="flex: 0; min-width: 100px;"><label>QUALITÉ</label><input
+                            type="number" id="object-quality" value="0" style="width: 80px;"></div>
+                    <button class="add-object-btn" onclick="addObject()">+ AJOUTER</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="modal">
+            <div class="modal-content">
+                <h3 class="modal-title" id="modal-title">Titre</h3><input type="text" class="modal-input"
+                    id="modal-input" placeholder="Entrez une valeur...">
+                <div class="modal-buttons"><button class="modal-btn cancel"
+                        onclick="closeModal()">Annuler</button><button class="modal-btn confirm"
+                        onclick="confirmModal()">Confirmer</button></div>
+            </div>
+        </div>
+        <div class="result-overlay" id="result-overlay">
+            <div class="result-container">
+                <div class="result-header">
+                    <h2 class="result-title" id="result-title">Résultat</h2>
+                    <p class="result-subtitle" id="result-subtitle"></p>
+                </div>
+                <div class="dice-container" id="dice-container"></div>
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Succès</div>
+                        <div class="stat-value" id="stat-successes">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Échecs</div>
+                        <div class="stat-value" id="stat-failures">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Explosions</div>
+                        <div class="stat-value" id="stat-explosions">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Bonus Attribut</div>
+                        <div class="stat-value" id="stat-attribute-bonus">0</div>
+                    </div>
+                </div>
+                <div class="result-total">
+                    <div class="result-total-label">RÉSULTAT TOTAL</div>
+                    <div class="result-total-value" id="result-total">0</div>
+                </div><button class="result-close-btn" onclick="closeResult()">FERMER</button>
+
+                <div class="card notes-section">
+                    <div class="card-title">
+                        <span class="icon" style="background: rgba(107, 76, 154, 0.1); color: #a08abf;">&#128221;</span>
+                        Notes
+                    </div>
+                    <textarea class="notes-textarea" id="notes-textarea"
+                        placeholder="Notes libres, descriptions, rappels..."
+                        oninput="appState.notes = this.value"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SABER_COLORS = {
+            argent: { name: "Argent", effect: "Le coût en Points de Force de vos pouvoirs est réduit de 1 (minimum 1)." },
+            blanc: { name: "Blanc", effect: "Les bonus et malus conférés par les registres émotionnels sont augmentés de 1." },
+            bleu: { name: "Bleu", effect: "Pouvoir utiliser pour protéger quelqu'un d'autre +1 en Puissance." },
+            "bleu-clair": { name: "Bleu clair", effect: "Les pouvoirs obscurs -2 de puissance contre vous. Peut relancer un jet de Force raté (Puissance-2 si réussi)." },
+            cyan: { name: "Cyan", effect: "+2 aux jets de synchronisation. +1 de Puissance lors de la participation à un pouvoir conjoint." },
+            indigo: { name: "Indigo", effect: "Régénération de Points de Force : 4/heure au lieu de 2." },
+            jaune: { name: "Jaune", effect: "Augmente la puissance des pouvoirs de 1 lorsque le sorcier utilise un bonus tactique ou que l'adversaire subit un malus tactique." },
+            "jaune-vert": { name: "Jaune-Vert", effect: "+1 de puissance sur les pouvoirs accompagnant un jet d'Intelligence ou d'Intuition." },
+            magenta: { name: "Magenta", effect: "Augmente de 3 la consommation en points de force d'un pouvoir pour utiliser un attribut différent pour lancer le pouvoir. " },
+            or: { name: "Or", effect: "Le personnage possède deux points de focalisations par round." },
+            orange: { name: "Orange", effect: "Pouvoirs offensifs directs : −1 de Puissance. Pouvoirs non-offensifs : +1 de Puissance" },
+            rose: { name: "Rose", effect: "+1 de puissance sur les pouvoirs bénéfiques ciblant des alliés." },
+            rouge: { name: "Rouge", effect: "Peut augmenter la puissance d'un pouvoir de 2, en échange d'une blessure de gravité 2 auto-infligée." },
+            vert: { name: "Vert", effect: "Après avoir utilisé un Verbe de Force, le prochain pouvoir utilisant un Verbe différent gagne +1 en Puissance." },
+            violet: { name: "Violet", effect: "+1 de Puissance sur les pouvoirs par blessure subie (maximum +3)." },
+            viridien: { name: "Viridien", effect: "+2 de Puissance sur les pouvoirs visant à retirer des altérations." }
+        };
+        const CRYSTALS = {
+            adegan: { name: "Adegan", effect: "+1 de Puissance sur les pouvoirs de Force combinés avec une action d'escrime." },
+            bondar: { name: "Bondar", effect: "Peut infliger des blessures non-létales sans subir de malus." },
+            brise: { name: "Brisé", effect: "Avant chaque jet d'escrime, lancer 1d6 : sur 1-2, −2 efficacité ; sur 3-4, aucun modificateur ; sur 5-6, +2 efficacité." },
+            compresse: { name: "Compressé", effect: "Les dés explosent sur une valeur réduite de 1." },
+            damind: { name: "Damind", effect: "+1 efficacité sur les jets de sabre laser pour dévier les tirs de blaster." },
+            firkrann: { name: "Firkrann", effect: "+1 efficacité sur les jets de sabre laser contre les droïdes et les éléments technologiques." },
+            ilum: { name: "Ilum", effect: "La gravité minimale des blessures infligées au sabre est égale à la moitié du niveau d'Escrime du porteur (arrondi à l'inférieur)." },
+            instable: { name: "Instable", effect: "+2 efficacité sur les jets. Cependant, chaque dé affichant un 1 inflige une blessure de gravité 1 au porteur." },
+            jenruax: { name: "Jenruax", effect: "+1 efficacité sur les jets d'esquive." },
+            kaiburr: { name: "Kaiburr", effect: "+2 de Puissance de sort  lorsque le porteur se trouve dans un lieu de pouvoir de la Force." },
+            lambent: { name: "Lambent", effect: "Permet de remplacer l'attribut physique utilisé pour l'escrime par son attribut mental opposé (Puissance ↔ Présence, Réflexes ↔ Intelligence, Endurance ↔ Volonté, Contrôle ↔ Intuition)." },
+            luxum: { name: "Luxum", effect: "+1 efficacité sur les jets de sabre laser lors de défense contre les attaques provenant de droïdes ou d'éléments technologiques." },
+            nexor: { name: "Nexor", effect: "Après une défense réussie, la prochaine attaque effectuée durant le même round gagne +1 efficacité." },
+            perle: { name: "Perle", effect: "+1 gravité sur les blessures infligées au sabre." },
+            sapith: { name: "Sapith", effect: "Après une défense réussie, peut dépenser 1 Point de Focalisation pour effectuer immédiatement une contre-attaque." },
+            sigil: { name: "Sigil", effect: "−1 gravité sur les blessures reçues (minimum 1)." },
+            solaris: { name: "Solaris", effect: "Confère un bonus d'efficacité égal à la moitié du niveau de Côté Lumineux du porteur (arrondi à l'inférieur). Sans effet pour un utilisateur neutre ou obscur." },
+            synthetique: { name: "Synthétique", effect: "Réplique les effets d'un autre type de cristal, déterminé à la création du sabre." },
+            upari: { name: "Upari", effect: "+1 efficacité les jets de sabre laser lorsque le porteur maintient sa concentration." }
+        };
+        const SABER_TYPES = {
+            standard: { name: "Standard", effect: "+1 de Puissance sur les pouvoirs de Force (main libre disponible)." },
+            lourde: { name: "Lame lourde", effect: "Ignore jusqu'à 2 points d'armure de la cible." },
+            jumelle: { name: "Lames jumelées", effect: "Ajoute la qualité des deux armes à la gravité des blessures infligées." },
+            allonge: { name: "Lame d'allonge", effect: "Portée de mêlée étendue à 10 ft." },
+            bifide: { name: "Lame bifide", effect: "+1 efficacité sur les jets de sabre laser si le personnage n'a pas utilisé plus de la moitié de son déplacement ce round." }
+        };
+        const COMBAT_FORMS = {
+            shiicho: {
+                name: "Forme I - Shii-Cho",
+                attribute: "Endurance",
+                effect: "Peut attaquer tous les adversaires à portée de l'arme en une seule action."
+            },
+            makashi: {
+                name: "Forme II - Makashi",
+                attribute: "Précision",
+                effect: "Lors d'un combat au corps à corps, vous bénéficiez d'un modificateur d'explosion de 1. Lors d'une confrontation offensive, vos attaques ignorent un nombre de points d'armure égal au nombre d'explosions sur le jet."
+            },
+            soresu: {
+                name: "Forme III - Soresu",
+                attribute: "Endurance",
+                effect: "La qualité de l'arme s'applique comme de l'armure au lieu de s'ajouter aux dégâts infligés."
+            },
+            ataru: {
+                name: "Forme IV - Ataru",
+                attribute: "Vivacité",
+                effect: "Vous pouvez lancer une action tactique d'Athlétisme sur la Vivacité gratuitement, une fois par tour après avoir déclaré une attaque. Chaque action tactique réussie génère un nombre de points de vélocité égal à l'écart avec la DC au lieu des effets habituels. Lorsque vous lancez une attaque, vous pouvez dépenser les points de vélocité pour augmenter sa puissance de 1 par 2 points de vélocité. Le maximum de points de vélocité est égal au niveau de compétence de sabre laser. Passer un round sans attaquer fait perdre tous les points de vélocité."
+            },
+            shien: {
+                name: "Forme V - Shien",
+                attribute: "Intuition",
+                effect: "Après une confrontation défensive contre une attaque à distance, réduit les résistances de la confrontation d'une valeur égale à l'écart de jet. L'écart de jet n'est pas compté dans les dégâts infligés lors d'autres types de confrontation."
+            },
+            djemso: {
+                name: "Forme V - Djem So",
+                attribute: "Puissance",
+                effect: "L'utilisateur repousse son tour. Lorsque vous remportez une confrontation défensive, vous pouvez immédiatement activer votre action offensive en utilisant l'écart de cette défense comme bonus tactique. Si l'utilisateur n'est pas attaqué, il effectue son action à la fin du round."
+            },
+            niman: {
+                name: "Forme VI - Niman",
+                attribute: "Même attribut que pour l'action tactique",
+                effect: "Après avoir déclaré une attaque au sabre laser, le personnage peut utiliser une action tactique sans consommer de point de focalisation avec sa compétence de Combat de Force et lancer un pouvoir de Force affectant son adversaire. L'action tactique offre un bonus tactique sur l'attaque au sabre préalablement déclarée."
+            },
+            juyo: {
+                name: "Forme VII - Juyo",
+                attribute: "Puissance",
+                effect: "Nécessite d'être dans le registre Ardeur pour être utilisée. Toutes les confrontations défensives sont résolues par des contre-offensives. Toute utilisation de pouvoir de Force dans cette posture est considérée comme un pouvoir obscur."
+            },
+            vaapad: {
+                name: "Forme VII - Vaapad",
+                attribute: "Volonté",
+                effect: "L'utilisateur ne peut effectuer d'action offensive par lui-même, mais toutes les confrontations défensives sont résolues comme des contre-offensives. Chaque contre-offensive donne +1 efficacité à la suivante."
+            },
+            jarkai: {
+                name: "Jar'Kai",
+                attribute: "Vivacité",
+                effect: "Ajoute la qualité de la seconde lame à l'armure et non aux dégâts infligés."
+            },
+            ysannanite: {
+                name: "Ysannanite",
+                attribute: "Précision",
+                effect: "Lorsque le personnage porte un sabre laser et un blaster, il peut après avoir annoncé une attaque au sabre laser sur son tour utiliser une action tactique de tir avec l'attribut Précision gratuitement."
+            },
+            praetoriaIshu: {
+                name: "Praetoria Ishu",
+                attribute: "Volonté",
+                effect: "Protéger un allié dans la portée de votre arme ne consomme pas de Point de Focalisation."
+            },
+            praetoriaVonil: {
+                name: "Praetoria Vonil",
+                attribute: "Présence",
+                effect: "Lorsqu'un ennemi dans la portée de l'arme reçoit une blessure de la part d'un allié, permet d'attaquer."
+            }
+        };
+        // ========== NIVEAUX D'ATTRIBUTS ==========
+        // Bonus progressif : 1-2 → +0, 3-4 → +2, 5-6 → +4, 7 → +5, 8 → +6
+        const ATTRIBUTE_LEVELS = {
+            1: { name: 'Déficient', faces: 1, bonus: 0, color: '#ff4444' },
+            2: { name: 'Faible', faces: 2, bonus: 0, color: '#ff7744' },
+            3: { name: 'Médiocre', faces: 3, bonus: 2, color: '#ddaa33' },
+            4: { name: 'Commun', faces: 4, bonus: 2, color: '#8b949e' },
+            5: { name: 'Élevé', faces: 5, bonus: 4, color: '#3fb950' },
+            6: { name: 'Supérieur', faces: 6, bonus: 4, color: '#4dc3ff' },
+            7: { name: 'Exceptionnel', faces: 7, bonus: 5, color: '#b366ff' },
+            8: { name: 'Prodigieux', faces: 9, bonus: 6, color: '#ffcc00' }
+        };
+
+        // ========== NIVEAUX DE COMPÉTENCES ==========
+        // Explosion basée sur le tier : Novice(1-3)=12, Confirmé(4-5)=11, Expert(6-7)=10, Absolu(8)=8
+        const SKILL_LEVELS = {
+            1: { name: 'Ignorant', dice: 1, explosion: 12, color: '#ff4444' },
+            2: { name: 'Novice', dice: 2, explosion: 12, color: '#ff7744' },
+            3: { name: 'Compétent', dice: 3, explosion: 12, color: '#ddaa33' },
+            4: { name: 'Qualifié', dice: 4, explosion: 11, color: '#8b949e' },
+            5: { name: 'Excellent', dice: 5, explosion: 11, color: '#3fb950' },
+            6: { name: 'Expert', dice: 6, explosion: 10, color: '#4dc3ff' },
+            7: { name: 'Maître', dice: 8, explosion: 10, color: '#b366ff' },
+            8: { name: 'Absolue', dice: 10, explosion: 8, color: '#ffcc00' }
+        };
+
+        // Fonction pour calculer l'explosion d'un niveau de Force combiné
+        function getForceExplosion(combinedLevel) {
+            if (combinedLevel >= 9) return 8;
+            if (combinedLevel >= 7) return 10;
+            if (combinedLevel >= 5) return 11;
+            return 12;
+        }
+
+        // ========== NIVEAUX DE MAGIE ==========
+        const MAGIC_LEVELS = {
+            1: { name: 'Initié', color: '#8b949e' },
+            2: { name: 'Praticien', color: '#3fb950' },
+            3: { name: 'Adepte', color: '#4dc3ff' },
+            4: { name: 'Expert', color: '#b366ff' },
+            5: { name: 'Virtuose', color: '#ffcc00' }
+        };
+
+        // Fonctions utilitaires pour les niveaux
+        function getAttributeLevel(value) {
+            return ATTRIBUTE_LEVELS[Math.min(8, Math.max(1, value))] || ATTRIBUTE_LEVELS[4];
+        }
+
+        function getSkillLevel(value) {
+            return SKILL_LEVELS[Math.min(8, Math.max(1, value))] || SKILL_LEVELS[1];
+        }
+
+        const REGISTRES = {
+            neutre: { name: "Neutre", bonus: [], malus: [], bonusText: "", malusText: "" },
+            ardeur: { name: "Ardeur", bonus: ["amplifier", "dissiper"], malus: ["harmoniser", "proteger"], bonusText: "+1 Amplifier, Dissiper", malusText: "−1 Harmoniser, Protéger" },
+            terreur: { name: "Terreur", bonus: ["percevoir", "proteger"], malus: ["manifester", "lier"], bonusText: "+1 Percevoir, Protéger", malusText: "−1 Manifester, Lier" },
+            lumiere: { name: "Lumière", bonus: ["harmoniser", "manifester"], malus: ["dissiper", "transformer"], bonusText: "+1 Harmoniser, Manifester", malusText: "−1 Dissiper, Transformer" },
+            ombre: { name: "Ombre", bonus: ["percevoir", "lier"], malus: ["amplifier", "manifester"], bonusText: "+1 Percevoir, Lier", malusText: "−1 Amplifier, Manifester" },
+            lien: { name: "Lien", bonus: ["proteger", "harmoniser"], malus: ["dissiper", "transformer"], bonusText: "+1 Protéger, Harmoniser", malusText: "−1 Dissiper, Transformer" },
+            mepris: { name: "Mépris", bonus: ["dissiper", "mouvoir"], malus: ["harmoniser", "lier"], bonusText: "+1 Dissiper, Mouvoir", malusText: "−1 Harmoniser, Lier" }
+        };
+        const FORCE_VERBS = [
+            { id: 'amplifier', name: 'Amplifier', level: 1 },
+            { id: 'dissiper', name: 'Dissiper', level: 1 },
+            { id: 'harmoniser', name: 'Harmoniser', level: 1 },
+            { id: 'lier', name: 'Lier', level: 1 },
+            { id: 'manifester', name: 'Manifester', level: 1 },
+            { id: 'mouvoir', name: 'Mouvoir', level: 1 },
+            { id: 'percevoir', name: 'Percevoir', level: 1 },
+            { id: 'proteger', name: 'Protéger', level: 1 },
+            { id: 'transformer', name: 'Transformer', level: 1 }
+        ];
+        const FORCE_TARGETS = [
+            { id: 'matiere', name: 'Matière', level: 1 },
+            { id: 'energie', name: 'Énergie', level: 1 },
+            { id: 'corps', name: 'Corps', level: 1 },
+            { id: 'esprit', name: 'Esprit', level: 1 },
+            { id: 'vie', name: 'Vie', level: 1 },
+            { id: 'force', name: 'Force', level: 1 },
+            { id: 'temps', name: 'Temps', level: 1 }
+        ];
+        const defaultSkills = ['Art', 'Athlétisme', 'Autorité', 'Bagarre', 'Combat de Force', 'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Informatique', 'Ingénierie', 'Médecine', 'Pilotage', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Tir', 'Tromperie', 'Vigilance'];
+        const appState = {
+            profile: { name: '', image: null },
+            attributes: { puissance: 4, vivacite: 4, precision: 4, endurance: 4, intelligence: 4, intuition: 4, volonte: 4, presence: 4 },
+            counters: { health: { current: 10, max: 10 }, force: { current: 10, max: 10 } },
+            skills: [],
+            forceVerbs: JSON.parse(JSON.stringify(FORCE_VERBS)),
+            forceTargets: JSON.parse(JSON.stringify(FORCE_TARGETS)),
+            wounds: [],
+            objects: [],
+            notes: "",
+            saber: { colors: [], crystal: '', form: '', type: 'standard' },
+            registre: "neutre",
+            currentModal: null
+        };
+        function switchPage(pageName, tabEl) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`page-${pageName}`).classList.add('active');
+            if (tabEl) tabEl.classList.add('active');
+            updateRollSelects();
+        }
+        function setRegistre(registreId) {
+            appState.registre = registreId;
+            document.querySelectorAll('.registre-card').forEach(card => card.classList.remove('active'));
+            document.querySelector(`.registre-card[data-registre="${registreId}"]`).classList.add('active');
+            const registre = REGISTRES[registreId];
+            document.getElementById('registre-active-name').textContent = registre.name;
+            document.getElementById('registre-active-bonus').textContent = registre.bonusText;
+            document.getElementById('registre-active-malus').textContent = registre.malusText;
+        }
+        function getRegistreModifier(verbId) {
+            const registre = REGISTRES[appState.registre];
+            let modifier = 0;
+            if (registre.bonus.includes(verbId)) modifier += 1;
+            if (registre.malus.includes(verbId)) modifier -= 1;
+            return modifier;
+        }
+        function modifyAttribute(attr, delta) {
+            appState.attributes[attr] = Math.max(1, Math.min(8, appState.attributes[attr] + delta));
+            updateAllAttributes();
+        }
+        function updateAllAttributes() {
+            Object.keys(appState.attributes).forEach(attr => {
+                const el = document.getElementById(`attr-${attr}`);
+                const val = appState.attributes[attr];
+                const level = getAttributeLevel(val);
+                el.innerHTML = `<span style="color: ${level.color}">${level.name}</span><sub style="opacity: 0.6; font-size: 0.6em; margin-left: 2px;">${val}</sub>`;
+                el.title = `Niveau ${val} • ${level.faces} faces • +${level.bonus} bonus`;
+            });
+        }
+        function modifyCounter(type, delta) {
+            const counter = appState.counters[type];
+            counter.current = Math.max(0, Math.min(counter.max, counter.current + delta));
+            updateCounterDisplay(type);
+        }
+        function updateCounters() {
+            ['force'].forEach(type => {
+                const counter = appState.counters[type];
+                counter.current = parseInt(document.getElementById(`${type}-current`).value) || 0;
+                counter.max = parseInt(document.getElementById(`${type}-max`).value) || 1;
+                counter.current = Math.max(0, Math.min(counter.max, counter.current));
+                updateCounterDisplay(type);
+            });
+        }
+        function updateCounterDisplay(type) {
+            const counter = appState.counters[type];
+            document.getElementById(`${type}-current`).value = counter.current;
+            document.getElementById(`${type}-max`).value = counter.max;
+            document.getElementById(`${type}-bar`).style.width = `${(counter.current / counter.max) * 100}%`;
+        }
+        function updateElan() {
+            appState.counters.health.max = parseInt(document.getElementById('elan-max').value) || 10;
+            recalcHealthFromWounds();
+            syncElanFromHealth();
+        }
+        function recalcHealthFromWounds() {
+            const totalGravity = appState.wounds.reduce((sum, w) => sum + w.gravity, 0);
+            appState.counters.health.current = Math.max(0, appState.counters.health.max - totalGravity);
+        }
+        function syncElanFromHealth() {
+            const h = appState.counters.health;
+            document.getElementById('elan-current').textContent = h.current;
+            document.getElementById('elan-total').textContent = h.max;
+            const percent = h.max > 0 ? (h.current / h.max) * 100 : 0;
+            document.getElementById('elan-bar-fill').style.width = `${percent}%`;
+            document.getElementById('elan-bar-text').textContent = `${Math.round(percent)}%`;
+        }
+        function renderWounds() {
+            const list = document.getElementById('wounds-list');
+            list.innerHTML = '';
+            appState.wounds.forEach((wound, index) => {
+                const item = document.createElement('div');
+                item.className = 'wound-item';
+                item.innerHTML = `<div class="wound-info"><div class="wound-name">${wound.name}</div><div class="wound-type">${wound.type}</div></div><div class="wound-gravity">${wound.gravity}</div><button class="wound-remove" onclick="removeWound(${index})">✕</button>`;
+                list.appendChild(item);
+            });
+        }
+        function addWound() {
+            const name = document.getElementById('wound-name').value.trim();
+            const type = document.getElementById('wound-type').value.trim();
+            const gravity = parseInt(document.getElementById('wound-gravity').value) || 1;
+            if (!name) return;
+            appState.wounds.push({ name, type, gravity });
+            document.getElementById('wound-name').value = '';
+            document.getElementById('wound-type').value = '';
+            document.getElementById('wound-gravity').value = 1;
+            renderWounds(); recalcHealthFromWounds(); syncElanFromHealth();
+        }
+        function removeWound(index) { appState.wounds.splice(index, 1); renderWounds(); recalcHealthFromWounds(); syncElanFromHealth(); }
+        function renderObjects() {
+            const list = document.getElementById('objects-list');
+            list.innerHTML = '';
+            appState.objects.forEach((obj, index) => {
+                const item = document.createElement('div');
+                item.className = 'object-item';
+                item.innerHTML = `<div class="object-name">${obj.name}</div><div class="object-quality">${obj.quality >= 0 ? '+' : ''}${obj.quality}</div><button class="object-remove" onclick="removeObject(${index})">✕</button>`;
+                list.appendChild(item);
+            });
+        }
+        function addObject() {
+            const name = document.getElementById('object-name').value.trim();
+            const quality = parseInt(document.getElementById('object-quality').value) || 0;
+            if (!name) return;
+            appState.objects.push({ name, quality });
+            document.getElementById('object-name').value = '';
+            document.getElementById('object-quality').value = 0;
+            renderObjects();
+            if (appState.notes) {
+                const ta = document.getElementById('notes-textarea');
+                if (ta) ta.value = appState.notes;
+            }
+        }
+        function removeObject(index) { appState.objects.splice(index, 1); renderObjects(); }
+        // ========== NOMS ALTERNATIFS SW ==========
+        const SKILL_ALTERNATIVES = {
+            'Art': ['Art', 'Création', 'Artisanat', 'Danse'],
+            'Athlétisme': ['Athlétisme', 'Acrobaties', 'Agilité', 'Endurance'],
+            'Autorité': ['Autorité', 'Commandement', 'Intimidation', 'Leadership'],
+            'Bagarre': ['Bagarre', 'Sabre laser', 'Pugilat', 'Vibrolame'],
+            'Combat de Force': ['Combat de Force', 'Duel de Force', 'Frappe de Force', 'Pouvoir en combat'],
+            'Discrétion': ['Discrétion', 'Furtivité', 'Infiltration', 'Inaperçu'],
+            'Dressage': ['Dressage', 'Apprivoisement', 'Créatures exotiques', 'Monture'],
+            'Éloquence': ['Éloquence', 'Diplomatie', 'Négociation', 'Séduction'],
+            'Érudition': ['Érudition', 'Lore Jedi', 'Histoire', 'Cultures galactiques'],
+            'Escamotage': ['Escamotage', 'Larcin', 'Crochetage', 'Prestidigitation'],
+            'Informatique': ['Informatique', 'Slicing', 'Piratage', 'Systèmes'],
+            'Ingénierie': ['Ingénierie', 'Réparation', 'Modifications', 'Mécanique'],
+            'Médecine': ['Médecine', 'Chirurgie', 'Soins', 'Premiers secours'],
+            'Pilotage': ['Pilotage', 'Vaisseau', 'Speeder', 'Navette'],
+            'Recherche': ['Recherche', 'Enquête', 'Investigation', 'Pistage'],
+            'Résilience': ['Résilience', 'Sang-froid', 'Bravoure', 'Calme'],
+            'Sagacité': ['Sagacité', 'Empathie', 'Intuition', 'Perspicacité'],
+            'Stratégie': ['Stratégie', 'Tactique', 'Ruse', 'Planification'],
+            'Tir': ['Tir', 'Blaster', 'Canonnier', 'Sniper'],
+            'Tromperie': ['Tromperie', 'Manipulation', 'Comédie', 'Bluff'],
+            'Vigilance': ['Vigilance', 'Perception', 'Instinct', 'Observation'],
+        };
+
+        function getBaseSkillName(name) {
+            for (const [base, alts] of Object.entries(SKILL_ALTERNATIVES)) {
+                if (alts.includes(name) || base === name) return base;
+            }
+            return null;
+        }
+
+        function openRenameSkill(id) {
+            document.querySelectorAll('.skill-rename-popup').forEach(p => p.remove());
+            document.querySelectorAll('.skill-name.renaming').forEach(n => n.classList.remove('renaming'));
+
+            const skill = appState.skills.find(s => s.id === id);
+            if (!skill) return;
+            const nameEl = document.getElementById(`skill-name-${id}`);
+            if (!nameEl) return;
+            nameEl.classList.add('renaming');
+
+            const baseName = skill.baseName || getBaseSkillName(skill.name) || null;
+            const alts = baseName ? SKILL_ALTERNATIVES[baseName] : null;
+
+            const popup = document.createElement('div');
+            popup.className = 'skill-rename-popup';
+            popup.addEventListener('click', e => e.stopPropagation());
+
+            let html = '';
+            if (alts) {
+                html += `<div class="rename-label">Noms alternatifs</div>`;
+                alts.forEach(alt => {
+                    const active = alt === skill.name ? ' active' : '';
+                    html += `<div class="rename-option${active}" onclick="applySkillRename('${id}','${alt.replace(/'/g, "\\'")}','${baseName.replace(/'/g, "\\'")}',this)">${alt}</div>`;
+                });
+                html += `<div class="rename-divider"></div>`;
+            }
+            html += `<div class="rename-label">Nom personnalisé</div>`;
+            html += `<div class="rename-custom-row">
+                <input class="rename-custom-input" type="text" placeholder="Saisir un nom..." value="${alts ? '' : skill.name}" id="custom-rename-${id}">
+                <button class="rename-custom-btn" onclick="applyCustomRename('${id}','${baseName ? baseName.replace(/'/g, "\\'") : ''}')">✓</button>
+            </div>`;
+            popup.innerHTML = html;
+
+            document.body.appendChild(popup);
+            const rect = nameEl.getBoundingClientRect();
+            popup.style.position = 'fixed';
+            popup.style.top = (rect.bottom + 6) + 'px';
+            popup.style.left = rect.left + 'px';
+            popup.style.zIndex = '9999';
+
+            const customInp = document.getElementById(`custom-rename-${id}`);
+            if (customInp) {
+                if (!alts) setTimeout(() => customInp.focus(), 30);
+                customInp.addEventListener('keydown', e => { if (e.key === 'Enter') applyCustomRename(id, baseName || ''); });
+            }
+
+            setTimeout(() => {
+                document.addEventListener('click', function closePopup(e) {
+                    if (!popup.contains(e.target) && !nameEl.contains(e.target)) {
+                        popup.remove();
+                        nameEl.classList.remove('renaming');
+                        document.removeEventListener('click', closePopup);
+                    }
+                });
+            }, 10);
+        }
+
+        function applySkillRename(id, newName, baseName) {
+            const skill = appState.skills.find(s => s.id === id);
+            if (!skill) return;
+            skill.name = newName;
+            skill.baseName = baseName;
+            document.querySelectorAll('.skill-rename-popup').forEach(p => p.remove());
+            renderSkills(); updateRollSelects();
+        }
+
+        function applyCustomRename(id, baseName) {
+            const input = document.getElementById(`custom-rename-${id}`);
+            if (!input) return;
+            const newName = input.value.trim();
+            if (!newName) return;
+            const skill = appState.skills.find(s => s.id === id);
+            if (!skill) return;
+            skill.name = newName;
+            if (baseName) skill.baseName = baseName;
+            document.querySelectorAll('.skill-rename-popup').forEach(p => p.remove());
+            renderSkills(); updateRollSelects();
+        }
+
+        // ========== COMPÉTENCES ==========
+        function renderSkills() {
+            const list = document.getElementById('skills-list');
+            list.innerHTML = '';
+            appState.skills.forEach((skill) => {
+                const item = document.createElement('div');
+                item.className = 'skill-item';
+                const level = getSkillLevel(skill.level);
+                const hasAlts = !!(skill.baseName ? SKILL_ALTERNATIVES[skill.baseName] : getBaseSkillName(skill.name));
+                item.innerHTML = `
+                    <div class="skill-name ${hasAlts ? 'skill-renameable' : ''}" id="skill-name-${skill.id}"
+                         ${hasAlts ? `onclick="openRenameSkill('${skill.id}')" title="Cliquer pour choisir un nom alternatif"` : ''}>
+                        ${skill.name}${hasAlts ? ' <span class="rename-hint">✎</span>' : ''}
+                    </div>
+                    <div class="skill-level">
+                        <button class="skill-level-btn" onclick="modifySkillById('${skill.id}', -1)" ${skill.level <= 1 ? 'disabled' : ''}>−</button>
+                        <span class="skill-level-value" title="Niveau ${skill.level} • ${level.dice} dés" style="color: ${level.color}">${level.name}<sub style="opacity:0.6;font-size:0.7em;margin-left:2px;">${skill.level}</sub></span>
+                        <button class="skill-level-btn" onclick="modifySkillById('${skill.id}', 1)" ${skill.level >= 8 ? 'disabled' : ''}>+</button>
+                    </div>`;
+                list.appendChild(item);
+            });
+        }
+        function modifySkillById(id, delta) {
+            const skill = appState.skills.find(s => s.id === id);
+            if (skill) { skill.level = Math.max(1, Math.min(8, skill.level + delta)); renderSkills(); updateRollSelects(); }
+        }
+        function modifySkill(index, delta) { if (appState.skills[index]) { appState.skills[index].level = Math.max(1, Math.min(8, appState.skills[index].level + delta)); renderSkills(); updateRollSelects(); } }
+        function renderForceSkills() {
+            const verbsList = document.getElementById('force-verbs-list');
+            verbsList.innerHTML = '';
+            appState.forceVerbs.forEach((verb, index) => {
+                const item = document.createElement('div');
+                item.className = 'skill-item';
+                const level = MAGIC_LEVELS[verb.level] || MAGIC_LEVELS[1];
+                item.innerHTML = `<div class="skill-name">${verb.name}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceVerb(${index}, -1)" ${verb.level <= 1 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${verb.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${verb.level}</sub></span><button class="skill-level-btn" onclick="modifyForceVerb(${index}, 1)" ${verb.level >= 5 ? 'disabled' : ''}>+</button></div>`;
+                verbsList.appendChild(item);
+            });
+            const targetsList = document.getElementById('force-targets-list');
+            targetsList.innerHTML = '';
+            appState.forceTargets.forEach((target, index) => {
+                const item = document.createElement('div');
+                item.className = 'skill-item';
+                const level = MAGIC_LEVELS[target.level] || MAGIC_LEVELS[1];
+                item.innerHTML = `<div class="skill-name">${target.name}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceTarget(${index}, -1)" ${target.level <= 1 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${target.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${target.level}</sub></span><button class="skill-level-btn" onclick="modifyForceTarget(${index}, 1)" ${target.level >= 5 ? 'disabled' : ''}>+</button></div>`;
+                targetsList.appendChild(item);
+            });
+        }
+        function modifyForceVerb(index, delta) { appState.forceVerbs[index].level = Math.max(1, Math.min(5, appState.forceVerbs[index].level + delta)); renderForceSkills(); updateRollSelects(); }
+        function modifyForceTarget(index, delta) { appState.forceTargets[index].level = Math.max(1, Math.min(5, appState.forceTargets[index].level + delta)); renderForceSkills(); updateRollSelects(); }
+        function renderSaberColors() {
+            const grid = document.getElementById('saber-colors-grid');
+            grid.innerHTML = '';
+            Object.entries(SABER_COLORS).forEach(([id, color]) => {
+                const item = document.createElement('div');
+                item.className = 'saber-color-item' + (appState.saber.colors.includes(id) ? ' selected' : '');
+                item.setAttribute('data-color', id);
+                item.onclick = () => toggleSaberColor(id);
+                item.innerHTML = `<div class="saber-color-preview"></div><div class="saber-color-name">${color.name}</div>`;
+                grid.appendChild(item);
+            });
+            updateSaberSelectionDisplay();
+        }
+        function toggleSaberColor(colorId) {
+            const index = appState.saber.colors.indexOf(colorId);
+            if (index > -1) appState.saber.colors.splice(index, 1);
+            else if (appState.saber.colors.length < 2) appState.saber.colors.push(colorId);
+            renderSaberColors();
+        }
+        function updateSaberSelectionDisplay() {
+            const display = document.getElementById('saber-selection-display');
+            if (appState.saber.colors.length === 0) { display.innerHTML = '<div style="color: var(--silver-chrome); text-align: center; width: 100%;">Sélectionnez jusqu\'à 2 couleurs</div>'; return; }
+            display.innerHTML = appState.saber.colors.map((colorId, i) => {
+                const color = SABER_COLORS[colorId];
+                return `<div class="saber-selected-item"><div class="saber-selected-label">COULEUR ${i + 1}</div><div class="saber-selected-name">${color.name}</div><div class="saber-selected-effect">${color.effect}</div></div>`;
+            }).join('');
+        }
+        function renderCrystalSelect() {
+            const select = document.getElementById('crystal-select');
+            select.innerHTML = '<option value="">— Sélectionner un cristal —</option>';
+            Object.entries(CRYSTALS).forEach(([id, crystal]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = crystal.name;
+                if (appState.saber.crystal === id) option.selected = true;
+                select.appendChild(option);
+            });
+        }
+        function renderSaberTypes() {
+            const grid = document.getElementById('saber-types-grid');
+            grid.innerHTML = '';
+            const icons = { standard: '⚔', lourde: '🗡', jumelle: '⚔⚔', allonge: '↑', bifide: '⟷' };
+            Object.entries(SABER_TYPES).forEach(([id, type]) => {
+                const item = document.createElement('div');
+                item.className = 'saber-type-item' + (appState.saber.type === id ? ' selected' : '');
+                item.onclick = () => selectSaberType(id);
+                item.innerHTML = `<div class="saber-type-icon">${icons[id] || '⚔'}</div><div class="saber-type-name">${type.name}</div>`;
+                grid.appendChild(item);
+            });
+            updateSaberTypeDisplay();
+        }
+        function selectSaberType(typeId) {
+            appState.saber.type = typeId;
+            renderSaberTypes();
+        }
+        function updateSaberTypeDisplay() {
+            const display = document.getElementById('saber-type-display');
+            const typeId = appState.saber.type;
+            if (typeId && SABER_TYPES[typeId]) {
+                document.getElementById('saber-type-name').textContent = SABER_TYPES[typeId].name;
+                document.getElementById('saber-type-effect').textContent = SABER_TYPES[typeId].effect;
+                display.style.display = 'block';
+            } else display.style.display = 'none';
+        }
+        function updateCrystal() {
+            const crystalId = document.getElementById('crystal-select').value;
+            appState.saber.crystal = crystalId;
+            const display = document.getElementById('crystal-effect-display');
+            if (crystalId && CRYSTALS[crystalId]) {
+                document.getElementById('crystal-name').textContent = CRYSTALS[crystalId].name;
+                document.getElementById('crystal-effect').textContent = CRYSTALS[crystalId].effect;
+                display.style.display = 'block';
+            } else display.style.display = 'none';
+        }
+        function renderFormSelect() {
+            const select = document.getElementById('form-select');
+            select.innerHTML = '<option value="">— Sélectionner une forme —</option>';
+            Object.entries(COMBAT_FORMS).forEach(([id, form]) => {
+                const option = document.createElement('option');
+                option.value = id;
+                option.textContent = form.name;
+                if (appState.saber.form === id) option.selected = true;
+                select.appendChild(option);
+            });
+        }
+        function updateForm() {
+            const formId = document.getElementById('form-select').value;
+            appState.saber.form = formId;
+            const display = document.getElementById('form-effect-display');
+            if (formId && COMBAT_FORMS[formId]) {
+                const form = COMBAT_FORMS[formId];
+                document.getElementById('form-name').textContent = form.name;
+                document.getElementById('form-attribute').textContent = form.attribute;
+                document.getElementById('form-positive').innerHTML = form.effect;
+                display.style.display = 'block';
+            } else display.style.display = 'none';
+        }
+        function updateRollSelects() {
+            ['skill-select', 'skill-page-skill-select', 'conjoint-skill-select'].forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (!select) return;
+                const currentValue = select.value;
+                select.innerHTML = '<option value="">— Sélectionner —</option>';
+                appState.skills.forEach(skill => {
+                    const opt = document.createElement('option');
+                    opt.value = skill.name;
+                    opt.textContent = `${skill.name} (${skill.level})`;
+                    select.appendChild(opt);
+                });
+                select.value = currentValue;
+            });
+            // Verbes (coupled + simple)
+            ['force-verb-select', 'force-simple-verb-select'].forEach(selectId => {
+                const verbSelect = document.getElementById(selectId);
+                if (verbSelect) {
+                    const currentValue = verbSelect.value;
+                    verbSelect.innerHTML = '<option value="">— Sélectionner —</option>';
+                    appState.forceVerbs.forEach(verb => {
+                        const opt = document.createElement('option');
+                        opt.value = verb.id;
+                        opt.textContent = `${verb.name} (${verb.level})`;
+                        verbSelect.appendChild(opt);
+                    });
+                    verbSelect.value = currentValue;
+                }
+            });
+            // Cibles (coupled + simple)
+            ['force-target-select', 'force-simple-target-select'].forEach(selectId => {
+                const targetSelect = document.getElementById(selectId);
+                if (targetSelect) {
+                    const currentValue = targetSelect.value;
+                    targetSelect.innerHTML = '<option value="">— Sélectionner —</option>';
+                    appState.forceTargets.forEach(target => {
+                        const opt = document.createElement('option');
+                        opt.value = target.id;
+                        opt.textContent = `${target.name} (${target.level})`;
+                        targetSelect.appendChild(opt);
+                    });
+                    targetSelect.value = currentValue;
+                }
+            });
+            updateRollButtons();
+        }
+        function switchForceRollMode(mode, tabEl) {
+            document.querySelectorAll('.force-roll-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.force-roll-panel').forEach(p => p.classList.remove('active'));
+            tabEl.classList.add('active');
+            document.getElementById(`force-roll-${mode}`).classList.add('active');
+        }
+
+        function rollForceSimple() {
+            const attrName = document.getElementById('force-simple-attr-select').value;
+            const verbId = document.getElementById('force-simple-verb-select').value;
+            const targetId = document.getElementById('force-simple-target-select').value;
+            const bonus = parseInt(document.getElementById('force-simple-bonus').value) || 0;
+
+            const attr = appState.attributes[attrName];
+            const attrLevel = getAttributeLevel(attr);
+            const verb = appState.forceVerbs.find(v => v.id === verbId);
+            const target = appState.forceTargets.find(t => t.id === targetId);
+            if (!verb || !target) return;
+
+            const threshold = 13 - attrLevel.faces;
+            const numDice = Math.min(verb.level + target.level, 10);
+            const explosionThreshold = getForceExplosion(numDice);
+            const registreMod = getRegistreModifier(verbId);
+            const attrBonus = attrLevel.bonus;
+
+            const result = rollDice(numDice, threshold, explosionThreshold);
+            const total = result.successes + attrBonus + bonus + registreMod;
+
+            let subtitle = `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | Explosion ${explosionThreshold}+`;
+            if (registreMod !== 0) subtitle += ` | Registre ${registreMod > 0 ? '+' : ''}${registreMod}`;
+
+            displayResult({
+                title: `${verb.name} + ${target.name}`,
+                subtitle,
+                dice: result.dice,
+                threshold,
+                successes: result.successes,
+                failures: result.failures,
+                explosions: result.explosions,
+                attributeBonus: attrBonus,
+                total
+            });
+        }
+
+        function updateRollButtons() {
+            const simpleBtn = document.getElementById('simple-roll-btn');
+            if (simpleBtn) simpleBtn.disabled = !document.getElementById('attribute-select').value || !document.getElementById('skill-select').value;
+            const skillBtn = document.getElementById('skill-page-roll-btn');
+            if (skillBtn) skillBtn.disabled = !document.getElementById('skill-page-attr-select').value || !document.getElementById('skill-page-skill-select').value;
+            const forceSimpleBtn = document.getElementById('force-simple-roll-btn');
+            if (forceSimpleBtn) forceSimpleBtn.disabled = !document.getElementById('force-simple-attr-select').value || !document.getElementById('force-simple-verb-select').value || !document.getElementById('force-simple-target-select').value;
+            const conjointBtn = document.getElementById('conjoint-roll-btn');
+            if (conjointBtn) conjointBtn.disabled = !document.getElementById('force-attr-select').value || !document.getElementById('force-verb-select').value || !document.getElementById('force-target-select').value || !document.getElementById('conjoint-attr-select').value || !document.getElementById('conjoint-skill-select').value;
+        }
+        function rollDice(numDice, threshold, explosionThreshold = 12) {
+            const dice = [];
+            for (let i = 0; i < numDice; i++) {
+                const value = Math.floor(Math.random() * 12) + 1;
+                const isExplosion = value >= explosionThreshold;
+                dice.push({ value, isExplosion: false });
+                // Maximum 1 explosion par dé
+                if (isExplosion) {
+                    const explosionValue = Math.floor(Math.random() * 12) + 1;
+                    dice.push({ value: explosionValue, isExplosion: true });
+                }
+            }
+            return { dice, successes: dice.filter(d => d.value >= threshold && d.value <= 12).length, failures: dice.filter(d => d.value <= 2).length, explosions: dice.filter(d => d.isExplosion).length };
+        }
+        function rollSimple() {
+            const attrName = document.getElementById('attribute-select').value;
+            const skillName = document.getElementById('skill-select').value;
+            const bonus = parseInt(document.getElementById('roll-bonus').value) || 0;
+            const explosionMod = parseInt(document.getElementById('roll-explosion').value) || 0;
+            const attr = appState.attributes[attrName];
+            const attrLevel = getAttributeLevel(attr);
+            const skill = appState.skills.find(s => s.name === skillName);
+            if (!skill) return;
+            const skillLevel = getSkillLevel(skill.level);
+            const threshold = 13 - attrLevel.faces;
+            const baseExplosion = skillLevel.explosion;
+            const explosion = Math.max(3, Math.min(12, baseExplosion - explosionMod));
+            const result = rollDice(skillLevel.dice, threshold, explosion);
+            const attrBonus = attrLevel.bonus;
+            const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
+            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, total: result.successes + attrBonus + bonus });
+        }
+        function rollSkillPage() {
+            const attrName = document.getElementById('skill-page-attr-select').value;
+            const skillName = document.getElementById('skill-page-skill-select').value;
+            const bonus = parseInt(document.getElementById('skill-page-bonus').value) || 0;
+            const explosionMod = parseInt(document.getElementById('skill-page-explosion').value) || 0;
+            const attr = appState.attributes[attrName];
+            const attrLevel = getAttributeLevel(attr);
+            const skill = appState.skills.find(s => s.name === skillName);
+            if (!skill) return;
+            const skillLevel = getSkillLevel(skill.level);
+            const threshold = 13 - attrLevel.faces;
+            const baseExplosion = skillLevel.explosion;
+            const explosion = Math.max(3, Math.min(12, baseExplosion - explosionMod));
+            const result = rollDice(skillLevel.dice, threshold, explosion);
+            const attrBonus = attrLevel.bonus;
+            const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
+            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, total: result.successes + attrBonus + bonus });
+        }
+        function rollConjoint() {
+            const forceAttrName = document.getElementById('force-attr-select').value;
+            const verbId = document.getElementById('force-verb-select').value;
+            const targetId = document.getElementById('force-target-select').value;
+            const skillAttrName = document.getElementById('conjoint-attr-select').value;
+            const skillName = document.getElementById('conjoint-skill-select').value;
+            const bonus = parseInt(document.getElementById('force-bonus').value) || 0;
+            const explosionMod = parseInt(document.getElementById('force-explosion').value) || 0;
+            const powerLevel = parseInt(document.getElementById('power-level').value) || 1;
+            const puissanceMod = parseInt(document.getElementById('power-puissance-mod').value) || 0;
+            const forceAttr = appState.attributes[forceAttrName];
+            const forceAttrLevel = getAttributeLevel(forceAttr);
+            const skillAttr = appState.attributes[skillAttrName];
+            const skillAttrLevel = getAttributeLevel(skillAttr);
+            const verb = appState.forceVerbs.find(v => v.id === verbId);
+            const target = appState.forceTargets.find(t => t.id === targetId);
+            const skill = appState.skills.find(s => s.name === skillName);
+            if (!verb || !target || !skill) return;
+
+            // Modificateur de registre
+            const registreMod = getRegistreModifier(verbId);
+            const registreName = REGISTRES[appState.registre].name;
+
+            // Calcul de la puissance = Magnitude + Mod. Puissance + Registre
+            const puissance = powerLevel + puissanceMod + registreMod;
+
+            const forceThreshold = 13 - forceAttrLevel.faces;
+            const forceDice = Math.min(verb.level + target.level, 10);
+            // Explosion basée sur le niveau de Force (PAS de modificateur)
+            const forceExplosion = getForceExplosion(forceDice);
+            const forceResult = rollDice(forceDice, forceThreshold, forceExplosion);
+            const forceAttrBonus = forceAttrLevel.bonus;
+            const forceDC = powerLevel + 1;
+            const forceTotal = forceResult.successes + forceAttrBonus;
+            const forceSuccess = forceTotal >= forceDC;
+            const skillThreshold = 13 - skillAttrLevel.faces;
+            const skillLevel = getSkillLevel(skill.level);
+            // Explosion basée sur le niveau de compétence + modificateur (SEULEMENT sur compétence)
+            const baseSkillExplosion = skillLevel.explosion;
+            const skillExplosion = Math.max(3, Math.min(12, baseSkillExplosion - explosionMod));
+            const skillResult = rollDice(skillLevel.dice, skillThreshold, skillExplosion);
+            const skillAttrBonus = skillAttrLevel.bonus;
+            const skillTotal = skillResult.successes + skillAttrBonus;
+            const explosionText = explosionMod !== 0 ? ` | Mod. Explosion ${explosionMod > 0 ? '+' : ''}${explosionMod}` : '';
+
+            // Si force réussie, ajouter la PUISSANCE (pas juste la magnitude)
+            const powerBonus = forceSuccess ? puissance : 0;
+
+            displayConjointResult({
+                title: `${verb.name} + ${target.name} → ${skill.name}`,
+                subtitle: `Force: ${capitalize(forceAttrName)} | Compétence: ${capitalize(skillAttrName)}${explosionText}`,
+                forceDice: forceResult.dice,
+                forceThreshold,
+                forceSuccesses: forceResult.successes,
+                forceAttrBonus,
+                skillDice: skillResult.dice,
+                skillThreshold,
+                skillSuccesses: skillResult.successes,
+                skillFailures: skillResult.failures,
+                skillExplosions: skillResult.explosions,
+                skillAttrBonus,
+                dc: forceDC,
+                forceSuccess,
+                powerLevel,
+                puissance,
+                puissanceMod,
+                registreMod,
+                registreName,
+                finalTotal: skillTotal + powerBonus + bonus
+            });
+        }
+        function displayResult(data) {
+            document.getElementById('result-title').textContent = data.title;
+            document.getElementById('result-subtitle').textContent = data.subtitle;
+            const container = document.getElementById('dice-container');
+            container.innerHTML = '';
+            data.dice.forEach((d, i) => {
+                const die = document.createElement('div');
+                die.className = 'die';
+                die.textContent = d.value;
+                die.style.animationDelay = `${i * 0.08}s`;
+                if (d.isExplosion) die.classList.add('explosion');
+                else if (d.value <= 2) die.classList.add('universal-failure');
+                else if (d.value >= data.threshold) die.classList.add('success');
+                else die.classList.add('failure');
+                container.appendChild(die);
+            });
+            document.getElementById('stat-successes').textContent = data.successes;
+            document.getElementById('stat-failures').textContent = data.failures;
+            document.getElementById('stat-explosions').textContent = data.explosions;
+            document.getElementById('stat-attribute-bonus').textContent = data.attributeBonus;
+            document.getElementById('result-total').textContent = data.total;
+            document.getElementById('result-overlay').classList.add('active');
+        }
+        function displayConjointResult(data) {
+            document.getElementById('result-title').textContent = data.title;
+            let subtitle = data.subtitle + ` | DC ${data.dc} → ${data.forceSuccess ? '✓' : '✗'}`;
+            if (data.forceSuccess) subtitle += ` (+${data.puissance} puissance)`;
+            document.getElementById('result-subtitle').textContent = subtitle;
+            const container = document.getElementById('dice-container');
+            container.innerHTML = '';
+            const forceLabel = document.createElement('div');
+            forceLabel.style.cssText = 'width: 100%; text-align: center; font-weight: 600; color: var(--saber-purple); margin-bottom: 8px; font-family: var(--font-display);';
+            forceLabel.textContent = '⚡ Force';
+            container.appendChild(forceLabel);
+            const forceDiceDiv = document.createElement('div');
+            forceDiceDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; width: 100%;';
+            data.forceDice.forEach((d, i) => {
+                const die = document.createElement('div');
+                die.className = 'die';
+                die.textContent = d.value;
+                die.style.animationDelay = `${i * 0.08}s`;
+                if (d.isExplosion) die.classList.add('explosion');
+                else if (d.value <= 2) die.classList.add('universal-failure');
+                else if (d.value >= data.forceThreshold) die.classList.add('success');
+                else die.classList.add('failure');
+                forceDiceDiv.appendChild(die);
+            });
+            container.appendChild(forceDiceDiv);
+            const skillLabel = document.createElement('div');
+            skillLabel.style.cssText = 'width: 100%; text-align: center; font-weight: 600; color: var(--success-green); margin-bottom: 8px; font-family: var(--font-display);';
+            skillLabel.textContent = '⚔ Compétence';
+            container.appendChild(skillLabel);
+            const skillDiceDiv = document.createElement('div');
+            skillDiceDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%;';
+            data.skillDice.forEach((d, i) => {
+                const die = document.createElement('div');
+                die.className = 'die';
+                die.textContent = d.value;
+                die.style.animationDelay = `${(data.forceDice.length + i) * 0.08}s`;
+                if (d.isExplosion) die.classList.add('explosion');
+                else if (d.value <= 2) die.classList.add('universal-failure');
+                else if (d.value >= data.skillThreshold) die.classList.add('success');
+                else die.classList.add('failure');
+                skillDiceDiv.appendChild(die);
+            });
+            container.appendChild(skillDiceDiv);
+
+            // Résumé du jet de Force (séparé, pour ne pas polluer le total)
+            const forceSummary = document.createElement('div');
+            forceSummary.style.cssText = 'width:100%;margin-top:12px;padding:8px 12px;border-radius:4px;background:rgba(107,63,160,0.10);border:1px solid rgba(107,63,160,0.25);text-align:center;font-size:0.82rem;color:var(--saber-purple);font-family:var(--font-body);';
+            const forceCheckTotal = data.forceSuccesses + data.forceAttrBonus;
+
+            // Construire le détail de la puissance
+            let puissanceDetail = `Magnitude ${data.powerLevel}`;
+            if (data.puissanceMod !== 0) {
+                puissanceDetail += ` ${data.puissanceMod > 0 ? '+' : ''}${data.puissanceMod} mod`;
+            }
+            if (data.registreMod !== 0) {
+                puissanceDetail += ` ${data.registreMod > 0 ? '+' : ''}${data.registreMod} ${data.registreName}`;
+            }
+            puissanceDetail += ` = <strong>${data.puissance} puissance</strong>`;
+
+            forceSummary.innerHTML = `<strong>⚡ Jet de Force</strong> : ${data.forceSuccesses} réussite(s) + ${data.forceAttrBonus} bonus attr = <strong>${forceCheckTotal}</strong> vs DC ${data.dc} → ${data.forceSuccess ? `<span style="color:#3fb950">✓ Pouvoir activé (${puissanceDetail})</span>` : '<span style="color:#f85149">✗ Pouvoir raté (pas de bonus)</span>'}`;
+            container.appendChild(forceSummary);
+
+            document.getElementById('stat-successes').textContent = data.skillSuccesses;
+            document.getElementById('stat-failures').textContent = data.skillFailures !== undefined ? data.skillFailures : '—';
+            document.getElementById('stat-explosions').textContent = data.skillExplosions !== undefined ? data.skillExplosions : '—';
+            document.getElementById('stat-attribute-bonus').textContent = data.skillAttrBonus;
+            document.getElementById('result-total').textContent = data.finalTotal;
+            document.getElementById('result-overlay').classList.add('active');
+        }
+        function closeResult() { document.getElementById('result-overlay').classList.remove('active'); }
+        function closeModal() { document.getElementById('modal').classList.remove('active'); appState.currentModal = null; }
+        function confirmModal() {
+            const input = document.getElementById('modal-input').value;
+            closeModal();
+        }
+        function changeProfileImage() {
+            document.getElementById('profile-image-input').click();
+        }
+        function handleProfileImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const base64 = e.target.result;
+                appState.profile.image = base64;
+                const display = document.getElementById('profile-image-display');
+                display.innerHTML = `<img src="${base64}" alt="Portrait" onerror="this.parentElement.innerHTML='<div class=\\'profile-placeholder\\'>👤</div>'">`;
+            };
+            reader.readAsDataURL(file);
+        }
+        function updateProfile() { appState.profile.name = document.getElementById('character-name').value; }
+        function saveToFile() {
+            const data = JSON.stringify(appState, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${appState.profile.name || 'personnage'}_starwars.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        function loadFromFile() { document.getElementById('file-input').click(); }
+        function handleFileLoad(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const loaded = JSON.parse(e.target.result);
+                    Object.assign(appState, loaded);
+                    document.getElementById('character-name').value = appState.profile.name || '';
+                    if (appState.profile.image) document.getElementById('profile-image-display').innerHTML = `<img src="${appState.profile.image}" alt="Portrait">`;
+                    updateAllAttributes();
+                    updateCounterDisplay('force');
+                    renderSkills();
+                    renderForceSkills();
+                    renderWounds();
+                    renderObjects();
+                    recalcHealthFromWounds();
+                    syncElanFromHealth();
+                    updateRollSelects();
+                    renderSaberColors();
+                    renderSaberTypes();
+                    renderCrystalSelect();
+                    renderFormSelect();
+                    updateCrystal();
+                    updateForm();
+                    if (appState.registre) setRegistre(appState.registre);
+                    alert('Personnage chargé avec succès !');
+                } catch (err) { alert('Erreur lors du chargement'); console.error(err); }
+            };
+            reader.readAsText(file);
+        }
+        function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
+        // ── RÉSONANCE / CORRUPTION ──
+        let resonanceValue = 0;
+
+        const RESONANCE_STAGES = [
+            { threshold: -90, label: 'Corruption Totale', color: '#a03030', bg: 'rgba(160,48,48,0.12)' },
+            { threshold: -80, label: 'Corruption Abyssale', color: '#b04030', bg: 'rgba(176,64,48,0.10)' },
+            { threshold: -70, label: 'Corruption Dévorante', color: '#b85028', bg: 'rgba(184,80,40,0.10)' },
+            { threshold: -60, label: 'Corruption Dominante', color: '#c06030', bg: 'rgba(192,96,48,0.10)' },
+            { threshold: -50, label: 'Corruption Profonde', color: '#b87030', bg: 'rgba(184,112,48,0.10)' },
+            { threshold: -40, label: 'Corruption Établie', color: '#a08030', bg: 'rgba(160,128,48,0.10)' },
+            { threshold: -30, label: 'Corruption Ancrée', color: '#908828', bg: 'rgba(144,136,40,0.10)' },
+            { threshold: -20, label: 'Corruption Émergente', color: '#808830', bg: 'rgba(128,136,48,0.10)' },
+            { threshold: -10, label: 'Corruption Naissante', color: '#909090', bg: 'rgba(144,144,144,0.08)' },
+            { threshold: 0, label: 'Équilibre', color: '#b0a0d0', bg: 'rgba(176,160,208,0.08)' },
+            { threshold: 10, label: 'Résonance Naissante', color: '#8090a8', bg: 'rgba(128,144,168,0.08)' },
+            { threshold: 20, label: 'Résonance Émergente', color: '#7098b8', bg: 'rgba(112,152,184,0.10)' },
+            { threshold: 30, label: 'Résonance Ancrée', color: '#60a8c8', bg: 'rgba(96,168,200,0.10)' },
+            { threshold: 40, label: 'Résonance Établie', color: '#50a8d0', bg: 'rgba(80,168,208,0.10)' },
+            { threshold: 50, label: 'Résonance Profonde', color: '#40a0e0', bg: 'rgba(64,160,224,0.10)' },
+            { threshold: 60, label: 'Résonance Rayonnante', color: '#3898e8', bg: 'rgba(56,152,232,0.10)' },
+            { threshold: 70, label: 'Résonance Ascendante', color: '#3090f0', bg: 'rgba(48,144,240,0.10)' },
+            { threshold: 80, label: 'Résonance Sanctifiée', color: '#2888f8', bg: 'rgba(40,136,248,0.10)' },
+            { threshold: 90, label: 'Résonance Transcendante', color: '#6ab0ff', bg: 'rgba(106,176,255,0.12)' },
+            { threshold: 100, label: 'Résonance Absolue', color: '#90d0ff', bg: 'rgba(144,208,255,0.14)' },
+        ];
+
+        // group = key pour dédupliquer les effets mis à jour
+        const RESONANCE_EFFECTS = [
+            // Côté obscur (valeurs négatives), du plus proche de 0 au plus loin
+            { threshold: -20, group: 'auth_intimidate', side: 'dark', icon: '🗣', text: '+1 sur les jets d\'Autorité (intimidation)' },
+            { threshold: -30, group: 'auth_intimidate', side: 'dark', icon: '🗣', text: '+2 sur les jets d\'Autorité (intimidation)', updates: true },
+            { threshold: -40, group: 'cout_dark40', side: 'dark', icon: '⚡', text: 'Pouvoirs obscurs −1 coût · Pouvoirs lumineux +1 coût' },
+            { threshold: -40, group: 'animaux', side: 'dark', icon: '🐾', text: 'Animaux méfiants' },
+            { threshold: -50, group: 'registres_dark', side: 'dark', icon: '🔥', text: 'Modificateurs des registres Ardeur et Mépris +1' },
+            { threshold: -60, group: 'degats_min', side: 'dark', icon: '🛡', text: 'Pouvoirs obscurs adverses : plus de dégâts minimum garantis' },
+            { threshold: -60, group: 'soins', side: 'dark', icon: '💊', text: 'Pouvoirs de soin −2 de Puissance' },
+            { threshold: -70, group: 'cout_dark40', side: 'dark', icon: '⚡', text: 'Pouvoirs obscurs −2 coût · Pouvoirs lumineux +2 coût', updates: true },
+            { threshold: -80, group: 'soins', side: 'dark', icon: '💊', text: 'Pouvoirs de soin impossibles sur vous', updates: true },
+            { threshold: -80, group: 'pa_meurtre', side: 'dark', icon: '💀', text: '+5 Points de Force par meurtre' },
+            { threshold: -90, group: 'cout_dark40', side: 'dark', icon: '⚡', text: 'Pouvoirs obscurs −3 coût +2 de Puissance · Pouvoirs lumineux +3 coût', updates: true },
+            // Côté lumineux (valeurs positives), du plus proche de 0 au plus loin
+            { threshold: 20, group: 'eloquence', side: 'light', icon: '🕊', text: '+1 sur les jets d\'Éloquence (connexion empathique, alliances, paix)' },
+            { threshold: 30, group: 'eloquence', side: 'light', icon: '🕊', text: '+2 sur les jets d\'Éloquence (connexion empathique, alliances, paix)', updates: true },
+            { threshold: 40, group: 'cout_light40', side: 'light', icon: '✨', text: 'Pouvoirs obscurs +1 coût · Pouvoirs lumineux −1 coût' },
+            { threshold: 40, group: 'animaux', side: 'light', icon: '🐾', text: 'Animaux à l\'aise en votre présence' },
+            { threshold: 50, group: 'registres_light', side: 'light', icon: '💫', text: 'Modificateurs des registres Lumière et Lien +1' },
+            { threshold: 70, group: 'cout_light40', side: 'light', icon: '✨', text: 'Pouvoirs obscurs +1 coût · Pouvoirs lumineux −1 coût', updates: true },
+            { threshold: 80, group: 'soin_reflet', side: 'light', icon: '💖', text: 'Les pouvoirs bénéfiques que vous appliquez aux autres vous affectent aussi' },
+            { threshold: 90, group: 'cout_light40', side: 'light', icon: '✨', text: 'Pouvoirs lumineux −3 coût +2 de Puissance · Pouvoirs obscurs +3 coût', updates: true },
+        ];
+
+        function getResonanceStage(val) {
+            let stage = RESONANCE_STAGES[0];
+            for (const s of RESONANCE_STAGES) {
+                if (val >= s.threshold) stage = s;
+            }
+            return stage;
+        }
+
+        function getGaugeColorDark(val) {
+            const pct = Math.abs(val) / 90;
+            const r = Math.round(160 + pct * 60);
+            return `rgb(${r}, ${Math.round(50 - pct * 20)}, ${Math.round(50 - pct * 20)})`;
+        }
+
+        function getGaugeColorLight(val) {
+            const pct = Math.min(val / 100, 1);
+            const b = Math.round(180 + pct * 75);
+            return `rgb(${Math.round(80 - pct * 30)}, ${Math.round(140 + pct * 60)}, ${Math.min(b, 255)})`;
+        }
+
+        function renderResonance() {
+            const val = resonanceValue;
+            const stage = getResonanceStage(val);
+
+            // Gauge
+            const lightFill = document.getElementById('res-fill-light');
+            const darkFill = document.getElementById('res-fill-dark');
+            if (val >= 0) {
+                const pct = Math.min((val / 100) * 50, 50);
+                lightFill.style.width = pct + '%';
+                lightFill.style.background = `linear-gradient(90deg, rgba(106,176,255,0.4), ${getGaugeColorLight(val)})`;
+                darkFill.style.width = '0%';
+            } else {
+                const pct = Math.min((Math.abs(val) / 90) * 50, 50);
+                darkFill.style.width = pct + '%';
+                darkFill.style.background = `linear-gradient(270deg, rgba(200,80,80,0.4), ${getGaugeColorDark(val)})`;
+                lightFill.style.width = '0%';
+            }
+
+            // Value & badge
+            const valDisplay = document.getElementById('res-value');
+            valDisplay.textContent = val > 0 ? '+' + val : val;
+            valDisplay.style.color = val > 0 ? '#6ab0ff' : val < 0 ? '#e07070' : '#b0a0d0';
+
+            const badge = document.getElementById('res-stage-badge');
+            badge.textContent = stage.label;
+            badge.style.color = stage.color;
+            badge.style.borderColor = stage.color;
+            badge.style.background = stage.bg;
+
+            // Effects — on déduplique par groupe, on garde le dernier actif
+            const activeByGroup = {};
+            for (const eff of RESONANCE_EFFECTS) {
+                const active = (eff.side === 'dark' && val <= eff.threshold) ||
+                    (eff.side === 'light' && val >= eff.threshold);
+                if (active) activeByGroup[eff.group] = eff;
+            }
+
+            // Construire la liste affichable pour chaque côté
+            const darkEffects = []; const lightEffects = [];
+            const seenDark = {}; const seenLight = {};
+
+            for (const eff of RESONANCE_EFFECTS) {
+                if (eff.side === 'dark') {
+                    if (seenDark[eff.group]) continue;
+                    const active = activeByGroup[eff.group];
+                    darkEffects.push(active ? { ...active, isActive: true } : { ...eff, isActive: false });
+                    seenDark[eff.group] = true;
+                } else {
+                    if (seenLight[eff.group]) continue;
+                    const active = activeByGroup[eff.group];
+                    lightEffects.push(active ? { ...active, isActive: true } : { ...eff, isActive: false });
+                    seenLight[eff.group] = true;
+                }
+            }
+
+            const list = document.getElementById('res-effects-list');
+            const noEff = document.getElementById('res-no-effects');
+
+            const allActive = [...darkEffects.filter(e => e.isActive), ...lightEffects.filter(e => e.isActive)];
+            if (allActive.length === 0) {
+                list.innerHTML = '';
+                noEff.style.display = 'block';
+                return;
+            }
+            noEff.style.display = 'none';
+
+            const renderSection = (effects, title, titleColor) => {
+                const hasActive = effects.some(e => e.isActive);
+                if (!hasActive) return '';
+                return `<div style="margin-bottom:12px;">
+                    <div style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;color:${titleColor};margin-bottom:8px;text-transform:uppercase;">${title}</div>
+                    ${effects.map(e => {
+                    const inactive = e.isActive ? '' : 'inactive';
+                    const updated = (e.isActive && e.updates) ? 'updated-tag' : '';
+                    const rowColor = e.side === 'dark' ? '#c06040' : '#60a8e0';
+                    const rowBg = e.isActive ? `background: ${rowColor}12; border-color: ${rowColor}30;` : '';
+                    return `<div class="resonance-effect-row ${inactive} ${updated}" style="${rowBg}">
+                            <span class="resonance-effect-icon">${e.icon}</span>
+                            <span class="resonance-effect-text">${e.text}</span>
+                            <span class="resonance-effect-threshold">${e.threshold > 0 ? '+' : ''}${e.threshold}</span>
+                        </div>`;
+                }).join('')}
+                </div>`;
+            };
+
+            list.innerHTML =
+                renderSection(darkEffects.reverse(), '🌑 Effets de corruption', '#c06040') +
+                renderSection(lightEffects, '✨ Effets de résonance', '#60a8e0');
+        }
+
+        function applyResonanceDelta(delta) {
+            resonanceValue = Math.max(-90, Math.min(100, resonanceValue + delta));
+            renderResonance();
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            renderResonance();
+            defaultSkills.forEach((name, i) => appState.skills.push({ id: `skill_${i}`, name, level: 1, baseName: name }));
+            renderSkills();
+            renderForceSkills();
+            renderWounds();
+            renderObjects();
+            renderSaberColors();
+            renderSaberTypes();
+            renderCrystalSelect();
+            renderFormSelect();
+            updateRollSelects();
+            updateAllAttributes();
+            updateCounterDisplay('force');
+            syncElanFromHealth();
+            setRegistre('neutre');
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeResult(); } if (e.key === 'Enter' && document.getElementById('modal').classList.contains('active')) confirmModal(); });
+            document.getElementById('modal-input').addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); confirmModal(); } });
+            ['attribute-select', 'skill-select', 'skill-page-attr-select', 'skill-page-skill-select', 'force-attr-select', 'force-verb-select', 'force-target-select', 'force-simple-attr-select', 'force-simple-verb-select', 'force-simple-target-select', 'conjoint-attr-select', 'conjoint-skill-select'].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', updateRollButtons); });
+        });
+    </script>
+</body>
+
+</html>

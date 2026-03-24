@@ -1,0 +1,3223 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche de Personnage — Version Alternative</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Nunito+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Palette moderne fantasy épurée */
+            --midnight: #0f1729;
+            --deep-navy: #1a2744;
+            --slate-blue: #2d3a5c;
+            --silver-mist: #8b9dc3;
+            --moonlight: #c9d4e8;
+            --pure-white: #f8fafc;
+
+            /* Accents magiques */
+            --eclat-gold: #d4a84b;
+            --eclat-glow: #f5d98a;
+            --ombre-purple: #6b4c9a;
+            --ombre-deep: #3d2963;
+            --soul-blue: #4a90c2;
+            --soul-glow: #7eb8e8;
+            --power-cyan: #3ba6a6;
+            --power-glow: #5ecece;
+
+            /* Élan / Santé */
+            --vitality-red: #c45c5c;
+            --vitality-soft: #e88a8a;
+
+            /* UI */
+            --success-green: #4a9b6e;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --card-border: rgba(139, 157, 195, 0.3);
+            --shadow-soft: 0 4px 20px rgba(15, 23, 41, 0.12);
+            --shadow-hover: 0 8px 30px rgba(15, 23, 41, 0.18);
+
+            /* Typography */
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Nunito Sans', -apple-system, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(145deg, var(--midnight) 0%, var(--deep-navy) 50%, var(--slate-blue) 100%);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--midnight);
+        }
+
+        /* Texture de fond subtile */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(ellipse at 20% 30%, rgba(212, 168, 75, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(107, 76, 154, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            border: 1px solid var(--card-border);
+        }
+
+        /* HEADER */
+        .header {
+            background: linear-gradient(135deg, var(--deep-navy) 0%, var(--slate-blue) 100%);
+            color: var(--pure-white);
+            padding: 28px 32px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.1), transparent);
+            pointer-events: none;
+        }
+
+        .header h1 {
+            font-family: var(--font-display);
+            font-size: 2.2em;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 10px 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: var(--moonlight);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .nav-tab:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: var(--pure-white);
+            color: var(--deep-navy);
+            border-color: var(--pure-white);
+            font-weight: 600;
+        }
+
+        .save-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .save-controls button {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--deep-navy);
+            border: none;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-controls button:hover {
+            background: var(--pure-white);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* PAGES */
+        .page {
+            display: none;
+            padding: 32px;
+            min-height: 600px;
+        }
+
+        .page.active {
+            display: grid;
+        }
+
+        .attributes-page {
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        .skills-page {
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-title {
+            font-family: var(--font-display);
+            font-size: 1.25em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--moonlight);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title .icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+        }
+
+        /* PROFIL */
+        .profile-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .profile-image-container {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: linear-gradient(145deg, var(--moonlight), var(--pure-white));
+            box-shadow: 0 6px 20px rgba(15, 23, 41, 0.12);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-image-container:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(15, 23, 41, 0.18);
+        }
+
+        .profile-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5em;
+            color: var(--silver-mist);
+        }
+
+        .profile-image-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 41, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-image-container:hover .profile-image-overlay {
+            opacity: 1;
+        }
+
+        .profile-name-input {
+            width: 100%;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 1.6em;
+            font-weight: 600;
+            border: none;
+            background: transparent;
+            color: var(--deep-navy);
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .profile-name-input:focus {
+            outline: none;
+            background: rgba(201, 212, 232, 0.3);
+        }
+
+        .profile-name-input::placeholder {
+            color: var(--silver-mist);
+        }
+
+        /* COLONNES */
+        .left-column,
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* ATTRIBUTS */
+        .attributes-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .attribute-item {
+            background: linear-gradient(145deg, rgba(201, 212, 232, 0.15), rgba(201, 212, 232, 0.05));
+            border-radius: 12px;
+            padding: 14px 12px;
+            text-align: center;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .attribute-item:hover {
+            background: linear-gradient(145deg, rgba(201, 212, 232, 0.25), rgba(201, 212, 232, 0.1));
+            border-color: var(--card-border);
+        }
+
+        .attribute-name {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--silver-mist);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+        }
+
+        .attribute-value {
+            font-family: var(--font-display);
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin-bottom: 10px;
+            min-height: 1.5em;
+        }
+
+        .attribute-controls {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .attribute-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--deep-navy), var(--slate-blue));
+            color: white;
+            font-weight: 700;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .attribute-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 10px rgba(26, 39, 68, 0.3);
+        }
+
+        /* COMPTEURS */
+        .counters-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .counter-item {
+            background: rgba(201, 212, 232, 0.12);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .counter-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--deep-navy);
+        }
+
+        .counter-label .emoji {
+            font-size: 1.1em;
+        }
+
+        .counter-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .counter-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.3em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .counter-btn.minus {
+            background: linear-gradient(135deg, var(--vitality-red), var(--vitality-soft));
+            color: white;
+        }
+
+        .counter-btn.plus {
+            background: linear-gradient(135deg, var(--success-green), #5fb882);
+            color: white;
+        }
+
+        .counter-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .counter-value {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .counter-value input {
+            width: 50px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 1.4em;
+            font-weight: 700;
+            border: none;
+            background: transparent;
+            color: var(--deep-navy);
+        }
+
+        .counter-value input:focus {
+            outline: none;
+        }
+
+        .counter-separator {
+            font-size: 1.2em;
+            color: var(--silver-mist);
+        }
+
+        .counter-bar {
+            height: 8px;
+            background: rgba(201, 212, 232, 0.4);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .counter-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .counter-fill.power {
+            background: linear-gradient(90deg, var(--power-cyan), var(--power-glow));
+        }
+
+        /* RESSOURCES PERSONNALISÉES */
+        .custom-resources-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--moonlight);
+        }
+
+        .custom-resources-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .custom-resources-title {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--silver-mist);
+        }
+
+        .add-resource-btn {
+            padding: 6px 12px;
+            background: linear-gradient(135deg, var(--deep-navy), var(--slate-blue));
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-resource-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 10px rgba(26, 39, 68, 0.3);
+        }
+
+        .custom-resources-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .custom-resource-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(201, 212, 232, 0.15);
+            border-radius: 8px;
+        }
+
+        .custom-resource-name {
+            flex: 1;
+            font-weight: 500;
+            color: var(--deep-navy);
+            font-size: 0.9em;
+        }
+
+        .custom-resource-name input {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 0.95em;
+            color: var(--deep-navy);
+        }
+
+        .custom-resource-name input:focus {
+            outline: none;
+        }
+
+        .custom-resource-value {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .custom-resource-value input {
+            width: 45px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 1.1em;
+            font-weight: 700;
+            border: 1px solid var(--moonlight);
+            border-radius: 6px;
+            padding: 4px;
+            background: white;
+            color: var(--deep-navy);
+        }
+
+        .custom-resource-value input:focus {
+            outline: none;
+            border-color: var(--soul-blue);
+        }
+
+        .custom-resource-delete {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(196, 92, 92, 0.1);
+            color: var(--vitality-red);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.8em;
+        }
+
+        .custom-resource-delete:hover {
+            background: var(--vitality-red);
+            color: white;
+        }
+
+        .custom-resource-bar {
+            height: 6px;
+            background: rgba(201, 212, 232, 0.4);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .custom-resource-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            background: linear-gradient(90deg, var(--soul-blue), var(--soul-glow));
+        }
+
+        /* ÉLAN */
+        .elan-section {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--card-border);
+            border-top: 4px solid var(--vitality-red);
+        }
+
+        .elan-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .elan-capacity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .elan-capacity-label {
+            font-weight: 600;
+            color: var(--deep-navy);
+        }
+
+        .elan-capacity input {
+            width: 60px;
+            text-align: center;
+            font-family: var(--font-display);
+            font-size: 1.2em;
+            font-weight: 700;
+            border: 2px solid var(--moonlight);
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .elan-capacity input:focus {
+            outline: none;
+            border-color: var(--vitality-red);
+        }
+
+        .elan-used {
+            font-family: var(--font-display);
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--deep-navy);
+        }
+
+        .elan-bar {
+            height: 20px;
+            background: rgba(196, 92, 92, 0.15);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .elan-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--vitality-red), var(--vitality-soft));
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .elan-bar-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85em;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .wounds-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 14px;
+        }
+
+        .wound-item {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            background: rgba(196, 92, 92, 0.08);
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid var(--vitality-red);
+        }
+
+        .wound-col {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .wound-col label {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--silver-mist);
+            text-transform: uppercase;
+        }
+
+        .wound-col input {
+            padding: 6px 8px;
+            border: 1px solid var(--moonlight);
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .wound-col input:focus {
+            outline: none;
+            border-color: var(--vitality-red);
+        }
+
+        .wound-del {
+            padding: 6px 10px;
+            background: var(--vitality-red);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .wound-del:hover {
+            background: #b54545;
+            transform: scale(1.05);
+        }
+
+        .add-wound-section {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .add-wound-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .add-wound-field label {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--silver-mist);
+            text-transform: uppercase;
+        }
+
+        .add-wound-field input {
+            padding: 8px 10px;
+            border: 2px solid var(--moonlight);
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .add-wound-field input:focus {
+            outline: none;
+            border-color: var(--vitality-red);
+        }
+
+        .add-wound-btn {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, var(--vitality-red), var(--vitality-soft));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .add-wound-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(196, 92, 92, 0.3);
+        }
+
+        /* COMPÉTENCES */
+        .skills-column {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--card-border);
+        }
+
+        .skills-column.regular {
+            border-top: 4px solid var(--success-green);
+        }
+
+        .column-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--moonlight);
+        }
+
+        .column-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+        }
+
+        .column-icon.regular {
+            background: rgba(74, 155, 110, 0.15);
+            color: var(--success-green);
+        }
+
+        .column-title {
+            font-family: var(--font-display);
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--deep-navy);
+        }
+
+        .add-skill-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .add-skill-input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 2px solid var(--moonlight);
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-family: var(--font-body);
+        }
+
+        .add-skill-input:focus {
+            outline: none;
+            border-color: var(--soul-blue);
+        }
+
+        .add-skill-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--deep-navy), var(--slate-blue));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .add-skill-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 39, 68, 0.3);
+        }
+
+        .skills-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .skill-item {
+            background: rgba(201, 212, 232, 0.2);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .skill-item:hover {
+            background: rgba(201, 212, 232, 0.35);
+            transform: translateX(4px);
+        }
+
+        .skill-item.power-skill {
+            background: linear-gradient(135deg, rgba(59, 166, 166, 0.15), rgba(94, 206, 206, 0.1));
+            border-left: 3px solid var(--power-cyan);
+        }
+
+        .skill-name {
+            flex: 1;
+            font-weight: 500;
+            color: var(--deep-navy);
+        }
+
+        .skill-level-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .skill-level-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--deep-navy), var(--slate-blue));
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .skill-level-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+        }
+
+        .skill-level-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .skill-level-value {
+            min-width: 80px;
+            text-align: center;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--soul-blue);
+        }
+
+        .skill-delete-btn {
+            padding: 6px 12px;
+            background: rgba(196, 92, 92, 0.1);
+            color: var(--vitality-red);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85em;
+        }
+
+        .skill-delete-btn:hover {
+            background: var(--vitality-red);
+            color: white;
+        }
+
+        .skill-renameable {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .skill-renameable:hover {
+            color: var(--soul-blue);
+        }
+
+        .rename-hint {
+            font-size: 0.75em;
+            opacity: 0;
+            color: var(--silver-mist);
+            transition: opacity 0.15s;
+        }
+
+        .skill-renameable:hover .rename-hint,
+        .skill-name.renaming .rename-hint {
+            opacity: 1;
+        }
+
+        .skill-rename-popup {
+            background: var(--pure-white);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 8px 24px rgba(15, 23, 41, 0.18);
+            min-width: 200px;
+            max-width: 260px;
+        }
+
+        .rename-label {
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--silver-mist);
+            margin-bottom: 6px;
+            margin-top: 2px;
+        }
+
+        .rename-option {
+            padding: 6px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: var(--deep-navy);
+            transition: background 0.15s;
+        }
+
+        .rename-option:hover { background: rgba(74, 144, 194, 0.1); color: var(--soul-blue); }
+        .rename-option.active { background: rgba(74, 144, 194, 0.15); color: var(--soul-blue); font-weight: 600; }
+
+        .rename-divider {
+            height: 1px;
+            background: var(--card-border);
+            margin: 8px 0;
+        }
+
+        .rename-custom-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .rename-custom-input {
+            flex: 1;
+            border: 1px solid var(--card-border);
+            border-radius: 7px;
+            padding: 5px 8px;
+            font-size: 0.88em;
+            font-family: var(--font-body);
+            color: var(--deep-navy);
+            outline: none;
+        }
+
+        .rename-custom-input:focus { border-color: var(--soul-blue); }
+
+        .rename-custom-btn {
+            background: var(--soul-blue);
+            color: white;
+            border: none;
+            border-radius: 7px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background 0.15s;
+        }
+
+        .rename-custom-btn:hover { background: var(--soul-glow); }
+
+        /* JETS DE DÉS */
+        .roll-section {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--card-border);
+        }
+
+        .roll-section.dual {
+            border-top: 4px solid var(--ombre-purple);
+        }
+
+        .roll-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--moonlight);
+        }
+
+        .roll-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .roll-icon.dual {
+            background: linear-gradient(135deg, rgba(107, 76, 154, 0.15), rgba(74, 155, 110, 0.15));
+            color: var(--ombre-purple);
+        }
+
+        .roll-title {
+            font-family: var(--font-display);
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--deep-navy);
+        }
+
+        .roll-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--silver-mist);
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .form-select,
+        .bonus-input {
+            padding: 10px 12px;
+            border: 2px solid var(--moonlight);
+            border-radius: 8px;
+            font-size: 0.95em;
+            font-family: var(--font-body);
+            background: white;
+            color: var(--deep-navy);
+            transition: all 0.2s ease;
+        }
+
+        .form-select:focus,
+        .bonus-input:focus {
+            outline: none;
+            border-color: var(--soul-blue);
+        }
+
+        .perform-roll-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--deep-navy), var(--slate-blue));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 8px;
+        }
+
+        .perform-roll-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 39, 68, 0.3);
+        }
+
+        .perform-roll-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .perform-roll-btn.dual {
+            background: linear-gradient(135deg, var(--ombre-purple), #8464b8);
+        }
+
+        .roll-info {
+            background: rgba(74, 144, 194, 0.08);
+            border-left: 3px solid var(--soul-blue);
+            padding: 12px 14px;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .roll-info-title {
+            font-weight: 600;
+            color: var(--soul-blue);
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .roll-info-content {
+            color: var(--slate-blue);
+            font-size: 0.85em;
+            line-height: 1.5;
+        }
+
+        /* TABS POUR JETS */
+        .roll-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .roll-tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: rgba(74, 155, 110, 0.1);
+            border: 2px solid rgba(74, 155, 110, 0.3);
+            border-radius: 8px;
+            color: var(--success-green);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.95em;
+            text-align: center;
+        }
+
+        .roll-tab:hover {
+            background: rgba(74, 155, 110, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .roll-tab.active {
+            background: linear-gradient(135deg, var(--success-green), #5fb882);
+            color: var(--pure-white);
+            border-color: var(--success-green);
+            box-shadow: 0 4px 15px rgba(74, 155, 110, 0.4);
+        }
+
+        .roll-panel {
+            display: none;
+        }
+
+        .roll-panel.active {
+            display: block;
+        }
+
+        /* DUAL ROLL LAYOUT */
+        .dual-roll-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .roll-column {
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        .roll-column.skill-roll {
+            background: rgba(74, 155, 110, 0.05);
+            border: 1px solid rgba(74, 155, 110, 0.2);
+        }
+
+        .roll-column.power-roll {
+            background: rgba(107, 76, 154, 0.05);
+            border: 1px solid rgba(107, 76, 154, 0.2);
+        }
+
+        .roll-column-title {
+            font-weight: 600;
+            margin-bottom: 14px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid;
+        }
+
+        .roll-column.skill-roll .roll-column-title {
+            color: var(--success-green);
+            border-color: rgba(74, 155, 110, 0.3);
+        }
+
+        .roll-column.power-roll .roll-column-title {
+            color: var(--ombre-purple);
+            border-color: rgba(107, 76, 154, 0.3);
+        }
+
+        /* MODAL */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 41, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 28px;
+            max-width: 400px;
+            width: 90%;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-title {
+            font-family: var(--font-display);
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin-bottom: 16px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid var(--moonlight);
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: var(--font-body);
+            margin-bottom: 20px;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--soul-blue);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-body);
+        }
+
+        .modal-btn.cancel {
+            background: var(--moonlight);
+            border: none;
+            color: var(--slate-blue);
+        }
+
+        .modal-btn.cancel:hover {
+            background: var(--silver-mist);
+            color: white;
+        }
+
+        .modal-btn.confirm {
+            background: linear-gradient(135deg, var(--deep-navy), var(--slate-blue));
+            border: none;
+            color: white;
+        }
+
+        .modal-btn.confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 39, 68, 0.3);
+        }
+
+        /* RÉSULTAT */
+        .result-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 41, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .result-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .result-container {
+            background: var(--pure-white);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 520px;
+            width: 90%;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .result-overlay.active .result-container {
+            transform: scale(1);
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .result-title {
+            font-family: var(--font-display);
+            font-size: 1.6em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            margin-bottom: 8px;
+        }
+
+        .result-subtitle {
+            color: var(--silver-mist);
+            font-size: 0.95em;
+        }
+
+        .dice-section {
+            margin-bottom: 16px;
+        }
+
+        .dice-section-label {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .dice-section-label.skill {
+            color: var(--success-green);
+        }
+
+        .dice-section-label.power {
+            color: var(--ombre-purple);
+        }
+
+        .dice-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .die {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-display);
+            font-size: 1.4em;
+            font-weight: 700;
+            animation: rollDie 0.5s ease-out;
+        }
+
+        .die.success {
+            background: linear-gradient(135deg, var(--success-green), #5fb882);
+            color: white;
+        }
+
+        .die.failure {
+            background: linear-gradient(135deg, var(--moonlight), var(--silver-mist));
+            color: var(--slate-blue);
+        }
+
+        .die.universal-failure {
+            background: linear-gradient(135deg, var(--vitality-red), var(--vitality-soft));
+            color: white;
+        }
+
+        .die.explosion {
+            background: linear-gradient(135deg, var(--eclat-gold), var(--eclat-glow));
+            color: var(--deep-navy);
+            box-shadow: 0 0 15px rgba(212, 168, 75, 0.5);
+        }
+
+        @keyframes rollDie {
+            0% {
+                transform: rotate(0deg) scale(0);
+            }
+
+            50% {
+                transform: rotate(180deg) scale(1.15);
+            }
+
+            100% {
+                transform: rotate(360deg) scale(1);
+            }
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stat-item {
+            background: rgba(201, 212, 232, 0.2);
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: var(--silver-mist);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .stat-value {
+            font-family: var(--font-display);
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--deep-navy);
+        }
+
+        .magnitude-result {
+            background: linear-gradient(135deg, rgba(107, 76, 154, 0.1), rgba(107, 76, 154, 0.05));
+            border: 1px solid rgba(107, 76, 154, 0.2);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .magnitude-label {
+            font-size: 0.85em;
+            color: var(--ombre-purple);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .magnitude-value {
+            font-family: var(--font-display);
+            font-size: 1.6em;
+            font-weight: 700;
+            color: var(--ombre-purple);
+        }
+
+        .magnitude-status {
+            font-size: 0.85em;
+            margin-top: 4px;
+        }
+
+        .magnitude-status.success {
+            color: var(--success-green);
+        }
+
+        .magnitude-status.failure {
+            color: var(--vitality-red);
+        }
+
+        .result-total {
+            background: linear-gradient(135deg, var(--deep-navy), var(--slate-blue));
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .result-total-label {
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            opacity: 0.85;
+        }
+
+        .result-total-value {
+            font-family: var(--font-display);
+            font-size: 2.4em;
+            font-weight: 700;
+        }
+
+        .result-close-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--deep-navy), var(--slate-blue));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font-body);
+        }
+
+        .result-close-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 39, 68, 0.3);
+        }
+
+        /* PAGE OBJETS */
+        .objects-page {
+            display: flex;
+            justify-content: center;
+            padding: 32px;
+        }
+
+        .objects-container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .objects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .object-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: rgba(201, 212, 232, 0.15);
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            transition: all 0.2s ease;
+        }
+
+        .object-item:hover {
+            background: rgba(201, 212, 232, 0.25);
+            border-color: var(--soul-blue);
+        }
+
+        .object-name {
+            flex: 1;
+            font-weight: 500;
+            color: var(--deep-navy);
+        }
+
+        .object-quality {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--ombre-purple);
+            min-width: 50px;
+            text-align: center;
+            padding: 4px 8px;
+            background: rgba(107, 76, 154, 0.1);
+            border-radius: 6px;
+        }
+
+        .object-remove {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid var(--vitality-red);
+            background: transparent;
+            color: var(--vitality-red);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+        }
+
+        .object-remove:hover {
+            background: var(--vitality-red);
+            color: white;
+        }
+
+        .add-object-section {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .add-object-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .add-object-field label {
+            font-size: 0.8em;
+            color: var(--silver-mist);
+            font-weight: 600;
+        }
+
+        .add-object-field input {
+            padding: 10px 12px;
+            border: 2px solid var(--moonlight);
+            border-radius: 8px;
+            background: white;
+            color: var(--deep-navy);
+            font-family: var(--font-body);
+            font-size: 0.95em;
+        }
+
+        .add-object-field input:focus {
+            outline: none;
+            border-color: var(--soul-blue);
+        }
+
+        .add-object-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, var(--deep-navy), var(--slate-blue));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 600;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .add-object-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 39, 68, 0.3);
+        }
+
+        /* Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--moonlight);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--silver-mist);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--slate-blue);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+
+            .attributes-page,
+            .skills-page {
+                grid-template-columns: 1fr;
+            }
+
+            .attributes-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .dual-roll-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .nav-tabs {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .nav-tab {
+                text-align: center;
+            }
+        }
+    
+        .notes-section {
+            margin-top: 20px;
+        }
+        .notes-textarea {
+            width: 100%;
+            min-height: 200px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: inherit;
+            font-family: inherit;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            padding: 12px;
+            resize: vertical;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .notes-textarea:focus {
+            outline: none;
+            border-color: rgba(218,165,32,0.4);
+        }
+        .notes-textarea::placeholder {
+            color: rgba(255,255,255,0.2);
+            font-style: italic;
+        }
+
+        </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Fiche de Personnage</h1>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchPage('attributes', this)">Personnage</button>
+                <button class="nav-tab" onclick="switchPage('skills', this)">Compétences</button>
+                <button class="nav-tab" onclick="switchPage('objects', this)">Objets</button>
+            </div>
+            <div class="save-controls">
+                <button onclick="saveToFile()">💾 Sauvegarder</button>
+                <button onclick="loadFromFile()">📂 Charger</button>
+                <input type="file" id="file-input" style="display: none;" accept=".json"
+                    onchange="handleFileLoad(event)">
+            </div>
+        </div>
+
+        <!-- PAGE 1 : PERSONNAGE -->
+        <div class="page attributes-page active" id="page-attributes">
+            <div class="left-column">
+                <!-- Profil -->
+                <div class="card">
+                    <div class="profile-section">
+                        <div class="profile-image-container"
+                            onclick="document.getElementById('profile-image-input').click()">
+                            <div id="profile-image-display" class="profile-placeholder">👤</div>
+                            <div class="profile-image-overlay">Changer l'image</div>
+                            <input type="file" id="profile-image-input" style="display: none;" accept="image/*"
+                                onchange="handleProfileImageUpload(event)">
+                        </div>
+                        <input type="text" id="character-name" class="profile-name-input"
+                            placeholder="Nom du personnage" oninput="updateProfile()">
+                    </div>
+                </div>
+
+                <!-- Élan et Blessures -->
+                <div class="elan-section">
+                    <div class="card-title" style="color: var(--vitality-red); border-color: rgba(196, 92, 92, 0.3);">
+                        <span class="icon"
+                            style="background: rgba(196, 92, 92, 0.15); color: var(--vitality-red);">♥</span>
+                        Élan & Blessures
+                    </div>
+                    <div class="elan-header">
+                        <div class="elan-capacity">
+                            <span class="elan-capacity-label">Capacité :</span>
+                            <input type="number" id="elan-max" value="10" min="1" onchange="updateElan()">
+                        </div>
+                        <div class="elan-used">
+                            <span id="elan-current">10</span> / <span id="elan-total">10</span>
+                        </div>
+                    </div>
+                    <div class="elan-bar">
+                        <div class="elan-bar-fill" id="elan-bar-fill" style="width: 100%;"></div>
+                        <div class="elan-bar-text" id="elan-bar-text">100%</div>
+                    </div>
+                    <div class="wounds-list" id="wounds-list"></div>
+                    <div class="add-wound-section">
+                        <div class="add-wound-field">
+                            <label>Nom</label>
+                            <input type="text" id="wound-name" placeholder="Ex: Entorse">
+                        </div>
+                        <div class="add-wound-field">
+                            <label>Type</label>
+                            <input type="text" id="wound-type" placeholder="Physique, Mental..."
+                                list="wound-type-suggestions">
+                            <datalist id="wound-type-suggestions">
+                                <option value="Physique">
+                                <option value="Mental">
+                                <option value="Stratégique">
+                                <option value="Magique">
+                            </datalist>
+                        </div>
+                        <div class="add-wound-field" style="min-width: 80px; flex: 0;">
+                            <label>Gravité</label>
+                            <input type="number" id="wound-gravity" min="1" value="1" style="width: 60px;">
+                        </div>
+                        <button class="add-wound-btn" onclick="addWound()">+ Ajouter</button>
+                    </div>
+                </div>
+
+                <!-- Compteurs de Ressources -->
+                <div class="card">
+                    <div class="card-title">
+                        <span class="icon"
+                            style="background: rgba(59, 166, 166, 0.15); color: var(--power-cyan);">✧</span>
+                        Ressources
+                    </div>
+                    <div class="counters-grid">
+                        <!-- Réserve Pouvoir -->
+                        <div class="counter-item power">
+                            <div class="counter-label">
+                                <span class="emoji">⚡</span> Réserve Pouvoir
+                            </div>
+                            <div class="counter-controls">
+                                <button class="counter-btn minus" onclick="modifyCounter('power', -1)">−</button>
+                                <div class="counter-value">
+                                    <input type="number" id="power-current" value="10" min="0"
+                                        onchange="updateCounters()">
+                                    <span class="counter-separator">/</span>
+                                    <input type="number" id="power-max" value="10" min="1" onchange="updateCounters()">
+                                </div>
+                                <button class="counter-btn plus" onclick="modifyCounter('power', 1)">+</button>
+                            </div>
+                            <div class="counter-bar">
+                                <div id="power-bar" class="counter-fill power" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ressources Personnalisées -->
+                    <div class="custom-resources-section">
+                        <div class="custom-resources-header">
+                            <span class="custom-resources-title">Ressources Personnalisées</span>
+                            <button class="add-resource-btn" onclick="addCustomResource()">+ Ajouter</button>
+                        </div>
+                        <div class="custom-resources-list" id="custom-resources-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <!-- Attributs -->
+                <div class="card">
+                    <div class="card-title">
+                        <span class="icon"
+                            style="background: rgba(45, 58, 92, 0.15); color: var(--slate-blue);">⬡</span>
+                        Attributs
+                    </div>
+                    <div class="attributes-grid">
+                        <div class="attribute-item">
+                            <div class="attribute-name">Puissance</div>
+                            <div class="attribute-value" id="attr-puissance">5</div>
+                            <div class="attribute-controls">
+                                <button class="attribute-btn" onclick="modifyAttribute('puissance', -1)">−</button>
+                                <button class="attribute-btn" onclick="modifyAttribute('puissance', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Vivacité</div>
+                            <div class="attribute-value" id="attr-vivacite">5</div>
+                            <div class="attribute-controls">
+                                <button class="attribute-btn" onclick="modifyAttribute('vivacite', -1)">−</button>
+                                <button class="attribute-btn" onclick="modifyAttribute('vivacite', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Précision</div>
+                            <div class="attribute-value" id="attr-precision">5</div>
+                            <div class="attribute-controls">
+                                <button class="attribute-btn" onclick="modifyAttribute('precision', -1)">−</button>
+                                <button class="attribute-btn" onclick="modifyAttribute('precision', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Endurance</div>
+                            <div class="attribute-value" id="attr-endurance">5</div>
+                            <div class="attribute-controls">
+                                <button class="attribute-btn" onclick="modifyAttribute('endurance', -1)">−</button>
+                                <button class="attribute-btn" onclick="modifyAttribute('endurance', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Intelligence</div>
+                            <div class="attribute-value" id="attr-intelligence">5</div>
+                            <div class="attribute-controls">
+                                <button class="attribute-btn" onclick="modifyAttribute('intelligence', -1)">−</button>
+                                <button class="attribute-btn" onclick="modifyAttribute('intelligence', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Intuition</div>
+                            <div class="attribute-value" id="attr-intuition">5</div>
+                            <div class="attribute-controls">
+                                <button class="attribute-btn" onclick="modifyAttribute('intuition', -1)">−</button>
+                                <button class="attribute-btn" onclick="modifyAttribute('intuition', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Volonté</div>
+                            <div class="attribute-value" id="attr-volonte">5</div>
+                            <div class="attribute-controls">
+                                <button class="attribute-btn" onclick="modifyAttribute('volonte', -1)">−</button>
+                                <button class="attribute-btn" onclick="modifyAttribute('volonte', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="attribute-item">
+                            <div class="attribute-name">Présence</div>
+                            <div class="attribute-value" id="attr-presence">5</div>
+                            <div class="attribute-controls">
+                                <button class="attribute-btn" onclick="modifyAttribute('presence', -1)">−</button>
+                                <button class="attribute-btn" onclick="modifyAttribute('presence', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2 : COMPÉTENCES -->
+        <div class="page skills-page" id="page-skills">
+            <div class="skills-column regular">
+                <div class="column-header">
+                    <div class="column-icon regular">⚔</div>
+                    <div class="column-title">Compétences</div>
+                </div>
+                <div class="add-skill-container">
+                    <input type="text" id="new-regular-skill" class="add-skill-input"
+                        placeholder="Nouvelle compétence...">
+                    <button class="add-skill-btn" onclick="addSkill()">+ Ajouter</button>
+                </div>
+                <div class="skills-list" id="regular-skills-list"></div>
+            </div>
+
+            <div class="roll-section dual">
+                <div class="roll-header">
+                    <div class="roll-icon dual">🎲</div>
+                    <div class="roll-title">Jets de Compétence</div>
+                </div>
+
+                <!-- Tabs pour switcher entre jet simple et double -->
+                <div class="roll-tabs">
+                    <button class="roll-tab active" onclick="switchRollMode('simple', this)">🎲 Jet Simple</button>
+                    <button class="roll-tab" onclick="switchRollMode('dual', this)">🎲✨ Double Jet (+ Ésotérisme)</button>
+                </div>
+
+                <!-- JET SIMPLE -->
+                <div id="roll-simple" class="roll-panel active">
+                    <div class="roll-form">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label class="form-label">Attribut</label>
+                                <select id="simple-attr-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                    <option value="puissance">Puissance</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="precision">Précision</option>
+                                    <option value="endurance">Endurance</option>
+                                    <option value="intelligence">Intelligence</option>
+                                    <option value="intuition">Intuition</option>
+                                    <option value="volonte">Volonté</option>
+                                    <option value="presence">Présence</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Compétence</label>
+                                <select id="simple-skill-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Bonus / Malus</label>
+                                <input id="simple-bonus" class="bonus-input" type="number" value="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Mod. Explosion</label>
+                                <input id="simple-explosion" class="bonus-input" type="number" value="0" min="-4" max="4">
+                            </div>
+                        </div>
+                        <button id="perform-simple-roll-btn" class="perform-roll-btn" style="background: linear-gradient(135deg, var(--success-green), #5fb882); margin-top: 16px;" onclick="performSimpleRoll()" disabled>
+                            🎲 Lancer le jet
+                        </button>
+                    </div>
+                    <div class="roll-info" style="margin-top: 16px;">
+                        <div class="roll-info-title">Mécanique</div>
+                        <div class="roll-info-content">
+                            Dés = niveau de compétence. Seuil = 13 − Attribut.<br>
+                            Explosion basée sur le niveau de compétence.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DOUBLE JET -->
+                <div id="roll-dual" class="roll-panel">
+                    <div class="dual-roll-container">
+                        <!-- Colonne Compétence -->
+                        <div class="roll-column skill-roll">
+                            <div class="roll-column-title">⚔ Jet de Compétence</div>
+                            <div class="roll-form">
+                                <div class="form-group">
+                                    <label class="form-label">Attribut</label>
+                                    <select id="skill-attr-select" class="form-select" onchange="updateRollButtons()">
+                                        <option value="">— Sélectionner —</option>
+                                        <option value="puissance">Puissance</option>
+                                        <option value="vivacite">Vivacité</option>
+                                        <option value="precision">Précision</option>
+                                        <option value="endurance">Endurance</option>
+                                        <option value="intelligence">Intelligence</option>
+                                        <option value="intuition">Intuition</option>
+                                        <option value="volonte">Volonté</option>
+                                        <option value="presence">Présence</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Compétence</label>
+                                    <select id="skill-select" class="form-select" onchange="updateRollButtons()">
+                                        <option value="">— Sélectionner —</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Bonus / Malus</label>
+                                    <input id="skill-bonus" class="bonus-input" type="number" value="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Colonne Maîtrise Pouvoir -->
+                        <div class="roll-column power-roll">
+                            <div class="roll-column-title">✨ Jet Ésotérisme</div>
+                            <div class="roll-form">
+                                <div class="form-group">
+                                    <label class="form-label">Attribut (Pouvoir)</label>
+                                    <select id="power-attr-select" class="form-select" onchange="updateRollButtons()">
+                                        <option value="">— Sélectionner —</option>
+                                        <option value="puissance">Puissance</option>
+                                        <option value="vivacite">Vivacité</option>
+                                        <option value="precision">Précision</option>
+                                        <option value="endurance">Endurance</option>
+                                        <option value="intelligence">Intelligence</option>
+                                        <option value="intuition">Intuition</option>
+                                        <option value="volonte">Volonté</option>
+                                        <option value="presence">Présence</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Magnitude du Sort</label>
+                                    <input id="spell-magnitude" class="bonus-input" type="number" value="1" min="1"
+                                        max="10">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Mod. Explosion</label>
+                                    <input id="explosion-threshold" class="bonus-input" type="number" value="0" min="-4"
+                                        max="4">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="perform-dual-roll-btn" class="perform-roll-btn dual" onclick="performDualRoll()" disabled
+                        style="margin-top: 20px;">
+                        🎲✨ Lancer le double jet
+                    </button>
+
+                    <div class="roll-info" style="margin-top: 16px;">
+                        <div class="roll-info-title">Mécanique du Double Jet</div>
+                        <div class="roll-info-content">
+                            <strong>Jet Ésotérisme :</strong> Dés = niveau Ésotérisme. DC = Magnitude + 1.<br>
+                            Si réussi, la Magnitude s'ajoute au résultat du jet de compétence.<br>
+                            <strong>Jet Compétence :</strong> Fonctionnement classique avec bonus de magnitude si réussi.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 3 : OBJETS -->
+        <div class="page objects-page" id="page-objects">
+            <div class="objects-container">
+                <div class="card">
+                    <div class="card-title">
+                        <span class="icon"
+                            style="background: rgba(107, 76, 154, 0.15); color: var(--ombre-purple);">📦</span>
+                        Inventaire
+                    </div>
+                    <div class="objects-list" id="objects-list"></div>
+                    <div class="add-object-section">
+                        <div class="add-object-field" style="flex: 2;">
+                            <label>Nom de l'objet</label>
+                            <input type="text" id="object-name" placeholder="Ex: Épée enchantée">
+                        </div>
+                        <div class="add-object-field" style="flex: 0; min-width: 100px;">
+                            <label>Qualité</label>
+                            <input type="number" id="object-quality" value="0" style="width: 80px;">
+                        </div>
+                        <button class="add-object-btn" onclick="addObject()">+ Ajouter</button>
+                    </div>
+                </div>
+            
+                <div class="card notes-section">
+                    <div class="card-title">
+                        <span class="icon" style="background: rgba(107, 76, 154, 0.1); color: #a08abf;">&#128221;</span>
+                        Notes
+                    </div>
+                    <textarea class="notes-textarea" id="notes-textarea" placeholder="Notes libres, descriptions, rappels..." oninput="appState.notes = this.value"></textarea>
+                </div>
+</div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal" id="modal">
+            <div class="modal-content">
+                <h3 class="modal-title" id="modal-title">Titre</h3>
+                <input type="text" class="modal-input" id="modal-input" placeholder="Entrez une valeur...">
+                <div class="modal-buttons">
+                    <button class="modal-btn cancel" onclick="closeModal()">Annuler</button>
+                    <button class="modal-btn confirm" onclick="confirmModal()">Confirmer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Résultat -->
+        <div class="result-overlay" id="result-overlay">
+            <div class="result-container">
+                <div class="result-header">
+                    <h2 class="result-title" id="result-title">Résultat du Jet</h2>
+                    <p class="result-subtitle" id="result-subtitle"></p>
+                </div>
+                <div id="dice-display-area"></div>
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <div class="stat-label">Succès Total</div>
+                        <div class="stat-value" id="stat-successes">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Faces Neutres</div>
+                        <div class="stat-value" id="stat-neutrals">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Explosions</div>
+                        <div class="stat-value" id="stat-explosions">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Bonus Attributs</div>
+                        <div class="stat-value" id="stat-attribute-bonus">0</div>
+                    </div>
+                </div>
+                <div id="magnitude-result-area"></div>
+                <div class="result-total">
+                    <div class="result-total-label">Résultat Final</div>
+                    <div class="result-total-value" id="result-total">0</div>
+                </div>
+                <button class="result-close-btn" onclick="closeResult()">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== COMPÉTENCES RÉGULIÈRES PAR DÉFAUT ==========
+        const defaultRegularSkills = [
+            'Art', 'Athlétisme', 'Autorité', 'Apothicairerie', 'Bagarre', 'Combat Occulte',
+            'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Ésotérisme',
+            'Médecine', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Technologie',
+            'Tir', 'Tromperie', 'Vigilance'
+        ];
+
+        // ========== NIVEAUX D'ATTRIBUTS ==========
+        // Bonus progressif : 1-2 → +0, 3-4 → +2, 5-6 → +4, 7 → +5, 8 → +6
+        const ATTRIBUTE_LEVELS = {
+            1: { name: 'Déficient', faces: 1, bonus: 0, color: '#c45c5c' },
+            2: { name: 'Faible', faces: 2, bonus: 0, color: '#d97a4a' },
+            3: { name: 'Médiocre', faces: 3, bonus: 2, color: '#c9a227' },
+            4: { name: 'Commun', faces: 4, bonus: 2, color: '#8b9dc3' },
+            5: { name: 'Élevé', faces: 5, bonus: 4, color: '#4a9b6e' },
+            6: { name: 'Supérieur', faces: 6, bonus: 4, color: '#4a90c2' },
+            7: { name: 'Exceptionnel', faces: 7, bonus: 5, color: '#6b4c9a' },
+            8: { name: 'Prodigieux', faces: 9, bonus: 6, color: '#d4a84b' }
+        };
+
+        // ========== NIVEAUX DE COMPÉTENCES ==========
+        // Explosion basée sur le tier : Novice(1-3)=12, Confirmé(4-5)=11, Expert(6-7)=10, Absolu(8)=8
+        const SKILL_LEVELS = {
+            1: { name: 'Ignorant', dice: 1, explosion: 12, color: '#c45c5c' },
+            2: { name: 'Novice', dice: 2, explosion: 12, color: '#d97a4a' },
+            3: { name: 'Compétent', dice: 3, explosion: 12, color: '#c9a227' },
+            4: { name: 'Qualifié', dice: 4, explosion: 11, color: '#8b9dc3' },
+            5: { name: 'Excellent', dice: 5, explosion: 11, color: '#4a9b6e' },
+            6: { name: 'Expert', dice: 6, explosion: 10, color: '#4a90c2' },
+            7: { name: 'Maître', dice: 8, explosion: 10, color: '#6b4c9a' },
+            8: { name: 'Absolue', dice: 10, explosion: 8, color: '#d4a84b' }
+        };
+        
+        // Fonction pour calculer l'explosion d'un niveau de pouvoir combiné
+        function getPowerExplosion(combinedLevel) {
+            if (combinedLevel >= 9) return 8;
+            if (combinedLevel >= 7) return 10;
+            if (combinedLevel >= 5) return 11;
+            return 12;
+        }
+
+        // Fonctions utilitaires pour les niveaux
+        function getAttributeLevel(value) {
+            return ATTRIBUTE_LEVELS[Math.min(8, Math.max(1, value))] || ATTRIBUTE_LEVELS[4];
+        }
+
+        function getSkillLevel(value) {
+            return SKILL_LEVELS[Math.min(8, Math.max(1, value))] || SKILL_LEVELS[1];
+        }
+
+        // ========== ÉTAT DE L'APPLICATION ==========
+        const appState = {
+            profile: { name: '', image: null },
+            attributes: {
+                puissance: 4, vivacite: 4, precision: 4, endurance: 4,
+                intelligence: 4, intuition: 4, volonte: 4, presence: 4
+            },
+            counters: {
+                health: { current: 10, max: 10 },
+                power: { current: 10, max: 10 }
+            },
+            customResources: [],
+            skills: [],
+            wounds: [],
+            objects: [],
+            notes: "",
+            currentModal: null
+        };
+
+        // ========== GESTION DES PAGES ==========
+        function switchPage(pageName, tabEl) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`page-${pageName}`).classList.add('active');
+            if (tabEl) tabEl.classList.add('active');
+            if (pageName === 'skills') updateRollSelects();
+        }
+
+        // ========== ATTRIBUTS ==========
+        function modifyAttribute(attr, delta) {
+            const newVal = Math.max(1, Math.min(8, appState.attributes[attr] + delta));
+            appState.attributes[attr] = newVal;
+            updateAttributeDisplay(attr);
+        }
+
+        function updateAttributeDisplay(attr) {
+            const el = document.getElementById(`attr-${attr}`);
+            const val = appState.attributes[attr];
+            const level = getAttributeLevel(val);
+            el.innerHTML = `<span style="color: ${level.color}">${level.name}</span><sub style="opacity: 0.6; font-size: 0.6em; margin-left: 2px;">${val}</sub>`;
+            el.title = `Niveau ${val} • ${level.faces} faces • +${level.bonus} bonus`;
+        }
+
+        function updateAllAttributes() {
+            Object.keys(appState.attributes).forEach(attr => {
+                updateAttributeDisplay(attr);
+            });
+        }
+
+        // ========== COMPTEURS ==========
+        function modifyCounter(type, delta) {
+            const counter = appState.counters[type];
+            counter.current = Math.max(0, Math.min(counter.max, counter.current + delta));
+            updateCounterDisplay(type);
+        }
+
+        function updateCounters() {
+            ['power'].forEach(type => {
+                const current = parseInt(document.getElementById(`${type}-current`).value) || 0;
+                const max = parseInt(document.getElementById(`${type}-max`).value) || 1;
+                appState.counters[type].current = Math.max(0, Math.min(max, current));
+                appState.counters[type].max = Math.max(1, max);
+                updateCounterDisplay(type);
+            });
+        }
+
+        function updateCounterDisplay(type) {
+            const counter = appState.counters[type];
+            document.getElementById(`${type}-current`).value = counter.current;
+            document.getElementById(`${type}-max`).value = counter.max;
+            const percent = (counter.current / counter.max) * 100;
+            document.getElementById(`${type}-bar`).style.width = `${percent}%`;
+        }
+
+        // ========== RESSOURCES PERSONNALISÉES ==========
+        function addCustomResource() {
+            const id = `resource_${Date.now()}`;
+            appState.customResources.push({
+                id: id,
+                name: 'Nouvelle ressource',
+                current: 0,
+                max: 10
+            });
+            renderCustomResources();
+        }
+
+        function updateCustomResource(id, field, value) {
+            const resource = appState.customResources.find(r => r.id === id);
+            if (resource) {
+                if (field === 'name') {
+                    resource.name = value;
+                } else if (field === 'current') {
+                    resource.current = Math.max(0, Math.min(resource.max, parseInt(value) || 0));
+                } else if (field === 'max') {
+                    resource.max = Math.max(1, parseInt(value) || 1);
+                    resource.current = Math.min(resource.current, resource.max);
+                }
+                renderCustomResources();
+            }
+        }
+
+        function deleteCustomResource(id) {
+            appState.customResources = appState.customResources.filter(r => r.id !== id);
+            renderCustomResources();
+        }
+
+        function renderCustomResources() {
+            const list = document.getElementById('custom-resources-list');
+            list.innerHTML = '';
+
+            appState.customResources.forEach(resource => {
+                const percent = resource.max > 0 ? (resource.current / resource.max) * 100 : 0;
+                const item = document.createElement('div');
+                item.className = 'custom-resource-item';
+                item.innerHTML = `
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="custom-resource-name" style="flex: 1;">
+                                <input type="text" value="${resource.name}" 
+                                       onchange="updateCustomResource('${resource.id}', 'name', this.value)"
+                                       placeholder="Nom de la ressource">
+                            </div>
+                            <div class="custom-resource-value">
+                                <input type="number" value="${resource.current}" min="0" max="${resource.max}"
+                                       onchange="updateCustomResource('${resource.id}', 'current', this.value)">
+                                <span style="color: var(--silver-mist);">/</span>
+                                <input type="number" value="${resource.max}" min="1"
+                                       onchange="updateCustomResource('${resource.id}', 'max', this.value)">
+                            </div>
+                            <button class="custom-resource-delete" onclick="deleteCustomResource('${resource.id}')">✕</button>
+                        </div>
+                        <div class="custom-resource-bar">
+                            <div class="custom-resource-bar-fill" style="width: ${percent}%;"></div>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // ========== ÉLAN & BLESSURES ==========
+        function updateElan() {
+            const max = Math.max(1, parseInt(document.getElementById('elan-max').value) || 10);
+            appState.counters.health.max = max;
+            recalcHealthFromWounds();
+        }
+
+        function syncElanFromHealth() {
+            const h = appState.counters.health;
+            document.getElementById('elan-max').value = h.max;
+            document.getElementById('elan-current').textContent = h.current;
+            document.getElementById('elan-total').textContent = h.max;
+            const pct = h.max > 0 ? (h.current / h.max) * 100 : 0;
+            document.getElementById('elan-bar-fill').style.width = `${pct}%`;
+            document.getElementById('elan-bar-text').textContent = `${Math.round(pct)}%`;
+        }
+
+        function recalcHealthFromWounds() {
+            const totalGravity = appState.wounds.reduce((sum, w) => sum + (w.gravity || 0), 0);
+            const current = Math.max(0, appState.counters.health.max - totalGravity);
+            appState.counters.health.current = current;
+            syncElanFromHealth();
+        }
+
+        function addWound() {
+            const name = document.getElementById('wound-name').value.trim();
+            const type = document.getElementById('wound-type').value.trim();
+            const gravity = parseInt(document.getElementById('wound-gravity').value) || 1;
+            if (!name) return;
+
+            appState.wounds.push({
+                id: `wound_${Date.now()}`,
+                name,
+                type,
+                gravity
+            });
+
+            document.getElementById('wound-name').value = '';
+            document.getElementById('wound-type').value = '';
+            document.getElementById('wound-gravity').value = '1';
+
+            renderWounds();
+            recalcHealthFromWounds();
+        }
+
+        function updateWoundField(id, field, value) {
+            const w = appState.wounds.find(x => x.id === id);
+            if (!w) return;
+            if (field === 'gravity') w.gravity = Math.max(1, parseInt(value) || 1);
+            else w[field] = value;
+            recalcHealthFromWounds();
+        }
+
+        function deleteWound(id) {
+            appState.wounds = appState.wounds.filter(w => w.id !== id);
+            renderWounds();
+            recalcHealthFromWounds();
+        }
+
+        function renderWounds() {
+            const list = document.getElementById('wounds-list');
+            if (!list) return;
+            list.innerHTML = '';
+            appState.wounds.forEach(w => {
+                const row = document.createElement('div');
+                row.className = 'wound-item';
+                row.innerHTML = `
+                    <div class="wound-col">
+                        <label>Nom</label>
+                        <input type="text" value="${w.name}" oninput="updateWoundField('${w.id}','name',this.value)">
+                    </div>
+                    <div class="wound-col">
+                        <label>Type</label>
+                        <input type="text" value="${w.type || ''}" oninput="updateWoundField('${w.id}','type',this.value)">
+                    </div>
+                    <div class="wound-col" style="min-width: 70px; flex: 0;">
+                        <label>Gravité</label>
+                        <input type="number" min="1" value="${w.gravity}" oninput="updateWoundField('${w.id}','gravity',this.value)">
+                    </div>
+                    <button class="wound-del" onclick="deleteWound('${w.id}')">✕</button>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        // ========== NOMS ALTERNATIFS DES COMPÉTENCES ==========
+        const SKILL_ALTERNATIVES = {
+            'Art':            ['Art', 'Performance', 'Artisanat', 'Création'],
+            'Athlétisme':     ['Athlétisme', 'Acrobaties', 'Survie', 'Endurance'],
+            'Autorité':       ['Autorité', 'Intimidation', 'Leadership', 'Commandement'],
+            'Apothicairerie': ['Apothicairerie', 'Herboristerie', 'Botanique', 'Potions'],
+            'Bagarre':        ['Bagarre', 'Escrime', 'Arts martiaux', 'Lance'],
+            'Combat Occulte': ['Combat Occulte', 'Duel', 'Combat magique', 'Pouvoir en combat'],
+            'Discrétion':     ['Discrétion', 'Furtivité', 'Infiltration', 'Présence effacée'],
+            'Dressage':       ['Dressage', 'Équitation', 'Apprivoisement', 'Capture'],
+            'Éloquence':      ['Éloquence', 'Diplomatie', 'Séduction', 'Raison'],
+            'Érudition':      ['Érudition', 'Histoire', 'Théologie', 'Droit'],
+            'Escamotage':     ['Escamotage', 'Larcin', 'Crochetage', 'Prestidigitation'],
+            'Ésotérisme':     ['Ésotérisme', 'Arcanes', 'Pouvoir', 'Magie'],
+            'Médecine':       ['Médecine', 'Chirurgie', 'Soins', 'Premiers secours'],
+            'Recherche':      ['Recherche', 'Enquête', 'Pistage', 'Investigation'],
+            'Résilience':     ['Résilience', 'Sang-froid', 'Bravoure', 'Calme'],
+            'Sagacité':       ['Sagacité', 'Empathie', 'Intuition', 'Perspicacité'],
+            'Stratégie':      ['Stratégie', 'Tactique', 'Commandement', 'Planification'],
+            'Technologie':    ['Technologie', 'Ingénierie', 'Mécanique', 'Sabotage'],
+            'Tir':            ['Tir', 'Archerie', 'Lancer', 'Arme à feu'],
+            'Tromperie':      ['Tromperie', 'Manipulation', 'Comédie', 'Bluff'],
+            'Vigilance':      ['Vigilance', 'Perception', 'Instinct', 'Observation'],
+        };
+
+        // Trouve la compétence de base (la "racine") d'un nom alternatif
+        function getBaseSkillName(name) {
+            for (const [base, alts] of Object.entries(SKILL_ALTERNATIVES)) {
+                if (alts.includes(name) || base === name) return base;
+            }
+            return null; // compétence custom, pas de base
+        }
+
+        function openRenameSkill(id) {
+            // Ferme tout popup ouvert
+            document.querySelectorAll('.skill-rename-popup').forEach(p => p.remove());
+            document.querySelectorAll('.skill-name.renaming').forEach(n => n.classList.remove('renaming'));
+
+            const skill = appState.skills.find(s => s.id === id);
+            if (!skill) return;
+
+            const nameEl = document.getElementById(`skill-name-${id}`);
+            if (!nameEl) return;
+            nameEl.classList.add('renaming');
+
+            const baseName = skill.baseName || getBaseSkillName(skill.name) || null;
+            const alts = baseName ? SKILL_ALTERNATIVES[baseName] : null;
+
+            const popup = document.createElement('div');
+            popup.className = 'skill-rename-popup';
+
+            // Stopper la propagation sur tout clic dans le popup
+            popup.addEventListener('click', e => e.stopPropagation());
+
+            let html = '';
+            if (alts) {
+                html += `<div class="rename-label">Noms alternatifs</div>`;
+                alts.forEach(alt => {
+                    const active = alt === skill.name ? ' active' : '';
+                    html += `<div class="rename-option${active}" onclick="applySkillRename('${id}', '${alt.replace(/'/g, "\\'")}', '${baseName.replace(/'/g, "\\'")}', this)">${alt}</div>`;
+                });
+                html += `<div class="rename-divider"></div>`;
+            }
+            html += `<div class="rename-label">Nom personnalisé</div>`;
+            html += `<div class="rename-custom-row">
+                <input class="rename-custom-input" type="text" placeholder="Saisir un nom..." value="${alts ? '' : skill.name}" id="custom-rename-${id}">
+                <button class="rename-custom-btn" onclick="applyCustomRename('${id}', '${baseName ? baseName.replace(/'/g, "\\'") : ''}')">✓</button>
+            </div>`;
+
+            popup.innerHTML = html;
+
+            // Ancrer au body en position fixe sous le nameEl
+            document.body.appendChild(popup);
+            const rect = nameEl.getBoundingClientRect();
+            popup.style.position = 'fixed';
+            popup.style.top = (rect.bottom + 6) + 'px';
+            popup.style.left = rect.left + 'px';
+            popup.style.zIndex = '9999';
+
+            // Focus auto sur l'input custom si pas d'alts
+            if (!alts) {
+                const inp = document.getElementById(`custom-rename-${id}`);
+                if (inp) setTimeout(() => inp.focus(), 30);
+            }
+
+            // Touche Entrée sur l'input custom
+            const customInp = document.getElementById(`custom-rename-${id}`);
+            if (customInp) {
+                customInp.addEventListener('keydown', e => {
+                    if (e.key === 'Enter') applyCustomRename(id, baseName || '');
+                });
+            }
+
+            // Fermer au clic extérieur
+            setTimeout(() => {
+                document.addEventListener('click', function closePopup(e) {
+                    if (!popup.contains(e.target) && e.target !== nameEl && !nameEl.contains(e.target)) {
+                        popup.remove();
+                        nameEl.classList.remove('renaming');
+                        document.removeEventListener('click', closePopup);
+                    }
+                });
+            }, 10);
+        }
+
+        function applySkillRename(id, newName, baseName, el) {
+            const skill = appState.skills.find(s => s.id === id);
+            if (!skill) return;
+            skill.name = newName;
+            skill.baseName = baseName;
+            document.querySelectorAll('.skill-rename-popup').forEach(p => p.remove());
+            renderSkills();
+            updateRollSelects();
+        }
+
+        function applyCustomRename(id, baseName) {
+            const input = document.getElementById(`custom-rename-${id}`);
+            if (!input) return;
+            const newName = input.value.trim();
+            if (!newName) return;
+            const skill = appState.skills.find(s => s.id === id);
+            if (!skill) return;
+            skill.name = newName;
+            if (baseName) skill.baseName = baseName;
+            document.querySelectorAll('.skill-rename-popup').forEach(p => p.remove());
+            renderSkills();
+            updateRollSelects();
+        }
+
+        // ========== COMPÉTENCES ==========
+        function renderSkills() {
+            const list = document.getElementById('regular-skills-list');
+            if (!list) return;
+            list.innerHTML = '';
+
+            appState.skills.forEach(skill => {
+                const item = document.createElement('div');
+                const isPowerSkill = skill.name === 'Ésotérisme';
+                const isBaseSkill = skill.isBase === true;
+                const level = getSkillLevel(skill.level);
+                const hasAlts = !!(skill.baseName ? SKILL_ALTERNATIVES[skill.baseName] : getBaseSkillName(skill.name));
+                item.className = 'skill-item' + (isPowerSkill ? ' power-skill' : '');
+                item.innerHTML = `
+                    <div class="skill-name ${hasAlts || isBaseSkill ? 'skill-renameable' : ''}" id="skill-name-${skill.id}"
+                         ${isBaseSkill || hasAlts ? `onclick="openRenameSkill('${skill.id}')" title="Cliquer pour choisir un nom alternatif"` : ''}>
+                        ${isPowerSkill ? '✨ ' : ''}${skill.name}
+                        ${isBaseSkill || hasAlts ? '<span class="rename-hint">✎</span>' : ''}
+                    </div>
+                    <div class="skill-level-controls">
+                        <button class="skill-level-btn" onclick="modifySkillLevel('${skill.id}', -1)" ${skill.level <= 1 ? 'disabled' : ''}>−</button>
+                        <span class="skill-level-value" title="Niveau ${skill.level} • ${level.dice} dés" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${skill.level}</sub></span>
+                        <button class="skill-level-btn" onclick="modifySkillLevel('${skill.id}', 1)" ${skill.level >= 8 ? 'disabled' : ''}>+</button>
+                    </div>
+                    ${isBaseSkill ? '' : `<button class="skill-delete-btn" onclick="deleteSkill('${skill.id}')">Supprimer</button>`}
+                `;
+                list.appendChild(item);
+            });
+
+            updateRollSelects();
+        }
+
+        function addSkill() {
+            const input = document.getElementById('new-regular-skill');
+            const name = input.value.trim();
+            if (!name) return;
+
+            appState.skills.push({
+                id: `skill_${Date.now()}`,
+                name,
+                level: 1
+            });
+
+            input.value = '';
+            renderSkills();
+        }
+
+        function modifySkillLevel(id, delta) {
+            const skill = appState.skills.find(s => s.id === id);
+            if (skill) {
+                skill.level = Math.max(1, Math.min(8, skill.level + delta));
+                renderSkills();
+            }
+        }
+
+        function deleteSkill(id) {
+            appState.skills = appState.skills.filter(s => s.id !== id);
+            renderSkills();
+        }
+
+        // ========== GESTION IMAGE PROFIL ==========
+        function handleProfileImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                appState.profile.image = e.target.result;
+                const display = document.getElementById('profile-image-display');
+                display.innerHTML = `<img src="${e.target.result}" alt="Portrait">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function updateProfile() {
+            appState.profile.name = document.getElementById('character-name').value;
+        }
+
+        // ========== GESTION DES OBJETS ==========
+        function renderObjects() {
+            const list = document.getElementById('objects-list');
+            if (!list) return;
+            list.innerHTML = '';
+
+            appState.objects.forEach((obj, index) => {
+                const item = document.createElement('div');
+                item.className = 'object-item';
+                item.innerHTML = `
+                    <div class="object-name">${obj.name}</div>
+                    <div class="object-quality">${obj.quality >= 0 ? '+' : ''}${obj.quality}</div>
+                    <button class="object-remove" onclick="removeObject(${index})">✕</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function addObject() {
+            const nameInput = document.getElementById('object-name');
+            const qualityInput = document.getElementById('object-quality');
+            const name = nameInput.value.trim();
+            const quality = parseInt(qualityInput.value) || 0;
+
+            if (!name) return;
+
+            appState.objects.push({ name, quality });
+            nameInput.value = '';
+            qualityInput.value = '0';
+            renderObjects();
+                    if (appState.notes) {
+                        const ta = document.getElementById('notes-textarea');
+                        if (ta) ta.value = appState.notes;
+                    }
+        }
+
+        function removeObject(index) {
+            appState.objects.splice(index, 1);
+            renderObjects();
+        }
+
+        // ========== SWITCH MODE JETS ==========
+        function switchRollMode(mode, tabEl) {
+            document.querySelectorAll('.roll-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.roll-panel').forEach(p => p.classList.remove('active'));
+            tabEl.classList.add('active');
+            document.getElementById(`roll-${mode}`).classList.add('active');
+        }
+
+        // ========== MISE À JOUR DES SELECTS ==========
+        function updateRollSelects() {
+            // Jet simple
+            const simpleSkillSelect = document.getElementById('simple-skill-select');
+            if (simpleSkillSelect) {
+                const currentSimpleValue = simpleSkillSelect.value;
+                simpleSkillSelect.innerHTML = '<option value="">— Sélectionner —</option>';
+                appState.skills.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.id;
+                    opt.textContent = `${s.name} (${s.level})`;
+                    simpleSkillSelect.appendChild(opt);
+                });
+                if (currentSimpleValue && appState.skills.find(s => s.id === currentSimpleValue)) {
+                    simpleSkillSelect.value = currentSimpleValue;
+                }
+            }
+
+            // Jet double - compétence
+            const skillSelect = document.getElementById('skill-select');
+            if (skillSelect) {
+                const currentValue = skillSelect.value;
+                skillSelect.innerHTML = '<option value="">— Sélectionner —</option>';
+                appState.skills.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s.id;
+                    opt.textContent = `${s.name} (${s.level})`;
+                    skillSelect.appendChild(opt);
+                });
+                if (currentValue && appState.skills.find(s => s.id === currentValue)) {
+                    skillSelect.value = currentValue;
+                }
+            }
+
+            updateRollButtons();
+        }
+
+        function updateRollButtons() {
+            // Jet simple
+            const simpleAttr = document.getElementById('simple-attr-select');
+            const simpleSkill = document.getElementById('simple-skill-select');
+            const simpleBtn = document.getElementById('perform-simple-roll-btn');
+            if (simpleBtn) {
+                simpleBtn.disabled = !simpleAttr?.value || !simpleSkill?.value;
+            }
+
+            // Jet double
+            const skillAttr = document.getElementById('skill-attr-select');
+            const skillSel = document.getElementById('skill-select');
+            const powerAttr = document.getElementById('power-attr-select');
+            const dualBtn = document.getElementById('perform-dual-roll-btn');
+
+            if (dualBtn) {
+                dualBtn.disabled = !skillAttr?.value || !skillSel?.value || !powerAttr?.value;
+            }
+        }
+
+        // ========== SYSTÈME DE DÉS ==========
+        function rollD12() {
+            return Math.floor(Math.random() * 12) + 1;
+        }
+
+        function rollWithExplosions(numDice, threshold, explosionThreshold = 12) {
+            const results = [];
+            for (let i = 0; i < numDice; i++) {
+                let roll = rollD12();
+                results.push({ value: roll, isExplosion: false });
+                // Maximum 1 explosion par dé
+                if (roll >= explosionThreshold) {
+                    roll = rollD12();
+                    results.push({ value: roll, isExplosion: true });
+                }
+            }
+            return results;
+        }
+
+        function countSuccesses(diceResults, threshold) {
+            let successes = 0, neutrals = 0, explosions = 0;
+            diceResults.forEach(d => {
+                if (d.isExplosion) explosions++;
+                if (d.value >= threshold) successes++;
+                else if (d.value > 2) neutrals++;
+                // Les 1-2 ne sont comptés nulle part (échecs critiques visuels seulement)
+            });
+            return { successes, neutrals, explosions };
+        }
+
+        // ========== JET SIMPLE ==========
+        function performSimpleRoll() {
+            const attrName = document.getElementById('simple-attr-select').value;
+            const skillId = document.getElementById('simple-skill-select').value;
+            const bonus = parseInt(document.getElementById('simple-bonus').value) || 0;
+            const explosionMod = parseInt(document.getElementById('simple-explosion').value) || 0;
+
+            const skill = appState.skills.find(s => s.id === skillId);
+            if (!skill) return;
+
+            const attrValue = appState.attributes[attrName];
+            const attrLevel = getAttributeLevel(attrValue);
+            const skillLevel = getSkillLevel(skill.level);
+            const numDice = skillLevel.dice;
+            const attrBonus = attrLevel.bonus;
+            const threshold = 13 - attrLevel.faces;
+            
+            // Explosion basée sur le niveau de compétence + modificateur
+            const baseExplosion = skillLevel.explosion;
+            const explosionThreshold = Math.max(3, Math.min(12, baseExplosion - explosionMod));
+
+            const diceResults = rollWithExplosions(numDice, threshold, explosionThreshold);
+            const counts = countSuccesses(diceResults, threshold);
+            const successes = counts.successes;
+            const total = successes + attrBonus + bonus;
+
+            const explosionText = explosionMod !== 0 
+                ? `Explosion ${explosionThreshold}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})`
+                : `Explosion ${explosionThreshold}+`;
+
+            displaySimpleResult({
+                title: 'Jet de Compétence',
+                subtitle: `${skill.name} (${capitalize(attrName)}) | ${explosionText}`,
+                dice: diceResults,
+                threshold,
+                successes,
+                neutrals: counts.neutrals,
+                explosions: counts.explosions,
+                attributeBonus: attrBonus,
+                bonus,
+                total
+            });
+        }
+
+        function displaySimpleResult(data) {
+            document.getElementById('result-title').textContent = data.title;
+            document.getElementById('result-subtitle').textContent = data.subtitle;
+
+            // Zone d'affichage des dés
+            const diceArea = document.getElementById('dice-display-area');
+            diceArea.innerHTML = '';
+
+            const diceSection = document.createElement('div');
+            diceSection.className = 'dice-section';
+            diceSection.innerHTML = `
+                <div class="dice-section-label skill">Seuil ${data.threshold}+</div>
+                <div class="dice-container"></div>
+            `;
+            diceArea.appendChild(diceSection);
+
+            const diceContainer = diceSection.querySelector('.dice-container');
+            data.dice.forEach((d, i) => {
+                const die = document.createElement('div');
+                die.className = 'die';
+                die.textContent = d.value;
+                die.style.animationDelay = `${i * 0.08}s`;
+                if (d.isExplosion) die.classList.add('explosion');
+                else if (d.value <= 2) die.classList.add('universal-failure');
+                else if (d.value >= data.threshold) die.classList.add('success');
+                else die.classList.add('failure');
+                diceContainer.appendChild(die);
+            });
+
+            // Stats
+            document.getElementById('stat-successes').textContent = data.successes;
+            document.getElementById('stat-neutrals').textContent = data.neutrals;
+            document.getElementById('stat-explosions').textContent = data.explosions;
+            document.getElementById('stat-attribute-bonus').textContent = data.attributeBonus;
+
+            // Pas de magnitude pour jet simple
+            document.getElementById('magnitude-result-area').innerHTML = '';
+
+            // Total
+            document.getElementById('result-total').textContent = data.total;
+
+            document.getElementById('result-overlay').classList.add('active');
+        }
+
+        // ========== DOUBLE JET ==========
+        function performDualRoll() {
+            const skillAttrName = document.getElementById('skill-attr-select').value;
+            const skillId = document.getElementById('skill-select').value;
+            const skillBonus = parseInt(document.getElementById('skill-bonus').value) || 0;
+            const powerAttrName = document.getElementById('power-attr-select').value;
+            const magnitude = parseInt(document.getElementById('spell-magnitude').value) || 1;
+            const explosionMod = parseInt(document.getElementById('explosion-threshold').value) || 0;
+
+            const skill = appState.skills.find(s => s.id === skillId);
+            const powerSkill = appState.skills.find(s => s.name === 'Ésotérisme');
+
+            if (!skill) return;
+
+            // === JET DE MAÎTRISE POUVOIR ===
+            const powerAttrValue = appState.attributes[powerAttrName];
+            const powerAttrLevel = getAttributeLevel(powerAttrValue);
+            const powerSkillLevel = powerSkill ? getSkillLevel(powerSkill.level) : getSkillLevel(1);
+            const powerNumDice = powerSkillLevel.dice;
+            const powerThreshold = 13 - powerAttrLevel.faces;
+            const powerAttrBonus = powerAttrLevel.bonus;
+            const dc = magnitude + 1;
+            
+            // Explosion basée sur le niveau d'Ésotérisme (PAS de modificateur)
+            const powerExplosionThreshold = powerSkillLevel.explosion;
+
+            const powerDiceResults = rollWithExplosions(powerNumDice, powerThreshold, powerExplosionThreshold);
+            const powerCounts = countSuccesses(powerDiceResults, powerThreshold);
+            const powerSuccesses = powerCounts.successes;
+            const powerTotal = powerSuccesses + powerAttrBonus;
+            const powerSuccess = powerTotal >= dc;
+
+            // === JET DE COMPÉTENCE ===
+            const skillAttrValue = appState.attributes[skillAttrName];
+            const skillAttrLevel = getAttributeLevel(skillAttrValue);
+            const skillLevel = getSkillLevel(skill.level);
+            const skillNumDice = skillLevel.dice;
+            const skillThreshold = 13 - skillAttrLevel.faces;
+            const skillAttrBonus = skillAttrLevel.bonus;
+            
+            // Explosion basée sur le niveau de compétence + modificateur (SEULEMENT sur compétence)
+            const baseSkillExplosion = skillLevel.explosion;
+            const skillExplosionThreshold = Math.max(3, Math.min(12, baseSkillExplosion - explosionMod));
+
+            const skillDiceResults = rollWithExplosions(skillNumDice, skillThreshold, skillExplosionThreshold);
+            const skillCounts = countSuccesses(skillDiceResults, skillThreshold);
+            const skillSuccesses = skillCounts.successes;
+
+            // Bonus de magnitude si réussi
+            const magnitudeBonus = powerSuccess ? magnitude : 0;
+
+            // Total final
+            const finalTotal = skillSuccesses + skillAttrBonus + magnitudeBonus + skillBonus;
+
+            // Affichage
+            displayDualResult({
+                skillName: skill.name,
+                skillAttrName: capitalize(skillAttrName),
+                powerAttrName: capitalize(powerAttrName),
+                skillDice: skillDiceResults,
+                powerDice: powerDiceResults,
+                skillThreshold,
+                powerThreshold,
+                skillSuccesses,
+                powerSuccesses,
+                skillAttrBonus,
+                powerAttrBonus,
+                magnitude,
+                dc,
+                powerTotal,
+                powerSuccess,
+                magnitudeBonus,
+                skillBonus,
+                finalTotal,
+                totalNeutrals: skillCounts.neutrals + powerCounts.neutrals,
+                totalExplosions: skillCounts.explosions + powerCounts.explosions,
+                explosionThreshold: skillExplosionThreshold,
+                explosionMod
+            });
+        }
+
+        function displayDualResult(data) {
+            document.getElementById('result-title').textContent = 'Double Jet';
+
+            let subtitle = `${data.skillName} (${data.skillAttrName}) + Ésotérisme (${data.powerAttrName})`;
+            if (data.explosionMod !== 0) {
+                subtitle += ` | Mod. Explosion ${data.explosionMod > 0 ? '+' : ''}${data.explosionMod}`;
+            }
+            document.getElementById('result-subtitle').textContent = subtitle;
+
+            // Zone d'affichage des dés
+            const diceArea = document.getElementById('dice-display-area');
+            diceArea.innerHTML = '';
+
+            // Section Compétence
+            const skillSection = document.createElement('div');
+            skillSection.className = 'dice-section';
+            skillSection.innerHTML = `
+                <div class="dice-section-label skill">⚔ Compétence (Seuil ${data.skillThreshold}+)</div>
+                <div class="dice-container" id="skill-dice-container"></div>
+            `;
+            diceArea.appendChild(skillSection);
+
+            const skillDiceContainer = skillSection.querySelector('#skill-dice-container');
+            data.skillDice.forEach((d, i) => {
+                const die = document.createElement('div');
+                die.className = 'die';
+                die.textContent = d.value;
+                die.style.animationDelay = `${i * 0.08}s`;
+                if (d.isExplosion) die.classList.add('explosion');
+                else if (d.value <= 2) die.classList.add('universal-failure');
+                else if (d.value >= data.skillThreshold) die.classList.add('success');
+                else die.classList.add('failure');
+                skillDiceContainer.appendChild(die);
+            });
+
+            // Section Maîtrise Pouvoir
+            const powerSection = document.createElement('div');
+            powerSection.className = 'dice-section';
+            powerSection.innerHTML = `
+                <div class="dice-section-label power">✨ Ésotérisme (Seuil ${data.powerThreshold}+)</div>
+                <div class="dice-container" id="power-dice-container"></div>
+            `;
+            diceArea.appendChild(powerSection);
+
+            const powerDiceContainer = powerSection.querySelector('#power-dice-container');
+            data.powerDice.forEach((d, i) => {
+                const die = document.createElement('div');
+                die.className = 'die';
+                die.textContent = d.value;
+                die.style.animationDelay = `${(data.skillDice.length + i) * 0.08}s`;
+                if (d.isExplosion) die.classList.add('explosion');
+                else if (d.value <= 2) die.classList.add('universal-failure');
+                else if (d.value >= data.powerThreshold) die.classList.add('success');
+                else die.classList.add('failure');
+                powerDiceContainer.appendChild(die);
+            });
+
+            // Stats
+            document.getElementById('stat-successes').textContent = `${data.skillSuccesses} + ${data.powerSuccesses}`;
+            document.getElementById('stat-neutrals').textContent = data.totalNeutrals;
+            document.getElementById('stat-explosions').textContent = data.totalExplosions;
+            document.getElementById('stat-attribute-bonus').textContent = `${data.skillAttrBonus} + ${data.powerAttrBonus}`;
+
+            // Résultat magnitude
+            const magnitudeArea = document.getElementById('magnitude-result-area');
+            magnitudeArea.innerHTML = `
+                <div class="magnitude-result">
+                    <div class="magnitude-label">Magnitude ${data.magnitude} (DC ${data.dc})</div>
+                    <div class="magnitude-value">${data.powerTotal} vs ${data.dc}</div>
+                    <div class="magnitude-status ${data.powerSuccess ? 'success' : 'failure'}">
+                        ${data.powerSuccess ? `✓ Réussi (+${data.magnitude} au résultat)` : '✗ Échoué (pas de bonus)'}
+                    </div>
+                </div>
+            `;
+
+            // Total
+            document.getElementById('result-total').textContent = data.finalTotal;
+
+            document.getElementById('result-overlay').classList.add('active');
+        }
+
+        function closeResult() {
+            document.getElementById('result-overlay').classList.remove('active');
+        }
+
+        // ========== MODAL ==========
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            appState.currentModal = null;
+        }
+
+        function confirmModal() {
+            const input = document.getElementById('modal-input').value;
+            if (appState.currentModal === 'profile-image') {
+                appState.profile.image = input;
+                const display = document.getElementById('profile-image-display');
+                if (input) {
+                    display.innerHTML = `<img src="${input}" alt="Portrait" onerror="this.parentElement.innerHTML='<div class=\\'profile-placeholder\\'>👤</div>'">`;
+                } else {
+                    display.innerHTML = '<div class="profile-placeholder">👤</div>';
+                }
+            }
+            closeModal();
+        }
+
+        // ========== SAUVEGARDE / CHARGEMENT ==========
+        function saveToFile() {
+            const data = JSON.stringify(appState, null, 2);
+            const blob = new Blob([data], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${appState.profile.name || 'personnage'}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function loadFromFile() {
+            document.getElementById('file-input').click();
+        }
+
+        function handleFileLoad(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    const loaded = JSON.parse(e.target.result);
+                    Object.assign(appState, loaded);
+
+                    // Restaurer l'interface
+                    document.getElementById('character-name').value = appState.profile.name || '';
+                    if (appState.profile.image) {
+                        document.getElementById('profile-image-display').innerHTML =
+                            `<img src="${appState.profile.image}" alt="Portrait">`;
+                    }
+
+                    updateAllAttributes();
+                    updateCounterDisplay('power');
+                    renderSkills();
+                    renderWounds();
+                    renderObjects();
+                    renderCustomResources();
+                    recalcHealthFromWounds();
+                    syncElanFromHealth();
+                    updateRollSelects();
+
+                    alert('Personnage chargé avec succès !');
+                } catch (err) {
+                    alert('Erreur lors du chargement');
+                    console.error(err);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // ========== UTILITAIRES ==========
+        function capitalize(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        // ========== INITIALISATION ==========
+        document.addEventListener('DOMContentLoaded', function () {
+            // Compétences régulières par défaut (marquées comme base)
+            defaultRegularSkills.forEach((name, i) => {
+                appState.skills.push({ id: `regular_${i}`, name, level: 1, isBase: true });
+            });
+
+            renderSkills();
+            renderObjects();
+            renderCustomResources();
+            updateRollSelects();
+            updateAllAttributes();
+            updateCounterDisplay('power');
+            syncElanFromHealth();
+
+            // Événements clavier
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') { closeModal(); closeResult(); }
+                if (e.key === 'Enter' && document.getElementById('modal').classList.contains('active')) confirmModal();
+            });
+
+            document.getElementById('modal-input').addEventListener('keypress', e => {
+                if (e.key === 'Enter') { e.preventDefault(); confirmModal(); }
+            });
+
+            // Événements pour les selects
+            ['simple-attr-select', 'simple-skill-select', 'skill-attr-select', 'skill-select', 'power-attr-select'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('change', updateRollButtons);
+            });
+        });
+    </script>
+</body>
+
+</html>
