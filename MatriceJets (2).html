@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrice des Jets — Statistiques</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --midnight: #0f1729;
+            --deep-navy: #1a2744;
+            --slate-blue: #2d3a5c;
+            --silver-mist: #8b9dc3;
+            --moonlight: #c9d4e8;
+            --pure-white: #f8fafc;
+            --eclat-gold: #d4a84b;
+            --success-green: #4a9b6e;
+            --soul-blue: #4a90c2;
+            --ombre-purple: #6b4c9a;
+            --vitality-red: #c45c5c;
+            --font-display: 'Cormorant Garamond', Georgia, serif;
+            --font-body: 'Nunito Sans', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: linear-gradient(145deg, var(--midnight) 0%, var(--deep-navy) 50%, var(--slate-blue) 100%);
+            min-height: 100vh;
+            padding: 24px;
+            color: var(--midnight);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: var(--pure-white);
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            font-family: var(--font-display);
+            font-size: 2em;
+            color: var(--deep-navy);
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--silver-mist);
+            margin-bottom: 24px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+        }
+
+        .formula-box {
+            background: linear-gradient(135deg, rgba(212, 168, 75, 0.1), rgba(107, 76, 154, 0.1));
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            border-left: 4px solid var(--eclat-gold);
+        }
+
+        .formula-box h3 {
+            font-family: var(--font-display);
+            color: var(--deep-navy);
+            margin-bottom: 8px;
+        }
+
+        .formula-box code {
+            background: rgba(0,0,0,0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .matrix-wrapper {
+            overflow-x: auto;
+            margin-bottom: 32px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85em;
+        }
+
+        th, td {
+            padding: 8px 6px;
+            text-align: center;
+            border: 1px solid var(--moonlight);
+        }
+
+        th {
+            background: var(--deep-navy);
+            color: var(--pure-white);
+            font-weight: 600;
+        }
+
+        th.corner {
+            background: var(--slate-blue);
+        }
+
+        th.attr-header {
+            background: linear-gradient(135deg, var(--ombre-purple), var(--deep-navy));
+        }
+
+        th.skill-header {
+            background: linear-gradient(135deg, var(--success-green), var(--deep-navy));
+            writing-mode: horizontal-tb;
+        }
+
+        td.skill-label {
+            background: rgba(74, 155, 110, 0.1);
+            font-weight: 600;
+            color: var(--success-green);
+            text-align: left;
+            padding-left: 12px;
+            white-space: nowrap;
+        }
+
+        td.data-cell {
+            background: var(--pure-white);
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        td.data-cell:hover {
+            background: rgba(212, 168, 75, 0.15);
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .cell-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .cell-avg {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--deep-navy);
+        }
+
+        .cell-range {
+            font-size: 0.8em;
+            color: var(--silver-mist);
+        }
+
+        .cell-median {
+            font-size: 0.75em;
+            color: var(--ombre-purple);
+        }
+
+        /* Couleurs selon la moyenne */
+        .tier-1 { background: rgba(196, 92, 92, 0.15) !important; }
+        .tier-2 { background: rgba(217, 122, 74, 0.15) !important; }
+        .tier-3 { background: rgba(201, 162, 39, 0.15) !important; }
+        .tier-4 { background: rgba(139, 157, 195, 0.1) !important; }
+        .tier-5 { background: rgba(74, 155, 110, 0.15) !important; }
+        .tier-6 { background: rgba(74, 144, 194, 0.15) !important; }
+        .tier-7 { background: rgba(107, 76, 154, 0.15) !important; }
+        .tier-8 { background: rgba(212, 168, 75, 0.2) !important; }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            justify-content: center;
+        }
+
+        .tab {
+            padding: 10px 24px;
+            background: rgba(139, 157, 195, 0.2);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 600;
+            color: var(--deep-navy);
+            transition: all 0.2s ease;
+        }
+
+        .tab:hover {
+            background: rgba(139, 157, 195, 0.3);
+        }
+
+        .tab.active {
+            background: var(--deep-navy);
+            color: var(--pure-white);
+        }
+
+        .stat-selector {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .stat-selector label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 8px 16px;
+            background: rgba(139, 157, 195, 0.1);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .stat-selector label:hover {
+            background: rgba(139, 157, 195, 0.2);
+        }
+
+        .stat-selector input:checked + span {
+            font-weight: 700;
+            color: var(--deep-navy);
+        }
+
+        .detail-panel {
+            background: linear-gradient(135deg, var(--deep-navy), var(--slate-blue));
+            border-radius: 12px;
+            padding: 24px;
+            color: var(--pure-white);
+            margin-top: 24px;
+            display: none;
+        }
+
+        .detail-panel.visible {
+            display: block;
+        }
+
+        .detail-panel h3 {
+            font-family: var(--font-display);
+            margin-bottom: 16px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .detail-stat {
+            background: rgba(255,255,255,0.1);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .detail-stat-label {
+            font-size: 0.8em;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .detail-stat-value {
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .distribution-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .distribution-fill {
+            height: 100%;
+            background: var(--eclat-gold);
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 24px;
+            color: var(--silver-mist);
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Matrice des Jets de Dés</h1>
+        <p class="subtitle">Statistiques selon Attribut × Compétence (d12 avec explosion sur 12)</p>
+
+        <div class="formula-box">
+            <h3>🎲 Formule du système</h3>
+            <p>
+                <strong>Seuil de réussite :</strong> <code>13 − Faces de l'attribut</code><br>
+                <strong>Nombre de dés :</strong> <code>Dés de la compétence</code><br>
+                <strong>Total :</strong> <code>Succès + Bonus attribut</code><br>
+                <strong>Explosion :</strong> Sur un 12, le dé compte comme succès et est relancé
+            </p>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color tier-1"></div> Très faible (0-3)</div>
+            <div class="legend-item"><div class="legend-color tier-3"></div> Faible (3-5)</div>
+            <div class="legend-item"><div class="legend-color tier-4"></div> Moyen (5-7)</div>
+            <div class="legend-item"><div class="legend-color tier-5"></div> Bon (7-10)</div>
+            <div class="legend-item"><div class="legend-color tier-7"></div> Excellent (10-14)</div>
+            <div class="legend-item"><div class="legend-color tier-8"></div> Exceptionnel (14+)</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchView('moyenne')">Moyenne</button>
+            <button class="tab" onclick="switchView('complet')">Complet</button>
+            <button class="tab" onclick="switchView('DC')">Chances vs DC</button>
+        </div>
+
+        <div class="matrix-wrapper">
+            <table id="matrix-table">
+                <!-- Généré par JS -->
+            </table>
+        </div>
+
+        <div class="detail-panel" id="detail-panel">
+            <h3 id="detail-title">Détails</h3>
+            <div class="detail-grid" id="detail-grid">
+                <!-- Généré par JS -->
+            </div>
+        </div>
+
+        <footer>
+            Calculs basés sur 100 000 simulations Monte Carlo par combinaison
+        </footer>
+    </div>
+
+    <script>
+        // Configuration du système
+        const ATTRIBUTES = [
+            { level: 1, name: 'Déficient', faces: 1, bonus: 0, color: '#c45c5c' },
+            { level: 2, name: 'Faible', faces: 2, bonus: 1, color: '#d97a4a' },
+            { level: 3, name: 'Médiocre', faces: 3, bonus: 1, color: '#c9a227' },
+            { level: 4, name: 'Commun', faces: 4, bonus: 2, color: '#8b9dc3' },
+            { level: 5, name: 'Élevé', faces: 5, bonus: 2, color: '#4a9b6e' },
+            { level: 6, name: 'Supérieur', faces: 6, bonus: 3, color: '#4a90c2' },
+            { level: 7, name: 'Exceptionnel', faces: 7, bonus: 3, color: '#6b4c9a' },
+            { level: 8, name: 'Prodigieux', faces: 9, bonus: 4, color: '#d4a84b' }
+        ];
+
+        const SKILLS = [
+            { level: 1, name: 'Ignorant', dice: 1, bonus: 0, color: '#c45c5c' },
+            { level: 2, name: 'Novice', dice: 2, bonus: 0, color: '#d97a4a' },
+            { level: 3, name: 'Compétent', dice: 3, bonus: 1, color: '#c9a227' },
+            { level: 4, name: 'Qualifié', dice: 4, bonus: 1, color: '#8b9dc3' },
+            { level: 5, name: 'Excellent', dice: 5, bonus: 2, color: '#4a9b6e' },
+            { level: 6, name: 'Expert', dice: 6, bonus: 2, color: '#4dc3ff' },
+            { level: 7, name: 'Maître', dice: 8, bonus: 3, color: '#6b4c9a' },
+            { level: 8, name: 'Absolue', dice: 10, bonus: 4, color: '#d4a84b' }
+        ];
+
+        // Cache des résultats de simulation
+        let simulationCache = {};
+        let currentView = 'moyenne';
+
+        // Simulation d'un jet de dé avec explosion
+        function rollDie(threshold) {
+            let successes = 0;
+            let value = Math.floor(Math.random() * 12) + 1;
+            
+            while (true) {
+                if (value >= threshold && value <= 11) {
+                    successes++;
+                    break;
+                } else if (value === 12) {
+                    successes++;
+                    value = Math.floor(Math.random() * 12) + 1; // Explosion
+                } else {
+                    break; // Échec (1-2 ou sous le seuil)
+                }
+            }
+            return successes;
+        }
+
+        // Simulation complète d'un jet
+        function simulateRoll(numDice, threshold, bonus) {
+            let total = bonus;
+            for (let i = 0; i < numDice; i++) {
+                total += rollDie(threshold);
+            }
+            return total;
+        }
+
+        // Calcul des statistiques via Monte Carlo
+        function computeStats(attrIndex, skillIndex, iterations = 100000) {
+            const key = `${attrIndex}-${skillIndex}`;
+            if (simulationCache[key]) return simulationCache[key];
+
+            const attr = ATTRIBUTES[attrIndex];
+            const skill = SKILLS[skillIndex];
+            const threshold = 13 - attr.faces;
+            const numDice = skill.dice;
+            const totalBonus = attr.bonus + (skill.bonus || 0);
+
+            const results = [];
+            for (let i = 0; i < iterations; i++) {
+                results.push(simulateRoll(numDice, threshold, totalBonus));
+            }
+
+            results.sort((a, b) => a - b);
+
+            const sum = results.reduce((a, b) => a + b, 0);
+            const mean = sum / iterations;
+            const median = results[Math.floor(iterations / 2)];
+            const min = results[0];
+            const max = results[iterations - 1];
+            const p95 = results[Math.floor(iterations * 0.95)];
+            const p05 = results[Math.floor(iterations * 0.05)];
+
+            // Calcul de l'écart-type
+            const sqDiffs = results.map(r => Math.pow(r - mean, 2));
+            const avgSqDiff = sqDiffs.reduce((a, b) => a + b, 0) / iterations;
+            const stdDev = Math.sqrt(avgSqDiff);
+
+            // Distribution des résultats pour le graphique
+            const distribution = {};
+            results.forEach(r => {
+                distribution[r] = (distribution[r] || 0) + 1;
+            });
+
+            // Probabilités de battre des DC
+            const dcProbs = {};
+            for (let dc = 1; dc <= 20; dc++) {
+                dcProbs[dc] = results.filter(r => r >= dc).length / iterations * 100;
+            }
+
+            const stats = {
+                mean: mean.toFixed(2),
+                median,
+                min,
+                max,
+                p05,
+                p95,
+                stdDev: stdDev.toFixed(2),
+                distribution,
+                dcProbs,
+                threshold,
+                numDice,
+                attrBonus: attr.bonus,
+                skillBonus: skill.bonus || 0,
+                totalBonus
+            };
+
+            simulationCache[key] = stats;
+            return stats;
+        }
+
+        // Déterminer le tier de couleur selon la moyenne
+        function getTier(mean) {
+            if (mean < 3) return 'tier-1';
+            if (mean < 5) return 'tier-3';
+            if (mean < 7) return 'tier-4';
+            if (mean < 10) return 'tier-5';
+            if (mean < 14) return 'tier-7';
+            return 'tier-8';
+        }
+
+        // Générer la table
+        function generateTable() {
+            const table = document.getElementById('matrix-table');
+            let html = '<thead><tr><th class="corner">Comp. \\ Attr.</th>';
+            
+            // En-têtes attributs
+            ATTRIBUTES.forEach(attr => {
+                html += `<th class="attr-header" style="color: ${attr.color}">${attr.name}<sub>${attr.level}</sub><br><small>${attr.faces}f +${attr.bonus}</small></th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            // Lignes compétences
+            SKILLS.forEach((skill, si) => {
+                html += `<tr><td class="skill-label" style="color: ${skill.color}">${skill.name}<sub>${skill.level}</sub> <small>(${skill.dice}d +${skill.bonus || 0})</small></td>`;
+                
+                ATTRIBUTES.forEach((attr, ai) => {
+                    const stats = computeStats(ai, si);
+                    const tier = getTier(parseFloat(stats.mean));
+                    
+                    if (currentView === 'moyenne') {
+                        html += `<td class="data-cell ${tier}" onclick="showDetails(${ai}, ${si})">
+                            <div class="cell-content">
+                                <span class="cell-avg">${stats.mean}</span>
+                            </div>
+                        </td>`;
+                    } else if (currentView === 'complet') {
+                        html += `<td class="data-cell ${tier}" onclick="showDetails(${ai}, ${si})">
+                            <div class="cell-content">
+                                <span class="cell-avg">${stats.mean}</span>
+                                <span class="cell-range">${stats.min}–${stats.p95}</span>
+                                <span class="cell-median">méd: ${stats.median}</span>
+                            </div>
+                        </td>`;
+                    } else if (currentView === 'DC') {
+                        html += `<td class="data-cell ${tier}" onclick="showDetails(${ai}, ${si})">
+                            <div class="cell-content">
+                                <span class="cell-median" style="font-size:0.7em">DC5: ${stats.dcProbs[5].toFixed(0)}%</span>
+                                <span class="cell-median" style="font-size:0.7em">DC8: ${stats.dcProbs[8].toFixed(0)}%</span>
+                                <span class="cell-median" style="font-size:0.7em">DC12: ${stats.dcProbs[12].toFixed(0)}%</span>
+                            </div>
+                        </td>`;
+                    }
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+
+        // Afficher les détails d'une cellule
+        function showDetails(attrIndex, skillIndex) {
+            const attr = ATTRIBUTES[attrIndex];
+            const skill = SKILLS[skillIndex];
+            const stats = computeStats(attrIndex, skillIndex);
+            
+            const panel = document.getElementById('detail-panel');
+            const title = document.getElementById('detail-title');
+            const grid = document.getElementById('detail-grid');
+
+            title.innerHTML = `📊 ${skill.name} + ${attr.name} <small>(${skill.dice}d12 seuil ${stats.threshold}+ | bonus attr +${stats.attrBonus} comp +${stats.skillBonus})</small>`;
+
+            let html = `
+                <div class="detail-stat">
+                    <div class="detail-stat-label">Moyenne</div>
+                    <div class="detail-stat-value">${stats.mean}</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="detail-stat-label">Médiane</div>
+                    <div class="detail-stat-value">${stats.median}</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="detail-stat-label">Minimum</div>
+                    <div class="detail-stat-value">${stats.min}</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="detail-stat-label">Maximum (95%)</div>
+                    <div class="detail-stat-value">${stats.p95}</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="detail-stat-label">Écart-type</div>
+                    <div class="detail-stat-value">±${stats.stdDev}</div>
+                </div>
+                <div class="detail-stat">
+                    <div class="detail-stat-label">Plage 90%</div>
+                    <div class="detail-stat-value">${stats.p05}–${stats.p95}</div>
+                </div>
+            `;
+
+            // Probabilités DC
+            html += `<div class="detail-stat" style="grid-column: span 2;">
+                <div class="detail-stat-label">Probabilité de réussir DC</div>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 8px;">`;
+            
+            [4, 6, 8, 10, 12, 14, 16, 18, 20].forEach(dc => {
+                const prob = stats.dcProbs[dc];
+                const color = prob >= 75 ? '#4a9b6e' : prob >= 50 ? '#c9a227' : prob >= 25 ? '#d97a4a' : '#c45c5c';
+                html += `<div style="text-align: center;">
+                    <div style="font-size: 0.8em; opacity: 0.7;">DC ${dc}</div>
+                    <div style="font-weight: 700; color: ${color};">${prob.toFixed(0)}%</div>
+                    <div class="distribution-bar"><div class="distribution-fill" style="width: ${prob}%; background: ${color};"></div></div>
+                </div>`;
+            });
+            
+            html += `</div></div>`;
+
+            grid.innerHTML = html;
+            panel.classList.add('visible');
+        }
+
+        // Changer de vue
+        function switchView(view) {
+            currentView = view;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.tab[onclick="switchView('${view}')"]`).classList.add('active');
+            generateTable();
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            generateTable();
+        });
+    </script>
+</body>
+</html>

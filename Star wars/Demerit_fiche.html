@@ -2798,6 +2798,10 @@
                         <div class="stat-label">Bonus Attribut</div>
                         <div class="stat-value" id="stat-attribute-bonus">0</div>
                     </div>
+                    <div class="stat-item">
+                        <div class="stat-label">Bonus Compétence</div>
+                        <div class="stat-value" id="stat-skill-bonus">0</div>
+                    </div>
                 </div>
                 <div class="result-total">
                     <div class="result-total-label">RÉSULTAT TOTAL</div>
@@ -2932,29 +2936,29 @@
             }
         };
         // ========== NIVEAUX D'ATTRIBUTS ==========
-        // Bonus progressif : 1-2 → +0, 3-4 → +2, 5-6 → +4, 7 → +5, 8 → +6
+        // Bonus progressif : équilibré avec les compétences
         const ATTRIBUTE_LEVELS = {
             1: { name: 'Déficient', faces: 1, bonus: 0, color: '#ff4444' },
-            2: { name: 'Faible', faces: 2, bonus: 0, color: '#ff7744' },
-            3: { name: 'Médiocre', faces: 3, bonus: 2, color: '#ddaa33' },
+            2: { name: 'Faible', faces: 2, bonus: 1, color: '#ff7744' },
+            3: { name: 'Médiocre', faces: 3, bonus: 1, color: '#ddaa33' },
             4: { name: 'Commun', faces: 4, bonus: 2, color: '#8b949e' },
-            5: { name: 'Élevé', faces: 5, bonus: 4, color: '#3fb950' },
-            6: { name: 'Supérieur', faces: 6, bonus: 4, color: '#4dc3ff' },
-            7: { name: 'Exceptionnel', faces: 7, bonus: 5, color: '#b366ff' },
-            8: { name: 'Prodigieux', faces: 9, bonus: 6, color: '#ffcc00' }
+            5: { name: 'Élevé', faces: 5, bonus: 2, color: '#3fb950' },
+            6: { name: 'Supérieur', faces: 6, bonus: 3, color: '#4dc3ff' },
+            7: { name: 'Exceptionnel', faces: 7, bonus: 3, color: '#b366ff' },
+            8: { name: 'Prodigieux', faces: 9, bonus: 4, color: '#ffcc00' }
         };
 
         // ========== NIVEAUX DE COMPÉTENCES ==========
         // Explosion basée sur le tier : Novice(1-3)=12, Confirmé(4-5)=11, Expert(6-7)=10, Absolu(8)=8
         const SKILL_LEVELS = {
-            1: { name: 'Ignorant', dice: 1, explosion: 12, color: '#ff4444' },
-            2: { name: 'Novice', dice: 2, explosion: 12, color: '#ff7744' },
-            3: { name: 'Compétent', dice: 3, explosion: 12, color: '#ddaa33' },
-            4: { name: 'Qualifié', dice: 4, explosion: 11, color: '#8b949e' },
-            5: { name: 'Excellent', dice: 5, explosion: 11, color: '#3fb950' },
-            6: { name: 'Expert', dice: 6, explosion: 10, color: '#4dc3ff' },
-            7: { name: 'Maître', dice: 8, explosion: 10, color: '#b366ff' },
-            8: { name: 'Absolue', dice: 10, explosion: 8, color: '#ffcc00' }
+            1: { name: 'Ignorant', dice: 1, explosion: 12, bonus: 0, color: '#ff4444' },
+            2: { name: 'Novice', dice: 2, explosion: 12, bonus: 0, color: '#ff7744' },
+            3: { name: 'Compétent', dice: 3, explosion: 12, bonus: 1, color: '#ddaa33' },
+            4: { name: 'Qualifié', dice: 4, explosion: 11, bonus: 1, color: '#8b949e' },
+            5: { name: 'Excellent', dice: 5, explosion: 11, bonus: 2, color: '#3fb950' },
+            6: { name: 'Expert', dice: 6, explosion: 10, bonus: 2, color: '#4dc3ff' },
+            7: { name: 'Maître', dice: 8, explosion: 10, bonus: 3, color: '#b366ff' },
+            8: { name: 'Absolue', dice: 10, explosion: 8, bonus: 4, color: '#ffcc00' }
         };
 
         // Fonction pour calculer l'explosion d'un niveau de Force combiné
@@ -3532,8 +3536,9 @@
             const explosion = Math.max(3, Math.min(12, baseExplosion - explosionMod));
             const result = rollDice(skillLevel.dice, threshold, explosion);
             const attrBonus = attrLevel.bonus;
+            const skillBonus = skillLevel.bonus;
             const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
-            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, total: result.successes + attrBonus + bonus });
+            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total: result.successes + attrBonus + skillBonus + bonus });
         }
         function rollSkillPage() {
             const attrName = document.getElementById('skill-page-attr-select').value;
@@ -3550,8 +3555,9 @@
             const explosion = Math.max(3, Math.min(12, baseExplosion - explosionMod));
             const result = rollDice(skillLevel.dice, threshold, explosion);
             const attrBonus = attrLevel.bonus;
+            const skillBonus = skillLevel.bonus;
             const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
-            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, total: result.successes + attrBonus + bonus });
+            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total: result.successes + attrBonus + skillBonus + bonus });
         }
         function rollConjoint() {
             const forceAttrName = document.getElementById('force-attr-select').value;
@@ -3595,7 +3601,8 @@
             const skillExplosion = Math.max(3, Math.min(12, baseSkillExplosion - explosionMod));
             const skillResult = rollDice(skillLevel.dice, skillThreshold, skillExplosion);
             const skillAttrBonus = skillAttrLevel.bonus;
-            const skillTotal = skillResult.successes + skillAttrBonus;
+            const skillBonus = skillLevel.bonus;
+            const skillTotal = skillResult.successes + skillAttrBonus + skillBonus;
             const explosionText = explosionMod !== 0 ? ` | Mod. Explosion ${explosionMod > 0 ? '+' : ''}${explosionMod}` : '';
 
             // Si force réussie, ajouter la PUISSANCE (pas juste la magnitude)
@@ -3614,6 +3621,7 @@
                 skillFailures: skillResult.failures,
                 skillExplosions: skillResult.explosions,
                 skillAttrBonus,
+                skillBonus,
                 dc: forceDC,
                 forceSuccess,
                 powerLevel,
@@ -3644,6 +3652,7 @@
             document.getElementById('stat-failures').textContent = data.failures;
             document.getElementById('stat-explosions').textContent = data.explosions;
             document.getElementById('stat-attribute-bonus').textContent = data.attributeBonus;
+            document.getElementById('stat-skill-bonus').textContent = data.skillBonus || 0;
             document.getElementById('result-total').textContent = data.total;
             document.getElementById('result-overlay').classList.add('active');
         }
@@ -3713,6 +3722,7 @@
             document.getElementById('stat-failures').textContent = data.skillFailures !== undefined ? data.skillFailures : '—';
             document.getElementById('stat-explosions').textContent = data.skillExplosions !== undefined ? data.skillExplosions : '—';
             document.getElementById('stat-attribute-bonus').textContent = data.skillAttrBonus;
+            document.getElementById('stat-skill-bonus').textContent = data.skillBonus || 0;
             document.getElementById('result-total').textContent = data.finalTotal;
             document.getElementById('result-overlay').classList.add('active');
         }
