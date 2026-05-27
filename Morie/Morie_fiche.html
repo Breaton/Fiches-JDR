@@ -1023,8 +1023,16 @@
             transition: background 0.15s;
         }
 
-        .rename-option:hover { background: rgba(74, 144, 194, 0.1); color: var(--soul-blue); }
-        .rename-option.active { background: rgba(74, 144, 194, 0.15); color: var(--soul-blue); font-weight: 600; }
+        .rename-option:hover {
+            background: rgba(74, 144, 194, 0.1);
+            color: var(--soul-blue);
+        }
+
+        .rename-option.active {
+            background: rgba(74, 144, 194, 0.15);
+            color: var(--soul-blue);
+            font-weight: 600;
+        }
 
         .rename-divider {
             height: 1px;
@@ -1048,7 +1056,9 @@
             outline: none;
         }
 
-        .rename-custom-input:focus { border-color: var(--soul-blue); }
+        .rename-custom-input:focus {
+            border-color: var(--soul-blue);
+        }
 
         .rename-custom-btn {
             background: var(--soul-blue);
@@ -1061,7 +1071,9 @@
             transition: background 0.15s;
         }
 
-        .rename-custom-btn:hover { background: var(--soul-glow); }
+        .rename-custom-btn:hover {
+            background: var(--soul-glow);
+        }
 
         /* JETS DE DÉS */
         .roll-section {
@@ -1771,15 +1783,16 @@
                 text-align: center;
             }
         }
-    
+
         .notes-section {
             margin-top: 20px;
         }
+
         .notes-textarea {
             width: 100%;
             min-height: 200px;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             color: inherit;
             font-family: inherit;
@@ -1790,16 +1803,17 @@
             box-sizing: border-box;
             transition: border-color 0.2s;
         }
+
         .notes-textarea:focus {
             outline: none;
-            border-color: rgba(218,165,32,0.4);
-        }
-        .notes-textarea::placeholder {
-            color: rgba(255,255,255,0.2);
-            font-style: italic;
+            border-color: rgba(218, 165, 32, 0.4);
         }
 
-        </style>
+        .notes-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-style: italic;
+        }
+    </style>
 </head>
 
 <body>
@@ -1834,7 +1848,6 @@
                         </div>
                         <input type="text" id="character-name" class="profile-name-input"
                             placeholder="Nom du personnage" oninput="updateProfile()">
-                        <input type="text" id="discord-avatar-url" style="width:100%;padding:6px 10px;border:1px solid var(--moonlight);border-radius:8px;font-family:var(--font-body);font-size:0.8em;color:var(--slate-blue);margin-top:4px;" placeholder="🎮 URL image Discord (optionnel)" oninput="updateProfile()">
                     </div>
                 </div>
 
@@ -2025,7 +2038,8 @@
                 <!-- Tabs pour switcher entre jet simple et double -->
                 <div class="roll-tabs">
                     <button class="roll-tab active" onclick="switchRollMode('simple', this)">🎲 Jet Simple</button>
-                    <button class="roll-tab" onclick="switchRollMode('dual', this)">🎲✨ Double Jet (+ Ésotérisme)</button>
+                    <button class="roll-tab" onclick="switchRollMode('dual', this)">🎲✨ Double Jet (+
+                        Ésotérisme)</button>
                 </div>
 
                 <!-- JET SIMPLE -->
@@ -2058,10 +2072,13 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Mod. Explosion</label>
-                                <input id="simple-explosion" class="bonus-input" type="number" value="0" min="-4" max="4">
+                                <input id="simple-explosion" class="bonus-input" type="number" value="0" min="-4"
+                                    max="4">
                             </div>
                         </div>
-                        <button id="perform-simple-roll-btn" class="perform-roll-btn" style="background: linear-gradient(135deg, var(--success-green), #5fb882); margin-top: 16px;" onclick="performSimpleRoll()" disabled>
+                        <button id="perform-simple-roll-btn" class="perform-roll-btn"
+                            style="background: linear-gradient(135deg, var(--success-green), #5fb882); margin-top: 16px;"
+                            onclick="performSimpleRoll()" disabled>
                             🎲 Lancer le jet
                         </button>
                     </div>
@@ -2140,8 +2157,8 @@
                         </div>
                     </div>
 
-                    <button id="perform-dual-roll-btn" class="perform-roll-btn dual" onclick="performDualRoll()" disabled
-                        style="margin-top: 20px;">
+                    <button id="perform-dual-roll-btn" class="perform-roll-btn dual" onclick="performDualRoll()"
+                        disabled style="margin-top: 20px;">
                         🎲✨ Lancer le double jet
                     </button>
 
@@ -2150,7 +2167,8 @@
                         <div class="roll-info-content">
                             <strong>Jet Ésotérisme :</strong> Dés = niveau Ésotérisme. DC = Magnitude + 1.<br>
                             Si réussi, la Magnitude s'ajoute au résultat du jet de compétence.<br>
-                            <strong>Jet Compétence :</strong> Fonctionnement classique avec bonus de magnitude si réussi.
+                            <strong>Jet Compétence :</strong> Fonctionnement classique avec bonus de magnitude si
+                            réussi.
                         </div>
                     </div>
                 </div>
@@ -2179,15 +2197,17 @@
                         <button class="add-object-btn" onclick="addObject()">+ Ajouter</button>
                     </div>
                 </div>
-            
+
                 <div class="card notes-section">
                     <div class="card-title">
                         <span class="icon" style="background: rgba(107, 76, 154, 0.1); color: #a08abf;">&#128221;</span>
                         Notes
                     </div>
-                    <textarea class="notes-textarea" id="notes-textarea" placeholder="Notes libres, descriptions, rappels..." oninput="appState.notes = this.value"></textarea>
+                    <textarea class="notes-textarea" id="notes-textarea"
+                        placeholder="Notes libres, descriptions, rappels..."
+                        oninput="appState.notes = this.value"></textarea>
                 </div>
-</div>
+            </div>
         </div>
 
         <!-- Modal -->
@@ -2276,7 +2296,7 @@
             7: { name: 'Maître', dice: 8, explosion: 10, bonus: 3, color: '#6b4c9a' },
             8: { name: 'Absolue', dice: 10, explosion: 8, bonus: 4, color: '#d4a84b' }
         };
-        
+
         // Fonction pour calculer l'explosion d'un niveau de pouvoir combiné
         function getPowerExplosion(combinedLevel) {
             if (combinedLevel >= 9) return 8;
@@ -2296,7 +2316,7 @@
 
         // ========== ÉTAT DE L'APPLICATION ==========
         const appState = {
-            profile: { name: '', image: null, discordAvatarUrl: '' },
+            profile: { name: '', image: null },
             attributes: {
                 puissance: 4, vivacite: 4, precision: 4, endurance: 4,
                 intelligence: 4, intuition: 4, volonte: 4, presence: 4
@@ -2521,27 +2541,27 @@
 
         // ========== NOMS ALTERNATIFS DES COMPÉTENCES ==========
         const SKILL_ALTERNATIVES = {
-            'Art':            ['Art', 'Performance', 'Artisanat', 'Création'],
-            'Athlétisme':     ['Athlétisme', 'Acrobaties', 'Survie', 'Endurance'],
-            'Autorité':       ['Autorité', 'Intimidation', 'Leadership', 'Commandement'],
+            'Art': ['Art', 'Performance', 'Artisanat', 'Création'],
+            'Athlétisme': ['Athlétisme', 'Acrobaties', 'Survie', 'Endurance'],
+            'Autorité': ['Autorité', 'Intimidation', 'Leadership', 'Commandement'],
             'Apothicairerie': ['Apothicairerie', 'Herboristerie', 'Botanique', 'Potions'],
-            'Bagarre':        ['Bagarre', 'Escrime', 'Arts martiaux', 'Lance'],
+            'Bagarre': ['Bagarre', 'Escrime', 'Arts martiaux', 'Lance'],
             'Combat Occulte': ['Combat Occulte', 'Duel', 'Combat magique', 'Pouvoir en combat'],
-            'Discrétion':     ['Discrétion', 'Furtivité', 'Infiltration', 'Présence effacée'],
-            'Dressage':       ['Dressage', 'Équitation', 'Apprivoisement', 'Capture'],
-            'Éloquence':      ['Éloquence', 'Diplomatie', 'Séduction', 'Raison'],
-            'Érudition':      ['Érudition', 'Histoire', 'Théologie', 'Droit'],
-            'Escamotage':     ['Escamotage', 'Larcin', 'Crochetage', 'Prestidigitation'],
-            'Ésotérisme':     ['Ésotérisme', 'Arcanes', 'Pouvoir', 'Magie'],
-            'Médecine':       ['Médecine', 'Chirurgie', 'Soins', 'Premiers secours'],
-            'Recherche':      ['Recherche', 'Enquête', 'Pistage', 'Investigation'],
-            'Résilience':     ['Résilience', 'Sang-froid', 'Bravoure', 'Calme'],
-            'Sagacité':       ['Sagacité', 'Empathie', 'Intuition', 'Perspicacité'],
-            'Stratégie':      ['Stratégie', 'Tactique', 'Commandement', 'Planification'],
-            'Technologie':    ['Technologie', 'Ingénierie', 'Mécanique', 'Sabotage'],
-            'Tir':            ['Tir', 'Archerie', 'Lancer', 'Arme à feu'],
-            'Tromperie':      ['Tromperie', 'Manipulation', 'Comédie', 'Bluff'],
-            'Vigilance':      ['Vigilance', 'Perception', 'Instinct', 'Observation'],
+            'Discrétion': ['Discrétion', 'Furtivité', 'Infiltration', 'Présence effacée'],
+            'Dressage': ['Dressage', 'Équitation', 'Apprivoisement', 'Capture'],
+            'Éloquence': ['Éloquence', 'Diplomatie', 'Séduction', 'Raison'],
+            'Érudition': ['Érudition', 'Histoire', 'Théologie', 'Droit'],
+            'Escamotage': ['Escamotage', 'Larcin', 'Crochetage', 'Prestidigitation'],
+            'Ésotérisme': ['Ésotérisme', 'Arcanes', 'Pouvoir', 'Magie'],
+            'Médecine': ['Médecine', 'Chirurgie', 'Soins', 'Premiers secours'],
+            'Recherche': ['Recherche', 'Enquête', 'Pistage', 'Investigation'],
+            'Résilience': ['Résilience', 'Sang-froid', 'Bravoure', 'Calme'],
+            'Sagacité': ['Sagacité', 'Empathie', 'Intuition', 'Perspicacité'],
+            'Stratégie': ['Stratégie', 'Tactique', 'Commandement', 'Planification'],
+            'Technologie': ['Technologie', 'Ingénierie', 'Mécanique', 'Sabotage'],
+            'Tir': ['Tir', 'Archerie', 'Lancer', 'Arme à feu'],
+            'Tromperie': ['Tromperie', 'Manipulation', 'Comédie', 'Bluff'],
+            'Vigilance': ['Vigilance', 'Perception', 'Instinct', 'Observation'],
         };
 
         // Trouve la compétence de base (la "racine") d'un nom alternatif
@@ -2723,7 +2743,6 @@
 
         function updateProfile() {
             appState.profile.name = document.getElementById('character-name').value;
-            appState.profile.discordAvatarUrl = document.getElementById('discord-avatar-url').value.trim();
         }
 
         // ========== GESTION DES OBJETS ==========
@@ -2756,10 +2775,10 @@
             nameInput.value = '';
             qualityInput.value = '0';
             renderObjects();
-                    if (appState.notes) {
-                        const ta = document.getElementById('notes-textarea');
-                        if (ta) ta.value = appState.notes;
-                    }
+            if (appState.notes) {
+                const ta = document.getElementById('notes-textarea');
+                if (ta) ta.value = appState.notes;
+            }
         }
 
         function removeObject(index) {
@@ -2879,7 +2898,7 @@
             const attrBonus = attrLevel.bonus;
             const skillBonus = skillLevel.bonus;
             const threshold = 13 - attrLevel.faces;
-            
+
             // Explosion basée sur le niveau de compétence + modificateur
             const baseExplosion = skillLevel.explosion;
             const explosionThreshold = Math.max(3, Math.min(12, baseExplosion - explosionMod));
@@ -2889,7 +2908,7 @@
             const successes = counts.successes;
             const total = successes + attrBonus + skillBonus + bonus;
 
-            const explosionText = explosionMod !== 0 
+            const explosionText = explosionMod !== 0
                 ? `Explosion ${explosionThreshold}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})`
                 : `Explosion ${explosionThreshold}+`;
 
@@ -2976,7 +2995,7 @@
             const powerThreshold = 13 - powerAttrLevel.faces;
             const powerAttrBonus = powerAttrLevel.bonus;
             const dc = magnitude + 1;
-            
+
             // Explosion basée sur le niveau d'Ésotérisme (PAS de modificateur)
             const powerExplosionThreshold = powerSkillLevel.explosion;
 
@@ -2994,7 +3013,7 @@
             const skillThreshold = 13 - skillAttrLevel.faces;
             const skillAttrBonus = skillAttrLevel.bonus;
             const skillLevelBonus = skillLevel.bonus;
-            
+
             // Explosion basée sur le niveau de compétence + modificateur (SEULEMENT sur compétence)
             const baseSkillExplosion = skillLevel.explosion;
             const skillExplosionThreshold = Math.max(3, Math.min(12, baseSkillExplosion - explosionMod));
@@ -3171,7 +3190,6 @@
 
                     // Restaurer l'interface
                     document.getElementById('character-name').value = appState.profile.name || '';
-                    document.getElementById('discord-avatar-url').value = appState.profile.discordAvatarUrl || '';
                     if (appState.profile.image) {
                         document.getElementById('profile-image-display').innerHTML =
                             `<img src="${appState.profile.image}" alt="Portrait">`;
@@ -3203,21 +3221,19 @@
         function sendDiscordRoll(skillName, baseName, total) {
             const charName = appState.profile.name || 'Personnage';
             const charImage = appState.profile.image;
-            const discordAvatar = appState.profile.discordAvatarUrl;
             const isUrl = charImage && !charImage.startsWith('data:');
-            const avatarUrl = discordAvatar || (isUrl ? charImage : null);
             const base = baseName || skillName;
             const custom = baseName && baseName !== skillName ? skillName : null;
             const payload = {
                 username: charName,
                 content: `🎲 **${base}**${custom ? ` *(${custom})*` : ''} — Résultat : **${total}**`
             };
-            if (avatarUrl) payload.avatar_url = avatarUrl;
+            if (isUrl) payload.avatar_url = charImage;
             fetch(DISCORD_WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
-            }).catch(() => {});
+            }).catch(() => { });
         }
 
         function capitalize(str) {

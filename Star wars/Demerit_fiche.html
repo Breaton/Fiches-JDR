@@ -2217,7 +2217,6 @@
                             onchange="handleProfileImage(event)">
                         <input type="text" id="character-name" class="profile-name-input"
                             placeholder="Nom du personnage" oninput="updateProfile()">
-                        <input type="text" id="discord-avatar-url" style="width:100%;padding:6px 10px;border:1px solid rgba(0,168,255,0.3);border-radius:4px;font-family:var(--font-body);font-size:0.8em;background:var(--metal-gray);color:var(--light-steel);margin-top:4px;" placeholder="🎮 URL image Discord (optionnel)" oninput="updateProfile()">
                     </div>
                 </div>
                 <div class="elan-section">
@@ -3009,7 +3008,7 @@
         ];
         const defaultSkills = ['Art', 'Athlétisme', 'Autorité', 'Bagarre', 'Combat de Force', 'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Informatique', 'Ingénierie', 'Médecine', 'Pilotage', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Tir', 'Tromperie', 'Vigilance'];
         const appState = {
-            profile: { name: '', image: null, discordAvatarUrl: '' },
+            profile: { name: '', image: null },
             attributes: { puissance: 4, vivacite: 4, precision: 4, endurance: 4, intelligence: 4, intuition: 4, volonte: 4, presence: 4 },
             counters: { health: { current: 10, max: 10 }, force: { current: 10, max: 10 } },
             skills: [],
@@ -3744,10 +3743,7 @@
             };
             reader.readAsDataURL(file);
         }
-        function updateProfile() {
-            appState.profile.name = document.getElementById('character-name').value;
-            appState.profile.discordAvatarUrl = document.getElementById('discord-avatar-url').value.trim();
-        }
+        function updateProfile() { appState.profile.name = document.getElementById('character-name').value; }
         function saveToFile() {
             const data = JSON.stringify(appState, null, 2);
             const blob = new Blob([data], { type: 'application/json' });
@@ -3768,7 +3764,6 @@
                     const loaded = JSON.parse(e.target.result);
                     Object.assign(appState, loaded);
                     document.getElementById('character-name').value = appState.profile.name || '';
-                    document.getElementById('discord-avatar-url').value = appState.profile.discordAvatarUrl || '';
                     if (appState.profile.image) document.getElementById('profile-image-display').innerHTML = `<img src="${appState.profile.image}" alt="Portrait">`;
                     updateAllAttributes();
                     updateCounterDisplay('force');
@@ -3797,21 +3792,19 @@
         function sendDiscordRoll(skillName, baseName, total) {
             const charName = appState.profile.name || 'Personnage';
             const charImage = appState.profile.image;
-            const discordAvatar = appState.profile.discordAvatarUrl;
             const isUrl = charImage && !charImage.startsWith('data:');
-            const avatarUrl = discordAvatar || (isUrl ? charImage : null);
             const base = baseName || skillName;
             const custom = baseName && baseName !== skillName ? skillName : null;
             const payload = {
                 username: charName,
                 content: `🎲 **${base}**${custom ? ` *(${custom})*` : ''} — Résultat : **${total}**`
             };
-            if (avatarUrl) payload.avatar_url = avatarUrl;
+            if (isUrl) payload.avatar_url = charImage;
             fetch(DISCORD_WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
-            }).catch(() => {});
+            }).catch(() => { });
         }
 
         function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
