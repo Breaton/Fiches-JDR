@@ -2904,7 +2904,7 @@
                 bonus,
                 total
             });
-            sendDiscordRoll(skill.name, skill.baseName, total);
+            sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName));
         }
 
         function displaySimpleResult(data) {
@@ -3033,7 +3033,7 @@
                 explosionThreshold: skillExplosionThreshold,
                 explosionMod
             });
-            sendDiscordRoll(skill.name, skill.baseName, finalTotal);
+            sendDiscordRoll(skill.name, skill.baseName, finalTotal, capitalize(skillAttrName));
         }
 
         function displayDualResult(data) {
@@ -3197,12 +3197,13 @@
         // ========== DISCORD WEBHOOK ==========
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1509003659407524041/plYUTg3J6tuwaSDM32dEhjjH3n9kj9JQm1e-Okit0vFT66ivfBuIsH6DULNJgkIR9iiN';
 
-        function sendDiscordRoll(skillName, baseName, total) {
+        function sendDiscordRoll(skillName, baseName, total, attrName) {
             const charName = appState.profile.name || 'Personnage';
             const charImage = appState.profile.image;
             const base = baseName || skillName;
             const custom = baseName && baseName !== skillName ? skillName : null;
-            const text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''} — Résultat : **${total}**`;
+            const attrLabel = attrName ? ` [${attrName}]` : '';
+            const text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} — Résultat : **${total}**`;
             const embed = {
                 description: text,
                 color: 0xd4a84b,

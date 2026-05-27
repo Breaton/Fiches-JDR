@@ -3485,7 +3485,7 @@
                 attributeBonus: attrBonus,
                 total
             });
-            sendDiscordRoll(`${verb.name} + ${target.name}`, null, total);
+            sendDiscordRoll(`${verb.name} + ${target.name}`, null, total, capitalize(powerAttrName));
         }
 
         function updateRollButtons() {
@@ -3531,7 +3531,7 @@
             const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
             const total = result.successes + attrBonus + skillBonus + bonus;
             displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
-            sendDiscordRoll(skill.name, skill.baseName, total);
+            sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName));
         }
         function rollSkillPage() {
             const attrName = document.getElementById('skill-page-attr-select').value;
@@ -3552,7 +3552,7 @@
             const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
             const total = result.successes + attrBonus + skillBonus + bonus;
             displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
-            sendDiscordRoll(skill.name, skill.baseName, total);
+            sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName));
         }
         function rollConjoint() {
             const forceAttrName = document.getElementById('force-attr-select').value;
@@ -3626,7 +3626,7 @@
                 registreName,
                 finalTotal
             });
-            sendDiscordRoll(skill.name, skill.baseName, finalTotal);
+            sendDiscordRoll(skill.name, skill.baseName, finalTotal, capitalize(skillAttrName));
         }
         function displayResult(data) {
             document.getElementById('result-title').textContent = data.title;
@@ -3791,12 +3791,13 @@
         // ========== DISCORD WEBHOOK ==========
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1509003659407524041/plYUTg3J6tuwaSDM32dEhjjH3n9kj9JQm1e-Okit0vFT66ivfBuIsH6DULNJgkIR9iiN';
 
-        function sendDiscordRoll(skillName, baseName, total) {
+        function sendDiscordRoll(skillName, baseName, total, attrName) {
             const charName = appState.profile.name || 'Personnage';
             const charImage = appState.profile.image;
             const base = baseName || skillName;
             const custom = baseName && baseName !== skillName ? skillName : null;
-            const text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''} — Résultat : **${total}**`;
+            const attrLabel = attrName ? ` [${attrName}]` : '';
+            const text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} — Résultat : **${total}**`;
             const embed = {
                 description: text,
                 color: 0xd4a84b,
