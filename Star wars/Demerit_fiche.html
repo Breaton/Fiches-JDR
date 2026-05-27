@@ -3485,6 +3485,7 @@
                 attributeBonus: attrBonus,
                 total
             });
+            sendDiscordRoll(`${verb.name} + ${target.name}`, null, total);
         }
 
         function updateRollButtons() {
@@ -3528,7 +3529,9 @@
             const attrBonus = attrLevel.bonus;
             const skillBonus = skillLevel.bonus;
             const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
-            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total: result.successes + attrBonus + skillBonus + bonus });
+            const total = result.successes + attrBonus + skillBonus + bonus;
+            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
+            sendDiscordRoll(skill.name, skill.baseName, total);
         }
         function rollSkillPage() {
             const attrName = document.getElementById('skill-page-attr-select').value;
@@ -3547,7 +3550,9 @@
             const attrBonus = attrLevel.bonus;
             const skillBonus = skillLevel.bonus;
             const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
-            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total: result.successes + attrBonus + skillBonus + bonus });
+            const total = result.successes + attrBonus + skillBonus + bonus;
+            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
+            sendDiscordRoll(skill.name, skill.baseName, total);
         }
         function rollConjoint() {
             const forceAttrName = document.getElementById('force-attr-select').value;
@@ -3595,8 +3600,8 @@
             const skillTotal = skillResult.successes + skillAttrBonus + skillBonus;
             const explosionText = explosionMod !== 0 ? ` | Mod. Explosion ${explosionMod > 0 ? '+' : ''}${explosionMod}` : '';
 
-            // Si force réussie, ajouter la PUISSANCE (pas juste la magnitude)
             const powerBonus = forceSuccess ? puissance : 0;
+            const finalTotal = skillTotal + powerBonus + bonus;
 
             displayConjointResult({
                 title: `${verb.name} + ${target.name} → ${skill.name}`,
@@ -3619,8 +3624,9 @@
                 puissanceMod,
                 registreMod,
                 registreName,
-                finalTotal: skillTotal + powerBonus + bonus
+                finalTotal
             });
+            sendDiscordRoll(skill.name, skill.baseName, finalTotal);
         }
         function displayResult(data) {
             document.getElementById('result-title').textContent = data.title;
@@ -3780,6 +3786,27 @@
             };
             reader.readAsText(file);
         }
+        // ========== DISCORD WEBHOOK ==========
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1509003659407524041/plYUTg3J6tuwaSDM32dEhjjH3n9kj9JQm1e-Okit0vFT66ivfBuIsH6DULNJgkIR9iiN';
+
+        function sendDiscordRoll(skillName, baseName, total) {
+            const charName = appState.profile.name || 'Personnage';
+            const charImage = appState.profile.image;
+            const isUrl = charImage && !charImage.startsWith('data:');
+            const base = baseName || skillName;
+            const custom = baseName && baseName !== skillName ? skillName : null;
+            const payload = {
+                username: charName,
+                content: `🎲 **${base}**${custom ? ` *(${custom})*` : ''} — Résultat : **${total}**`
+            };
+            if (isUrl) payload.avatar_url = charImage;
+            fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(() => { });
+        }
+
         function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
         // ── RÉSONANCE / CORRUPTION ──
         let resonanceValue = 0;

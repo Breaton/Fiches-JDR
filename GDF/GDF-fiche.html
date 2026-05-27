@@ -2973,7 +2973,8 @@
                                 <div class="stance-name">Liàn shì (Vivacité)</div>
                             </div>
                             <div class="stance-effect">
-                                Vous pouvez lancer deux sorts par tour à condition que la magnitude individuelle de chaque sort n'excède pas
+                                Vous pouvez lancer deux sorts par tour à condition que la magnitude individuelle de
+                                chaque sort n'excède pas
                                 la moitié de votre niveau en Combat Magique, que les deux sorts ne soient pas des sorts
                                 de durée ou de zone, et qu'ils visent la même cible.
                             </div>
@@ -4349,6 +4350,7 @@
                 attributeBonus: attrBonus, bonus, total, threshold,
                 explosionThreshold
             });
+            sendDiscordRoll(skill.name, skill.baseName, total);
         }
 
         function performMagicRoll() {
@@ -4454,6 +4456,7 @@
                 finalTotal,
                 explosionThreshold: skillExplosionThreshold
             });
+            sendDiscordRoll(skill.name, skill.baseName, finalTotal);
         }
 
         function displayConjointResult(data) {
@@ -4735,6 +4738,27 @@
         }
 
         // ========== UTILITAIRES ==========
+        // ========== DISCORD WEBHOOK ==========
+        const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1509003659407524041/plYUTg3J6tuwaSDM32dEhjjH3n9kj9JQm1e-Okit0vFT66ivfBuIsH6DULNJgkIR9iiN';
+
+        function sendDiscordRoll(skillName, baseName, total) {
+            const charName = appState.profile.name || 'Personnage';
+            const charImage = appState.profile.image;
+            const isUrl = charImage && !charImage.startsWith('data:');
+            const base = baseName || skillName;
+            const custom = baseName && baseName !== skillName ? skillName : null;
+            const payload = {
+                username: charName,
+                content: `🎲 **${base}**${custom ? ` *(${custom})*` : ''} — Résultat : **${total}**`
+            };
+            if (isUrl) payload.avatar_url = charImage;
+            fetch(DISCORD_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).catch(() => { });
+        }
+
         function capitalize(str) {
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
