@@ -2342,6 +2342,7 @@
                         </div>
                         <input type="text" id="character-name" class="profile-name-input"
                             placeholder="Nom du personnage" oninput="updateProfile()">
+                        <input type="text" id="discord-avatar-url" style="width:100%;padding:6px 10px;border:1px solid var(--moonlight);border-radius:8px;font-family:var(--font-body);font-size:0.8em;color:var(--slate-blue);margin-top:4px;" placeholder="🎮 URL image Discord (optionnel)" oninput="updateProfile()">
                     </div>
                 </div>
 
@@ -2973,8 +2974,7 @@
                                 <div class="stance-name">Liàn shì (Vivacité)</div>
                             </div>
                             <div class="stance-effect">
-                                Vous pouvez lancer deux sorts par tour à condition que la magnitude individuelle de
-                                chaque sort n'excède pas
+                                Vous pouvez lancer deux sorts par tour à condition que la magnitude individuelle de chaque sort n'excède pas
                                 la moitié de votre niveau en Combat Magique, que les deux sorts ne soient pas des sorts
                                 de durée ou de zone, et qu'ils visent la même cible.
                             </div>
@@ -3515,7 +3515,7 @@
 
         // ========== ÉTAT DE L'APPLICATION ==========
         const appState = {
-            profile: { name: '', image: null },
+            profile: { name: '', image: null, discordAvatarUrl: '' },
             attributes: {
                 puissance: 4, vivacite: 4, precision: 4, endurance: 4,
                 intelligence: 4, intuition: 4, volonte: 4, presence: 4
@@ -3879,6 +3879,7 @@
 
         function updateProfile() {
             appState.profile.name = document.getElementById('character-name').value;
+            appState.profile.discordAvatarUrl = document.getElementById('discord-avatar-url').value.trim();
         }
 
         // ========== SWITCH MODE JETS DE MAGIE ==========
@@ -4632,6 +4633,7 @@
 
                     // Restaurer l'interface
                     document.getElementById('character-name').value = appState.profile.name || '';
+                    document.getElementById('discord-avatar-url').value = appState.profile.discordAvatarUrl || '';
                     if (appState.profile.image) {
                         document.getElementById('profile-image-display').innerHTML =
                             `<img src="${appState.profile.image}" alt="Portrait">`;
@@ -4745,19 +4747,21 @@
         function sendDiscordRoll(skillName, baseName, total) {
             const charName = appState.profile.name || 'Personnage';
             const charImage = appState.profile.image;
+            const discordAvatar = appState.profile.discordAvatarUrl;
             const isUrl = charImage && !charImage.startsWith('data:');
+            const avatarUrl = discordAvatar || (isUrl ? charImage : null);
             const base = baseName || skillName;
             const custom = baseName && baseName !== skillName ? skillName : null;
             const payload = {
                 username: charName,
                 content: `🎲 **${base}**${custom ? ` *(${custom})*` : ''} — Résultat : **${total}**`
             };
-            if (isUrl) payload.avatar_url = charImage;
+            if (avatarUrl) payload.avatar_url = avatarUrl;
             fetch(DISCORD_WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
-            }).catch(() => { });
+            }).catch(() => {});
         }
 
         function capitalize(str) {
