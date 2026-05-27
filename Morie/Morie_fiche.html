@@ -2904,7 +2904,7 @@
                 bonus,
                 total
             });
-            sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName));
+            sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), { successes, attrBonus, skillBonus, bonus });
         }
 
         function displaySimpleResult(data) {
@@ -3033,7 +3033,7 @@
                 explosionThreshold: skillExplosionThreshold,
                 explosionMod
             });
-            sendDiscordRoll(skill.name, skill.baseName, finalTotal, capitalize(skillAttrName));
+            sendDiscordRoll(skill.name, skill.baseName, finalTotal, capitalize(skillAttrName), { successes: skillSuccesses, attrBonus: skillAttrBonus, skillBonus: skillLevelBonus, bonus: skillBonus, spellBonus: magnitudeBonus || null, spellLabel: 'Ésotérisme' });
         }
 
         function displayDualResult(data) {
@@ -3197,15 +3197,28 @@
         // ========== DISCORD WEBHOOK ==========
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1509003659407524041/plYUTg3J6tuwaSDM32dEhjjH3n9kj9JQm1e-Okit0vFT66ivfBuIsH6DULNJgkIR9iiN';
 
-        function sendDiscordRoll(skillName, baseName, total, attrName) {
+        function sendDiscordRoll(skillName, baseName, total, attrName, details) {
             const charName = appState.profile.name || 'Personnage';
             const charImage = appState.profile.image;
             const base = baseName || skillName;
             const custom = baseName && baseName !== skillName ? skillName : null;
             const attrLabel = attrName ? ` [${attrName}]` : '';
             const text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} — Résultat : **${total}**`;
+
+            // Build detail line
+            let detailParts = [];
+            if (details) {
+                detailParts.push(`Succès : ${details.successes}`);
+                if (details.attrBonus) detailParts.push(`Attr : +${details.attrBonus}`);
+                if (details.skillBonus) detailParts.push(`Comp : +${details.skillBonus}`);
+                if (details.bonus !== undefined && details.bonus !== 0) detailParts.push(`Mod : ${details.bonus > 0 ? '+' : ''}${details.bonus}`);
+                if (details.spellBonus) detailParts.push(`${details.spellLabel || 'Sort'} : +${details.spellBonus}`);
+            }
+            const detailLine = detailParts.length ? `
+┈ ${detailParts.join(' │ ')}` : '';
+
             const embed = {
-                description: text,
+                description: text + detailLine,
                 color: 0xd4a84b,
                 author: { name: charName }
             };
