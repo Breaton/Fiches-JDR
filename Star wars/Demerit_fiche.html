@@ -3743,7 +3743,9 @@
             };
             reader.readAsDataURL(file);
         }
-        function updateProfile() { appState.profile.name = document.getElementById('character-name').value; }
+        function updateProfile() {
+            appState.profile.name = document.getElementById('character-name').value;
+        }
         function saveToFile() {
             const data = JSON.stringify(appState, null, 2);
             const blob = new Blob([data], { type: 'application/json' });
@@ -3792,19 +3794,32 @@
         function sendDiscordRoll(skillName, baseName, total) {
             const charName = appState.profile.name || 'Personnage';
             const charImage = appState.profile.image;
-            const isUrl = charImage && !charImage.startsWith('data:');
             const base = baseName || skillName;
             const custom = baseName && baseName !== skillName ? skillName : null;
-            const payload = {
-                username: charName,
-                content: `🎲 **${base}**${custom ? ` *(${custom})*` : ''} — Résultat : **${total}**`
+            const text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''} — Résultat : **${total}**`;
+            const embed = {
+                description: text,
+                color: 0xd4a84b,
+                author: { name: charName }
             };
-            if (isUrl) payload.avatar_url = charImage;
-            fetch(DISCORD_WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).catch(() => { });
+            if (charImage && charImage.startsWith('data:')) {
+                const [header, data] = charImage.split(',');
+                const mime = header.match(/:(.*?);/)[1];
+                const bytes = Uint8Array.from(atob(data), c => c.charCodeAt(0));
+                const blob = new Blob([bytes], { type: mime });
+                embed.author.icon_url = 'attachment://avatar.png';
+                const form = new FormData();
+                form.append('files[0]', blob, 'avatar.png');
+                form.append('payload_json', JSON.stringify({ username: charName, embeds: [embed] }));
+                fetch(DISCORD_WEBHOOK_URL, { method: 'POST', body: form }).catch(() => {});
+            } else {
+                if (charImage && !charImage.startsWith('data:')) embed.author.icon_url = charImage;
+                fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: charName, embeds: [embed] })
+                }).catch(() => {});
+            }
         }
 
         function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
