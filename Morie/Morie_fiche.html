@@ -1890,24 +1890,38 @@
                         Ressources
                     </div>
                     <div class="counters-grid">
-                        <!-- Réserve Pouvoir -->
-                        <div class="counter-item power">
-                            <div class="counter-label">
-                                <span class="emoji">⚡</span> Réserve Pouvoir
+                        <!-- Pool de Dés Magiques -->
+                        <div class="counter-item" id="magic-pool-block" style="background: rgba(107,76,154,0.08); border: 1px solid rgba(107,76,154,0.2);">
+                            <div class="counter-label" style="color: var(--ombre-purple);">
+                                <span class="emoji">✨</span> Pool de Dés Magiques
+                            </div>
+                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap;">
+                                <label style="font-size:0.8em; color:var(--silver-mist); font-weight:600;">Attr. Pouvoir :</label>
+                                <select id="magic-attr-select" style="border:1px solid var(--moonlight); border-radius:6px; padding:4px 8px; font-family:var(--font-body); font-size:0.85em; background:white; color:var(--deep-navy);" onchange="updateMagicPool()">
+                                    <option value="puissance">Puissance</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="precision">Précision</option>
+                                    <option value="endurance">Endurance</option>
+                                    <option value="intelligence">Intelligence</option>
+                                    <option value="intuition" selected>Intuition</option>
+                                    <option value="volonte">Volonté</option>
+                                    <option value="presence">Présence</option>
+                                </select>
                             </div>
                             <div class="counter-controls">
-                                <button class="counter-btn minus" onclick="modifyCounter('power', -1)">−</button>
+                                <button class="counter-btn minus" onclick="consumeMagicDie(1)" title="Consommer manuellement">−</button>
                                 <div class="counter-value">
-                                    <input type="number" id="power-current" value="10" min="0"
-                                        onchange="updateCounters()">
+                                    <span id="magic-pool-remaining" style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:var(--ombre-purple);">0</span>
                                     <span class="counter-separator">/</span>
-                                    <input type="number" id="power-max" value="10" min="1" onchange="updateCounters()">
+                                    <span id="magic-pool-max" style="font-family:var(--font-display); font-size:1.4em; font-weight:700;">0</span>
                                 </div>
-                                <button class="counter-btn plus" onclick="modifyCounter('power', 1)">+</button>
+                                <button class="counter-btn plus" onclick="consumeMagicDie(-1)" title="Récupérer manuellement">+</button>
                             </div>
-                            <div class="counter-bar">
-                                <div id="power-bar" class="counter-fill power" style="width: 100%;"></div>
+                            <div class="counter-bar" style="background:rgba(107,76,154,0.15);">
+                                <div id="magic-pool-bar" style="height:100%; border-radius:4px; background:linear-gradient(90deg,var(--ombre-purple),#9b7cd4); transition:width 0.3s ease; width:100%;"></div>
                             </div>
+                            <div id="magic-pool-status" style="margin-top:8px; font-size:0.78em; font-weight:600; text-align:center;"></div>
+                            <button onclick="resetMagicPool()" style="margin-top:8px; width:100%; padding:5px; background:rgba(107,76,154,0.15); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺ Repos — Réinitialiser le pool</button>
                         </div>
                     </div>
 
@@ -2021,10 +2035,28 @@
                     <div class="roll-title">Jets de Compétence</div>
                 </div>
 
-                <!-- Tabs pour switcher entre jet simple et double -->
+                <!-- Mini pool magique -->
+                <div id="roll-page-pool" style="display:none; margin-bottom:12px; padding:10px 14px; background:rgba(107,76,154,0.08); border:1px solid rgba(107,76,154,0.2); border-radius:10px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span style="font-size:1em;">✨</span>
+                            <span style="font-weight:600; color:var(--ombre-purple); font-size:0.9em;">Pool Magique</span>
+                            <span id="roll-pool-display" style="font-family:var(--font-display); font-weight:700; color:var(--ombre-purple); font-size:1.1em;">0/0</span>
+                        </div>
+                        <div style="flex:1; min-width:80px; height:6px; background:rgba(107,76,154,0.15); border-radius:3px; overflow:hidden;">
+                            <div id="roll-pool-bar" style="height:100%; border-radius:3px; background:linear-gradient(90deg,var(--ombre-purple),#9b7cd4); transition:width 0.3s ease; width:100%;"></div>
+                        </div>
+                        <span id="roll-pool-status" style="font-size:0.78em; font-weight:600; white-space:nowrap;"></span>
+                        <button onclick="resetMagicPool()" style="padding:3px 10px; background:rgba(107,76,154,0.15); border:1px solid rgba(107,76,154,0.3); border-radius:5px; color:var(--ombre-purple); font-size:0.78em; font-weight:600; cursor:pointer;">↺ Repos</button>
+                    </div>
+                    <div style="margin-top:6px; font-size:0.78em; color:var(--silver-mist);" id="roll-pool-details"></div>
+                </div>
+
+                <!-- Tabs pour switcher entre jet simple, jet+magie, magie pure -->
                 <div class="roll-tabs">
                     <button class="roll-tab active" onclick="switchRollMode('simple', this)">🎲 Jet Simple</button>
-                    <button class="roll-tab" onclick="switchRollMode('dual', this)">🎲✨ Double Jet (+ Ésotérisme)</button>
+                    <button class="roll-tab" onclick="switchRollMode('hybrid', this)">🎲✨ Jet + Magie</button>
+                    <button class="roll-tab" onclick="switchRollMode('pure', this)">✨ Magie Pure</button>
                 </div>
 
                 <!-- JET SIMPLE -->
@@ -2073,83 +2105,80 @@
                     </div>
                 </div>
 
-                <!-- DOUBLE JET -->
-                <div id="roll-dual" class="roll-panel">
-                    <div class="dual-roll-container">
-                        <!-- Colonne Compétence -->
-                        <div class="roll-column skill-roll">
-                            <div class="roll-column-title">⚔ Jet de Compétence</div>
-                            <div class="roll-form">
-                                <div class="form-group">
-                                    <label class="form-label">Attribut</label>
-                                    <select id="skill-attr-select" class="form-select" onchange="updateRollButtons()">
-                                        <option value="">— Sélectionner —</option>
-                                        <option value="puissance">Puissance</option>
-                                        <option value="vivacite">Vivacité</option>
-                                        <option value="precision">Précision</option>
-                                        <option value="endurance">Endurance</option>
-                                        <option value="intelligence">Intelligence</option>
-                                        <option value="intuition">Intuition</option>
-                                        <option value="volonte">Volonté</option>
-                                        <option value="presence">Présence</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Compétence</label>
-                                    <select id="skill-select" class="form-select" onchange="updateRollButtons()">
-                                        <option value="">— Sélectionner —</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Bonus / Malus</label>
-                                    <input id="skill-bonus" class="bonus-input" type="number" value="0">
-                                </div>
+                <!-- JET + MAGIE (hybride) -->
+                <div id="roll-hybrid" class="roll-panel">
+                    <div class="roll-form">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label class="form-label">Attribut</label>
+                                <select id="hybrid-attr-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                    <option value="puissance">Puissance</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="precision">Précision</option>
+                                    <option value="endurance">Endurance</option>
+                                    <option value="intelligence">Intelligence</option>
+                                    <option value="intuition">Intuition</option>
+                                    <option value="volonte">Volonté</option>
+                                    <option value="presence">Présence</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Compétence</label>
+                                <select id="hybrid-skill-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Dés magiques injectés</label>
+                                <input id="hybrid-magic-dice" class="bonus-input" type="number" value="1" min="0" onchange="updateHybridMagicInfo()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Bonus / Malus</label>
+                                <input id="hybrid-bonus" class="bonus-input" type="number" value="0">
                             </div>
                         </div>
-
-                        <!-- Colonne Maîtrise Pouvoir -->
-                        <div class="roll-column power-roll">
-                            <div class="roll-column-title">✨ Jet Ésotérisme</div>
-                            <div class="roll-form">
-                                <div class="form-group">
-                                    <label class="form-label">Attribut (Pouvoir)</label>
-                                    <select id="power-attr-select" class="form-select" onchange="updateRollButtons()">
-                                        <option value="">— Sélectionner —</option>
-                                        <option value="puissance">Puissance</option>
-                                        <option value="vivacite">Vivacité</option>
-                                        <option value="precision">Précision</option>
-                                        <option value="endurance">Endurance</option>
-                                        <option value="intelligence">Intelligence</option>
-                                        <option value="intuition">Intuition</option>
-                                        <option value="volonte">Volonté</option>
-                                        <option value="presence">Présence</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Magnitude du Sort</label>
-                                    <input id="spell-magnitude" class="bonus-input" type="number" value="1" min="1"
-                                        max="10">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Mod. Explosion</label>
-                                    <input id="explosion-threshold" class="bonus-input" type="number" value="0" min="-4"
-                                        max="4">
-                                </div>
-                            </div>
+                        <div id="hybrid-magic-info" style="margin-top:10px; padding:10px; background:rgba(59,166,166,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);"></div>
+                        <button id="perform-hybrid-roll-btn" class="perform-roll-btn" style="background: linear-gradient(135deg, var(--power-cyan), var(--power-glow)); margin-top: 16px;" onclick="performHybridRoll()" disabled>
+                            🎲✨ Lancer le jet
+                        </button>
+                    </div>
+                    <div class="roll-info" style="margin-top: 16px;">
+                        <div class="roll-info-title">Mécanique Jet + Magie</div>
+                        <div class="roll-info-content">
+                            Les dés magiques s'ajoutent au pool normal avec le seuil de l'attribut lié à la magie.<br>
+                            Pas de bonus d'attribut sur les dés magiques.<br>
+                            Si <strong>tous</strong> les dés magiques tombent en zone critique → Perte d'Élan = dés × 2.<br>
+                            La zone critique s'élargit selon les dés déjà consommés aujourd'hui.
                         </div>
                     </div>
+                </div>
 
-                    <button id="perform-dual-roll-btn" class="perform-roll-btn dual" onclick="performDualRoll()" disabled
-                        style="margin-top: 20px;">
-                        🎲✨ Lancer le double jet
-                    </button>
-
+                <!-- MAGIE PURE -->
+                <div id="roll-pure" class="roll-panel">
+                    <div class="roll-form">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group">
+                                <label class="form-label">Dés magiques injectés</label>
+                                <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1" onchange="updatePureMagicInfo()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Magnitude requise (succès)</label>
+                                <input id="pure-magnitude" class="bonus-input" type="number" value="2" min="1" max="10">
+                            </div>
+                        </div>
+                        <div id="pure-magic-info" style="margin-top:10px; padding:10px; background:rgba(107,76,154,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);"></div>
+                        <button id="perform-pure-roll-btn" class="perform-roll-btn" style="background: linear-gradient(135deg, var(--ombre-purple), #8b6cbf); margin-top: 16px;" onclick="performPureRoll()">
+                            ✨ Lancer le pouvoir
+                        </button>
+                    </div>
                     <div class="roll-info" style="margin-top: 16px;">
-                        <div class="roll-info-title">Mécanique du Double Jet</div>
+                        <div class="roll-info-title">Mécanique Magie Pure</div>
                         <div class="roll-info-content">
-                            <strong>Jet Ésotérisme :</strong> Dés = niveau Ésotérisme. DC = Magnitude + 1.<br>
-                            Si réussi, la Magnitude s'ajoute au résultat du jet de compétence.<br>
-                            <strong>Jet Compétence :</strong> Fonctionnement classique avec bonus de magnitude si réussi.
+                            Jet uniquement avec les dés magiques sur l'attribut lié.<br>
+                            Si le nombre de succès ≥ magnitude → pouvoir réussi.<br>
+                            Si <strong>tous</strong> les dés tombent en zone critique → Perte d'Élan = dés × 2.<br>
+                            <strong>Magnitudes :</strong> 1 triviale · 2 simple · 3 modérée · 4 complexe · 5 majeure · 6+ légendaire
                         </div>
                     </div>
                 </div>
@@ -2309,7 +2338,12 @@
             wounds: [],
             objects: [],
             notes: "",
-            currentModal: null
+            currentModal: null,
+            magic: {
+                attr: 'intuition',   // attribut lié au pouvoir
+                poolMax: 0,          // calculé automatiquement
+                poolUsed: 0          // dés déjà consommés ce jour
+            }
         };
 
         // ========== GESTION DES PAGES ==========
@@ -2326,6 +2360,7 @@
             const newVal = Math.max(1, Math.min(8, appState.attributes[attr] + delta));
             appState.attributes[attr] = newVal;
             updateAttributeDisplay(attr);
+            updateMagicPool();
         }
 
         function updateAttributeDisplay(attr) {
@@ -2361,10 +2396,13 @@
 
         function updateCounterDisplay(type) {
             const counter = appState.counters[type];
-            document.getElementById(`${type}-current`).value = counter.current;
-            document.getElementById(`${type}-max`).value = counter.max;
-            const percent = (counter.current / counter.max) * 100;
-            document.getElementById(`${type}-bar`).style.width = `${percent}%`;
+            if (!counter) return;
+            const cur = document.getElementById(`${type}-current`);
+            const max = document.getElementById(`${type}-max`);
+            const bar = document.getElementById(`${type}-bar`);
+            if (cur) cur.value = counter.current;
+            if (max) max.value = counter.max;
+            if (bar) bar.style.width = `${(counter.current / counter.max) * 100}%`;
         }
 
         // ========== RESSOURCES PERSONNALISÉES ==========
@@ -2699,6 +2737,7 @@
             if (skill) {
                 skill.level = Math.max(1, Math.min(8, skill.level + delta));
                 renderSkills();
+                updateMagicPool();
             }
         }
 
@@ -2771,6 +2810,8 @@
             document.querySelectorAll('.roll-panel').forEach(p => p.classList.remove('active'));
             tabEl.classList.add('active');
             document.getElementById(`roll-${mode}`).classList.add('active');
+            if (mode === 'hybrid') updateHybridMagicInfo();
+            if (mode === 'pure') updatePureMagicInfo();
         }
 
         // ========== MISE À JOUR DES SELECTS ==========
@@ -2791,19 +2832,19 @@
                 }
             }
 
-            // Jet double - compétence
-            const skillSelect = document.getElementById('skill-select');
-            if (skillSelect) {
-                const currentValue = skillSelect.value;
-                skillSelect.innerHTML = '<option value="">— Sélectionner —</option>';
+            // Jet hybride - compétence
+            const hybridSkillSelect = document.getElementById('hybrid-skill-select');
+            if (hybridSkillSelect) {
+                const currentValue = hybridSkillSelect.value;
+                hybridSkillSelect.innerHTML = '<option value="">— Sélectionner —</option>';
                 appState.skills.forEach(s => {
                     const opt = document.createElement('option');
                     opt.value = s.id;
                     opt.textContent = `${s.name} (${s.level})`;
-                    skillSelect.appendChild(opt);
+                    hybridSkillSelect.appendChild(opt);
                 });
                 if (currentValue && appState.skills.find(s => s.id === currentValue)) {
-                    skillSelect.value = currentValue;
+                    hybridSkillSelect.value = currentValue;
                 }
             }
 
@@ -2819,14 +2860,12 @@
                 simpleBtn.disabled = !simpleAttr?.value || !simpleSkill?.value;
             }
 
-            // Jet double
-            const skillAttr = document.getElementById('skill-attr-select');
-            const skillSel = document.getElementById('skill-select');
-            const powerAttr = document.getElementById('power-attr-select');
-            const dualBtn = document.getElementById('perform-dual-roll-btn');
-
-            if (dualBtn) {
-                dualBtn.disabled = !skillAttr?.value || !skillSel?.value || !powerAttr?.value;
+            // Jet hybride
+            const hybridAttr = document.getElementById('hybrid-attr-select');
+            const hybridSkill = document.getElementById('hybrid-skill-select');
+            const hybridBtn = document.getElementById('perform-hybrid-roll-btn');
+            if (hybridBtn) {
+                hybridBtn.disabled = !hybridAttr?.value || !hybridSkill?.value;
             }
         }
 
@@ -2952,113 +2991,261 @@
             document.getElementById('result-overlay').classList.add('active');
         }
 
-        // ========== DOUBLE JET ==========
-        function performDualRoll() {
-            const skillAttrName = document.getElementById('skill-attr-select').value;
-            const skillId = document.getElementById('skill-select').value;
-            const skillBonus = parseInt(document.getElementById('skill-bonus').value) || 0;
-            const powerAttrName = document.getElementById('power-attr-select').value;
-            const magnitude = parseInt(document.getElementById('spell-magnitude').value) || 1;
-            const explosionMod = parseInt(document.getElementById('explosion-threshold').value) || 0;
-
-            const skill = appState.skills.find(s => s.id === skillId);
-            const powerSkill = appState.skills.find(s => s.name === 'Ésotérisme');
-
-            if (!skill) return;
-
-            // === JET DE MAÎTRISE POUVOIR ===
-            const powerAttrValue = appState.attributes[powerAttrName];
-            const powerAttrLevel = getAttributeLevel(powerAttrValue);
-            const powerSkillLevel = powerSkill ? getSkillLevel(powerSkill.level) : getSkillLevel(1);
-            const powerNumDice = powerSkillLevel.dice;
-            const powerThreshold = 13 - powerAttrLevel.faces;
-            const powerAttrBonus = powerAttrLevel.bonus;
-            const dc = magnitude + 1;
-            
-            // Explosion basée sur le niveau d'Ésotérisme (PAS de modificateur)
-            const powerExplosionThreshold = powerSkillLevel.explosion;
-
-            const powerDiceResults = rollWithExplosions(powerNumDice, powerThreshold, powerExplosionThreshold);
-            const powerCounts = countSuccesses(powerDiceResults, powerThreshold);
-            const powerSuccesses = powerCounts.successes;
-            const powerTotal = powerSuccesses + powerAttrBonus;
-            const powerSuccess = powerTotal >= dc;
-
-            // === JET DE COMPÉTENCE ===
-            const skillAttrValue = appState.attributes[skillAttrName];
-            const skillAttrLevel = getAttributeLevel(skillAttrValue);
-            const skillLevel = getSkillLevel(skill.level);
-            const skillNumDice = skillLevel.dice;
-            const skillThreshold = 13 - skillAttrLevel.faces;
-            const skillAttrBonus = skillAttrLevel.bonus;
-            const skillLevelBonus = skillLevel.bonus;
-            
-            // Explosion basée sur le niveau de compétence + modificateur (SEULEMENT sur compétence)
-            const baseSkillExplosion = skillLevel.explosion;
-            const skillExplosionThreshold = Math.max(3, Math.min(12, baseSkillExplosion - explosionMod));
-
-            const skillDiceResults = rollWithExplosions(skillNumDice, skillThreshold, skillExplosionThreshold);
-            const skillCounts = countSuccesses(skillDiceResults, skillThreshold);
-            const skillSuccesses = skillCounts.successes;
-
-            // Bonus de magnitude si réussi
-            const magnitudeBonus = powerSuccess ? magnitude : 0;
-
-            // Total final
-            const finalTotal = skillSuccesses + skillAttrBonus + skillLevelBonus + magnitudeBonus + skillBonus;
-
-            // Affichage
-            displayDualResult({
-                skillName: skill.name,
-                skillAttrName: capitalize(skillAttrName),
-                powerAttrName: capitalize(powerAttrName),
-                skillDice: skillDiceResults,
-                powerDice: powerDiceResults,
-                skillThreshold,
-                powerThreshold,
-                skillSuccesses,
-                powerSuccesses,
-                skillAttrBonus,
-                skillLevelBonus,
-                powerAttrBonus,
-                magnitude,
-                dc,
-                powerTotal,
-                powerSuccess,
-                magnitudeBonus,
-                skillBonus,
-                finalTotal,
-                totalNeutrals: skillCounts.neutrals + powerCounts.neutrals,
-                totalExplosions: skillCounts.explosions + powerCounts.explosions,
-                explosionThreshold: skillExplosionThreshold,
-                explosionMod
-            });
-            sendDiscordRoll(skill.name, skill.baseName, finalTotal, capitalize(skillAttrName), { successes: skillSuccesses, attrBonus: skillAttrBonus, skillBonus: skillLevelBonus, bonus: skillBonus, spellBonus: magnitudeBonus || null, spellLabel: 'Ésotérisme' });
+        // ========== POOL DE DÉS MAGIQUES ==========
+        function getEsoterismeLevel() {
+            const s = appState.skills.find(s => (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme');
+            return s ? s.level : 0;
         }
 
-        function displayDualResult(data) {
-            document.getElementById('result-title').textContent = 'Double Jet';
+        // Seuil basé sur l'attribut lié (comme les jets normaux)
+        function getMagicThreshold() {
+            const attrKey = appState.magic.attr;
+            const attrLevel = getAttributeLevel(appState.attributes[attrKey] || 4);
+            return 13 - attrLevel.faces;
+        }
 
-            let subtitle = `${data.skillName} (${data.skillAttrName}) + Ésotérisme (${data.powerAttrName})`;
-            if (data.explosionMod !== 0) {
-                subtitle += ` | Mod. Explosion ${data.explosionMod > 0 ? '+' : ''}${data.explosionMod}`;
+        // Explosion basée sur le niveau d'Ésotérisme (comme les jets de compétence)
+        function getMagicExplosionThreshold() {
+            const lvl = getEsoterismeLevel();
+            if (lvl === 0) return 12;
+            return getSkillLevel(lvl).explosion;
+        }
+
+        // Bonus de succès basé sur le niveau d'Ésotérisme
+        function getMagicSkillBonus() {
+            const lvl = getEsoterismeLevel();
+            if (lvl >= 8) return 3;
+            if (lvl >= 6) return 2;
+            if (lvl >= 4) return 1;
+            return 0; // niv 1-3
+        }
+
+        function getMagicPoolMax() {
+            const esotLevel = getEsoterismeLevel();
+            if (esotLevel === 0) return 0;
+            const attrKey = appState.magic.attr;
+            const attrValue = appState.attributes[attrKey] || 4;
+            return (esotLevel * 2) + attrValue;
+        }
+
+        function getMagicPoolRemaining() {
+            return Math.max(0, getMagicPoolMax() - appState.magic.poolUsed);
+        }
+
+        // Zone critique selon % consommé : 0-33% → 1, 34-50% → 1-2, 51-66% → 1-3, 67-83% → 1-4, 84-99% → 1-5, dernier dé → 1-6
+        function getCriticalZone() {
+            const max = getMagicPoolMax();
+            if (max === 0) return 0;
+            const remaining = getMagicPoolRemaining();
+            const pct = appState.magic.poolUsed / max;
+            if (remaining <= 0) return 7; // pool épuisé
+            if (remaining === 1) return 6; // dernier dé
+            if (pct >= 0.84) return 5;
+            if (pct >= 0.67) return 4;
+            if (pct >= 0.51) return 3;
+            if (pct >= 0.34) return 2;
+            return 1;
+        }
+
+        function getCriticalLabel(zone) {
+            if (zone <= 1) return '🟢 Zone sûre (critique : 1 sur d12)';
+            if (zone === 2) return '🟡 Risque faible (critique : 1-2)';
+            if (zone === 3) return '🟠 Risque modéré (critique : 1-3)';
+            if (zone === 4) return '🔴 Risque élevé (critique : 1-4)';
+            if (zone === 5) return '🔴 Risque très élevé (critique : 1-5)';
+            if (zone === 6) return '⚠️ Dernier dé ! (critique : 1-6)';
+            return '💀 Pool épuisé';
+        }
+
+        function updateMagicPool() {
+            const sel = document.getElementById('magic-attr-select');
+            if (sel) appState.magic.attr = sel.value;
+
+            const max = getMagicPoolMax();
+            const remaining = getMagicPoolRemaining();
+            const zone = getCriticalZone();
+            const esotLvl = getEsoterismeLevel();
+            const threshold = getMagicThreshold();
+            const explosion = getMagicExplosionThreshold();
+
+            appState.magic.poolMax = max;
+
+            // Bloc Personnage
+            const remEl = document.getElementById('magic-pool-remaining');
+            const maxEl = document.getElementById('magic-pool-max');
+            const barEl = document.getElementById('magic-pool-bar');
+            const statusEl = document.getElementById('magic-pool-status');
+            if (remEl) remEl.textContent = remaining;
+            if (maxEl) maxEl.textContent = max;
+            if (barEl) barEl.style.width = max > 0 ? `${(remaining / max) * 100}%` : '0%';
+            if (statusEl) statusEl.textContent = max > 0 ? getCriticalLabel(zone) : 'Aucune compétence Ésotérisme';
+
+            // Mini bloc page Compétences
+            const rollPool = document.getElementById('roll-page-pool');
+            const rollDisplay = document.getElementById('roll-pool-display');
+            const rollBar = document.getElementById('roll-pool-bar');
+            const rollStatus = document.getElementById('roll-pool-status');
+            const rollDetails = document.getElementById('roll-pool-details');
+            if (rollPool) rollPool.style.display = max > 0 ? 'block' : 'none';
+            if (rollDisplay) rollDisplay.textContent = `${remaining} / ${max}`;
+            if (rollBar) rollBar.style.width = max > 0 ? `${(remaining / max) * 100}%` : '0%';
+            if (rollStatus) rollStatus.textContent = max > 0 ? getCriticalLabel(zone) : '';
+            if (rollDetails) rollDetails.textContent = max > 0
+                ? `Seuil : ${threshold}+  ·  Explosion : ${explosion}+  ·  Bonus succès : +${getSkillLevel(esotLvl).bonus}  ·  Max/jet : ${getEsoterismeMaxDice()} dés`
+                : '';
+
+            updateHybridMagicInfo();
+            updatePureMagicInfo();
+        }
+
+        function consumeMagicDie(n) {
+            const max = getMagicPoolMax();
+            appState.magic.poolUsed = Math.max(0, Math.min(max, appState.magic.poolUsed + n));
+            updateMagicPool();
+        }
+
+        function resetMagicPool() {
+            appState.magic.poolUsed = 0;
+            updateMagicPool();
+        }
+
+        function getEsoterismeMaxDice() {
+            const s = appState.skills.find(s => (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme');
+            return s ? getSkillLevel(s.level).dice : 0;
+        }
+
+        function updateHybridMagicInfo() {
+            const infoEl = document.getElementById('hybrid-magic-info');
+            if (!infoEl) return;
+            const injected = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
+            const remaining = getMagicPoolRemaining();
+            const maxInject = getEsoterismeMaxDice();
+            const zone = getCriticalZone();
+            const threshold = getMagicThreshold();
+            const explosion = getMagicExplosionThreshold();
+            const skillBonus = getMagicSkillBonus();
+            const esotLvl = getEsoterismeLevel();
+
+            infoEl.innerHTML = `
+                <strong>Pool restant :</strong> ${remaining} / ${getMagicPoolMax()} &nbsp;|&nbsp;
+                <strong>Max injectable :</strong> ${maxInject} dés<br>
+                <strong>Seuil :</strong> ${threshold}+ &nbsp;|&nbsp;
+                <strong>Explosion :</strong> ${explosion}+ &nbsp;|&nbsp;
+                <strong>Bonus succès :</strong> +${skillBonus} (Ésotérisme niv.${esotLvl})<br>
+                ${getCriticalLabel(zone)}<br>
+                ${injected > remaining ? `<span style="color:var(--vitality-red)">⚠ Pas assez de dés dans le pool !</span>` : ''}
+                ${injected > maxInject ? `<span style="color:var(--vitality-red)">⚠ Dépasse le maximum injectable (${maxInject}) !</span>` : ''}
+            `;
+        }
+
+        function updatePureMagicInfo() {
+            const infoEl = document.getElementById('pure-magic-info');
+            if (!infoEl) return;
+            const injected = parseInt(document.getElementById('pure-magic-dice')?.value) || 1;
+            const remaining = getMagicPoolRemaining();
+            const zone = getCriticalZone();
+            const threshold = getMagicThreshold();
+            const explosion = getMagicExplosionThreshold();
+            const skillBonus = getMagicSkillBonus();
+            const magnitude = parseInt(document.getElementById('pure-magnitude')?.value) || 2;
+            const esotLvl = getEsoterismeLevel();
+
+            infoEl.innerHTML = `
+                <strong>Pool restant :</strong> ${remaining} / ${getMagicPoolMax()} &nbsp;|&nbsp;
+                <strong>Succès requis :</strong> ${magnitude}<br>
+                <strong>Seuil :</strong> ${threshold}+ &nbsp;|&nbsp;
+                <strong>Explosion :</strong> ${explosion}+ &nbsp;|&nbsp;
+                <strong>Bonus succès :</strong> +${skillBonus} (Ésotérisme niv.${esotLvl})<br>
+                ${getCriticalLabel(zone)}<br>
+                ${injected > remaining ? `<span style="color:var(--vitality-red)">⚠ Pas assez de dés dans le pool !</span>` : ''}
+            `;
+        }
+
+        // ========== JET HYBRIDE (compétence + dés magiques) ==========
+        function performHybridRoll() {
+            const attrName = document.getElementById('hybrid-attr-select').value;
+            const skillId = document.getElementById('hybrid-skill-select').value;
+            const bonus = parseInt(document.getElementById('hybrid-bonus').value) || 0;
+            const magicDiceCount = parseInt(document.getElementById('hybrid-magic-dice').value) || 0;
+
+            const skill = appState.skills.find(s => s.id === skillId);
+            if (!skill) return;
+
+            const remaining = getMagicPoolRemaining();
+            const maxInject = getEsoterismeMaxDice();
+            const actualMagic = Math.min(magicDiceCount, remaining, maxInject);
+
+            // Jet de compétence normal
+            const attrValue = appState.attributes[attrName];
+            const attrLevel = getAttributeLevel(attrValue);
+            const skillLevel = getSkillLevel(skill.level);
+            const threshold = 13 - attrLevel.faces;
+            const skillDice = rollWithExplosions(skillLevel.dice, threshold, skillLevel.explosion);
+            const skillCounts = countSuccesses(skillDice, threshold);
+
+            // Dés magiques avec explosions
+            const magicThreshold = getMagicThreshold();
+            const magicExplosion = getMagicExplosionThreshold();
+            const magicSkillBonus = getMagicSkillBonus();
+            const criticalZone = getCriticalZone();
+            const esotLvl = getEsoterismeLevel();
+
+            const magicDice = [];
+            let criticalCount = 0;
+            for (let i = 0; i < actualMagic; i++) {
+                const val = rollD12();
+                const isCritical = val <= criticalZone;
+                const isExplosion = !isCritical && val >= magicExplosion;
+                const isSuccess = !isCritical && val >= magicThreshold;
+                magicDice.push({ value: val, isCritical, isSuccess, isExplosion: false });
+                if (isCritical) criticalCount++;
+                if (isExplosion) {
+                    const expVal = rollD12();
+                    magicDice.push({ value: expVal, isCritical: false, isSuccess: expVal >= magicThreshold, isExplosion: true });
+                }
             }
-            document.getElementById('result-subtitle').textContent = subtitle;
 
-            // Zone d'affichage des dés
+            const allCritical = actualMagic > 0 && criticalCount === actualMagic;
+            const magicDiceSuccesses = magicDice.filter(d => d.isSuccess).length;
+            // Bonus s'applique même en cas de missfire (perte d'élan indépendante)
+            const magicSuccesses = magicDiceSuccesses + (actualMagic > 0 ? magicSkillBonus : 0);
+
+            if (actualMagic > 0) consumeMagicDie(actualMagic);
+
+            const total = skillCounts.successes + magicSuccesses + attrLevel.bonus + skillLevel.bonus + bonus;
+            const elanLoss = allCritical ? actualMagic * 2 : 0;
+
+            displayHybridResult({
+                skillName: skill.name,
+                attrName: capitalize(attrName),
+                skillDice, magicDice,
+                threshold, magicThreshold, magicExplosion, criticalZone,
+                skillSuccesses: skillCounts.successes,
+                magicDiceSuccesses, magicSkillBonus, magicSuccesses,
+                attrBonus: attrLevel.bonus,
+                skillBonus: skillLevel.bonus,
+                bonus, total, allCritical, elanLoss, actualMagic, esotLvl
+            });
+
+            sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), {
+                successes: skillCounts.successes + magicSuccesses,
+                attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus, bonus,
+                spellBonus: magicSuccesses > 0 ? magicSuccesses : null, spellLabel: 'Magie'
+            });
+        }
+
+        function displayHybridResult(data) {
+            document.getElementById('result-title').textContent = '🎲✨ Jet + Magie';
+            document.getElementById('result-subtitle').textContent = `${data.skillName} (${data.attrName}) + ${data.actualMagic} dé(s) magique(s) · Seuil ${data.magicThreshold}+ · Explosion ${data.magicExplosion}+`;
+
             const diceArea = document.getElementById('dice-display-area');
             diceArea.innerHTML = '';
 
-            // Section Compétence
+            // Section compétence
             const skillSection = document.createElement('div');
             skillSection.className = 'dice-section';
-            skillSection.innerHTML = `
-                <div class="dice-section-label skill">⚔ Compétence (Seuil ${data.skillThreshold}+)</div>
-                <div class="dice-container" id="skill-dice-container"></div>
-            `;
+            skillSection.innerHTML = `<div class="dice-section-label skill">⚔ Compétence (Seuil ${data.threshold}+)</div><div class="dice-container" id="hybrid-skill-dice"></div>`;
             diceArea.appendChild(skillSection);
-
-            const skillDiceContainer = skillSection.querySelector('#skill-dice-container');
             data.skillDice.forEach((d, i) => {
                 const die = document.createElement('div');
                 die.className = 'die';
@@ -3066,55 +3253,144 @@
                 die.style.animationDelay = `${i * 0.08}s`;
                 if (d.isExplosion) die.classList.add('explosion');
                 else if (d.value <= 2) die.classList.add('universal-failure');
-                else if (d.value >= data.skillThreshold) die.classList.add('success');
+                else if (d.value >= data.threshold) die.classList.add('success');
                 else die.classList.add('failure');
-                skillDiceContainer.appendChild(die);
+                skillSection.querySelector('#hybrid-skill-dice').appendChild(die);
             });
 
-            // Section Maîtrise Pouvoir
-            const powerSection = document.createElement('div');
-            powerSection.className = 'dice-section';
-            powerSection.innerHTML = `
-                <div class="dice-section-label power">✨ Ésotérisme (Seuil ${data.powerThreshold}+)</div>
-                <div class="dice-container" id="power-dice-container"></div>
-            `;
-            diceArea.appendChild(powerSection);
+            // Section magique
+            if (data.actualMagic > 0) {
+                const magicSection = document.createElement('div');
+                magicSection.className = 'dice-section';
+                magicSection.innerHTML = `<div class="dice-section-label power">✨ Dés Magiques (Seuil ${data.magicThreshold}+ · Explosion ${data.magicExplosion}+ · Critique ≤${data.criticalZone})</div><div class="dice-container" id="hybrid-magic-dice-display"></div>`;
+                diceArea.appendChild(magicSection);
+                data.magicDice.forEach((d, i) => {
+                    const die = document.createElement('div');
+                    die.className = 'die';
+                    die.textContent = d.value;
+                    die.style.animationDelay = `${(data.skillDice.length + i) * 0.08}s`;
+                    if (d.isCritical) { die.classList.add('universal-failure'); die.title = 'CRITIQUE !'; }
+                    else if (d.isExplosion) die.classList.add('explosion');
+                    else if (d.isSuccess) die.classList.add('success');
+                    else die.classList.add('failure');
+                    magicSection.querySelector('#hybrid-magic-dice-display').appendChild(die);
+                });
+            }
 
-            const powerDiceContainer = powerSection.querySelector('#power-dice-container');
-            data.powerDice.forEach((d, i) => {
+            document.getElementById('stat-successes').textContent = `${data.skillSuccesses} + ${data.magicDiceSuccesses}+${data.magicSkillBonus}`;
+            document.getElementById('stat-neutrals').textContent = '—';
+            document.getElementById('stat-explosions').textContent = [...data.skillDice, ...data.magicDice].filter(d => d.isExplosion).length;
+            document.getElementById('stat-attribute-bonus').textContent = data.attrBonus;
+            document.getElementById('stat-skill-bonus').textContent = data.skillBonus;
+
+            const magnitudeArea = document.getElementById('magnitude-result-area');
+            if (data.allCritical && data.actualMagic > 0) {
+                magnitudeArea.innerHTML = `<div class="magnitude-result">
+                    <div class="magnitude-label" style="color:var(--vitality-red)">⚠️ MISSFIRE — Tous les dés magiques sont critiques</div>
+                    <div class="magnitude-status failure">Perte d'Élan : <strong>${data.elanLoss}</strong> (${data.actualMagic} dés × 2)</div>
+                </div>`;
+            } else if (data.actualMagic > 0) {
+                magnitudeArea.innerHTML = `<div class="magnitude-result"><div class="magnitude-status success">✓ Magie stable — ${data.magicDiceSuccesses} succès dés + ${data.magicSkillBonus} bonus = ${data.magicSuccesses} succès magiques</div></div>`;
+            }
+
+            document.getElementById('result-total').textContent = data.total;
+            document.getElementById('result-overlay').classList.add('active');
+        }
+
+        // ========== MAGIE PURE ==========
+        function performPureRoll() {
+            const magicDiceCount = parseInt(document.getElementById('pure-magic-dice').value) || 1;
+            const magnitude = parseInt(document.getElementById('pure-magnitude').value) || 2;
+
+            const remaining = getMagicPoolRemaining();
+            const actualDice = Math.min(magicDiceCount, remaining);
+
+            const magicThreshold = getMagicThreshold();
+            const magicExplosion = getMagicExplosionThreshold();
+            const magicSkillBonus = getMagicSkillBonus();
+            const criticalZone = getCriticalZone();
+            const esotLvl = getEsoterismeLevel();
+
+            const magicDice = [];
+            let criticalCount = 0;
+            for (let i = 0; i < actualDice; i++) {
+                const val = rollD12();
+                const isCritical = val <= criticalZone;
+                const isExplosion = !isCritical && val >= magicExplosion;
+                const isSuccess = !isCritical && val >= magicThreshold;
+                magicDice.push({ value: val, isCritical, isSuccess, isExplosion: false });
+                if (isCritical) criticalCount++;
+                if (isExplosion) {
+                    const expVal = rollD12();
+                    magicDice.push({ value: expVal, isCritical: false, isSuccess: expVal >= magicThreshold, isExplosion: true });
+                }
+            }
+
+            const allCritical = actualDice > 0 && criticalCount === actualDice;
+            const diceSuccesses = magicDice.filter(d => d.isSuccess).length;
+            const totalSuccesses = diceSuccesses + magicSkillBonus;
+            const powerSuccess = totalSuccesses >= magnitude;
+            const elanLoss = allCritical ? actualDice * 2 : 0;
+
+            if (actualDice > 0) consumeMagicDie(actualDice);
+
+            displayPureResult({
+                magicDice, magicThreshold, magicExplosion, criticalZone,
+                diceSuccesses, magicSkillBonus, totalSuccesses,
+                magnitude, powerSuccess, allCritical, elanLoss, actualDice, esotLvl
+            });
+
+            sendDiscordRoll('Pouvoir', null, totalSuccesses, `Ésotérisme niv.${esotLvl}`, { successes: totalSuccesses });
+        }
+
+        function displayPureResult(data) {
+            document.getElementById('result-title').textContent = '✨ Magie Pure';
+            document.getElementById('result-subtitle').textContent = `${data.actualDice} dé(s) · Seuil ${data.magicThreshold}+ · Explosion ${data.magicExplosion}+ · Critique ≤${data.criticalZone} (Ésotérisme niv.${data.esotLvl})`;
+
+            const diceArea = document.getElementById('dice-display-area');
+            diceArea.innerHTML = '';
+
+            const section = document.createElement('div');
+            section.className = 'dice-section';
+            section.innerHTML = `<div class="dice-section-label power">✨ Pouvoir (Seuil ${data.magicThreshold}+ · Explosion ${data.magicExplosion}+ · Critique ≤${data.criticalZone})</div><div class="dice-container" id="pure-dice-display"></div>`;
+            diceArea.appendChild(section);
+
+            data.magicDice.forEach((d, i) => {
                 const die = document.createElement('div');
                 die.className = 'die';
                 die.textContent = d.value;
-                die.style.animationDelay = `${(data.skillDice.length + i) * 0.08}s`;
-                if (d.isExplosion) die.classList.add('explosion');
-                else if (d.value <= 2) die.classList.add('universal-failure');
-                else if (d.value >= data.powerThreshold) die.classList.add('success');
+                die.style.animationDelay = `${i * 0.08}s`;
+                if (d.isCritical) { die.classList.add('universal-failure'); die.title = 'CRITIQUE !'; }
+                else if (d.isExplosion) die.classList.add('explosion');
+                else if (d.isSuccess) die.classList.add('success');
                 else die.classList.add('failure');
-                powerDiceContainer.appendChild(die);
+                section.querySelector('#pure-dice-display').appendChild(die);
             });
 
-            // Stats
-            document.getElementById('stat-successes').textContent = `${data.skillSuccesses} + ${data.powerSuccesses}`;
-            document.getElementById('stat-neutrals').textContent = data.totalNeutrals;
-            document.getElementById('stat-explosions').textContent = data.totalExplosions;
-            document.getElementById('stat-attribute-bonus').textContent = `${data.skillAttrBonus} + ${data.powerAttrBonus}`;
-            document.getElementById('stat-skill-bonus').textContent = data.skillLevelBonus || 0;
+            document.getElementById('stat-successes').textContent = `${data.diceSuccesses} dés + ${data.magicSkillBonus} bonus = ${data.totalSuccesses}`;
+            document.getElementById('stat-neutrals').textContent = `Requis : ${data.magnitude}`;
+            document.getElementById('stat-explosions').textContent = data.magicDice.filter(d => d.isExplosion).length;
+            document.getElementById('stat-attribute-bonus').textContent = '—';
+            document.getElementById('stat-skill-bonus').textContent = '—';
 
-            // Résultat magnitude
             const magnitudeArea = document.getElementById('magnitude-result-area');
-            magnitudeArea.innerHTML = `
-                <div class="magnitude-result">
-                    <div class="magnitude-label">Magnitude ${data.magnitude} (DC ${data.dc})</div>
-                    <div class="magnitude-value">${data.powerTotal} vs ${data.dc}</div>
+            let html = '';
+            if (data.allCritical) {
+                html = `<div class="magnitude-result">
+                    <div class="magnitude-label" style="color:var(--vitality-red)">⚠️ MISSFIRE TOTAL</div>
+                    <div class="magnitude-status failure">Perte d'Élan : <strong>${data.elanLoss}</strong> (${data.actualDice} dés × 2)</div>
+                </div>`;
+            } else {
+                html = `<div class="magnitude-result">
+                    <div class="magnitude-label">Magnitude ${data.magnitude} — ${data.diceSuccesses} dés + ${data.magicSkillBonus} bonus = ${data.totalSuccesses} succès</div>
                     <div class="magnitude-status ${data.powerSuccess ? 'success' : 'failure'}">
-                        ${data.powerSuccess ? `✓ Réussi (+${data.magnitude} au résultat)` : '✗ Échoué (pas de bonus)'}
+                        ${data.powerSuccess ? '✓ Pouvoir réussi !' : `✗ Échec (il manque ${data.magnitude - data.totalSuccesses} succès)`}
                     </div>
-                </div>
-            `;
+                </div>`;
+            }
+            magnitudeArea.innerHTML = html;
 
-            // Total
-            document.getElementById('result-total').textContent = data.finalTotal;
-
+            document.getElementById('result-total').textContent = data.totalSuccesses;
             document.getElementById('result-overlay').classList.add('active');
         }
 
@@ -3166,6 +3442,7 @@
                 try {
                     const loaded = JSON.parse(e.target.result);
                     Object.assign(appState, loaded);
+                    if (!appState.magic) appState.magic = { attr: 'intuition', poolMax: 0, poolUsed: 0 };
 
                     // Restaurer l'interface
                     document.getElementById('character-name').value = appState.profile.name || '';
@@ -3183,6 +3460,10 @@
                     recalcHealthFromWounds();
                     syncElanFromHealth();
                     updateRollSelects();
+                    updateMagicPool();
+                    // Restaurer le select d'attribut magique
+                    const magicSel = document.getElementById('magic-attr-select');
+                    if (magicSel && appState.magic?.attr) magicSel.value = appState.magic.attr;
 
                     alert('Personnage chargé avec succès !');
                 } catch (err) {
@@ -3260,6 +3541,7 @@
             updateAllAttributes();
             updateCounterDisplay('power');
             syncElanFromHealth();
+            updateMagicPool();
 
             // Événements clavier
             document.addEventListener('keydown', e => {
@@ -3272,10 +3554,13 @@
             });
 
             // Événements pour les selects
-            ['simple-attr-select', 'simple-skill-select', 'skill-attr-select', 'skill-select', 'power-attr-select'].forEach(id => {
+            ['simple-attr-select', 'simple-skill-select', 'hybrid-attr-select', 'hybrid-skill-select'].forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.addEventListener('change', updateRollButtons);
             });
+
+            // Mettre à jour le pool quand les compétences changent (hook sur modifySkillLevel)
+            const origModifySkillLevel = modifySkillLevel;
         });
     </script>
 </body>
