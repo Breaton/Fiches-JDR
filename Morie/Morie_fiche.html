@@ -3287,6 +3287,8 @@
             const poolAfterMain = Math.max(0, remaining - actualMagic);
             const { results: magicResults, successes: magicSuccesses, elanLoss, extraPoolCost } = resolveMagicDice(etat, actualMagic, poolAfterMain);
 
+            const scoreBeforeConsume = getMagicScore();
+            const surchargeBeforeConsume = appState.magic.surcharge;
             consumeMagicDice(actualMagic + extraPoolCost);
             if (elanLoss > 0) {
                 appState.counters.health.current = Math.max(0, appState.counters.health.current - elanLoss);
@@ -3307,7 +3309,12 @@
             sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), {
                 successes: skillCounts.successes + magicSuccesses,
                 attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus, bonus,
-                spellBonus: magicSuccesses > 0 ? magicSuccesses : null, spellLabel: 'Magie'
+                magic: {
+                    etat, results: magicResults,
+                    elanLoss, extraPoolCost,
+                    score: scoreBeforeConsume,
+                    surcharge: surchargeBeforeConsume
+                }
             });
         }
 
@@ -3374,6 +3381,8 @@
             const poolAfterMain = Math.max(0, remaining - actualDice);
             const { results, successes, elanLoss, extraPoolCost } = resolveMagicDice(etat, actualDice, poolAfterMain);
 
+            const scoreBeforeConsume = getMagicScore();
+            const surchargeBeforeConsume = appState.magic.surcharge;
             consumeMagicDice(actualDice + extraPoolCost);
             if (elanLoss > 0) {
                 appState.counters.health.current = Math.max(0, appState.counters.health.current - elanLoss);
@@ -3382,7 +3391,17 @@
             }
 
             displayPureResult({ results, etat, successes, magnitude, powerSuccess: successes >= magnitude, elanLoss, extraPoolCost, actualDice, esotLvl });
-            sendDiscordRoll('Pouvoir', null, successes, `Ésotérisme niv.${esotLvl}`, { successes });
+
+            sendDiscordRoll('Pouvoir', null, successes, `Ésotérisme niv.${esotLvl}`, {
+                successes,
+                magic: {
+                    etat, results, isPure: true,
+                    magnitude, powerSuccess: successes >= magnitude,
+                    elanLoss, extraPoolCost,
+                    score: scoreBeforeConsume,
+                    surcharge: surchargeBeforeConsume
+                }
+            });
         }
 
         function displayPureResult(data) {
@@ -3505,25 +3524,68 @@
             const base = baseName || skillName;
             const custom = baseName && baseName !== skillName ? skillName : null;
             const attrLabel = attrName ? ` [${attrName}]` : '';
-            const text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} — Résultat : **${total}**`;
 
-            // Build detail line
-            let detailParts = [];
-            if (details) {
-                detailParts.push(`Succès : ${details.successes}`);
+            const FACE_ICONS = {
+                'succès': '✦', 'vide': '○', 'résonance': '✧',
+                'instabilité': '↯', 'critique': '✗', 'instabilité-crit': '✗!'
+            };
+
+            // Ligne principale
+            let text = '';
+            if (details?.magic?.isPure) {
+                const m = details.magic;
+                const status = m.powerSuccess ? '✓ Réussi' : '✗ Échec';
+                text = `✨ **Pouvoir** — Magnitude ${m.magnitude} — **${total} succès** (${status})`;
+            } else if (details?.magic) {
+                text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} + ✨ Magie — Résultat : **${total}**`;
+            } else {
+                text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} — Résultat : **${total}**`;
+            }
+
+            // Ligne détail compétence
+            let lines = [text];
+            if (details && !details.magic?.isPure) {
+                let detailParts = [];
+                if (details.successes !== undefined) detailParts.push(`Succès : ${details.successes}`);
                 if (details.attrBonus) detailParts.push(`Attr : +${details.attrBonus}`);
                 if (details.skillBonus) detailParts.push(`Comp : +${details.skillBonus}`);
                 if (details.bonus !== undefined && details.bonus !== 0) detailParts.push(`Mod : ${details.bonus > 0 ? '+' : ''}${details.bonus}`);
-                if (details.spellBonus) detailParts.push(`${details.spellLabel || 'Sort'} : +${details.spellBonus}`);
+                if (detailParts.length) lines.push(`┈ ${detailParts.join(' │ ')}`);
             }
-            const detailLine = detailParts.length ? `
-┈ ${detailParts.join(' │ ')}` : '';
+
+            // Bloc magie
+            if (details?.magic) {
+                const m = details.magic;
+                const info = ETAT_INFO[m.etat];
+                lines.push(`✨ État **${m.etat} — ${info.name}** · Score ${m.score} (Base ${getMagicBaseScore()} − Sur. ${m.surcharge})`);
+
+                // Comptage des faces
+                if (m.results && m.results.length > 0) {
+                    const counts = {};
+                    m.results.forEach(d => { counts[d.type] = (counts[d.type] || 0) + 1; });
+                    const faceOrder = ['succès','résonance','vide','instabilité','critique','instabilité-crit'];
+                    const faceParts = faceOrder
+                        .filter(t => counts[t])
+                        .map(t => `${FACE_ICONS[t]} ${counts[t]}× ${t.charAt(0).toUpperCase() + t.slice(1)}`);
+                    if (faceParts.length) lines.push(`┈ Faces : ${faceParts.join(' · ')}`);
+                }
+
+                // Conséquences
+                const conseq = [];
+                if (m.elanLoss > 0) conseq.push(`⚠ ${m.elanLoss} Élan perdu`);
+                if (m.extraPoolCost > 0) conseq.push(`↯ ${m.extraPoolCost} dé(s) extra (Instabilité)`);
+                if (m.isPure && m.powerSuccess !== undefined) {
+                    // already in title
+                }
+                if (conseq.length) lines.push(`┈ ${conseq.join(' · ')}`);
+            }
 
             const embed = {
-                description: text + detailLine,
-                color: 0xd4a84b,
+                description: lines.join('\n'),
+                color: details?.magic ? 0x6b4c9a : 0xd4a84b,
                 author: { name: charName }
             };
+
             if (charImage && charImage.startsWith('data:')) {
                 const [header, data] = charImage.split(',');
                 const mime = header.match(/:(.*?);/)[1];
