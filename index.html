@@ -1,12 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fiches de Personnage — Portail</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Nunito+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Nunito+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       --midnight: #0f1729;
@@ -29,7 +32,13 @@
       --alt-green: #4a9b6e;
     }
 
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       font-family: var(--font-body);
@@ -50,16 +59,16 @@
       position: fixed;
       inset: 0;
       background-image:
-        radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 30% 45%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 55% 20%, rgba(255,255,255,0.5) 0%, transparent 100%),
-        radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 85% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
-        radial-gradient(1px 1px at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
-        radial-gradient(1.5px 1.5px at 45% 70%, rgba(255,255,255,0.35) 0%, transparent 100%),
-        radial-gradient(1px 1px at 92% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
-        radial-gradient(1px 1px at 60% 90%, rgba(255,255,255,0.25) 0%, transparent 100%),
-        radial-gradient(1px 1px at 5% 55%, rgba(255,255,255,0.2) 0%, transparent 100%);
+        radial-gradient(1px 1px at 10% 15%, rgba(255, 255, 255, 0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 45%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 20%, rgba(255, 255, 255, 0.5) 0%, transparent 100%),
+        radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 85% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 100%),
+        radial-gradient(1px 1px at 20% 80%, rgba(255, 255, 255, 0.2) 0%, transparent 100%),
+        radial-gradient(1.5px 1.5px at 45% 70%, rgba(255, 255, 255, 0.35) 0%, transparent 100%),
+        radial-gradient(1px 1px at 92% 85%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+        radial-gradient(1px 1px at 60% 90%, rgba(255, 255, 255, 0.25) 0%, transparent 100%),
+        radial-gradient(1px 1px at 5% 55%, rgba(255, 255, 255, 0.2) 0%, transparent 100%);
       pointer-events: none;
       z-index: 0;
     }
@@ -154,9 +163,17 @@
       animation: fadeUp 0.6s ease both;
     }
 
-    .system-card:nth-child(1) { animation-delay: 0.1s; }
-    .system-card:nth-child(2) { animation-delay: 0.2s; }
-    .system-card:nth-child(3) { animation-delay: 0.3s; }
+    .system-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .system-card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .system-card:nth-child(3) {
+      animation-delay: 0.3s;
+    }
 
     .system-card:hover {
       transform: translateY(-4px);
@@ -172,17 +189,26 @@
     .system-card.gdf .card-banner {
       background: linear-gradient(90deg, var(--gdf-purple), var(--gdf-gold));
     }
-    .system-card.gdf:hover { border-color: rgba(212, 168, 75, 0.35); }
+
+    .system-card.gdf:hover {
+      border-color: rgba(212, 168, 75, 0.35);
+    }
 
     .system-card.star-wars .card-banner {
       background: linear-gradient(90deg, var(--sw-blue), #7ecfff, var(--sw-red));
     }
-    .system-card.star-wars:hover { border-color: rgba(0, 168, 255, 0.35); }
+
+    .system-card.star-wars:hover {
+      border-color: rgba(0, 168, 255, 0.35);
+    }
 
     .system-card.alt .card-banner {
       background: linear-gradient(90deg, var(--alt-teal), var(--alt-green));
     }
-    .system-card.alt:hover { border-color: rgba(45, 138, 138, 0.35); }
+
+    .system-card.alt:hover {
+      border-color: rgba(45, 138, 138, 0.35);
+    }
 
     .card-body {
       padding: 28px 28px 20px;
@@ -196,9 +222,17 @@
       margin-bottom: 8px;
     }
 
-    .gdf .card-system-label { color: var(--gdf-gold); }
-    .star-wars .card-system-label { color: var(--sw-blue); }
-    .alt .card-system-label { color: var(--alt-teal); }
+    .gdf .card-system-label {
+      color: var(--gdf-gold);
+    }
+
+    .star-wars .card-system-label {
+      color: var(--sw-blue);
+    }
+
+    .alt .card-system-label {
+      color: var(--alt-teal);
+    }
 
     .card-title {
       font-family: var(--font-display);
@@ -244,9 +278,17 @@
       transform: translateX(3px);
     }
 
-    .gdf .sheet-link:hover { border-color: rgba(212, 168, 75, 0.25); }
-    .star-wars .sheet-link:hover { border-color: rgba(0, 168, 255, 0.25); }
-    .alt .sheet-link:hover { border-color: rgba(45, 138, 138, 0.25); }
+    .gdf .sheet-link:hover {
+      border-color: rgba(212, 168, 75, 0.25);
+    }
+
+    .star-wars .sheet-link:hover {
+      border-color: rgba(0, 168, 255, 0.25);
+    }
+
+    .alt .sheet-link:hover {
+      border-color: rgba(45, 138, 138, 0.25);
+    }
 
     .sheet-icon {
       width: 28px;
@@ -259,11 +301,22 @@
       flex-shrink: 0;
     }
 
-    .gdf .sheet-icon { background: rgba(212, 168, 75, 0.15); }
-    .star-wars .sheet-icon { background: rgba(0, 168, 255, 0.15); }
-    .alt .sheet-icon { background: rgba(45, 138, 138, 0.15); }
+    .gdf .sheet-icon {
+      background: rgba(212, 168, 75, 0.15);
+    }
 
-    .sheet-info { flex: 1; min-width: 0; }
+    .star-wars .sheet-icon {
+      background: rgba(0, 168, 255, 0.15);
+    }
+
+    .alt .sheet-icon {
+      background: rgba(45, 138, 138, 0.15);
+    }
+
+    .sheet-info {
+      flex: 1;
+      min-width: 0;
+    }
 
     .sheet-name {
       font-size: 0.88rem;
@@ -319,23 +372,46 @@
 
     /* ─── ANIMATIONS ─── */
     @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-20px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 600px) {
-      body { padding: 32px 16px 48px; }
-      .site-header { margin-bottom: 40px; }
-      .systems-grid { grid-template-columns: 1fr; }
+      body {
+        padding: 32px 16px 48px;
+      }
+
+      .site-header {
+        margin-bottom: 40px;
+      }
+
+      .systems-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="wrapper">
 
@@ -343,7 +419,9 @@
     <header class="site-header">
       <p class="eyebrow">Sous le regard bienveillant d'<em>Ishikiri</em></p>
       <h1>Hub des fiches de <em>Personnage</em></h1>
-      <div class="divider"><div class="divider-gem"></div></div>
+      <div class="divider">
+        <div class="divider-gem"></div>
+      </div>
       <p class="subtitle">C'est pour toi Lucy, tu n'as plus à download les updates !</p>
     </header>
 
@@ -356,7 +434,8 @@
         <div class="card-body">
           <p class="card-system-label">Système Fantasy</p>
           <h2 class="card-title">Guerre des futurs</h2>
-          <p class="card-desc">Système narratif pour la Guerre des futurs, registres émotionnels, magie improvisée et constellations.</p>
+          <p class="card-desc">Système narratif pour la Guerre des futurs, registres émotionnels, magie improvisée et
+            constellations.</p>
           <div class="sheets-list">
             <a class="sheet-link" href="GDF/GDF-fiche.html">
               <div class="sheet-icon">🔮</div>
@@ -376,7 +455,8 @@
         <div class="card-body">
           <p class="card-system-label">Adaptation · Star Wars</p>
           <h2 class="card-title">Star Wars</h2>
-          <p class="card-desc">Adaptation du système à Star wars pour Demerit.Faut dire un peu plus de choses pour arriver à 3 lignes.</p>
+          <p class="card-desc">Adaptation du système à Star wars pour Demerit.Faut dire un peu plus de choses pour
+            arriver à 3 lignes.</p>
           <div class="sheets-list">
             <a class="sheet-link" href="Star wars/Demerit_fiche.html">
               <div class="sheet-icon">🌟</div>
@@ -395,8 +475,9 @@
         <div class="card-banner"></div>
         <div class="card-body">
           <p class="card-system-label">Version alternative · Low Fantasy</p>
-          <h2 class="card-title">Morie</h2>
-          <p class="card-desc">Variante du système principal allégé pour le lesbianisme. Faut dire un peu plus de choses pour arriver à 3 lignes.</p>
+          <h2 class="card-title">Aequor</h2>
+          <p class="card-desc">Variante du système avec une magie plus limitée et contrainte pour le lesbianisme. Faut
+            dire un peu plus de choses pour arriver à 3 lignes.</p>
           <div class="sheets-list">
             <a class="sheet-link" href="Morie/Morie_fiche.html">
               <div class="sheet-icon">🏳️‍🌈</div>
@@ -418,4 +499,5 @@
 
   </div>
 </body>
+
 </html>
