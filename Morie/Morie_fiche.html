@@ -1893,35 +1893,43 @@
                         <!-- Pool de Dés Magiques -->
                         <div class="counter-item" id="magic-pool-block" style="background: rgba(107,76,154,0.08); border: 1px solid rgba(107,76,154,0.2);">
                             <div class="counter-label" style="color: var(--ombre-purple);">
-                                <span class="emoji">✨</span> Pool de Dés Magiques
+                                <span class="emoji">✨</span> Magie
                             </div>
-                            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; flex-wrap:wrap;">
-                                <label style="font-size:0.8em; color:var(--silver-mist); font-weight:600;">Attr. Pouvoir :</label>
-                                <select id="magic-attr-select" style="border:1px solid var(--moonlight); border-radius:6px; padding:4px 8px; font-family:var(--font-body); font-size:0.85em; background:white; color:var(--deep-navy);" onchange="updateMagicPool()">
-                                    <option value="puissance">Puissance</option>
-                                    <option value="vivacite">Vivacité</option>
-                                    <option value="precision">Précision</option>
-                                    <option value="endurance">Endurance</option>
-                                    <option value="intelligence">Intelligence</option>
-                                    <option value="intuition" selected>Intuition</option>
-                                    <option value="volonte">Volonté</option>
-                                    <option value="presence">Présence</option>
-                                </select>
-                            </div>
+
+                            <!-- État actuel -->
+                            <div id="magic-etat-display" style="text-align:center; font-weight:600; font-size:0.9em; padding:5px 10px; border-radius:6px; margin-bottom:4px; border:1px solid transparent;">—</div>
+                            <div id="magic-score-val" style="font-size:0.72em; color:var(--silver-mist); text-align:center; margin-bottom:10px;">—</div>
+
+                            <!-- Pool (repos long) -->
+                            <div style="font-size:0.75em; color:var(--silver-mist); font-weight:600; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em;">Pool · Repos long</div>
                             <div class="counter-controls">
-                                <button class="counter-btn minus" onclick="consumeMagicDie(1)" title="Consommer manuellement">−</button>
+                                <button class="counter-btn minus" onclick="adjustPool(-1)">−</button>
                                 <div class="counter-value">
                                     <span id="magic-pool-remaining" style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:var(--ombre-purple);">0</span>
                                     <span class="counter-separator">/</span>
                                     <span id="magic-pool-max" style="font-family:var(--font-display); font-size:1.4em; font-weight:700;">0</span>
                                 </div>
-                                <button class="counter-btn plus" onclick="consumeMagicDie(-1)" title="Récupérer manuellement">+</button>
+                                <button class="counter-btn plus" onclick="adjustPool(1)">+</button>
                             </div>
                             <div class="counter-bar" style="background:rgba(107,76,154,0.15);">
                                 <div id="magic-pool-bar" style="height:100%; border-radius:4px; background:linear-gradient(90deg,var(--ombre-purple),#9b7cd4); transition:width 0.3s ease; width:100%;"></div>
                             </div>
-                            <div id="magic-pool-status" style="margin-top:8px; font-size:0.78em; font-weight:600; text-align:center;"></div>
-                            <button onclick="resetMagicPool()" style="margin-top:8px; width:100%; padding:5px; background:rgba(107,76,154,0.15); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺ Repos — Réinitialiser le pool</button>
+
+                            <!-- Surcharge (repos court) -->
+                            <div style="font-size:0.75em; color:var(--silver-mist); font-weight:600; margin:10px 0 4px; text-transform:uppercase; letter-spacing:0.04em;">Surcharge · Repos court</div>
+                            <div class="counter-controls">
+                                <button class="counter-btn minus" onclick="adjustSurcharge(-1)">−</button>
+                                <div class="counter-value">
+                                    <span id="magic-surcharge-val" style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:#BA7517;">0</span>
+                                </div>
+                                <button class="counter-btn plus" onclick="adjustSurcharge(1)">+</button>
+                            </div>
+
+                            <!-- Boutons de repos -->
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:10px;">
+                                <button onclick="shortRest()" style="padding:5px; background:rgba(186,117,23,0.12); border:1px solid rgba(186,117,23,0.3); border-radius:6px; color:#633806; font-size:0.78em; font-weight:600; cursor:pointer;">↺ Repos court</button>
+                                <button onclick="longRest()" style="padding:5px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.78em; font-weight:600; cursor:pointer;">↺ Repos long</button>
+                            </div>
                         </div>
                     </div>
 
@@ -2340,9 +2348,9 @@
             notes: "",
             currentModal: null,
             magic: {
-                attr: 'intuition',   // attribut lié au pouvoir
-                poolMax: 0,          // calculé automatiquement
-                poolUsed: 0          // dés déjà consommés ce jour
+                poolMax: 0,
+                poolUsed: 0,
+                surcharge: 0
             }
         };
 
@@ -2991,94 +2999,148 @@
             document.getElementById('result-overlay').classList.add('active');
         }
 
-        // ========== POOL DE DÉS MAGIQUES ==========
+        // ========== SYSTÈME DE DÉS MAGIQUES ==========
+
+        const ETAT_INFO = {
+            A: { name:'Maîtrise',    score:'≥5',   color:'#27500A', bg:'rgba(59,109,17,0.1)',   border:'#639922' },
+            B: { name:'Stable',      score:'3-4',  color:'#085041', bg:'rgba(29,158,117,0.1)',  border:'#1D9E75' },
+            C: { name:'Tendu',       score:'1-2',  color:'#633806', bg:'rgba(186,117,23,0.1)', border:'#BA7517' },
+            D: { name:'Instable',    score:'-1-0', color:'#712B13', bg:'rgba(216,90,48,0.1)',  border:'#D85A30' },
+            E: { name:'Débordement', score:'≤-2',  color:'#501313', bg:'rgba(163,45,45,0.1)',  border:'#A32D2D' },
+        };
+
+        const FACE_COLORS = {
+            'succès':          { bg:'rgba(99,153,34,0.15)',   border:'#639922', text:'#27500A' },
+            'vide':            { bg:'rgba(136,135,128,0.15)', border:'#888780', text:'#5F5E5A' },
+            'résonance':       { bg:'rgba(127,119,221,0.15)', border:'#7F77DD', text:'#3C3489' },
+            'instabilité':     { bg:'rgba(186,117,23,0.15)',  border:'#BA7517', text:'#633806' },
+            'critique':        { bg:'rgba(163,45,45,0.15)',   border:'#E24B4A', text:'#501313' },
+            'instabilité-crit':{ bg:'rgba(163,45,45,0.22)',   border:'#A32D2D', text:'#501313' },
+        };
+
+        function getFaceDistribution(etat) {
+            const D = {
+                A: [...Array(8).fill('succès'), 'vide','vide','résonance','résonance'],
+                B: [...Array(6).fill('succès'), 'vide','vide','résonance','instabilité','instabilité','critique'],
+                C: [...Array(5).fill('succès'), 'vide','vide','vide','instabilité','instabilité','critique','critique'],
+                D: ['succès','succès','vide',...Array(6).fill('instabilité'),'critique','critique','critique'],
+                E: ['succès','succès','vide',...Array(4).fill('instabilité'),...Array(5).fill('critique')],
+            };
+            return D[etat] || D['E'];
+        }
+
+        function rollMagicDie(etat) {
+            const dist = getFaceDistribution(etat);
+            const idx = Math.floor(Math.random() * 12);
+            return { value: idx + 1, type: dist[idx], isBonus: false };
+        }
+
+        function rollResonanceDie() {
+            const dist = [...Array(8).fill('succès'), ...Array(4).fill('vide')];
+            const idx = Math.floor(Math.random() * 12);
+            return { value: idx + 1, type: dist[idx], isBonus: true };
+        }
+
         function getEsoterismeLevel() {
             const s = appState.skills.find(s => (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme');
             return s ? s.level : 0;
         }
 
-        // Seuil basé sur l'attribut lié (comme les jets normaux)
-        function getMagicThreshold() {
-            const attrKey = appState.magic.attr;
-            const attrLevel = getAttributeLevel(appState.attributes[attrKey] || 4);
-            return 13 - attrLevel.faces;
+        function getMagicBaseScore() {
+            const lvl = getEsoterismeLevel();
+            const bases = { 1:1, 2:2, 3:3, 4:4, 5:6, 6:9, 7:13, 8:18 };
+            return bases[Math.min(8, Math.max(1, lvl))] || 0;
         }
 
-        // Explosion basée sur le niveau d'Ésotérisme (comme les jets de compétence)
-        function getMagicExplosionThreshold() {
-            const lvl = getEsoterismeLevel();
-            if (lvl === 0) return 12;
-            return getSkillLevel(lvl).explosion;
+        function getMagicScore() {
+            return getMagicBaseScore() - appState.magic.surcharge;
         }
 
-        // Bonus de succès basé sur le niveau d'Ésotérisme
-        function getMagicSkillBonus() {
-            const lvl = getEsoterismeLevel();
-            if (lvl >= 8) return 3;
-            if (lvl >= 6) return 2;
-            if (lvl >= 4) return 1;
-            return 0; // niv 1-3
+        function getMagicEtat() {
+            const score = getMagicScore();
+            if (score >= 5) return 'A';
+            if (score >= 3) return 'B';
+            if (score >= 1) return 'C';
+            if (score >= -1) return 'D';
+            return 'E';
         }
 
         function getMagicPoolMax() {
             const esotLevel = getEsoterismeLevel();
-            if (esotLevel === 0) return 0;
-            const attrKey = appState.magic.attr;
-            const attrValue = appState.attributes[attrKey] || 4;
-            return (esotLevel * 2) + attrValue;
+            return esotLevel * 3;
         }
 
         function getMagicPoolRemaining() {
             return Math.max(0, getMagicPoolMax() - appState.magic.poolUsed);
         }
 
-        // Zone critique selon % consommé : 0-33% → 1, 34-50% → 1-2, 51-66% → 1-3, 67-83% → 1-4, 84-99% → 1-5, dernier dé → 1-6
-        function getCriticalZone() {
-            const max = getMagicPoolMax();
-            if (max === 0) return 0;
-            const remaining = getMagicPoolRemaining();
-            const pct = appState.magic.poolUsed / max;
-            if (remaining <= 0) return 7; // pool épuisé
-            if (remaining === 1) return 6; // dernier dé
-            if (pct >= 0.84) return 5;
-            if (pct >= 0.67) return 4;
-            if (pct >= 0.51) return 3;
-            if (pct >= 0.34) return 2;
-            return 1;
+        function getEsoterismeMaxDice() {
+            const s = appState.skills.find(s => (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme');
+            return s ? getSkillLevel(s.level).dice : 0;
         }
 
-        function getCriticalLabel(zone) {
-            if (zone <= 1) return '🟢 Zone sûre (critique : 1 sur d12)';
-            if (zone === 2) return '🟡 Risque faible (critique : 1-2)';
-            if (zone === 3) return '🟠 Risque modéré (critique : 1-3)';
-            if (zone === 4) return '🔴 Risque élevé (critique : 1-4)';
-            if (zone === 5) return '🔴 Risque très élevé (critique : 1-5)';
-            if (zone === 6) return '⚠️ Dernier dé ! (critique : 1-6)';
-            return '💀 Pool épuisé';
+        function consumeMagicDice(n) {
+            const max = getMagicPoolMax();
+            appState.magic.poolUsed = Math.max(0, Math.min(max, appState.magic.poolUsed + n));
+            appState.magic.surcharge = Math.max(0, appState.magic.surcharge + n);
+            updateMagicPool();
+        }
+
+        function adjustPool(delta) {
+            const max = getMagicPoolMax();
+            appState.magic.poolUsed = Math.max(0, Math.min(max, appState.magic.poolUsed - delta));
+            updateMagicPool();
+        }
+
+        function adjustSurcharge(delta) {
+            appState.magic.surcharge = Math.max(0, appState.magic.surcharge + delta);
+            updateMagicPool();
+        }
+
+        function shortRest() {
+            appState.magic.surcharge = 0;
+            updateMagicPool();
+        }
+
+        function longRest() {
+            appState.magic.surcharge = 0;
+            appState.magic.poolUsed = 0;
+            updateMagicPool();
         }
 
         function updateMagicPool() {
-            const sel = document.getElementById('magic-attr-select');
-            if (sel) appState.magic.attr = sel.value;
-
             const max = getMagicPoolMax();
             const remaining = getMagicPoolRemaining();
-            const zone = getCriticalZone();
             const esotLvl = getEsoterismeLevel();
-            const threshold = getMagicThreshold();
-            const explosion = getMagicExplosionThreshold();
-
+            const score = getMagicScore();
+            const etat = getMagicEtat();
+            const info = ETAT_INFO[etat];
+            const surcharge = appState.magic.surcharge;
             appState.magic.poolMax = max;
 
-            // Bloc Personnage
             const remEl = document.getElementById('magic-pool-remaining');
             const maxEl = document.getElementById('magic-pool-max');
             const barEl = document.getElementById('magic-pool-bar');
-            const statusEl = document.getElementById('magic-pool-status');
+            const surchargeEl = document.getElementById('magic-surcharge-val');
+            const etatEl = document.getElementById('magic-etat-display');
+            const scoreEl = document.getElementById('magic-score-val');
+
             if (remEl) remEl.textContent = remaining;
             if (maxEl) maxEl.textContent = max;
             if (barEl) barEl.style.width = max > 0 ? `${(remaining / max) * 100}%` : '0%';
-            if (statusEl) statusEl.textContent = max > 0 ? getCriticalLabel(zone) : 'Aucune compétence Ésotérisme';
+            if (surchargeEl) surchargeEl.textContent = surcharge;
+            if (etatEl && max > 0) {
+                etatEl.textContent = `État ${etat} — ${info.name}`;
+                etatEl.style.color = info.color;
+                etatEl.style.background = info.bg;
+                etatEl.style.border = `1px solid ${info.border}`;
+            } else if (etatEl) {
+                etatEl.textContent = 'Aucune compétence Ésotérisme';
+                etatEl.style.color = 'var(--silver-mist)';
+                etatEl.style.background = 'transparent';
+                etatEl.style.border = 'none';
+            }
+            if (scoreEl) scoreEl.textContent = max > 0 ? `Base ${getMagicBaseScore()} − Surcharge ${surcharge} = Score ${score}` : '—';
 
             // Mini bloc page Compétences
             const rollPool = document.getElementById('roll-page-pool');
@@ -3089,29 +3151,16 @@
             if (rollPool) rollPool.style.display = max > 0 ? 'block' : 'none';
             if (rollDisplay) rollDisplay.textContent = `${remaining} / ${max}`;
             if (rollBar) rollBar.style.width = max > 0 ? `${(remaining / max) * 100}%` : '0%';
-            if (rollStatus) rollStatus.textContent = max > 0 ? getCriticalLabel(zone) : '';
+            if (rollStatus && max > 0) {
+                rollStatus.textContent = `État ${etat} — ${info.name}`;
+                rollStatus.style.color = info.color;
+            }
             if (rollDetails) rollDetails.textContent = max > 0
-                ? `Seuil : ${threshold}+  ·  Explosion : ${explosion}+  ·  Bonus succès : +${getSkillLevel(esotLvl).bonus}  ·  Max/jet : ${getEsoterismeMaxDice()} dés`
+                ? `Base ${getMagicBaseScore()} − Surcharge ${surcharge} = Score ${score} · Max/jet : ${getEsoterismeMaxDice()} dés`
                 : '';
 
             updateHybridMagicInfo();
             updatePureMagicInfo();
-        }
-
-        function consumeMagicDie(n) {
-            const max = getMagicPoolMax();
-            appState.magic.poolUsed = Math.max(0, Math.min(max, appState.magic.poolUsed + n));
-            updateMagicPool();
-        }
-
-        function resetMagicPool() {
-            appState.magic.poolUsed = 0;
-            updateMagicPool();
-        }
-
-        function getEsoterismeMaxDice() {
-            const s = appState.skills.find(s => (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme');
-            return s ? getSkillLevel(s.level).dice : 0;
         }
 
         function updateHybridMagicInfo() {
@@ -3120,19 +3169,13 @@
             const injected = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
             const remaining = getMagicPoolRemaining();
             const maxInject = getEsoterismeMaxDice();
-            const zone = getCriticalZone();
-            const threshold = getMagicThreshold();
-            const explosion = getMagicExplosionThreshold();
-            const skillBonus = getMagicSkillBonus();
-            const esotLvl = getEsoterismeLevel();
-
+            const etat = getMagicEtat();
+            const score = getMagicScore();
+            const info = ETAT_INFO[etat];
             infoEl.innerHTML = `
                 <strong>Pool restant :</strong> ${remaining} / ${getMagicPoolMax()} &nbsp;|&nbsp;
                 <strong>Max injectable :</strong> ${maxInject} dés<br>
-                <strong>Seuil :</strong> ${threshold}+ &nbsp;|&nbsp;
-                <strong>Explosion :</strong> ${explosion}+ &nbsp;|&nbsp;
-                <strong>Bonus succès :</strong> +${skillBonus} (Ésotérisme niv.${esotLvl})<br>
-                ${getCriticalLabel(zone)}<br>
+                <span style="color:${info.color};font-weight:600;">État ${etat} — ${info.name} · Base ${getMagicBaseScore()} − Sur. ${appState.magic.surcharge} = Score ${score}</span><br>
                 ${injected > remaining ? `<span style="color:var(--vitality-red)">⚠ Pas assez de dés dans le pool !</span>` : ''}
                 ${injected > maxInject ? `<span style="color:var(--vitality-red)">⚠ Dépasse le maximum injectable (${maxInject}) !</span>` : ''}
             `;
@@ -3143,31 +3186,89 @@
             if (!infoEl) return;
             const injected = parseInt(document.getElementById('pure-magic-dice')?.value) || 1;
             const remaining = getMagicPoolRemaining();
-            const zone = getCriticalZone();
-            const threshold = getMagicThreshold();
-            const explosion = getMagicExplosionThreshold();
-            const skillBonus = getMagicSkillBonus();
             const magnitude = parseInt(document.getElementById('pure-magnitude')?.value) || 2;
-            const esotLvl = getEsoterismeLevel();
-
+            const etat = getMagicEtat();
+            const score = getMagicScore();
+            const info = ETAT_INFO[etat];
             infoEl.innerHTML = `
                 <strong>Pool restant :</strong> ${remaining} / ${getMagicPoolMax()} &nbsp;|&nbsp;
                 <strong>Succès requis :</strong> ${magnitude}<br>
-                <strong>Seuil :</strong> ${threshold}+ &nbsp;|&nbsp;
-                <strong>Explosion :</strong> ${explosion}+ &nbsp;|&nbsp;
-                <strong>Bonus succès :</strong> +${skillBonus} (Ésotérisme niv.${esotLvl})<br>
-                ${getCriticalLabel(zone)}<br>
+                <span style="color:${info.color};font-weight:600;">État ${etat} — ${info.name} · Base ${getMagicBaseScore()} − Sur. ${appState.magic.surcharge} = Score ${score}</span><br>
                 ${injected > remaining ? `<span style="color:var(--vitality-red)">⚠ Pas assez de dés dans le pool !</span>` : ''}
             `;
         }
 
-        // ========== JET HYBRIDE (compétence + dés magiques) ==========
+        // Résolution des dés magiques (retourne résultats, succès, élan perdu, coût pool extra)
+        function resolveMagicDice(etat, count, poolExtra) {
+            const results = [];
+            let successes = 0, elanLoss = 0, extraPoolCost = 0;
+            let extraAvailable = poolExtra;
+
+            for (let i = 0; i < count; i++) {
+                const die = rollMagicDie(etat);
+                results.push(die);
+                if (die.type === 'succès') {
+                    successes++;
+                } else if (die.type === 'résonance') {
+                    successes++;
+                    const bonus = rollResonanceDie();
+                    results.push(bonus);
+                    if (bonus.type === 'succès') successes++;
+                } else if (die.type === 'critique') {
+                    elanLoss += 2;
+                } else if (die.type === 'instabilité') {
+                    if (extraAvailable > 0) {
+                        extraPoolCost++;
+                        extraAvailable--;
+                    } else {
+                        die.type = 'instabilité-crit';
+                        elanLoss += 2;
+                    }
+                }
+            }
+            return { results, successes, elanLoss, extraPoolCost };
+        }
+
+        function renderMagicDie(die, delay) {
+            const fc = FACE_COLORS[die.type] || FACE_COLORS['vide'];
+            const labels = {
+                'succès':          'Succ.',
+                'vide':            'Vide',
+                'résonance':       'Rés.',
+                'instabilité':     'Inst.',
+                'critique':        'Crit.',
+                'instabilité-crit':'Crit!',
+            };
+            const el = document.createElement('div');
+            el.className = 'die';
+            el.style.animationDelay = `${delay}s`;
+            el.style.background = fc.bg;
+            el.style.color = fc.text;
+            el.style.border = `1.5px ${die.isBonus ? 'dashed' : 'solid'} ${fc.border}`;
+            el.style.flexDirection = 'column';
+            el.style.gap = '1px';
+            el.style.height = '52px';
+            el.style.fontSize = '13px';
+            el.innerHTML = `<span style="font-weight:700;line-height:1.1;">${labels[die.type] || die.type}</span><span style="font-size:0.75em;opacity:0.65;line-height:1;">${die.value}</span>`;
+            if (die.isBonus) el.title = 'Résonance — dé bonus';
+            return el;
+        }
+
+        const MAGIC_DIE_LEGEND = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px;font-size:10px;padding:4px 0;">
+            <span style="color:#27500A;">● Succès</span>
+            <span style="color:#5F5E5A;">● Vide</span>
+            <span style="color:#3C3489;">● Résonance</span>
+            <span style="color:#633806;">● Instabilité</span>
+            <span style="color:#501313;">● Critique</span>
+            <span style="color:#501313;opacity:0.7;">⋯ dé bonus (Résonance)</span>
+        </div>`;
+
+        // ========== JET HYBRIDE ==========
         function performHybridRoll() {
             const attrName = document.getElementById('hybrid-attr-select').value;
             const skillId = document.getElementById('hybrid-skill-select').value;
             const bonus = parseInt(document.getElementById('hybrid-bonus').value) || 0;
             const magicDiceCount = parseInt(document.getElementById('hybrid-magic-dice').value) || 0;
-
             const skill = appState.skills.find(s => s.id === skillId);
             if (!skill) return;
 
@@ -3175,7 +3276,6 @@
             const maxInject = getEsoterismeMaxDice();
             const actualMagic = Math.min(magicDiceCount, remaining, maxInject);
 
-            // Jet de compétence normal
             const attrValue = appState.attributes[attrName];
             const attrLevel = getAttributeLevel(attrValue);
             const skillLevel = getSkillLevel(skill.level);
@@ -3183,48 +3283,25 @@
             const skillDice = rollWithExplosions(skillLevel.dice, threshold, skillLevel.explosion);
             const skillCounts = countSuccesses(skillDice, threshold);
 
-            // Dés magiques avec explosions
-            const magicThreshold = getMagicThreshold();
-            const magicExplosion = getMagicExplosionThreshold();
-            const magicSkillBonus = getMagicSkillBonus();
-            const criticalZone = getCriticalZone();
-            const esotLvl = getEsoterismeLevel();
+            const etat = getMagicEtat();
+            const poolAfterMain = Math.max(0, remaining - actualMagic);
+            const { results: magicResults, successes: magicSuccesses, elanLoss, extraPoolCost } = resolveMagicDice(etat, actualMagic, poolAfterMain);
 
-            const magicDice = [];
-            let criticalCount = 0;
-            for (let i = 0; i < actualMagic; i++) {
-                const val = rollD12();
-                const isCritical = val <= criticalZone;
-                const isExplosion = !isCritical && val >= magicExplosion;
-                const isSuccess = !isCritical && val >= magicThreshold;
-                magicDice.push({ value: val, isCritical, isSuccess, isExplosion: false });
-                if (isCritical) criticalCount++;
-                if (isExplosion) {
-                    const expVal = rollD12();
-                    magicDice.push({ value: expVal, isCritical: false, isSuccess: expVal >= magicThreshold, isExplosion: true });
-                }
+            consumeMagicDice(actualMagic + extraPoolCost);
+            if (elanLoss > 0) {
+                appState.counters.health.current = Math.max(0, appState.counters.health.current - elanLoss);
+                recalcHealthFromWounds();
+                syncElanFromHealth();
             }
 
-            const allCritical = actualMagic > 0 && criticalCount === actualMagic;
-            const magicDiceSuccesses = magicDice.filter(d => d.isSuccess).length;
-            // Bonus s'applique même en cas de missfire (perte d'élan indépendante)
-            const magicSuccesses = magicDiceSuccesses + (actualMagic > 0 ? magicSkillBonus : 0);
-
-            if (actualMagic > 0) consumeMagicDie(actualMagic);
-
             const total = skillCounts.successes + magicSuccesses + attrLevel.bonus + skillLevel.bonus + bonus;
-            const elanLoss = allCritical ? actualMagic * 2 : 0;
 
             displayHybridResult({
-                skillName: skill.name,
-                attrName: capitalize(attrName),
-                skillDice, magicDice,
-                threshold, magicThreshold, magicExplosion, criticalZone,
-                skillSuccesses: skillCounts.successes,
-                magicDiceSuccesses, magicSkillBonus, magicSuccesses,
-                attrBonus: attrLevel.bonus,
-                skillBonus: skillLevel.bonus,
-                bonus, total, allCritical, elanLoss, actualMagic, esotLvl
+                skillName: skill.name, attrName: capitalize(attrName),
+                skillDice, magicResults, threshold, etat,
+                skillSuccesses: skillCounts.successes, magicSuccesses,
+                attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus,
+                bonus, total, elanLoss, extraPoolCost, actualMagic
             });
 
             sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), {
@@ -3235,63 +3312,51 @@
         }
 
         function displayHybridResult(data) {
+            const info = ETAT_INFO[data.etat];
             document.getElementById('result-title').textContent = '🎲✨ Jet + Magie';
-            document.getElementById('result-subtitle').textContent = `${data.skillName} (${data.attrName}) + ${data.actualMagic} dé(s) magique(s) · Seuil ${data.magicThreshold}+ · Explosion ${data.magicExplosion}+`;
+            document.getElementById('result-subtitle').textContent = `${data.skillName} (${data.attrName}) + ${data.actualMagic} dé(s) · État ${data.etat} — ${info.name}`;
 
             const diceArea = document.getElementById('dice-display-area');
             diceArea.innerHTML = '';
 
-            // Section compétence
             const skillSection = document.createElement('div');
             skillSection.className = 'dice-section';
-            skillSection.innerHTML = `<div class="dice-section-label skill">⚔ Compétence (Seuil ${data.threshold}+)</div><div class="dice-container" id="hybrid-skill-dice"></div>`;
+            skillSection.innerHTML = `<div class="dice-section-label skill">⚔ Compétence (Seuil ${data.threshold}+)</div><div class="dice-container" id="hs-dice"></div>`;
             diceArea.appendChild(skillSection);
+            const hsCont = skillSection.querySelector('#hs-dice');
             data.skillDice.forEach((d, i) => {
-                const die = document.createElement('div');
-                die.className = 'die';
-                die.textContent = d.value;
-                die.style.animationDelay = `${i * 0.08}s`;
-                if (d.isExplosion) die.classList.add('explosion');
-                else if (d.value <= 2) die.classList.add('universal-failure');
-                else if (d.value >= data.threshold) die.classList.add('success');
-                else die.classList.add('failure');
-                skillSection.querySelector('#hybrid-skill-dice').appendChild(die);
+                const el = document.createElement('div');
+                el.className = 'die';
+                el.style.animationDelay = `${i * 0.08}s`;
+                el.textContent = d.value;
+                if (d.isExplosion) el.classList.add('explosion');
+                else if (d.value <= 2) el.classList.add('universal-failure');
+                else if (d.value >= data.threshold) el.classList.add('success');
+                else el.classList.add('failure');
+                hsCont.appendChild(el);
             });
 
-            // Section magique
             if (data.actualMagic > 0) {
                 const magicSection = document.createElement('div');
                 magicSection.className = 'dice-section';
-                magicSection.innerHTML = `<div class="dice-section-label power">✨ Dés Magiques (Seuil ${data.magicThreshold}+ · Explosion ${data.magicExplosion}+ · Critique ≤${data.criticalZone})</div><div class="dice-container" id="hybrid-magic-dice-display"></div>`;
+                magicSection.innerHTML = `<div class="dice-section-label power" style="color:${info.color}">✨ Magie · État ${data.etat} — ${info.name}</div><div class="dice-container" id="hm-dice"></div>${MAGIC_DIE_LEGEND}`;
                 diceArea.appendChild(magicSection);
-                data.magicDice.forEach((d, i) => {
-                    const die = document.createElement('div');
-                    die.className = 'die';
-                    die.textContent = d.value;
-                    die.style.animationDelay = `${(data.skillDice.length + i) * 0.08}s`;
-                    if (d.isCritical) { die.classList.add('universal-failure'); die.title = 'CRITIQUE !'; }
-                    else if (d.isExplosion) die.classList.add('explosion');
-                    else if (d.isSuccess) die.classList.add('success');
-                    else die.classList.add('failure');
-                    magicSection.querySelector('#hybrid-magic-dice-display').appendChild(die);
-                });
+                const hmCont = magicSection.querySelector('#hm-dice');
+                data.magicResults.forEach((d, i) => hmCont.appendChild(renderMagicDie(d, (data.skillDice.length + i) * 0.08)));
             }
 
-            document.getElementById('stat-successes').textContent = `${data.skillSuccesses} + ${data.magicDiceSuccesses}+${data.magicSkillBonus}`;
-            document.getElementById('stat-neutrals').textContent = '—';
-            document.getElementById('stat-explosions').textContent = [...data.skillDice, ...data.magicDice].filter(d => d.isExplosion).length;
+            const vides = data.magicResults.filter(d => d.type === 'vide').length;
+            document.getElementById('stat-successes').textContent = `${data.skillSuccesses} + ${data.magicSuccesses}`;
+            document.getElementById('stat-neutrals').textContent = vides > 0 ? `${vides} vide(s)` : '—';
+            document.getElementById('stat-explosions').textContent = data.skillDice.filter(d => d.isExplosion).length;
             document.getElementById('stat-attribute-bonus').textContent = data.attrBonus;
             document.getElementById('stat-skill-bonus').textContent = data.skillBonus;
 
-            const magnitudeArea = document.getElementById('magnitude-result-area');
-            if (data.allCritical && data.actualMagic > 0) {
-                magnitudeArea.innerHTML = `<div class="magnitude-result">
-                    <div class="magnitude-label" style="color:var(--vitality-red)">⚠️ MISSFIRE — Tous les dés magiques sont critiques</div>
-                    <div class="magnitude-status failure">Perte d'Élan : <strong>${data.elanLoss}</strong> (${data.actualMagic} dés × 2)</div>
-                </div>`;
-            } else if (data.actualMagic > 0) {
-                magnitudeArea.innerHTML = `<div class="magnitude-result"><div class="magnitude-status success">✓ Magie stable — ${data.magicDiceSuccesses} succès dés + ${data.magicSkillBonus} bonus = ${data.magicSuccesses} succès magiques</div></div>`;
-            }
+            let mag = '';
+            if (data.elanLoss > 0) mag += `<div class="magnitude-status failure">⚠ ${data.elanLoss} Élan perdu (Critique)</div>`;
+            if (data.extraPoolCost > 0) mag += `<div class="magnitude-status" style="color:var(--power-cyan)">↺ +${data.extraPoolCost} dé(s) consommé(s) (Instabilité)</div>`;
+            if (!mag && data.actualMagic > 0) mag = `<div class="magnitude-status success">✓ Magie stable — ${data.magicSuccesses} succès</div>`;
+            document.getElementById('magnitude-result-area').innerHTML = mag ? `<div class="magnitude-result">${mag}</div>` : '';
 
             document.getElementById('result-total').textContent = data.total;
             document.getElementById('result-overlay').classList.add('active');
@@ -3301,99 +3366,57 @@
         function performPureRoll() {
             const magicDiceCount = parseInt(document.getElementById('pure-magic-dice').value) || 1;
             const magnitude = parseInt(document.getElementById('pure-magnitude').value) || 2;
-
             const remaining = getMagicPoolRemaining();
             const actualDice = Math.min(magicDiceCount, remaining);
-
-            const magicThreshold = getMagicThreshold();
-            const magicExplosion = getMagicExplosionThreshold();
-            const magicSkillBonus = getMagicSkillBonus();
-            const criticalZone = getCriticalZone();
+            const etat = getMagicEtat();
             const esotLvl = getEsoterismeLevel();
 
-            const magicDice = [];
-            let criticalCount = 0;
-            for (let i = 0; i < actualDice; i++) {
-                const val = rollD12();
-                const isCritical = val <= criticalZone;
-                const isExplosion = !isCritical && val >= magicExplosion;
-                const isSuccess = !isCritical && val >= magicThreshold;
-                magicDice.push({ value: val, isCritical, isSuccess, isExplosion: false });
-                if (isCritical) criticalCount++;
-                if (isExplosion) {
-                    const expVal = rollD12();
-                    magicDice.push({ value: expVal, isCritical: false, isSuccess: expVal >= magicThreshold, isExplosion: true });
-                }
+            const poolAfterMain = Math.max(0, remaining - actualDice);
+            const { results, successes, elanLoss, extraPoolCost } = resolveMagicDice(etat, actualDice, poolAfterMain);
+
+            consumeMagicDice(actualDice + extraPoolCost);
+            if (elanLoss > 0) {
+                appState.counters.health.current = Math.max(0, appState.counters.health.current - elanLoss);
+                recalcHealthFromWounds();
+                syncElanFromHealth();
             }
 
-            const allCritical = actualDice > 0 && criticalCount === actualDice;
-            const diceSuccesses = magicDice.filter(d => d.isSuccess).length;
-            const totalSuccesses = diceSuccesses + magicSkillBonus;
-            const powerSuccess = totalSuccesses >= magnitude;
-            const elanLoss = allCritical ? actualDice * 2 : 0;
-
-            if (actualDice > 0) consumeMagicDie(actualDice);
-
-            displayPureResult({
-                magicDice, magicThreshold, magicExplosion, criticalZone,
-                diceSuccesses, magicSkillBonus, totalSuccesses,
-                magnitude, powerSuccess, allCritical, elanLoss, actualDice, esotLvl
-            });
-
-            sendDiscordRoll('Pouvoir', null, totalSuccesses, `Ésotérisme niv.${esotLvl}`, { successes: totalSuccesses });
+            displayPureResult({ results, etat, successes, magnitude, powerSuccess: successes >= magnitude, elanLoss, extraPoolCost, actualDice, esotLvl });
+            sendDiscordRoll('Pouvoir', null, successes, `Ésotérisme niv.${esotLvl}`, { successes });
         }
 
         function displayPureResult(data) {
+            const info = ETAT_INFO[data.etat];
             document.getElementById('result-title').textContent = '✨ Magie Pure';
-            document.getElementById('result-subtitle').textContent = `${data.actualDice} dé(s) · Seuil ${data.magicThreshold}+ · Explosion ${data.magicExplosion}+ · Critique ≤${data.criticalZone} (Ésotérisme niv.${data.esotLvl})`;
+            document.getElementById('result-subtitle').textContent = `${data.actualDice} dé(s) · État ${data.etat} — ${info.name} · Magnitude ${data.magnitude}`;
 
             const diceArea = document.getElementById('dice-display-area');
             diceArea.innerHTML = '';
-
             const section = document.createElement('div');
             section.className = 'dice-section';
-            section.innerHTML = `<div class="dice-section-label power">✨ Pouvoir (Seuil ${data.magicThreshold}+ · Explosion ${data.magicExplosion}+ · Critique ≤${data.criticalZone})</div><div class="dice-container" id="pure-dice-display"></div>`;
+            section.innerHTML = `<div class="dice-section-label power" style="color:${info.color}">✨ État ${data.etat} — ${info.name}</div><div class="dice-container" id="pm-dice"></div>${MAGIC_DIE_LEGEND}`;
             diceArea.appendChild(section);
+            const cont = section.querySelector('#pm-dice');
+            data.results.forEach((d, i) => cont.appendChild(renderMagicDie(d, i * 0.08)));
 
-            data.magicDice.forEach((d, i) => {
-                const die = document.createElement('div');
-                die.className = 'die';
-                die.textContent = d.value;
-                die.style.animationDelay = `${i * 0.08}s`;
-                if (d.isCritical) { die.classList.add('universal-failure'); die.title = 'CRITIQUE !'; }
-                else if (d.isExplosion) die.classList.add('explosion');
-                else if (d.isSuccess) die.classList.add('success');
-                else die.classList.add('failure');
-                section.querySelector('#pure-dice-display').appendChild(die);
-            });
-
-            document.getElementById('stat-successes').textContent = `${data.diceSuccesses} dés + ${data.magicSkillBonus} bonus = ${data.totalSuccesses}`;
-            document.getElementById('stat-neutrals').textContent = `Requis : ${data.magnitude}`;
-            document.getElementById('stat-explosions').textContent = data.magicDice.filter(d => d.isExplosion).length;
+            const videsP = data.results.filter(d => d.type === 'vide').length;
+            document.getElementById('stat-successes').textContent = data.successes;
+            document.getElementById('stat-neutrals').textContent = videsP > 0 ? `${videsP} vide(s)` : '—';
+            document.getElementById('stat-explosions').textContent = data.results.filter(d => d.type === 'résonance').length;
             document.getElementById('stat-attribute-bonus').textContent = '—';
             document.getElementById('stat-skill-bonus').textContent = '—';
 
-            const magnitudeArea = document.getElementById('magnitude-result-area');
-            let html = '';
-            if (data.allCritical) {
-                html = `<div class="magnitude-result">
-                    <div class="magnitude-label" style="color:var(--vitality-red)">⚠️ MISSFIRE TOTAL</div>
-                    <div class="magnitude-status failure">Perte d'Élan : <strong>${data.elanLoss}</strong> (${data.actualDice} dés × 2)</div>
-                </div>`;
-            } else {
-                html = `<div class="magnitude-result">
-                    <div class="magnitude-label">Magnitude ${data.magnitude} — ${data.diceSuccesses} dés + ${data.magicSkillBonus} bonus = ${data.totalSuccesses} succès</div>
-                    <div class="magnitude-status ${data.powerSuccess ? 'success' : 'failure'}">
-                        ${data.powerSuccess ? '✓ Pouvoir réussi !' : `✗ Échec (il manque ${data.magnitude - data.totalSuccesses} succès)`}
-                    </div>
-                </div>`;
-            }
-            magnitudeArea.innerHTML = html;
+            let mag = `<div class="magnitude-result">
+                <div class="magnitude-label">Magnitude ${data.magnitude} — ${data.successes} succès</div>
+                <div class="magnitude-status ${data.powerSuccess ? 'success' : 'failure'}">${data.powerSuccess ? '✓ Pouvoir réussi !' : `✗ Échec — il manque ${data.magnitude - data.successes} succès`}</div>`;
+            if (data.elanLoss > 0) mag += `<div class="magnitude-status failure" style="margin-top:4px;">⚠ ${data.elanLoss} Élan perdu (Critique)</div>`;
+            if (data.extraPoolCost > 0) mag += `<div class="magnitude-status" style="color:var(--power-cyan);margin-top:4px;">↺ +${data.extraPoolCost} dé(s) consommé(s) (Instabilité)</div>`;
+            mag += `</div>`;
+            document.getElementById('magnitude-result-area').innerHTML = mag;
 
-            document.getElementById('result-total').textContent = data.totalSuccesses;
+            document.getElementById('result-total').textContent = data.successes;
             document.getElementById('result-overlay').classList.add('active');
         }
-
         function closeResult() {
             document.getElementById('result-overlay').classList.remove('active');
         }
@@ -3442,7 +3465,8 @@
                 try {
                     const loaded = JSON.parse(e.target.result);
                     Object.assign(appState, loaded);
-                    if (!appState.magic) appState.magic = { attr: 'intuition', poolMax: 0, poolUsed: 0 };
+                    if (!appState.magic) appState.magic = { poolMax: 0, poolUsed: 0, surcharge: 0 };
+                    if (appState.magic.surcharge === undefined) appState.magic.surcharge = 0;
 
                     // Restaurer l'interface
                     document.getElementById('character-name').value = appState.profile.name || '';
@@ -3461,9 +3485,6 @@
                     syncElanFromHealth();
                     updateRollSelects();
                     updateMagicPool();
-                    // Restaurer le select d'attribut magique
-                    const magicSel = document.getElementById('magic-attr-select');
-                    if (magicSel && appState.magic?.attr) magicSel.value = appState.magic.attr;
 
                     alert('Personnage chargé avec succès !');
                 } catch (err) {
