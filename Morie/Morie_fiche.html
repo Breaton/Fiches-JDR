@@ -3020,11 +3020,11 @@
 
         function getFaceDistribution(etat) {
             const D = {
-                A: [...Array(8).fill('succès'), 'vide','vide','résonance','résonance'],
-                B: [...Array(6).fill('succès'), 'vide','vide','résonance','instabilité','instabilité','critique'],
-                C: [...Array(5).fill('succès'), 'vide','vide','vide','instabilité','instabilité','critique','critique'],
-                D: ['succès','succès','vide',...Array(6).fill('instabilité'),'critique','critique','critique'],
-                E: ['succès','succès','vide',...Array(4).fill('instabilité'),...Array(5).fill('critique')],
+                A: ['vide','vide',...Array(8).fill('succès'),'résonance','résonance'],
+                B: ['instabilité','instabilité','vide','vide','vide',...Array(6).fill('succès'),'résonance'],
+                C: ['critique','instabilité','instabilité','vide','vide','vide',...Array(6).fill('succès')],
+                D: ['critique','critique','critique',...Array(6).fill('instabilité'),'vide','succès','succès'],
+                E: [...Array(5).fill('critique'),...Array(4).fill('instabilité'),'vide','succès','succès'],
             };
             return D[etat] || D['E'];
         }
