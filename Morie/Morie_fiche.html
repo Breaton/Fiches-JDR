@@ -3002,11 +3002,11 @@
         // ========== SYSTÈME DE DÉS MAGIQUES ==========
 
         const ETAT_INFO = {
-            A: { name:'Maîtrise',    score:'≥5',   color:'#27500A', bg:'rgba(59,109,17,0.1)',   border:'#639922' },
-            B: { name:'Stable',      score:'3-4',  color:'#085041', bg:'rgba(29,158,117,0.1)',  border:'#1D9E75' },
-            C: { name:'Tendu',       score:'1-2',  color:'#633806', bg:'rgba(186,117,23,0.1)', border:'#BA7517' },
-            D: { name:'Instable',    score:'-1-0', color:'#712B13', bg:'rgba(216,90,48,0.1)',  border:'#D85A30' },
-            E: { name:'Débordement', score:'≤-2',  color:'#501313', bg:'rgba(163,45,45,0.1)',  border:'#A32D2D' },
+            A: { name:'Maîtrise',    score:'≥5',      color:'#27500A', bg:'rgba(59,109,17,0.1)',   border:'#639922' },
+            B: { name:'Stable',      score:'1-4',     color:'#085041', bg:'rgba(29,158,117,0.1)',  border:'#1D9E75' },
+            C: { name:'Tendu',       score:'-3 à 0',  color:'#633806', bg:'rgba(186,117,23,0.1)', border:'#BA7517' },
+            D: { name:'Instable',    score:'-7 à -4', color:'#712B13', bg:'rgba(216,90,48,0.1)',  border:'#D85A30' },
+            E: { name:'Débordement', score:'≤ -8',    color:'#501313', bg:'rgba(163,45,45,0.1)',  border:'#A32D2D' },
         };
 
         const FACE_COLORS = {
@@ -3058,10 +3058,10 @@
 
         function getMagicEtat() {
             const score = getMagicScore();
-            if (score >= 5) return 'A';
-            if (score >= 3) return 'B';
-            if (score >= 1) return 'C';
-            if (score >= -1) return 'D';
+            if (score >= 5)  return 'A';
+            if (score >= 1)  return 'B';
+            if (score >= -3) return 'C';
+            if (score >= -7) return 'D';
             return 'E';
         }
 
