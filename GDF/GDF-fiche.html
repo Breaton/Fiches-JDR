@@ -2973,7 +2973,8 @@
                                 <div class="stance-name">Liàn shì (Vivacité)</div>
                             </div>
                             <div class="stance-effect">
-                                Vous pouvez lancer deux sorts par tour à condition que la magnitude individuelle de chaque sort n'excède pas
+                                Vous pouvez lancer deux sorts par tour à condition que la magnitude individuelle de
+                                chaque sort n'excède pas
                                 la moitié de votre niveau en Combat Magique, que les deux sorts ne soient pas des sorts
                                 de durée ou de zone, et qu'ils visent la même cible.
                             </div>
@@ -4775,14 +4776,14 @@
                 const form = new FormData();
                 form.append('files[0]', blob, 'avatar.png');
                 form.append('payload_json', JSON.stringify({ username: charName, embeds: [embed] }));
-                fetch(DISCORD_WEBHOOK_URL, { method: 'POST', body: form }).catch(() => {});
+                fetch(DISCORD_WEBHOOK_URL, { method: 'POST', body: form }).catch(() => { });
             } else {
                 if (charImage && !charImage.startsWith('data:')) embed.author.icon_url = charImage;
                 fetch(DISCORD_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: charName, embeds: [embed] })
-                }).catch(() => {});
+                }).catch(() => { });
             }
         }
 
