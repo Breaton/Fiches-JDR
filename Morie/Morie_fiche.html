@@ -1023,8 +1023,16 @@
             transition: background 0.15s;
         }
 
-        .rename-option:hover { background: rgba(74, 144, 194, 0.1); color: var(--soul-blue); }
-        .rename-option.active { background: rgba(74, 144, 194, 0.15); color: var(--soul-blue); font-weight: 600; }
+        .rename-option:hover {
+            background: rgba(74, 144, 194, 0.1);
+            color: var(--soul-blue);
+        }
+
+        .rename-option.active {
+            background: rgba(74, 144, 194, 0.15);
+            color: var(--soul-blue);
+            font-weight: 600;
+        }
 
         .rename-divider {
             height: 1px;
@@ -1048,7 +1056,9 @@
             outline: none;
         }
 
-        .rename-custom-input:focus { border-color: var(--soul-blue); }
+        .rename-custom-input:focus {
+            border-color: var(--soul-blue);
+        }
 
         .rename-custom-btn {
             background: var(--soul-blue);
@@ -1061,7 +1071,9 @@
             transition: background 0.15s;
         }
 
-        .rename-custom-btn:hover { background: var(--soul-glow); }
+        .rename-custom-btn:hover {
+            background: var(--soul-glow);
+        }
 
         /* JETS DE DÉS */
         .roll-section {
@@ -1771,15 +1783,16 @@
                 text-align: center;
             }
         }
-    
+
         .notes-section {
             margin-top: 20px;
         }
+
         .notes-textarea {
             width: 100%;
             min-height: 200px;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
             color: inherit;
             font-family: inherit;
@@ -1790,16 +1803,17 @@
             box-sizing: border-box;
             transition: border-color 0.2s;
         }
+
         .notes-textarea:focus {
             outline: none;
-            border-color: rgba(218,165,32,0.4);
-        }
-        .notes-textarea::placeholder {
-            color: rgba(255,255,255,0.2);
-            font-style: italic;
+            border-color: rgba(218, 165, 32, 0.4);
         }
 
-        </style>
+        .notes-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-style: italic;
+        }
+    </style>
 </head>
 
 <body>
@@ -1891,27 +1905,37 @@
                     </div>
                     <div class="counters-grid">
                         <!-- État Magique -->
-                        <div class="counter-item" id="magic-state-block" style="background: rgba(107,76,154,0.08); border: 1px solid rgba(107,76,154,0.2);">
+                        <div class="counter-item" id="magic-state-block"
+                            style="background: rgba(107,76,154,0.08); border: 1px solid rgba(107,76,154,0.2);">
                             <div class="counter-label" style="color: var(--ombre-purple);">
                                 <span class="emoji">✨</span> Magie
                             </div>
 
                             <!-- État actuel -->
-                            <div id="magic-etat-display" style="text-align:center; font-weight:600; font-size:0.9em; padding:5px 10px; border-radius:6px; margin-bottom:4px; border:1px solid transparent;">—</div>
-                            <div id="magic-score-val" style="font-size:0.72em; color:var(--silver-mist); text-align:center; margin-bottom:10px;">—</div>
+                            <div id="magic-etat-display"
+                                style="text-align:center; font-weight:600; font-size:0.9em; padding:5px 10px; border-radius:6px; margin-bottom:4px; border:1px solid transparent;">
+                                —</div>
+                            <div id="magic-score-val"
+                                style="font-size:0.72em; color:var(--silver-mist); text-align:center; margin-bottom:10px;">
+                                —</div>
 
                             <!-- Surcharge -->
-                            <div style="font-size:0.75em; color:var(--silver-mist); font-weight:600; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em;">Surcharge</div>
+                            <div
+                                style="font-size:0.75em; color:var(--silver-mist); font-weight:600; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em;">
+                                Surcharge</div>
                             <div class="counter-controls">
                                 <button class="counter-btn minus" onclick="adjustSurcharge(-1)">−</button>
                                 <div class="counter-value">
-                                    <span id="magic-surcharge-val" style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:#BA7517;">0</span>
+                                    <span id="magic-surcharge-val"
+                                        style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:#BA7517;">0</span>
                                 </div>
                                 <button class="counter-btn plus" onclick="adjustSurcharge(1)">+</button>
                             </div>
 
                             <!-- Bouton de récupération -->
-                            <button onclick="recentrage()" style="margin-top:10px; width:100%; padding:6px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺ Recentrage — Surcharge à 0</button>
+                            <button onclick="recentrage()"
+                                style="margin-top:10px; width:100%; padding:6px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺
+                                Recentrage — Surcharge à 0</button>
                         </div>
                     </div>
 
@@ -2026,21 +2050,28 @@
                 </div>
 
                 <!-- Mini état magique -->
-                <div id="roll-page-pool" style="display:none; margin-bottom:12px; padding:10px 14px; background:rgba(107,76,154,0.08); border:1px solid rgba(107,76,154,0.2); border-radius:10px;">
-                    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <div id="roll-page-pool"
+                    style="display:none; margin-bottom:12px; padding:10px 14px; background:rgba(107,76,154,0.08); border:1px solid rgba(107,76,154,0.2); border-radius:10px;">
+                    <div
+                        style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span style="font-size:1em;">✨</span>
                             <span id="roll-pool-status" style="font-weight:700; font-size:0.95em;"></span>
                         </div>
-                        <button onclick="recentrage()" style="padding:3px 10px; background:rgba(107,76,154,0.15); border:1px solid rgba(107,76,154,0.3); border-radius:5px; color:var(--ombre-purple); font-size:0.78em; font-weight:600; cursor:pointer;">↺ Recentrage</button>
+                        <button onclick="recentrage()"
+                            style="padding:3px 10px; background:rgba(107,76,154,0.15); border:1px solid rgba(107,76,154,0.3); border-radius:5px; color:var(--ombre-purple); font-size:0.78em; font-weight:600; cursor:pointer;">↺
+                            Recentrage</button>
                     </div>
-                    <div style="margin-top:6px; font-size:0.78em; color:var(--silver-mist);" id="roll-pool-details"></div>
+                    <div style="margin-top:6px; font-size:0.78em; color:var(--silver-mist);" id="roll-pool-details">
+                    </div>
                 </div>
 
                 <!-- Jet privé -->
                 <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; margin-bottom:10px;">
-                    <label style="display:flex; align-items:center; gap:6px; font-size:0.82em; font-weight:600; color:var(--silver-mist); cursor:pointer;">
-                        <input type="checkbox" id="private-roll-toggle" style="width:16px; height:16px; cursor:pointer;">
+                    <label
+                        style="display:flex; align-items:center; gap:6px; font-size:0.82em; font-weight:600; color:var(--silver-mist); cursor:pointer;">
+                        <input type="checkbox" id="private-roll-toggle"
+                            style="width:16px; height:16px; cursor:pointer;">
                         🔒 Jet privé (n'envoie pas sur Discord)
                     </label>
                 </div>
@@ -2083,10 +2114,13 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Mod. Explosion</label>
-                                <input id="simple-explosion" class="bonus-input" type="number" value="0" min="-4" max="4">
+                                <input id="simple-explosion" class="bonus-input" type="number" value="0" min="-4"
+                                    max="4">
                             </div>
                         </div>
-                        <button id="perform-simple-roll-btn" class="perform-roll-btn" style="background: linear-gradient(135deg, var(--success-green), #5fb882); margin-top: 16px;" onclick="performSimpleRoll()" disabled>
+                        <button id="perform-simple-roll-btn" class="perform-roll-btn"
+                            style="background: linear-gradient(135deg, var(--success-green), #5fb882); margin-top: 16px;"
+                            onclick="performSimpleRoll()" disabled>
                             🎲 Lancer le jet
                         </button>
                     </div>
@@ -2125,29 +2159,37 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Dés magiques injectés</label>
-                                <input id="hybrid-magic-dice" class="bonus-input" type="number" value="1" min="0" onchange="updateHybridMagicInfo()">
+                                <input id="hybrid-magic-dice" class="bonus-input" type="number" value="1" min="0"
+                                    onchange="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
                                 <input id="hybrid-bonus" class="bonus-input" type="number" value="0">
                             </div>
                         </div>
-                        <div id="hybrid-magic-info" style="margin-top:10px; padding:10px; background:rgba(59,166,166,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);"></div>
-                        <label style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
-                            <input type="checkbox" id="hybrid-debridee" style="width:16px; height:16px; cursor:pointer;">
-                            ✨ Magie Débridée — situation de vie ou de mort, stress intense (Succès→Résonance/Instabilité, Vide→Flux/Rupture)
+                        <div id="hybrid-magic-info"
+                            style="margin-top:10px; padding:10px; background:rgba(59,166,166,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);">
+                        </div>
+                        <label
+                            style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
+                            <input type="checkbox" id="hybrid-debridee"
+                                style="width:16px; height:16px; cursor:pointer;">
+                            ✨ Magie Débridée dans les situations de vie ou de mort avec une forte intensité émotionelle.
+                            La magie devient plus forte, mais instable.
                         </label>
-                        <button id="perform-hybrid-roll-btn" class="perform-roll-btn" style="background: linear-gradient(135deg, var(--power-cyan), var(--power-glow)); margin-top: 16px;" onclick="performHybridRoll()" disabled>
+                        <button id="perform-hybrid-roll-btn" class="perform-roll-btn"
+                            style="background: linear-gradient(135deg, var(--power-cyan), var(--power-glow)); margin-top: 16px;"
+                            onclick="performHybridRoll()" disabled>
                             🎲✨ Lancer le jet
                         </button>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique Jet + Magie</div>
                         <div class="roll-info-content">
-                            Les dés magiques s'ajoutent aux succès de compétence, lancés selon l'État magique actuel (Score = Base − Surcharge).<br>
-                            Chaque dé coûte +1 Surcharge, allégé par Flux/Résonance/Transcendance.<br>
-                            Instabilité ajoute +1 Surcharge supplémentaire. Rupture génère un Effet Incontrôlé (Puissance +2).<br>
-                            <strong>Magie Débridée :</strong> Succès→Résonance/Instabilité, Vide→Flux/Rupture (50/50).
+                            Les dés magiques s'ajoutent aux succès de compétence, lancés selon l'État magique
+                            actuel.<br>
+                            Chaque dé utilisé augmente la valeur de Surcharge, mais peut être allégé par
+                            Flux/Résonance/Transcendance.<br>
                         </div>
                     </div>
                 </div>
@@ -2158,29 +2200,35 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                             <div class="form-group">
                                 <label class="form-label">Dés magiques injectés</label>
-                                <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1" onchange="updatePureMagicInfo()">
+                                <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1"
+                                    onchange="updatePureMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Magnitude requise (succès)</label>
+                                <label class="form-label">Puissance requise (succès)</label>
                                 <input id="pure-magnitude" class="bonus-input" type="number" value="2" min="1" max="10">
                             </div>
                         </div>
-                        <div id="pure-magic-info" style="margin-top:10px; padding:10px; background:rgba(107,76,154,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);"></div>
-                        <label style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
+                        <div id="pure-magic-info"
+                            style="margin-top:10px; padding:10px; background:rgba(107,76,154,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);">
+                        </div>
+                        <label
+                            style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
                             <input type="checkbox" id="pure-debridee" style="width:16px; height:16px; cursor:pointer;">
-                            ✨ Magie Débridée — situation de vie ou de mort, stress intense (Succès→Résonance/Instabilité, Vide→Flux/Rupture)
+                            ✨ Magie Débridée — situation de vie ou de mort, stress intense (Succès→Résonance,
+                            Vide→Instabilité ou Rupture)
                         </label>
-                        <button id="perform-pure-roll-btn" class="perform-roll-btn" style="background: linear-gradient(135deg, var(--ombre-purple), #8b6cbf); margin-top: 16px;" onclick="performPureRoll()">
+                        <button id="perform-pure-roll-btn" class="perform-roll-btn"
+                            style="background: linear-gradient(135deg, var(--ombre-purple), #8b6cbf); margin-top: 16px;"
+                            onclick="performPureRoll()">
                             ✨ Lancer le pouvoir
                         </button>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique Magie Pure</div>
                         <div class="roll-info-content">
-                            Jet uniquement avec les dés magiques selon l'État magique actuel (Score = Base − Surcharge).<br>
-                            Si le nombre de succès ≥ magnitude → pouvoir réussi.<br>
-                            Instabilité ajoute +1 Surcharge supplémentaire. Rupture génère un Effet Incontrôlé (Puissance +2).<br>
-                            <strong>Magnitudes :</strong> 1 triviale · 2 simple · 3 modérée · 4 complexe · 5 majeure · 6+ légendaire
+                            Jet uniquement avec les dés magiques selon l'État magique actuel.<br>
+                            Si le nombre de succès ≥ Puissance requise alors le pouvoir réussi à produire l'effet
+                            escompté.<br>
                         </div>
                     </div>
                 </div>
@@ -2209,15 +2257,17 @@
                         <button class="add-object-btn" onclick="addObject()">+ Ajouter</button>
                     </div>
                 </div>
-            
+
                 <div class="card notes-section">
                     <div class="card-title">
                         <span class="icon" style="background: rgba(107, 76, 154, 0.1); color: #a08abf;">&#128221;</span>
                         Notes
                     </div>
-                    <textarea class="notes-textarea" id="notes-textarea" placeholder="Notes libres, descriptions, rappels..." oninput="appState.notes = this.value"></textarea>
+                    <textarea class="notes-textarea" id="notes-textarea"
+                        placeholder="Notes libres, descriptions, rappels..."
+                        oninput="appState.notes = this.value"></textarea>
                 </div>
-</div>
+            </div>
         </div>
 
         <!-- Modal -->
@@ -2306,7 +2356,7 @@
             7: { name: 'Maître', dice: 8, explosion: 10, bonus: 3, color: '#6b4c9a' },
             8: { name: 'Absolue', dice: 10, explosion: 8, bonus: 4, color: '#d4a84b' }
         };
-        
+
         // Fonction pour calculer l'explosion d'un niveau de pouvoir combiné
         function getPowerExplosion(combinedLevel) {
             if (combinedLevel >= 9) return 8;
@@ -2558,27 +2608,27 @@
 
         // ========== NOMS ALTERNATIFS DES COMPÉTENCES ==========
         const SKILL_ALTERNATIVES = {
-            'Art':            ['Art', 'Performance', 'Artisanat', 'Création'],
-            'Athlétisme':     ['Athlétisme', 'Acrobaties', 'Survie', 'Endurance'],
-            'Autorité':       ['Autorité', 'Intimidation', 'Leadership', 'Commandement'],
+            'Art': ['Art', 'Performance', 'Artisanat', 'Création'],
+            'Athlétisme': ['Athlétisme', 'Acrobaties', 'Survie', 'Endurance'],
+            'Autorité': ['Autorité', 'Intimidation', 'Leadership', 'Commandement'],
             'Apothicairerie': ['Apothicairerie', 'Herboristerie', 'Botanique', 'Potions'],
-            'Bagarre':        ['Bagarre', 'Escrime', 'Arts martiaux', 'Lance'],
+            'Bagarre': ['Bagarre', 'Escrime', 'Arts martiaux', 'Lance'],
             'Combat Occulte': ['Combat Occulte', 'Duel', 'Combat magique', 'Pouvoir en combat'],
-            'Discrétion':     ['Discrétion', 'Furtivité', 'Infiltration', 'Présence effacée'],
-            'Dressage':       ['Dressage', 'Équitation', 'Apprivoisement', 'Capture'],
-            'Éloquence':      ['Éloquence', 'Diplomatie', 'Séduction', 'Raison'],
-            'Érudition':      ['Érudition', 'Histoire', 'Théologie', 'Droit'],
-            'Escamotage':     ['Escamotage', 'Larcin', 'Crochetage', 'Prestidigitation'],
-            'Ésotérisme':     ['Ésotérisme', 'Arcanes', 'Pouvoir', 'Magie'],
-            'Médecine':       ['Médecine', 'Chirurgie', 'Soins', 'Premiers secours'],
-            'Recherche':      ['Recherche', 'Enquête', 'Pistage', 'Investigation'],
-            'Résilience':     ['Résilience', 'Sang-froid', 'Bravoure', 'Calme'],
-            'Sagacité':       ['Sagacité', 'Empathie', 'Intuition', 'Perspicacité'],
-            'Stratégie':      ['Stratégie', 'Tactique', 'Commandement', 'Planification'],
-            'Technologie':    ['Technologie', 'Ingénierie', 'Mécanique', 'Sabotage'],
-            'Tir':            ['Tir', 'Archerie', 'Lancer', 'Arme à feu'],
-            'Tromperie':      ['Tromperie', 'Manipulation', 'Comédie', 'Bluff'],
-            'Vigilance':      ['Vigilance', 'Perception', 'Instinct', 'Observation'],
+            'Discrétion': ['Discrétion', 'Furtivité', 'Infiltration', 'Présence effacée'],
+            'Dressage': ['Dressage', 'Équitation', 'Apprivoisement', 'Capture'],
+            'Éloquence': ['Éloquence', 'Diplomatie', 'Séduction', 'Raison'],
+            'Érudition': ['Érudition', 'Histoire', 'Théologie', 'Droit'],
+            'Escamotage': ['Escamotage', 'Larcin', 'Crochetage', 'Prestidigitation'],
+            'Ésotérisme': ['Ésotérisme', 'Arcanes', 'Pouvoir', 'Magie'],
+            'Médecine': ['Médecine', 'Chirurgie', 'Soins', 'Premiers secours'],
+            'Recherche': ['Recherche', 'Enquête', 'Pistage', 'Investigation'],
+            'Résilience': ['Résilience', 'Sang-froid', 'Bravoure', 'Calme'],
+            'Sagacité': ['Sagacité', 'Empathie', 'Intuition', 'Perspicacité'],
+            'Stratégie': ['Stratégie', 'Tactique', 'Commandement', 'Planification'],
+            'Technologie': ['Technologie', 'Ingénierie', 'Mécanique', 'Sabotage'],
+            'Tir': ['Tir', 'Archerie', 'Lancer', 'Arme à feu'],
+            'Tromperie': ['Tromperie', 'Manipulation', 'Comédie', 'Bluff'],
+            'Vigilance': ['Vigilance', 'Perception', 'Instinct', 'Observation'],
         };
 
         // Trouve la compétence de base (la "racine") d'un nom alternatif
@@ -2793,10 +2843,10 @@
             nameInput.value = '';
             qualityInput.value = '0';
             renderObjects();
-                    if (appState.notes) {
-                        const ta = document.getElementById('notes-textarea');
-                        if (ta) ta.value = appState.notes;
-                    }
+            if (appState.notes) {
+                const ta = document.getElementById('notes-textarea');
+                if (ta) ta.value = appState.notes;
+            }
         }
 
         function removeObject(index) {
@@ -2916,7 +2966,7 @@
             const attrBonus = attrLevel.bonus;
             const skillBonus = skillLevel.bonus;
             const threshold = 13 - attrLevel.faces;
-            
+
             // Explosion basée sur le niveau de compétence + modificateur
             const baseExplosion = skillLevel.explosion;
             const explosionThreshold = Math.max(3, Math.min(12, baseExplosion - explosionMod));
@@ -2926,7 +2976,7 @@
             const successes = counts.successes;
             const total = successes + attrBonus + skillBonus + bonus;
 
-            const explosionText = explosionMod !== 0 
+            const explosionText = explosionMod !== 0
                 ? `Explosion ${explosionThreshold}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})`
                 : `Explosion ${explosionThreshold}+`;
 
@@ -2994,38 +3044,38 @@
         // ========== SYSTÈME DE DÉS MAGIQUES ==========
 
         const ETAT_INFO = {
-            S: { name:'Transcendance', score:'≥10',     color:'#8a6d00', bg:'rgba(212,175,55,0.14)', border:'#D4AF37' },
-            A: { name:'Maîtrise',    score:'5 à 9',   color:'#27500A', bg:'rgba(59,109,17,0.1)',   border:'#639922' },
-            B: { name:'Stable',      score:'1 à 4',   color:'#085041', bg:'rgba(29,158,117,0.1)',  border:'#1D9E75' },
-            C: { name:'Tendu',       score:'-3 à 0',  color:'#633806', bg:'rgba(186,117,23,0.1)', border:'#BA7517' },
-            D: { name:'Instable',    score:'-7 à -4', color:'#712B13', bg:'rgba(216,90,48,0.1)',  border:'#D85A30' },
-            E: { name:'Débordement', score:'≤ -8',    color:'#501313', bg:'rgba(163,45,45,0.1)',  border:'#A32D2D' },
+            S: { name: 'Transcendance', score: '≥10', color: '#8a6d00', bg: 'rgba(212,175,55,0.14)', border: '#D4AF37' },
+            A: { name: 'Maîtrise', score: '5 à 9', color: '#27500A', bg: 'rgba(59,109,17,0.1)', border: '#639922' },
+            B: { name: 'Stable', score: '1 à 4', color: '#085041', bg: 'rgba(29,158,117,0.1)', border: '#1D9E75' },
+            C: { name: 'Tendu', score: '-3 à 0', color: '#633806', bg: 'rgba(186,117,23,0.1)', border: '#BA7517' },
+            D: { name: 'Instable', score: '-7 à -4', color: '#712B13', bg: 'rgba(216,90,48,0.1)', border: '#D85A30' },
+            E: { name: 'Débordement', score: '≤ -8', color: '#501313', bg: 'rgba(163,45,45,0.1)', border: '#A32D2D' },
         };
 
         const FACE_COLORS = {
-            'succès':            { bg:'rgba(99,153,34,0.15)',   border:'#639922', text:'#27500A' },
-            'vide':              { bg:'rgba(136,135,128,0.15)', border:'#888780', text:'#5F5E5A' },
-            'flux':              { bg:'rgba(53,166,166,0.15)',  border:'#3BA6A6', text:'#1F5C5C' },
-            'résonance':         { bg:'rgba(127,119,221,0.15)', border:'#7F77DD', text:'#3C3489' },
-            'transcendance':     { bg:'rgba(212,175,55,0.18)',  border:'#D4AF37', text:'#8a6d00' },
-            'instabilité':       { bg:'rgba(186,117,23,0.15)',  border:'#BA7517', text:'#633806' },
-            'rupture':           { bg:'rgba(163,45,45,0.15)',   border:'#E24B4A', text:'#501313' },
+            'succès': { bg: 'rgba(99,153,34,0.15)', border: '#639922', text: '#27500A' },
+            'vide': { bg: 'rgba(136,135,128,0.15)', border: '#888780', text: '#5F5E5A' },
+            'flux': { bg: 'rgba(53,166,166,0.15)', border: '#3BA6A6', text: '#1F5C5C' },
+            'résonance': { bg: 'rgba(127,119,221,0.15)', border: '#7F77DD', text: '#3C3489' },
+            'transcendance': { bg: 'rgba(212,175,55,0.18)', border: '#D4AF37', text: '#8a6d00' },
+            'instabilité': { bg: 'rgba(186,117,23,0.15)', border: '#BA7517', text: '#633806' },
+            'rupture': { bg: 'rgba(163,45,45,0.15)', border: '#E24B4A', text: '#501313' },
         };
 
         function getFaceDistribution(etat) {
             const D = {
                 // Transcendance 1, Résonance 2, Flux 4, Succès 3, Vide 2
-                S: ['vide','vide','succès','succès','succès','flux','flux','flux','flux','résonance','résonance','transcendance'],
+                S: ['vide', 'vide', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'flux', 'résonance', 'résonance', 'transcendance'],
                 // Résonance 2, Flux 3, Succès 5, Vide 2
-                A: ['vide','vide','succès','succès','succès','succès','succès','flux','flux','flux','résonance','résonance'],
+                A: ['vide', 'vide', 'succès', 'succès', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'résonance', 'résonance'],
                 // Résonance 2, Flux 3, Succès 4, Vide 1, Instabilité 2
-                B: ['instabilité','instabilité','vide','succès','succès','succès','succès','flux','flux','flux','résonance','résonance'],
+                B: ['instabilité', 'instabilité', 'vide', 'succès', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'résonance', 'résonance'],
                 // Résonance 1, Flux 3, Succès 4, Vide 1, Instabilité 2, Rupture 1
-                C: ['rupture','instabilité','instabilité','vide','succès','succès','succès','succès','flux','flux','flux','résonance'],
+                C: ['rupture', 'instabilité', 'instabilité', 'vide', 'succès', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'résonance'],
                 // Flux 1, Succès 2, Vide 1, Instabilité 5, Rupture 3
-                D: ['rupture','rupture','rupture','instabilité','instabilité','instabilité','instabilité','instabilité','vide','succès','succès','flux'],
+                D: ['rupture', 'rupture', 'rupture', 'instabilité', 'instabilité', 'instabilité', 'instabilité', 'instabilité', 'vide', 'succès', 'succès', 'flux'],
                 // Succès 2, Vide 2, Rupture 8
-                E: ['rupture','rupture','rupture','rupture','rupture','rupture','rupture','rupture','vide','vide','succès','succès'],
+                E: ['rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'vide', 'vide', 'succès', 'succès'],
             };
             return D[etat] || D['E'];
         }
@@ -3049,7 +3099,7 @@
 
         function getMagicBaseScore() {
             const lvl = getEsoterismeLevel();
-            const bases = { 1:1, 2:2, 3:3, 4:4, 5:6, 6:9, 7:13, 8:18 };
+            const bases = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 6, 6: 9, 7: 13, 8: 18 };
             return bases[Math.min(8, Math.max(1, lvl))] || 0;
         }
 
@@ -3060,8 +3110,8 @@
         function getMagicEtat() {
             const score = getMagicScore();
             if (score >= 10) return 'S';
-            if (score >= 5)  return 'A';
-            if (score >= 1)  return 'B';
+            if (score >= 5) return 'A';
+            if (score >= 1) return 'B';
             if (score >= -3) return 'C';
             if (score >= -7) return 'D';
             return 'E';
@@ -3164,11 +3214,11 @@
             `;
         }
 
-        // Magie Débridée : transforme les faces "sûres" en leur meilleure ou pire version
-        // Succès -> Résonance ou Instabilité (50/50) · Vide -> Flux ou Rupture (50/50)
-        function applyMagieDebridee(type) {
-            if (type === 'succès') return Math.random() < 0.5 ? 'résonance' : 'instabilité';
-            if (type === 'vide') return Math.random() < 0.5 ? 'flux' : 'rupture';
+        // Magie Débridée : transforme les faces "sûres" en leur version puissante ou instable
+        // Succès -> Résonance (toujours) · Vide -> Instabilité (en S/A) ou Rupture (à partir de B)
+        function applyMagieDebridee(type, etat) {
+            if (type === 'succès') return 'résonance';
+            if (type === 'vide') return (etat === 'S' || etat === 'A') ? 'instabilité' : 'rupture';
             return type;
         }
 
@@ -3188,7 +3238,7 @@
 
             for (let i = 0; i < count; i++) {
                 const die = rollMagicDie(etat);
-                if (debridee) die.type = applyMagieDebridee(die.type);
+                if (debridee) die.type = applyMagieDebridee(die.type, etat);
                 results.push(die);
                 switch (die.type) {
                     case 'succès':
@@ -3237,13 +3287,13 @@
         function renderMagicDie(die, delay) {
             const fc = FACE_COLORS[die.type] || FACE_COLORS['vide'];
             const labels = {
-                'succès':              'Succ.',
-                'vide':                'Vide',
-                'flux':                'Flux',
-                'résonance':           'Rés.',
-                'transcendance':       'Trans.',
-                'instabilité':         'Inst.',
-                'rupture':             'Rupt.',
+                'succès': 'Succ.',
+                'vide': 'Vide',
+                'flux': 'Flux',
+                'résonance': 'Rés.',
+                'transcendance': 'Trans.',
+                'instabilité': 'Inst.',
+                'rupture': 'Rupt.',
             };
             const el = document.createElement('div');
             el.className = 'die';
@@ -3583,7 +3633,7 @@
                 if (m.results && m.results.length > 0) {
                     const counts = {};
                     m.results.forEach(d => { counts[d.type] = (counts[d.type] || 0) + 1; });
-                    const faceOrder = ['transcendance','résonance','flux','succès','vide','instabilité','rupture'];
+                    const faceOrder = ['transcendance', 'résonance', 'flux', 'succès', 'vide', 'instabilité', 'rupture'];
                     const faceParts = faceOrder
                         .filter(t => counts[t])
                         .map(t => `${FACE_ICONS[t]} ${counts[t]}× ${t.charAt(0).toUpperCase() + t.slice(1)}`);
@@ -3617,14 +3667,14 @@
                 const form = new FormData();
                 form.append('files[0]', blob, 'avatar.png');
                 form.append('payload_json', JSON.stringify({ username: charName, embeds: [embed] }));
-                fetch(DISCORD_WEBHOOK_URL, { method: 'POST', body: form }).catch(() => {});
+                fetch(DISCORD_WEBHOOK_URL, { method: 'POST', body: form }).catch(() => { });
             } else {
                 if (charImage && !charImage.startsWith('data:')) embed.author.icon_url = charImage;
                 fetch(DISCORD_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: charName, embeds: [embed] })
-                }).catch(() => {});
+                }).catch(() => { });
             }
         }
 
