@@ -857,7 +857,7 @@
           <div class="mastery-cat-group">
             <span class="cat-group-label">Combat</span>
             <button class="mastery-add-btn" onclick="addPurchasedMastery('arme')" title="3 pts">⚔ Arme <span
-                class="cost-pill">2</span></button>
+                class="cost-pill">3</span></button>
           </div>
           <div class="mastery-cat-group">
             <span class="cat-group-label">Déplacement</span>
@@ -866,10 +866,10 @@
           </div>
           <div class="mastery-cat-group">
             <span class="cat-group-label">Savoir</span>
-            <button class="mastery-add-btn" onclick="addPurchasedMastery('langue')" title="2 pt">🗣 Langue <span
-                class="cost-pill">1</span></button>
+            <button class="mastery-add-btn" onclick="addPurchasedMastery('specialite')" title="2 pt">🧠 Spécialité
+              <span class="cost-pill">2</span></button>
             <button class="mastery-add-btn" onclick="addPurchasedMastery('savoir_faire')" title="2 pt">✨ Savoir-faire
-              <span class="cost-pill">1</span></button>
+              <span class="cost-pill">2</span></button>
           </div>
         </div>
         <div id="purchasedMasteriesDiv"></div>
@@ -951,8 +951,7 @@
       'tir': [{ level: 2, type: 'arme', hint: 'Arme à distance' }, { level: 5, type: 'arme', hint: 'Arme à distance' }],
       'art': [{ level: 2, type: 'savoir_faire', hint: 'Savoir-faire artistique' }, { level: 5, type: 'savoir_faire', hint: 'Savoir-faire artistique' }],
       'dressage': [{ level: 3, type: 'monture', hint: 'Monture standard' }, { level: 5, type: 'monture', hint: 'Monture exotique' }],
-      'eloquence': [{ level: 3, type: 'langue', hint: 'Langue' }],
-      'erudition': [{ level: 3, type: 'langue', hint: 'Langue' }, { level: 5, type: 'langue', hint: 'Langue' }],
+      'erudition': [{ level: 3, type: 'specialite', hint: 'Sujet de prédilection' }, { level: 5, type: 'specialite', hint: 'Sujet de prédilection' }],
       'technologie': [{ level: 3, type: 'savoir_faire', hint: 'Outil spécialisé' }, { level: 5, type: 'savoir_faire', hint: 'Outil spécialisé' }],
     };
 
@@ -962,7 +961,7 @@
       { id: 'armure_lourde', label: '🛡 Armure Lourde', cost: 3, hint: 'Requiert Armure Médium' },
       { id: 'bouclier', label: '🛡 Bouclier', cost: 2, hint: 'Permet l\'utilisation d\'un bouclier' },
       { id: 'monture', label: '🐴 Monture/Véhicule', cost: 2, hint: 'Cheval, Navire, Attelage...' },
-      { id: 'langue', label: '🗣 Langue', cost: 2, hint: 'Langue étrangère' },
+      { id: 'specialite', label: '🧠 Spécialité', cost: 2, hint: 'Psychologie, Droit, Navigation' },
       { id: 'savoir_faire', label: '✨ Savoir-faire', cost: 2, hint: 'Cuisine, Instrument, Outil...' },
     ];
 
