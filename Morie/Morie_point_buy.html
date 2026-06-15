@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Création de Personnage</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
+
+    :root {
+      --bg: #0e0c0a;
+      --surface: #161310;
+      --surface2: #1e1a16;
+      --border: #3a2e22;
+      --border-bright: #6b4f2e;
+      --gold: #c9934a;
+      --gold-bright: #e8b86d;
+      --gold-dim: #7a5830;
+      --text: #d4c4a8;
+      --text-dim: #7a6e5e;
+      --text-bright: #f0e6d0;
+      --red: #c45a3a;
+      --green: #5a8a4a;
+      --blue: #4a6a9a;
+
+      /* TWEAKABLE COSTS - Attributs */
+      --attr-cost-2: 1;
+      --attr-cost-3: 2;
+      --attr-cost-4: 3;
+      --attr-cost-5: 5;
+      --attr-cost-6: 8;
+      --attr-cost-7: 12;
+
+      /* TWEAKABLE COSTS - Compétences */
+      --comp-cost-2: 1;
+      --comp-cost-3: 2;
+      --comp-cost-4: 3;
+      --comp-cost-5: 5;
+      --comp-cost-6: 8;
+
+      /* TWEAKABLE BUDGET */
+      --budget: 80;
+
+      /* TWEAKABLE PYRAMIDS */
+      --max-attr-7: 1;
+      --max-attr-6: 2;
+      --max-attr-5: 4;
+      --max-comp-6: 1;
+      --max-comp-5: 2;
+      --max-comp-4: 4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-size: 16px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    /* Texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Budget bar */
+    .budget-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.8rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .budget-label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .budget-track {
+      flex: 1;
+      height: 6px;
+      background: var(--surface2);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .budget-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold-dim), var(--gold));
+      border-radius: 3px;
+      transition: width 0.3s ease, background 0.3s ease;
+    }
+
+    .budget-fill.over {
+      background: linear-gradient(90deg, var(--red), #e06040);
+    }
+
+    .budget-numbers {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .budget-numbers .spent {
+      color: var(--gold-bright);
+    }
+
+    .budget-numbers .sep {
+      color: var(--text-dim);
+      margin: 0 0.3rem;
+    }
+
+    .budget-numbers .total {
+      color: var(--text-dim);
+    }
+
+    .budget-numbers.over .spent {
+      color: var(--red);
+    }
+
+    .budget-remaining {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+      font-style: italic;
+    }
+
+    .budget-remaining.over {
+      color: var(--red);
+    }
+
+    /* Settings panel */
+    .settings-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.4rem 0.8rem;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .settings-toggle:hover {
+      border-color: var(--gold-dim);
+      color: var(--gold);
+    }
+
+    .settings-panel {
+      display: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .settings-panel.open {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .settings-panel h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.8rem;
+    }
+
+    .setting-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .setting-item label {
+      flex: 1;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
+    .setting-item input {
+      width: 60px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      padding: 0.25rem 0.5rem;
+      text-align: center;
+    }
+
+    .setting-item input:focus {
+      outline: none;
+      border-color: var(--gold-dim);
+    }
+
+    .settings-section-title {
+      grid-column: 1 / -1;
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* Layout */
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 900px) {
+      .columns {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Section */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .section-header {
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .pyramid-info {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    /* Pyramid counters */
+    .pyramid-counters {
+      display: flex;
+      gap: 1rem;
+      padding: 0.6rem 1.2rem;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .pyramid-counter {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .pyramid-counter .count {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .pyramid-counter .count.maxed {
+      color: var(--red);
+    }
+
+    .pyramid-counter .count.ok {
+      color: var(--green);
+    }
+
+    /* Stat row */
+    .stat-row {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1.2rem;
+      border-bottom: 1px solid rgba(58, 46, 34, 0.4);
+      gap: 0.8rem;
+      transition: background 0.15s;
+    }
+
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+
+    .stat-row:hover {
+      background: rgba(201, 147, 74, 0.04);
+    }
+
+    .stat-name {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    .stat-alt {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      font-style: italic;
+    }
+
+    .stat-name-wrapper {
+      flex: 1;
+    }
+
+    .stat-level {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      width: 80px;
+      text-align: center;
+      font-style: italic;
+    }
+
+    .stat-cost {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      width: 50px;
+      text-align: center;
+    }
+
+    .stat-cost .cost-num {
+      color: var(--gold-dim);
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-dim);
+      font-size: 1rem;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      font-family: monospace;
+      flex-shrink: 0;
+    }
+
+    .btn:hover:not(:disabled) {
+      border-color: var(--gold-dim);
+      color: var(--gold);
+      background: rgba(201, 147, 74, 0.1);
+    }
+
+    .btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .value-display {
+      font-family: 'Cinzel', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold-bright);
+      width: 28px;
+      text-align: center;
+    }
+
+    /* Dots indicator */
+    .dots {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: transparent;
+      transition: all 0.15s;
+      flex-shrink: 0;
+    }
+
+    .dot.filled {
+      background: var(--gold);
+      border-color: var(--gold);
+      box-shadow: 0 0 4px rgba(201, 147, 74, 0.4);
+    }
+
+    /* Reset button */
+    .reset-btn {
+      display: block;
+      margin: 1.5rem auto 0;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.2rem;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    /* Summary */
+    .summary {
+      margin-top: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+    }
+
+    .summary h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.4rem;
+    }
+
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      padding: 0.2rem 0;
+    }
+
+    .summary-item .s-name {
+      color: var(--text-dim);
+    }
+
+    .summary-item .s-val {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .summary-item .s-level {
+      color: var(--text-dim);
+      font-style: italic;
+      font-size: 0.75rem;
+      margin-left: 0.3rem;
+    }
+
+    /* === MAÎTRISES === */
+    .mastery-section {
+      margin-top: 2rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.5rem;
+    }
+
+    .mastery-section-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mastery-subsection-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.6rem;
+      font-family: 'Cinzel', serif;
+    }
+
+    .mastery-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      flex-wrap: wrap;
+    }
+
+    .mastery-source-tag {
+      font-size: 0.75rem;
+      color: var(--gold);
+      background: rgba(201, 147, 74, 0.12);
+      border: 1px solid rgba(201, 147, 74, 0.3);
+      border-radius: 3px;
+      padding: 1px 7px;
+      white-space: nowrap;
+    }
+
+    .mastery-type-tag {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .mastery-cat-badge {
+      font-size: 0.75rem;
+      color: #7ecfcf;
+      background: rgba(126, 207, 207, 0.1);
+      border: 1px solid rgba(126, 207, 207, 0.3);
+      border-radius: 3px;
+      padding: 1px 7px;
+      white-space: nowrap;
+    }
+
+    .mastery-name-input {
+      flex: 1;
+      min-width: 120px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      font-size: 0.85rem;
+      padding: 3px 8px;
+      font-family: inherit;
+    }
+
+    .mastery-name-input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .mastery-cost {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .mastery-cost.free {
+      color: var(--green);
+    }
+
+    .mastery-del {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+      transition: all 0.15s;
+    }
+
+    .mastery-del:hover {
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .mastery-cat-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.8rem;
+    }
+
+    .mastery-cat-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .cat-group-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+    }
+
+    .mastery-add-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mastery-add-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .cost-pill {
+      background: rgba(201, 147, 74, 0.15);
+      color: var(--gold);
+      border-radius: 8px;
+      padding: 0 5px;
+      font-size: 0.72rem;
+    }
+
+    .armor-toggle {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      padding: 5px 12px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 8px;
+      margin-bottom: 6px;
+    }
+
+    .armor-toggle:hover:not(.disabled) {
+      border-color: #4a90c2;
+      color: #4a90c2;
+    }
+
+    .armor-toggle.active {
+      border-color: #4a90c2;
+      color: #4a90c2;
+      background: rgba(74, 144, 194, 0.12);
+    }
+
+    .armor-toggle.disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+
+    <div class="budget-bar">
+      <span class="budget-label">Budget</span>
+      <div class="budget-track">
+        <div class="budget-fill" id="budgetFill"></div>
+      </div>
+      <div class="budget-numbers" id="budgetNumbers">
+        <span class="spent" id="spentDisplay">0</span>
+        <span class="sep">/</span>
+        <span class="total" id="totalDisplay">80</span>
+      </div>
+      <div class="budget-remaining" id="budgetRemaining">80 restants</div>
+      <button class="settings-toggle" onclick="exportToFiche()" style="border-color:var(--gold-dim);color:var(--gold)">↓
+        Exporter vers Fiche</button>
+      <button class="settings-toggle" onclick="toggleSettings()">⚙ Paramètres</button>
+    </div>
+
+    <div class="settings-panel" id="settingsPanel">
+      <h3>Paramètres — Coûts & Limites</h3>
+      <div class="settings-grid">
+        <div class="settings-section-title">Budget total</div>
+        <div class="setting-item">
+          <label>Budget total</label>
+          <input type="number" id="s_budget" value="100" min="10" max="300" onchange="updateSettings()">
+        </div>
+
+        <div class="settings-section-title">Coûts cumulatifs — Attributs (depuis Commun 4)</div>
+        <div class="setting-item"><label>Déficient (1) remboursé</label><input type="number" id="s_ac1" value="-3"
+            min="-20" max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Faible (2) remboursé</label><input type="number" id="s_ac2" value="-2"
+            min="-20" max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Médiocre (3) remboursé</label><input type="number" id="s_ac3" value="-1"
+            min="-20" max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Élevé (5)</label><input type="number" id="s_ac5" value="5" min="0" max="50"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Supérieur (6)</label><input type="number" id="s_ac6" value="8" min="0" max="50"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Exceptionnel (7)</label><input type="number" id="s_ac7" value="12" min="0"
+            max="50" onchange="updateSettings()"></div>
+
+        <div class="settings-section-title">Coûts cumulatifs — Compétences</div>
+        <div class="setting-item"><label>Novice (2)</label><input type="number" id="s_cc2" value="1" min="0" max="50"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Compétent (3)</label><input type="number" id="s_cc3" value="2" min="0" max="50"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="3" min="0" max="50"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Excellent (5)</label><input type="number" id="s_cc5" value="5" min="0" max="50"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Expert (6)</label><input type="number" id="s_cc6" value="8" min="0" max="50"
+            onchange="updateSettings()"></div>
+
+        <div class="settings-section-title">Limites pyramide — Attributs</div>
+        <div class="setting-item"><label>Max Exceptionnel (7)</label><input type="number" id="s_max_a7" value="2"
+            min="0" max="8" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Max Supérieur (6)</label><input type="number" id="s_max_a6" value="3" min="0"
+            max="8" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Max Élevé (5)</label><input type="number" id="s_max_a5" value="8" min="0"
+            max="8" onchange="updateSettings()"></div>
+
+        <div class="settings-section-title">Limites pyramide — Compétences</div>
+        <div class="setting-item"><label>Max Expert (6)</label><input type="number" id="s_max_c6" value="1" min="0"
+            max="21" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Max Excellent (5)</label><input type="number" id="s_max_c5" value="3" min="0"
+            max="21" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Max Qualifié (4)</label><input type="number" id="s_max_c4" value="21" min="0"
+            max="21" onchange="updateSettings()"></div>
+      </div>
+    </div>
+
+    <div class="columns">
+      <!-- ATTRIBUTS -->
+      <div>
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Attributs</span>
+            <span class="pyramid-info">8 attributs</span>
+          </div>
+          <div class="pyramid-counters" id="attrPyramid"></div>
+          <div id="attrList"></div>
+        </div>
+      </div>
+
+      <!-- COMPÉTENCES -->
+      <div>
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Compétences</span>
+            <span class="pyramid-info">21 compétences</span>
+          </div>
+          <div class="pyramid-counters" id="compPyramid"></div>
+          <div id="compList"></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser</button>
+
+    <!-- MAÎTRISES -->
+    <div class="mastery-section">
+      <div class="mastery-section-title">
+        <span>Maîtrises</span>
+        <span style="font-size:0.75rem;color:var(--text-dim);font-family:sans-serif;font-weight:400;"></span>
+      </div>
+
+      <!-- Auto-unlocked -->
+      <div style="margin-bottom:1.5rem;">
+        <div class="mastery-subsection-title">✨ Maîtrises débloquées par compétence</div>
+        <div id="autoMasteriesDiv"></div>
+      </div>
+
+      <!-- Armures & Bouclier — toggles -->
+      <div style="margin-bottom:1.5rem;">
+        <div class="mastery-subsection-title">🛡 Armures & Bouclier</div>
+        <div id="armorTogglesDiv"></div>
+      </div>
+
+      <!-- Maîtrises nommées achetées -->
+      <div>
+        <div class="mastery-subsection-title">Maîtrises achetées</div>
+        <div class="mastery-cat-buttons">
+          <div class="mastery-cat-group">
+            <span class="cat-group-label">Combat</span>
+            <button class="mastery-add-btn" onclick="addPurchasedMastery('arme')" title="2 pts">⚔ Arme <span
+                class="cost-pill">2</span></button>
+          </div>
+          <div class="mastery-cat-group">
+            <span class="cat-group-label">Déplacement</span>
+            <button class="mastery-add-btn" onclick="addPurchasedMastery('monture')" title="2 pts">🐴 Monture/Véhicule
+              <span class="cost-pill">2</span></button>
+          </div>
+          <div class="mastery-cat-group">
+            <span class="cat-group-label">Savoir</span>
+            <button class="mastery-add-btn" onclick="addPurchasedMastery('langue')" title="1 pt">🗣 Langue <span
+                class="cost-pill">1</span></button>
+            <button class="mastery-add-btn" onclick="addPurchasedMastery('savoir_faire')" title="1 pt">✨ Savoir-faire
+              <span class="cost-pill">1</span></button>
+          </div>
+        </div>
+        <div id="purchasedMasteriesDiv"></div>
+      </div>
+    </div>
+
+    <div class="summary" id="summary">
+      <h3>Résumé du personnage</h3>
+      <div id="summaryContent"></div>
+    </div>
+
+  </div>
+
+  <script>
+    // ========================
+    // DATA
+    // ========================
+
+    const ATTR_LEVELS = [
+      { val: 1, label: 'Déficient' },
+      { val: 2, label: 'Faible' },
+      { val: 3, label: 'Médiocre' },
+      { val: 4, label: 'Commun' },
+      { val: 5, label: 'Élevé' },
+      { val: 6, label: 'Supérieur' },
+      { val: 7, label: 'Exceptionnel' },
+    ];
+
+    const COMP_LEVELS = [
+      { val: 1, label: 'Ignorant' },
+      { val: 2, label: 'Novice' },
+      { val: 3, label: 'Compétent' },
+      { val: 4, label: 'Qualifié' },
+      { val: 5, label: 'Excellent' },
+      { val: 6, label: 'Expert' },
+    ];
+
+    const ATTRIBUTES = [
+      { id: 'puissance', name: 'Puissance', alt: 'Force' },
+      { id: 'vivacite', name: 'Vivacité', alt: 'Réflexes' },
+      { id: 'precision', name: 'Précision', alt: 'Contrôle' },
+      { id: 'endurance', name: 'Endurance', alt: 'Résistance' },
+      { id: 'intelligence', name: 'Intelligence', alt: 'Analyse' },
+      { id: 'intuition', name: 'Intuition', alt: 'Perception' },
+      { id: 'volonte', name: 'Volonté', alt: 'Détermination' },
+      { id: 'presence', name: 'Présence', alt: 'Magnétisme' },
+    ];
+
+    const COMPETENCES = [
+      { id: 'art', name: 'Art', alt: 'Performance · Artisanat · Création' },
+      { id: 'athletisme', name: 'Athlétisme', alt: 'Acrobaties · Survie · Endurance' },
+      { id: 'autorite', name: 'Autorité', alt: 'Intimidation · Leadership · Commandement' },
+      { id: 'apothicairerie', name: 'Apothicairerie', alt: 'Herboristerie · Botanique · Potions' },
+      { id: 'bagarre', name: 'Bagarre', alt: 'Escrime · Arts martiaux · Lance' },
+      { id: 'combat_occulte', name: 'Combat Occulte', alt: 'Duel · Combat magique · Pouvoir en combat' },
+      { id: 'discretion', name: 'Discrétion', alt: 'Furtivité · Infiltration · Présence effacée' },
+      { id: 'dressage', name: 'Dressage', alt: 'Équitation · Apprivoisement · Capture' },
+      { id: 'eloquence', name: 'Éloquence', alt: 'Diplomatie · Séduction · Raison' },
+      { id: 'erudition', name: 'Érudition', alt: 'Histoire · Théologie · Droit' },
+      { id: 'escamotage', name: 'Escamotage', alt: 'Larcin · Crochetage · Prestidigitation' },
+      { id: 'esoterisme', name: 'Ésotérisme', alt: 'Arcanes · Pouvoir · Maitrise magique' },
+      { id: 'medecine', name: 'Médecine', alt: 'Chirurgie · Soins · Premiers secours' },
+      { id: 'recherche', name: 'Recherche', alt: 'Enquête · Pistage · Investigation' },
+      { id: 'resilience', name: 'Résilience', alt: 'Sang-froid · Bravoure · Calme' },
+      { id: 'sagacite', name: 'Sagacité', alt: 'Empathie · Intuition · Perspicacité' },
+      { id: 'strategie', name: 'Stratégie', alt: 'Tactique · Commandement · Planification' },
+      { id: 'technologie', name: 'Technologie', alt: 'Ingénierie · Mécanique · Sabotage' },
+      { id: 'tir', name: 'Tir', alt: 'Archerie · Lancer · Arme à feu' },
+      { id: 'tromperie', name: 'Tromperie', alt: 'Manipulation · Comédie · Bluff' },
+      { id: 'vigilance', name: 'Vigilance', alt: 'Perception · Instinct · Observation' },
+    ];
+
+    // ========================
+    // MAÎTRISES
+    // ========================
+
+    const MASTERY_UNLOCKS = {
+      'bagarre': [{ level: 2, type: 'arme', hint: 'Arme de mêlée' }, { level: 5, type: 'arme', hint: 'Arme de mêlée' }, { level: 7, type: 'arme', hint: 'Arme de mêlée' }],
+      'tir': [{ level: 2, type: 'arme', hint: 'Arme à distance' }, { level: 5, type: 'arme', hint: 'Arme à distance' }],
+      'art': [{ level: 2, type: 'savoir_faire', hint: 'Savoir-faire artistique' }, { level: 5, type: 'savoir_faire', hint: 'Savoir-faire artistique' }],
+      'dressage': [{ level: 3, type: 'monture', hint: 'Monture standard' }, { level: 5, type: 'monture', hint: 'Monture exotique' }],
+      'eloquence': [{ level: 3, type: 'langue', hint: 'Langue' }],
+      'erudition': [{ level: 3, type: 'langue', hint: 'Langue' }, { level: 5, type: 'langue', hint: 'Langue' }],
+      'technologie': [{ level: 3, type: 'savoir_faire', hint: 'Outil spécialisé' }, { level: 5, type: 'savoir_faire', hint: 'Outil spécialisé' }],
+    };
+
+    const MASTERY_CATS = [
+      { id: 'arme', label: '⚔ Arme', cost: 3, hint: 'Épée, Lance, Hache, Arc...' },
+      { id: 'armure_medium', label: '🛡 Armure Médium', cost: 2, hint: 'Requiert Armure Légère (offerte)' },
+      { id: 'armure_lourde', label: '🛡 Armure Lourde', cost: 3, hint: 'Requiert Armure Médium' },
+      { id: 'bouclier', label: '🛡 Bouclier', cost: 2, hint: 'Permet l\'utilisation d\'un bouclier' },
+      { id: 'monture', label: '🐴 Monture/Véhicule', cost: 2, hint: 'Cheval, Navire, Attelage...' },
+      { id: 'langue', label: '🗣 Langue', cost: 2, hint: 'Langue étrangère' },
+      { id: 'savoir_faire', label: '✨ Savoir-faire', cost: 2, hint: 'Cuisine, Instrument, Outil...' },
+    ];
+
+    // ========================
+    // STATE
+    // ========================
+
+    let config = {
+      budget: 100,
+      attrCosts: [0, -3, -2, -1, 0, 5, 8, 12],
+      compCosts: [0, 0, 1, 2, 3, 5, 8],
+      maxAttr: { 7: 2, 6: 3 },
+      maxComp: { 6: 1, 5: 3 },
+    };
+
+    let attrValues = {};
+    let compValues = {};
+    let masteryNames = {};       // key: 'skillId_idx' → string name
+    let purchasedMasteries = []; // [{id, category, name, cost}] — armes, montures, langues, savoir-faire
+    let armorToggles = { medium: false, lourde: false, bouclier: false };
+    // Armure légère = toujours offerte
+
+    const ARMOR_COSTS = { medium: 2, lourde: 3, bouclier: 2 };
+
+    ATTRIBUTES.forEach(a => attrValues[a.id] = 4);
+    COMPETENCES.forEach(c => compValues[c.id] = 1);
+
+    // ========================
+    // COST CALCULATION
+    // ========================
+
+    function attrCost(val) {
+      return config.attrCosts[val] || 0;
+    }
+
+    function compCost(val) {
+      return config.compCosts[val] || 0;
+    }
+
+    function totalSpent() {
+      let total = 0;
+      ATTRIBUTES.forEach(a => total += attrCost(attrValues[a.id]));
+      COMPETENCES.forEach(c => total += compCost(compValues[c.id]));
+      purchasedMasteries.forEach(m => total += m.cost);
+      Object.entries(armorToggles).forEach(([k, v]) => { if (v) total += ARMOR_COSTS[k]; });
+      return total;
+    }
+
+    function toggleArmor(type) {
+      if (type === 'lourde' && !armorToggles.medium) {
+        alert('Armure Lourde requiert Armure Médium.');
+        return;
+      }
+      armorToggles[type] = !armorToggles[type];
+      if (!armorToggles.medium) armorToggles.lourde = false; // cascade
+      render();
+    }
+
+    // ========================
+    // PYRAMID CHECK
+    // ========================
+
+    function attrCountAt(level) {
+      return ATTRIBUTES.filter(a => attrValues[a.id] === level).length;
+    }
+
+    function compCountAt(level) {
+      return COMPETENCES.filter(c => compValues[c.id] === level).length;
+    }
+
+    function canIncreaseAttr(id) {
+      const cur = attrValues[id];
+      const next = cur + 1;
+      if (next > 7) return { ok: false, reason: 'Maximum atteint' };
+      const limit = config.maxAttr[next];
+      if (limit !== undefined && attrCountAt(next) >= limit) {
+        return { ok: false, reason: `Limite pyramide (${limit} max)` };
+      }
+      const cost = attrCost(next) - attrCost(cur);
+      if (totalSpent() + cost > config.budget) return { ok: false, reason: 'Budget insuffisant' };
+      return { ok: true, cost };
+    }
+
+    function canIncreaseComp(id) {
+      const cur = compValues[id];
+      const next = cur + 1;
+      if (next > 6) return { ok: false, reason: 'Maximum atteint' };
+      const limit = config.maxComp[next];
+      if (limit !== undefined && compCountAt(next) >= limit) {
+        return { ok: false, reason: `Limite pyramide (${limit} max)` };
+      }
+      const cost = compCost(next) - compCost(cur);
+      if (totalSpent() + cost > config.budget) return { ok: false, reason: 'Budget insuffisant' };
+      return { ok: true, cost };
+    }
+
+    // ========================
+    // RENDER
+    // ========================
+
+    function renderAttrPyramid() {
+      const el = document.getElementById('attrPyramid');
+      let html = '';
+      [[7, 'Exceptionnel'], [6, 'Supérieur']].forEach(([level, label]) => {
+        const count = attrCountAt(level);
+        const max = config.maxAttr[level];
+        const cls = max !== undefined && count >= max ? 'maxed' : 'ok';
+        const maxStr = max !== undefined && max < 99 ? `/${max}` : '';
+        html += `<span class="pyramid-counter">${label} : <span class="count ${cls}">${count}${maxStr}</span></span>`;
+      });
+      el.innerHTML = html;
+    }
+
+    function renderCompPyramid() {
+      const el = document.getElementById('compPyramid');
+      let html = '';
+      [[6, 'Expert'], [5, 'Excellent']].forEach(([level, label]) => {
+        const count = compCountAt(level);
+        const max = config.maxComp[level];
+        const cls = max !== undefined && count >= max ? 'maxed' : 'ok';
+        const maxStr = max !== undefined && max < 99 ? `/${max}` : '';
+        html += `<span class="pyramid-counter">${label} : <span class="count ${cls}">${count}${maxStr}</span></span>`;
+      });
+      el.innerHTML = html;
+    }
+
+    function renderAttrList() {
+      const el = document.getElementById('attrList');
+      el.innerHTML = ATTRIBUTES.map(a => {
+        const val = attrValues[a.id];
+        const levelLabel = ATTR_LEVELS.find(l => l.val === val)?.label || '';
+        const costVal = attrCost(val);
+        const costDisplay = costVal < 0
+          ? `<span class="cost-num" style="color:var(--green)">${costVal} pts</span>`
+          : `<span class="cost-num">${costVal}</span> pts`;
+        const canUp = canIncreaseAttr(a.id);
+        const canDown = val > 1;
+
+        const dots = ATTR_LEVELS.map(l =>
+          `<div class="dot ${l.val <= val ? 'filled' : ''}"></div>`
+        ).join('');
+
+        return `<div class="stat-row">
+      <div class="stat-name-wrapper">
+        <div class="stat-name">${a.name}</div>
+        <div class="stat-alt">${a.alt}</div>
+      </div>
+      <div class="dots">${dots}</div>
+      <div class="stat-level">${levelLabel}</div>
+      <div class="stat-cost">${costDisplay}</div>
+      <div class="controls">
+        <button class="btn" onclick="changeAttr('${a.id}', -1)" ${!canDown ? 'disabled' : ''}>−</button>
+        <span class="value-display">${val}</span>
+        <button class="btn" onclick="changeAttr('${a.id}', 1)" ${!canUp.ok ? 'disabled' : ''} title="${canUp.ok ? '' : canUp.reason}">+</button>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    function renderCompList() {
+      const el = document.getElementById('compList');
+      el.innerHTML = COMPETENCES.map(c => {
+        const val = compValues[c.id];
+        const levelLabel = COMP_LEVELS.find(l => l.val === val)?.label || '';
+        const costVal = compCost(val);
+        const canUp = canIncreaseComp(c.id);
+        const canDown = val > 1;
+
+        const dots = COMP_LEVELS.map(l =>
+          `<div class="dot ${l.val <= val ? 'filled' : ''}"></div>`
+        ).join('');
+
+        return `<div class="stat-row">
+      <div class="stat-name-wrapper">
+        <div class="stat-name">${c.name}</div>
+        <div class="stat-alt">${c.alt}</div>
+      </div>
+      <div class="dots">${dots}</div>
+      <div class="stat-level">${levelLabel}</div>
+      <div class="stat-cost"><span class="cost-num">${costVal}</span> pts</div>
+      <div class="controls">
+        <button class="btn" onclick="changeComp('${c.id}', -1)" ${!canDown ? 'disabled' : ''}>−</button>
+        <span class="value-display">${val}</span>
+        <button class="btn" onclick="changeComp('${c.id}', 1)" ${!canUp.ok ? 'disabled' : ''} title="${canUp.ok ? '' : canUp.reason}">+</button>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    function renderBudget() {
+      const spent = totalSpent();
+      const pct = Math.min((spent / config.budget) * 100, 100);
+      const over = spent > config.budget;
+      const remaining = config.budget - spent;
+
+      document.getElementById('budgetFill').style.width = pct + '%';
+      document.getElementById('budgetFill').classList.toggle('over', over);
+      document.getElementById('spentDisplay').textContent = spent;
+      document.getElementById('totalDisplay').textContent = config.budget;
+      document.getElementById('budgetNumbers').classList.toggle('over', over);
+      document.getElementById('budgetRemaining').textContent = over
+        ? `${Math.abs(remaining)} de trop`
+        : `${remaining} restants`;
+      document.getElementById('budgetRemaining').classList.toggle('over', over);
+    }
+
+    function renderSummary() {
+      const el = document.getElementById('summaryContent');
+
+      const attrInvested = ATTRIBUTES.filter(a => attrValues[a.id] > 1)
+        .sort((a, b) => attrValues[b.id] - attrValues[a.id]);
+      const compInvested = COMPETENCES.filter(c => compValues[c.id] > 1)
+        .sort((a, b) => compValues[b.id] - compValues[a.id]);
+
+      if (attrInvested.length === 0 && compInvested.length === 0) {
+        el.innerHTML = '<p style="color:var(--text-dim);font-style:italic">Aucun point investi pour l\'instant.</p>';
+        return;
+      }
+
+      let html = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">';
+
+      if (attrInvested.length > 0) {
+        html += '<div>';
+        html += '<div style="font-family:Cinzel,serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem">Attributs</div>';
+        html += '<div class="summary-grid">';
+        attrInvested.forEach(a => {
+          const label = ATTR_LEVELS.find(l => l.val === attrValues[a.id])?.label || '';
+          html += `<div class="summary-item"><span class="s-name">${a.name}</span><span><span class="s-val">${attrValues[a.id]}</span><span class="s-level">${label}</span></span></div>`;
+        });
+        html += '</div></div>';
+      }
+
+      if (compInvested.length > 0) {
+        html += '<div>';
+        html += '<div style="font-family:Cinzel,serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem">Compétences</div>';
+        html += '<div class="summary-grid">';
+        compInvested.forEach(c => {
+          const label = COMP_LEVELS.find(l => l.val === compValues[c.id])?.label || '';
+          html += `<div class="summary-item"><span class="s-name">${c.name}</span><span><span class="s-val">${compValues[c.id]}</span><span class="s-level">${label}</span></span></div>`;
+        });
+        html += '</div></div>';
+      }
+
+      html += '</div>';
+
+      // Masteries summary
+      const autoM = getAutoMasteries().filter(({ key }) => masteryNames[key]);
+      const purchM = purchasedMasteries.filter(m => m.name);
+      if (autoM.length > 0 || purchM.length > 0) {
+        html += '<div style="margin-top:1.5rem;"><div style="font-family:Cinzel,serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem">Maîtrises</div>';
+        html += '<div class="summary-grid">';
+        autoM.forEach(({ skillId, slot, key }) => {
+          html += `<div class="summary-item"><span class="s-name">${masteryNames[key]}</span><span class="s-level">${MASTERY_CATS.find(c => c.id === slot.type)?.label || slot.type} · offerte</span></div>`;
+        });
+        purchM.forEach(m => {
+          const cat = MASTERY_CATS.find(c => c.id === m.category);
+          html += `<div class="summary-item"><span class="s-name">${m.name}</span><span class="s-level">${cat?.label || m.category} · ${m.cost}pts</span></div>`;
+        });
+        html += '</div></div>';
+      }
+
+      el.innerHTML = html;
+    }
+
+    // ========================
+    // MASTERY FUNCTIONS
+    // ========================
+
+    function getAutoMasteries() {
+      const result = [];
+      Object.entries(MASTERY_UNLOCKS).forEach(([skillId, unlocks]) => {
+        const cur = compValues[skillId] || 1;
+        unlocks.forEach((slot, idx) => {
+          if (cur >= slot.level) {
+            result.push({ skillId, idx, slot, key: `${skillId}_${idx}` });
+          }
+        });
+      });
+      return result;
+    }
+
+    function addPurchasedMastery(catId) {
+      if (['armure_medium', 'armure_lourde', 'bouclier'].includes(catId)) { toggleArmor(catId.replace('armure_', '')); return; }
+      const cat = MASTERY_CATS.find(c => c.id === catId);
+      if (!cat) return;
+      const id = `pm_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
+      purchasedMasteries.push({ id, category: catId, name: '', cost: cat.cost });
+      render();
+    }
+
+    function removePurchasedMastery(id) {
+      const m = purchasedMasteries.find(x => x.id === id);
+      if (m?.category === 'armure_medium') {
+        purchasedMasteries = purchasedMasteries.filter(x => x.id !== id && x.category !== 'armure_lourde');
+      } else {
+        purchasedMasteries = purchasedMasteries.filter(x => x.id !== id);
+      }
+      render();
+    }
+
+    function updatePurchasedName(id, name) {
+      const m = purchasedMasteries.find(x => x.id === id);
+      if (m) { m.name = name; renderSummary(); }
+    }
+
+    function updateAutoName(key, name) {
+      masteryNames[key] = name;
+      renderSummary();
+    }
+
+    function renderMasteries() {
+      const autoList = getAutoMasteries();
+      const compNames = Object.fromEntries(COMPETENCES.map(c => [c.id, c.name]));
+
+      const autoEl = document.getElementById('autoMasteriesDiv');
+      if (autoEl) {
+        autoEl.innerHTML = autoList.length === 0
+          ? '<p style="color:var(--text-dim);font-style:italic;font-size:0.85rem;">Aucune compétence n\'a encore débloqué de maîtrise (niveau 3 requis).</p>'
+          : autoList.map(({ skillId, slot, key }) => {
+            const val = masteryNames[key] || '';
+            const comp = compNames[skillId] || skillId;
+            const catLabel = MASTERY_CATS.find(c => c.id === slot.type)?.label || slot.type;
+            return `<div class="mastery-row">
+              <div class="mastery-source-tag">${comp} niv.${slot.level}</div>
+              <div class="mastery-type-tag">${catLabel}</div>
+              <input class="mastery-name-input" type="text" placeholder="${slot.hint}..."
+                value="${val.replace(/"/g, '&quot;')}"
+                oninput="updateAutoName('${key}', this.value)">
+              <span class="mastery-cost free">Offerte</span>
+            </div>`;
+          }).join('');
+      }
+
+      // Armor toggle buttons
+      const armorEl = document.getElementById('armorTogglesDiv');
+      if (armorEl) {
+        const armorDefs = [
+          { key: 'medium', label: '🛡 Armure Médium', cost: 2, req: null },
+          { key: 'lourde', label: '🛡 Armure Lourde', cost: 3, req: 'medium' },
+          { key: 'bouclier', label: '🛡 Bouclier', cost: 2, req: null },
+        ];
+        armorEl.innerHTML = armorDefs.map(a => {
+          const active = armorToggles[a.key];
+          const disabled = a.req && !armorToggles[a.req];
+          const reqLabel = a.req ? armorDefs.find(x => x.key === a.req)?.label : '';
+          return `<button class="armor-toggle ${active ? 'active' : ''} ${disabled ? 'disabled' : ''}"
+            onclick="toggleArmor('${a.key}')"
+            ${disabled ? `disabled title="Requiert ${reqLabel}"` : ''}>
+            ${a.label} <span class="cost-pill">${a.cost} pts</span>
+            ${active ? ' ✓' : ''}
+          </button>`;
+        }).join('');
+      }
+
+      const purchEl = document.getElementById('purchasedMasteriesDiv');
+      if (purchEl) {
+        purchEl.innerHTML = purchasedMasteries.length === 0
+          ? '<p style="color:var(--text-dim);font-style:italic;font-size:0.85rem;">Aucune maîtrise achetée.</p>'
+          : purchasedMasteries.map(m => {
+            const cat = MASTERY_CATS.find(c => c.id === m.category);
+            return `<div class="mastery-row">
+              <div class="mastery-cat-badge">${cat?.label || m.category}</div>
+              <input class="mastery-name-input" type="text" placeholder="Nom..."
+                value="${(m.name || '').replace(/"/g, '&quot;')}"
+                oninput="updatePurchasedName('${m.id}', this.value)">
+              <span class="mastery-cost">${m.cost} pts</span>
+              <button class="mastery-del" onclick="removePurchasedMastery('${m.id}')">✕</button>
+            </div>`;
+          }).join('');
+      }
+    }
+
+    function render() {
+      renderBudget();
+      renderAttrPyramid();
+      renderCompPyramid();
+      renderAttrList();
+      renderCompList();
+      renderMasteries();
+      renderSummary();
+    }
+
+    function resetAll() {
+      ATTRIBUTES.forEach(a => attrValues[a.id] = 4);
+      COMPETENCES.forEach(c => compValues[c.id] = 1);
+      masteryNames = {};
+      purchasedMasteries = [];
+      armorToggles = { medium: false, lourde: false, bouclier: false };
+      render();
+    }
+
+    function changeAttr(id, delta) {
+      if (delta > 0) {
+        const check = canIncreaseAttr(id);
+        if (!check.ok) return;
+        attrValues[id]++;
+      } else {
+        if (attrValues[id] <= 1) return;
+        attrValues[id]--;
+      }
+      render();
+    }
+
+    function changeComp(id, delta) {
+      if (delta > 0) {
+        const check = canIncreaseComp(id);
+        if (!check.ok) return;
+        compValues[id]++;
+      } else {
+        if (compValues[id] <= 1) return;
+        compValues[id]--;
+      }
+      render();
+    }
+
+    function exportToFiche() {
+      const skillNames = {
+        art: 'Art', athletisme: 'Athlétisme', autorite: 'Autorité',
+        apothicairerie: 'Apothicairerie', bagarre: 'Bagarre', combat_occulte: 'Combat Occulte',
+        discretion: 'Discrétion', dressage: 'Dressage', eloquence: 'Éloquence',
+        erudition: 'Érudition', escamotage: 'Escamotage', esoterisme: 'Ésotérisme',
+        medecine: 'Médecine', recherche: 'Recherche', resilience: 'Résilience',
+        sagacite: 'Sagacité', strategie: 'Stratégie', technologie: 'Technologie',
+        tir: 'Tir', tromperie: 'Tromperie', vigilance: 'Vigilance'
+      };
+
+      const skills = COMPETENCES.map((c, i) => ({
+        id: `regular_${i}`,
+        name: skillNames[c.id] || c.name,
+        level: compValues[c.id],
+        isBase: true
+      }));
+
+      const volonte = attrValues['volonte'] || 4;
+      const powerMax = 30 + volonte * 3;
+
+      // Build masteries array
+      const masteriesExport = [
+        // Armure légère toujours offerte
+        { id: 'auto_armure_legere', name: 'Armure Légère', category: 'armure_legere', source: 'auto', autoSkill: null, autoLevel: null, linkedSkill: null, cost: 0 }
+      ];
+      // Auto-unlocked
+      getAutoMasteries().forEach(({ skillId, slot, key }, i) => {
+        masteriesExport.push({
+          id: `auto_${key}`,
+          name: masteryNames[key] || '',
+          category: slot.type,
+          source: 'auto',
+          autoSkill: skillId,
+          autoLevel: slot.level,
+          linkedSkill: null,
+          cost: 0
+        });
+      });
+      // Add armor toggle masteries
+      const armorDefs = [
+        { key: 'medium', name: 'Armure Médium', category: 'armure_medium', cost: 2 },
+        { key: 'lourde', name: 'Armure Lourde', category: 'armure_lourde', cost: 3 },
+        { key: 'bouclier', name: 'Bouclier', category: 'bouclier', cost: 2 },
+      ];
+      armorDefs.forEach(a => {
+        if (armorToggles[a.key]) {
+          masteriesExport.push({ id: `armor_${a.key}`, name: a.name, category: a.category, source: 'purchased', autoSkill: null, autoLevel: null, linkedSkill: null, cost: a.cost });
+        }
+      });
+      // Purchased named
+      purchasedMasteries.forEach(m => {
+        masteriesExport.push({
+          id: m.id,
+          name: m.name,
+          category: m.category,
+          source: 'purchased',
+          autoSkill: null,
+          autoLevel: null,
+          linkedSkill: null,
+          cost: m.cost
+        });
+      });
+
+      const state = {
+        profile: { name: '', image: null },
+        attributes: {
+          puissance: attrValues['puissance'],
+          vivacite: attrValues['vivacite'],
+          precision: attrValues['precision'],
+          endurance: attrValues['endurance'],
+          intelligence: attrValues['intelligence'],
+          intuition: attrValues['intuition'],
+          volonte: attrValues['volonte'],
+          presence: attrValues['presence']
+        },
+        counters: {
+          health: { current: powerMax, max: powerMax },
+          power: { current: powerMax, max: powerMax }
+        },
+        customResources: [],
+        skills: skills,
+        wounds: [],
+        objects: [],
+        masteries: masteriesExport,
+        magic: { surcharge: 0 },
+        currentModal: null
+      };
+
+      const json = JSON.stringify(state, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'personnage.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    function toggleSettings() {
+      document.getElementById('settingsPanel').classList.toggle('open');
+    }
+
+    function updateSettings() {
+      config.budget = parseInt(document.getElementById('s_budget').value) || 60;
+      config.attrCosts = [0,
+        parseInt(document.getElementById('s_ac1').value) || 0,
+        parseInt(document.getElementById('s_ac2').value) || 0,
+        parseInt(document.getElementById('s_ac3').value) || 0,
+        0, // Commun (4) = baseline = 0
+        parseInt(document.getElementById('s_ac5').value) || 0,
+        parseInt(document.getElementById('s_ac6').value) || 0,
+        parseInt(document.getElementById('s_ac7').value) || 0,
+      ];
+      config.compCosts = [0, 0,
+        parseInt(document.getElementById('s_cc2').value) || 0,
+        parseInt(document.getElementById('s_cc3').value) || 0,
+        parseInt(document.getElementById('s_cc4').value) || 0,
+        parseInt(document.getElementById('s_cc5').value) || 0,
+        parseInt(document.getElementById('s_cc6').value) || 0,
+      ];
+      config.maxAttr = {
+        7: parseInt(document.getElementById('s_max_a7').value) || 0,
+        6: parseInt(document.getElementById('s_max_a6').value) || 0,
+        5: parseInt(document.getElementById('s_max_a5').value) || 99,
+      };
+      config.maxComp = {
+        6: parseInt(document.getElementById('s_max_c6').value) || 0,
+        5: parseInt(document.getElementById('s_max_c5').value) || 0,
+        4: parseInt(document.getElementById('s_max_c4').value) || 99,
+      };
+      render();
+    }
+
+    // ========================
+    // EXPORT VERS FICHE
+    // ========================
+
+    function exportToFiche() {
+      const skillNames = {
+        art: 'Art', athletisme: 'Athlétisme', autorite: 'Autorité',
+        apothicairerie: 'Apothicairerie', bagarre: 'Bagarre', combat_occulte: 'Combat Occulte',
+        discretion: 'Discrétion', dressage: 'Dressage', eloquence: 'Éloquence',
+        erudition: 'Érudition', escamotage: 'Escamotage', esoterisme: 'Ésotérisme',
+        medecine: 'Médecine', recherche: 'Recherche', resilience: 'Résilience',
+        sagacite: 'Sagacité', strategie: 'Stratégie', technologie: 'Technologie',
+        tir: 'Tir', tromperie: 'Tromperie', vigilance: 'Vigilance'
+      };
+
+      const skills = COMPETENCES.map((c, i) => ({
+        id: `regular_${i}`,
+        name: skillNames[c.id] || c.name,
+        level: compValues[c.id],
+        isBase: true
+      }));
+
+      const volonte = attrValues['volonte'] || 4;
+      const powerMax = 30 + volonte * 3;
+
+      const state = {
+        profile: { name: '', image: null },
+        attributes: {
+          puissance: attrValues['puissance'],
+          vivacite: attrValues['vivacite'],
+          precision: attrValues['precision'],
+          endurance: attrValues['endurance'],
+          intelligence: attrValues['intelligence'],
+          intuition: attrValues['intuition'],
+          volonte: attrValues['volonte'],
+          presence: attrValues['presence']
+        },
+        counters: {
+          health: { current: powerMax, max: powerMax },
+          power: { current: powerMax, max: powerMax }
+        },
+        customResources: [],
+        skills: skills,
+        wounds: [],
+        objects: [],
+        currentModal: null
+      };
+
+      const json = JSON.stringify(state, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'personnage.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // ========================
+    // INIT
+    // ========================
+    render();
+  </script>
+</body>
+
+</html>

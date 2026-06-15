@@ -1023,16 +1023,8 @@
             transition: background 0.15s;
         }
 
-        .rename-option:hover {
-            background: rgba(74, 144, 194, 0.1);
-            color: var(--soul-blue);
-        }
-
-        .rename-option.active {
-            background: rgba(74, 144, 194, 0.15);
-            color: var(--soul-blue);
-            font-weight: 600;
-        }
+        .rename-option:hover { background: rgba(74, 144, 194, 0.1); color: var(--soul-blue); }
+        .rename-option.active { background: rgba(74, 144, 194, 0.15); color: var(--soul-blue); font-weight: 600; }
 
         .rename-divider {
             height: 1px;
@@ -1056,9 +1048,7 @@
             outline: none;
         }
 
-        .rename-custom-input:focus {
-            border-color: var(--soul-blue);
-        }
+        .rename-custom-input:focus { border-color: var(--soul-blue); }
 
         .rename-custom-btn {
             background: var(--soul-blue);
@@ -1071,9 +1061,7 @@
             transition: background 0.15s;
         }
 
-        .rename-custom-btn:hover {
-            background: var(--soul-glow);
-        }
+        .rename-custom-btn:hover { background: var(--soul-glow); }
 
         /* JETS DE DÉS */
         .roll-section {
@@ -1783,16 +1771,27 @@
                 text-align: center;
             }
         }
-
-        .notes-section {
+    
+        .mastery-cat-group-fiche { margin-bottom: 12px; }
+        .mastery-cat-header { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+        .mastery-card { border: 1px solid; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; }
+        .mastery-card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap; }
+        .mastery-card-bottom { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .mastery-name-field { flex: 1; min-width: 120px; background: rgba(255,255,255,0.6); border: 1px solid var(--moonlight); border-radius: 5px; padding: 4px 8px; font-size: 0.85em; font-family: var(--font-body); color: var(--deep-navy); }
+        .mastery-name-field:focus { outline: none; border-color: var(--ombre-purple); }
+        .mastery-skill-select { font-size: 0.78em; border: 1px solid var(--moonlight); border-radius: 5px; padding: 3px 6px; background: white; color: var(--deep-navy); font-family: var(--font-body); }
+        .mastery-src-tag { font-size: 0.7em; padding: 2px 7px; border-radius: 10px; white-space: nowrap; font-weight: 600; }
+        .mastery-src-tag.auto { background: rgba(99,153,34,0.15); color: #639922; }
+        .mastery-src-tag.purch { background: rgba(107,76,154,0.15); color: var(--ombre-purple); }
+        .mastery-delete-btn { background: none; border: none; color: var(--silver-mist); cursor: pointer; font-size: 0.85em; padding: 2px 5px; border-radius: 4px; }
+        .mastery-delete-btn:hover { color: var(--vitality-red); }
             margin-top: 20px;
         }
-
         .notes-textarea {
             width: 100%;
             min-height: 200px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 8px;
             color: inherit;
             font-family: inherit;
@@ -1803,17 +1802,16 @@
             box-sizing: border-box;
             transition: border-color 0.2s;
         }
-
         .notes-textarea:focus {
             outline: none;
-            border-color: rgba(218, 165, 32, 0.4);
+            border-color: rgba(218,165,32,0.4);
         }
-
         .notes-textarea::placeholder {
-            color: rgba(255, 255, 255, 0.2);
+            color: rgba(255,255,255,0.2);
             font-style: italic;
         }
-    </style>
+
+        </style>
 </head>
 
 <body>
@@ -1905,37 +1903,27 @@
                     </div>
                     <div class="counters-grid">
                         <!-- État Magique -->
-                        <div class="counter-item" id="magic-state-block"
-                            style="background: rgba(107,76,154,0.08); border: 1px solid rgba(107,76,154,0.2);">
+                        <div class="counter-item" id="magic-state-block" style="background: rgba(107,76,154,0.08); border: 1px solid rgba(107,76,154,0.2);">
                             <div class="counter-label" style="color: var(--ombre-purple);">
                                 <span class="emoji">✨</span> Magie
                             </div>
 
                             <!-- État actuel -->
-                            <div id="magic-etat-display"
-                                style="text-align:center; font-weight:600; font-size:0.9em; padding:5px 10px; border-radius:6px; margin-bottom:4px; border:1px solid transparent;">
-                                —</div>
-                            <div id="magic-score-val"
-                                style="font-size:0.72em; color:var(--silver-mist); text-align:center; margin-bottom:10px;">
-                                —</div>
+                            <div id="magic-etat-display" style="text-align:center; font-weight:600; font-size:0.9em; padding:5px 10px; border-radius:6px; margin-bottom:4px; border:1px solid transparent;">—</div>
+                            <div id="magic-score-val" style="font-size:0.72em; color:var(--silver-mist); text-align:center; margin-bottom:10px;">—</div>
 
                             <!-- Surcharge -->
-                            <div
-                                style="font-size:0.75em; color:var(--silver-mist); font-weight:600; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em;">
-                                Surcharge</div>
+                            <div style="font-size:0.75em; color:var(--silver-mist); font-weight:600; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em;">Surcharge</div>
                             <div class="counter-controls">
                                 <button class="counter-btn minus" onclick="adjustSurcharge(-1)">−</button>
                                 <div class="counter-value">
-                                    <span id="magic-surcharge-val"
-                                        style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:#BA7517;">0</span>
+                                    <span id="magic-surcharge-val" style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:#BA7517;">0</span>
                                 </div>
                                 <button class="counter-btn plus" onclick="adjustSurcharge(1)">+</button>
                             </div>
 
                             <!-- Bouton de récupération -->
-                            <button onclick="recentrage()"
-                                style="margin-top:10px; width:100%; padding:6px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺
-                                Recentrage — Surcharge à 0</button>
+                            <button onclick="recentrage()" style="margin-top:10px; width:100%; padding:6px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺ Recentrage — Surcharge à 0</button>
                         </div>
                     </div>
 
@@ -2050,28 +2038,21 @@
                 </div>
 
                 <!-- Mini état magique -->
-                <div id="roll-page-pool"
-                    style="display:none; margin-bottom:12px; padding:10px 14px; background:rgba(107,76,154,0.08); border:1px solid rgba(107,76,154,0.2); border-radius:10px;">
-                    <div
-                        style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+                <div id="roll-page-pool" style="display:none; margin-bottom:12px; padding:10px 14px; background:rgba(107,76,154,0.08); border:1px solid rgba(107,76,154,0.2); border-radius:10px;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span style="font-size:1em;">✨</span>
                             <span id="roll-pool-status" style="font-weight:700; font-size:0.95em;"></span>
                         </div>
-                        <button onclick="recentrage()"
-                            style="padding:3px 10px; background:rgba(107,76,154,0.15); border:1px solid rgba(107,76,154,0.3); border-radius:5px; color:var(--ombre-purple); font-size:0.78em; font-weight:600; cursor:pointer;">↺
-                            Recentrage</button>
+                        <button onclick="recentrage()" style="padding:3px 10px; background:rgba(107,76,154,0.15); border:1px solid rgba(107,76,154,0.3); border-radius:5px; color:var(--ombre-purple); font-size:0.78em; font-weight:600; cursor:pointer;">↺ Recentrage</button>
                     </div>
-                    <div style="margin-top:6px; font-size:0.78em; color:var(--silver-mist);" id="roll-pool-details">
-                    </div>
+                    <div style="margin-top:6px; font-size:0.78em; color:var(--silver-mist);" id="roll-pool-details"></div>
                 </div>
 
                 <!-- Jet privé -->
                 <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px; margin-bottom:10px;">
-                    <label
-                        style="display:flex; align-items:center; gap:6px; font-size:0.82em; font-weight:600; color:var(--silver-mist); cursor:pointer;">
-                        <input type="checkbox" id="private-roll-toggle"
-                            style="width:16px; height:16px; cursor:pointer;">
+                    <label style="display:flex; align-items:center; gap:6px; font-size:0.82em; font-weight:600; color:var(--silver-mist); cursor:pointer;">
+                        <input type="checkbox" id="private-roll-toggle" style="width:16px; height:16px; cursor:pointer;">
                         🔒 Jet privé (n'envoie pas sur Discord)
                     </label>
                 </div>
@@ -2114,15 +2095,16 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Mod. Explosion</label>
-                                <input id="simple-explosion" class="bonus-input" type="number" value="0" min="-4"
-                                    max="4">
+                                <input id="simple-explosion" class="bonus-input" type="number" value="0" min="-4" max="4">
                             </div>
                         </div>
-                        <button id="perform-simple-roll-btn" class="perform-roll-btn"
-                            style="background: linear-gradient(135deg, var(--success-green), #5fb882); margin-top: 16px;"
-                            onclick="performSimpleRoll()" disabled>
+                        <button id="perform-simple-roll-btn" class="perform-roll-btn" style="background: linear-gradient(135deg, var(--success-green), #5fb882); margin-top: 16px;" onclick="performSimpleRoll()" disabled>
                             🎲 Lancer le jet
                         </button>
+                        <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:0.82em;font-weight:600;color:#BA7517;cursor:pointer;">
+                            <input type="checkbox" id="simple-non-maitrise" style="width:15px;height:15px;cursor:pointer;">
+                            🔓 Sans maîtrise (−2 niveaux de compétence)
+                        </label>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique</div>
@@ -2159,37 +2141,33 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Dés magiques injectés</label>
-                                <input id="hybrid-magic-dice" class="bonus-input" type="number" value="1" min="0"
-                                    onchange="updateHybridMagicInfo()">
+                                <input id="hybrid-magic-dice" class="bonus-input" type="number" value="1" min="0" onchange="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
                                 <input id="hybrid-bonus" class="bonus-input" type="number" value="0">
                             </div>
                         </div>
-                        <div id="hybrid-magic-info"
-                            style="margin-top:10px; padding:10px; background:rgba(59,166,166,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);">
-                        </div>
-                        <label
-                            style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
-                            <input type="checkbox" id="hybrid-debridee"
-                                style="width:16px; height:16px; cursor:pointer;">
-                            ✨ Magie Débridée dans les situations de vie ou de mort avec une forte intensité émotionelle.
-                            La magie devient plus forte, mais instable.
+                        <div id="hybrid-magic-info" style="margin-top:10px; padding:10px; background:rgba(59,166,166,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);"></div>
+                        <label style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
+                            <input type="checkbox" id="hybrid-debridee" style="width:16px; height:16px; cursor:pointer;">
+                            ✨ Magie Débridée — situation de vie ou de mort, stress intense (Succès→Résonance, Vide→Instabilité ou Rupture)
                         </label>
-                        <button id="perform-hybrid-roll-btn" class="perform-roll-btn"
-                            style="background: linear-gradient(135deg, var(--power-cyan), var(--power-glow)); margin-top: 16px;"
-                            onclick="performHybridRoll()" disabled>
+                        <button id="perform-hybrid-roll-btn" class="perform-roll-btn" style="background: linear-gradient(135deg, var(--power-cyan), var(--power-glow)); margin-top: 16px;" onclick="performHybridRoll()" disabled>
                             🎲✨ Lancer le jet
                         </button>
+                        <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:0.82em;font-weight:600;color:#BA7517;cursor:pointer;">
+                            <input type="checkbox" id="hybrid-non-maitrise" style="width:15px;height:15px;cursor:pointer;">
+                            🔓 Sans maîtrise (−2 niveaux de compétence)
+                        </label>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique Jet + Magie</div>
                         <div class="roll-info-content">
-                            Les dés magiques s'ajoutent aux succès de compétence, lancés selon l'État magique
-                            actuel.<br>
-                            Chaque dé utilisé augmente la valeur de Surcharge, mais peut être allégé par
-                            Flux/Résonance/Transcendance.<br>
+                            Les dés magiques s'ajoutent aux succès de compétence, lancés selon l'État magique actuel (Score = Base − Surcharge).<br>
+                            Chaque dé coûte +1 Surcharge, allégé par Flux/Résonance/Transcendance.<br>
+                            Instabilité ajoute +1 Surcharge supplémentaire. Rupture génère un Effet Incontrôlé (Puissance +2).<br>
+                            <strong>Magie Débridée :</strong> Succès→Résonance, Vide→Instabilité (États S/A) ou Rupture (États B-E).
                         </div>
                     </div>
                 </div>
@@ -2200,35 +2178,29 @@
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                             <div class="form-group">
                                 <label class="form-label">Dés magiques injectés</label>
-                                <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1"
-                                    onchange="updatePureMagicInfo()">
+                                <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1" onchange="updatePureMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Puissance requise (succès)</label>
+                                <label class="form-label">Magnitude requise (succès)</label>
                                 <input id="pure-magnitude" class="bonus-input" type="number" value="2" min="1" max="10">
                             </div>
                         </div>
-                        <div id="pure-magic-info"
-                            style="margin-top:10px; padding:10px; background:rgba(107,76,154,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);">
-                        </div>
-                        <label
-                            style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
+                        <div id="pure-magic-info" style="margin-top:10px; padding:10px; background:rgba(107,76,154,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);"></div>
+                        <label style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
                             <input type="checkbox" id="pure-debridee" style="width:16px; height:16px; cursor:pointer;">
-                            ✨ Magie Débridée — situation de vie ou de mort, stress intense (Succès→Résonance,
-                            Vide→Instabilité ou Rupture)
+                            ✨ Magie Débridée — situation de vie ou de mort, stress intense (Succès→Résonance, Vide→Instabilité ou Rupture)
                         </label>
-                        <button id="perform-pure-roll-btn" class="perform-roll-btn"
-                            style="background: linear-gradient(135deg, var(--ombre-purple), #8b6cbf); margin-top: 16px;"
-                            onclick="performPureRoll()">
+                        <button id="perform-pure-roll-btn" class="perform-roll-btn" style="background: linear-gradient(135deg, var(--ombre-purple), #8b6cbf); margin-top: 16px;" onclick="performPureRoll()">
                             ✨ Lancer le pouvoir
                         </button>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique Magie Pure</div>
                         <div class="roll-info-content">
-                            Jet uniquement avec les dés magiques selon l'État magique actuel.<br>
-                            Si le nombre de succès ≥ Puissance requise alors le pouvoir réussi à produire l'effet
-                            escompté.<br>
+                            Jet uniquement avec les dés magiques selon l'État magique actuel (Score = Base − Surcharge).<br>
+                            Si le nombre de succès ≥ magnitude → pouvoir réussi.<br>
+                            Instabilité ajoute +1 Surcharge supplémentaire. Rupture génère un Effet Incontrôlé (Puissance +2).<br>
+                            <strong>Magnitudes :</strong> 1 triviale · 2 simple · 3 modérée · 4 complexe · 5 majeure · 6+ légendaire
                         </div>
                     </div>
                 </div>
@@ -2238,6 +2210,26 @@
         <!-- PAGE 3 : OBJETS -->
         <div class="page objects-page" id="page-objects">
             <div class="objects-container">
+
+                <div class="card" id="masteries-section" style="margin-bottom:16px;">
+                    <div class="card-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="icon" style="background:rgba(99,153,34,0.1);color:#639922;">⚔</span>
+                            Maîtrises
+                        </div>
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                            <button onclick="addMasteryManual('arme')" style="padding:3px 8px;font-size:0.73em;background:rgba(99,153,34,0.1);border:1px solid rgba(99,153,34,0.3);border-radius:5px;color:#639922;cursor:pointer;">+ Arme</button>
+                            <button onclick="addMasteryManual('armure_medium')" style="padding:3px 8px;font-size:0.73em;background:rgba(74,144,194,0.1);border:1px solid rgba(74,144,194,0.3);border-radius:5px;color:#4a90c2;cursor:pointer;">🛡 Médium</button>
+                            <button onclick="addMasteryManual('armure_lourde')" style="padding:3px 8px;font-size:0.73em;background:rgba(107,76,154,0.1);border:1px solid rgba(107,76,154,0.3);border-radius:5px;color:var(--ombre-purple);cursor:pointer;">🛡 Lourde</button>
+                            <button onclick="addMasteryManual('bouclier')" style="padding:3px 8px;font-size:0.73em;background:rgba(74,144,194,0.1);border:1px solid rgba(74,144,194,0.3);border-radius:5px;color:#4a90c2;cursor:pointer;">🛡 Bouclier</button>
+                            <button onclick="addMasteryManual('monture')" style="padding:3px 8px;font-size:0.73em;background:rgba(201,162,39,0.1);border:1px solid rgba(201,162,39,0.3);border-radius:5px;color:#c9a227;cursor:pointer;">+ Monture</button>
+                            <button onclick="addMasteryManual('langue')" style="padding:3px 8px;font-size:0.73em;background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.3);border-radius:5px;color:#1D9E75;cursor:pointer;">+ Langue</button>
+                            <button onclick="addMasteryManual('savoir_faire')" style="padding:3px 8px;font-size:0.73em;background:rgba(186,117,23,0.1);border:1px solid rgba(186,117,23,0.3);border-radius:5px;color:#BA7517;cursor:pointer;">+ Savoir-faire</button>
+                        </div>
+                    </div>
+                    <div id="masteries-list"></div>
+                </div>
+
                 <div class="card">
                     <div class="card-title">
                         <span class="icon"
@@ -2263,11 +2255,9 @@
                         <span class="icon" style="background: rgba(107, 76, 154, 0.1); color: #a08abf;">&#128221;</span>
                         Notes
                     </div>
-                    <textarea class="notes-textarea" id="notes-textarea"
-                        placeholder="Notes libres, descriptions, rappels..."
-                        oninput="appState.notes = this.value"></textarea>
+                    <textarea class="notes-textarea" id="notes-textarea" placeholder="Notes libres, descriptions, rappels..." oninput="appState.notes = this.value"></textarea>
                 </div>
-            </div>
+</div>
         </div>
 
         <!-- Modal -->
@@ -2356,7 +2346,7 @@
             7: { name: 'Maître', dice: 8, explosion: 10, bonus: 3, color: '#6b4c9a' },
             8: { name: 'Absolue', dice: 10, explosion: 8, bonus: 4, color: '#d4a84b' }
         };
-
+        
         // Fonction pour calculer l'explosion d'un niveau de pouvoir combiné
         function getPowerExplosion(combinedLevel) {
             if (combinedLevel >= 9) return 8;
@@ -2393,7 +2383,8 @@
             currentModal: null,
             magic: {
                 surcharge: 0
-            }
+            },
+            masteries: []
         };
 
         // ========== GESTION DES PAGES ==========
@@ -2608,27 +2599,27 @@
 
         // ========== NOMS ALTERNATIFS DES COMPÉTENCES ==========
         const SKILL_ALTERNATIVES = {
-            'Art': ['Art', 'Performance', 'Artisanat', 'Création'],
-            'Athlétisme': ['Athlétisme', 'Acrobaties', 'Survie', 'Endurance'],
-            'Autorité': ['Autorité', 'Intimidation', 'Leadership', 'Commandement'],
+            'Art':            ['Art', 'Performance', 'Artisanat', 'Création'],
+            'Athlétisme':     ['Athlétisme', 'Acrobaties', 'Survie', 'Endurance'],
+            'Autorité':       ['Autorité', 'Intimidation', 'Leadership', 'Commandement'],
             'Apothicairerie': ['Apothicairerie', 'Herboristerie', 'Botanique', 'Potions'],
-            'Bagarre': ['Bagarre', 'Escrime', 'Arts martiaux', 'Lance'],
+            'Bagarre':        ['Bagarre', 'Escrime', 'Arts martiaux', 'Lance'],
             'Combat Occulte': ['Combat Occulte', 'Duel', 'Combat magique', 'Pouvoir en combat'],
-            'Discrétion': ['Discrétion', 'Furtivité', 'Infiltration', 'Présence effacée'],
-            'Dressage': ['Dressage', 'Équitation', 'Apprivoisement', 'Capture'],
-            'Éloquence': ['Éloquence', 'Diplomatie', 'Séduction', 'Raison'],
-            'Érudition': ['Érudition', 'Histoire', 'Théologie', 'Droit'],
-            'Escamotage': ['Escamotage', 'Larcin', 'Crochetage', 'Prestidigitation'],
-            'Ésotérisme': ['Ésotérisme', 'Arcanes', 'Pouvoir', 'Magie'],
-            'Médecine': ['Médecine', 'Chirurgie', 'Soins', 'Premiers secours'],
-            'Recherche': ['Recherche', 'Enquête', 'Pistage', 'Investigation'],
-            'Résilience': ['Résilience', 'Sang-froid', 'Bravoure', 'Calme'],
-            'Sagacité': ['Sagacité', 'Empathie', 'Intuition', 'Perspicacité'],
-            'Stratégie': ['Stratégie', 'Tactique', 'Commandement', 'Planification'],
-            'Technologie': ['Technologie', 'Ingénierie', 'Mécanique', 'Sabotage'],
-            'Tir': ['Tir', 'Archerie', 'Lancer', 'Arme à feu'],
-            'Tromperie': ['Tromperie', 'Manipulation', 'Comédie', 'Bluff'],
-            'Vigilance': ['Vigilance', 'Perception', 'Instinct', 'Observation'],
+            'Discrétion':     ['Discrétion', 'Furtivité', 'Infiltration', 'Présence effacée'],
+            'Dressage':       ['Dressage', 'Équitation', 'Apprivoisement', 'Capture'],
+            'Éloquence':      ['Éloquence', 'Diplomatie', 'Séduction', 'Raison'],
+            'Érudition':      ['Érudition', 'Histoire', 'Théologie', 'Droit'],
+            'Escamotage':     ['Escamotage', 'Larcin', 'Crochetage', 'Prestidigitation'],
+            'Ésotérisme':     ['Ésotérisme', 'Arcanes', 'Pouvoir', 'Magie'],
+            'Médecine':       ['Médecine', 'Chirurgie', 'Soins', 'Premiers secours'],
+            'Recherche':      ['Recherche', 'Enquête', 'Pistage', 'Investigation'],
+            'Résilience':     ['Résilience', 'Sang-froid', 'Bravoure', 'Calme'],
+            'Sagacité':       ['Sagacité', 'Empathie', 'Intuition', 'Perspicacité'],
+            'Stratégie':      ['Stratégie', 'Tactique', 'Commandement', 'Planification'],
+            'Technologie':    ['Technologie', 'Ingénierie', 'Mécanique', 'Sabotage'],
+            'Tir':            ['Tir', 'Archerie', 'Lancer', 'Arme à feu'],
+            'Tromperie':      ['Tromperie', 'Manipulation', 'Comédie', 'Bluff'],
+            'Vigilance':      ['Vigilance', 'Perception', 'Instinct', 'Observation'],
         };
 
         // Trouve la compétence de base (la "racine") d'un nom alternatif
@@ -2843,10 +2834,10 @@
             nameInput.value = '';
             qualityInput.value = '0';
             renderObjects();
-            if (appState.notes) {
-                const ta = document.getElementById('notes-textarea');
-                if (ta) ta.value = appState.notes;
-            }
+                    if (appState.notes) {
+                        const ta = document.getElementById('notes-textarea');
+                        if (ta) ta.value = appState.notes;
+                    }
         }
 
         function removeObject(index) {
@@ -2955,19 +2946,20 @@
             const skillId = document.getElementById('simple-skill-select').value;
             const bonus = parseInt(document.getElementById('simple-bonus').value) || 0;
             const explosionMod = parseInt(document.getElementById('simple-explosion').value) || 0;
+            const nonMaitrise = document.getElementById('simple-non-maitrise')?.checked || false;
 
             const skill = appState.skills.find(s => s.id === skillId);
             if (!skill) return;
 
+            const effectiveLevel = nonMaitrise ? Math.max(1, skill.level - 2) : skill.level;
             const attrValue = appState.attributes[attrName];
             const attrLevel = getAttributeLevel(attrValue);
-            const skillLevel = getSkillLevel(skill.level);
+            const skillLevel = getSkillLevel(effectiveLevel);
             const numDice = skillLevel.dice;
             const attrBonus = attrLevel.bonus;
             const skillBonus = skillLevel.bonus;
             const threshold = 13 - attrLevel.faces;
-
-            // Explosion basée sur le niveau de compétence + modificateur
+            
             const baseExplosion = skillLevel.explosion;
             const explosionThreshold = Math.max(3, Math.min(12, baseExplosion - explosionMod));
 
@@ -2976,13 +2968,14 @@
             const successes = counts.successes;
             const total = successes + attrBonus + skillBonus + bonus;
 
-            const explosionText = explosionMod !== 0
+            const explosionText = explosionMod !== 0 
                 ? `Explosion ${explosionThreshold}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})`
                 : `Explosion ${explosionThreshold}+`;
+            const nonMaitriseTag = nonMaitrise ? ` · 🔓 Sans maîtrise (niv.${skill.level}→${effectiveLevel})` : '';
 
             displaySimpleResult({
                 title: 'Jet de Compétence',
-                subtitle: `${skill.name} (${capitalize(attrName)}) | ${explosionText}`,
+                subtitle: `${skill.name} (${capitalize(attrName)}) | ${explosionText}${nonMaitriseTag}`,
                 dice: diceResults,
                 threshold,
                 successes,
@@ -3044,38 +3037,38 @@
         // ========== SYSTÈME DE DÉS MAGIQUES ==========
 
         const ETAT_INFO = {
-            S: { name: 'Transcendance', score: '≥10', color: '#8a6d00', bg: 'rgba(212,175,55,0.14)', border: '#D4AF37' },
-            A: { name: 'Maîtrise', score: '5 à 9', color: '#27500A', bg: 'rgba(59,109,17,0.1)', border: '#639922' },
-            B: { name: 'Stable', score: '1 à 4', color: '#085041', bg: 'rgba(29,158,117,0.1)', border: '#1D9E75' },
-            C: { name: 'Tendu', score: '-3 à 0', color: '#633806', bg: 'rgba(186,117,23,0.1)', border: '#BA7517' },
-            D: { name: 'Instable', score: '-7 à -4', color: '#712B13', bg: 'rgba(216,90,48,0.1)', border: '#D85A30' },
-            E: { name: 'Débordement', score: '≤ -8', color: '#501313', bg: 'rgba(163,45,45,0.1)', border: '#A32D2D' },
+            S: { name:'Transcendance', score:'≥10',     color:'#8a6d00', bg:'rgba(212,175,55,0.14)', border:'#D4AF37' },
+            A: { name:'Maîtrise',    score:'5 à 9',   color:'#27500A', bg:'rgba(59,109,17,0.1)',   border:'#639922' },
+            B: { name:'Stable',      score:'1 à 4',   color:'#085041', bg:'rgba(29,158,117,0.1)',  border:'#1D9E75' },
+            C: { name:'Tendu',       score:'-3 à 0',  color:'#633806', bg:'rgba(186,117,23,0.1)', border:'#BA7517' },
+            D: { name:'Instable',    score:'-7 à -4', color:'#712B13', bg:'rgba(216,90,48,0.1)',  border:'#D85A30' },
+            E: { name:'Débordement', score:'≤ -8',    color:'#501313', bg:'rgba(163,45,45,0.1)',  border:'#A32D2D' },
         };
 
         const FACE_COLORS = {
-            'succès': { bg: 'rgba(99,153,34,0.15)', border: '#639922', text: '#27500A' },
-            'vide': { bg: 'rgba(136,135,128,0.15)', border: '#888780', text: '#5F5E5A' },
-            'flux': { bg: 'rgba(53,166,166,0.15)', border: '#3BA6A6', text: '#1F5C5C' },
-            'résonance': { bg: 'rgba(127,119,221,0.15)', border: '#7F77DD', text: '#3C3489' },
-            'transcendance': { bg: 'rgba(212,175,55,0.18)', border: '#D4AF37', text: '#8a6d00' },
-            'instabilité': { bg: 'rgba(186,117,23,0.15)', border: '#BA7517', text: '#633806' },
-            'rupture': { bg: 'rgba(163,45,45,0.15)', border: '#E24B4A', text: '#501313' },
+            'succès':            { bg:'rgba(99,153,34,0.15)',   border:'#639922', text:'#27500A' },
+            'vide':              { bg:'rgba(136,135,128,0.15)', border:'#888780', text:'#5F5E5A' },
+            'flux':              { bg:'rgba(53,166,166,0.15)',  border:'#3BA6A6', text:'#1F5C5C' },
+            'résonance':         { bg:'rgba(127,119,221,0.15)', border:'#7F77DD', text:'#3C3489' },
+            'transcendance':     { bg:'rgba(212,175,55,0.18)',  border:'#D4AF37', text:'#8a6d00' },
+            'instabilité':       { bg:'rgba(186,117,23,0.15)',  border:'#BA7517', text:'#633806' },
+            'rupture':           { bg:'rgba(163,45,45,0.15)',   border:'#E24B4A', text:'#501313' },
         };
 
         function getFaceDistribution(etat) {
             const D = {
                 // Transcendance 1, Résonance 2, Flux 4, Succès 3, Vide 2
-                S: ['vide', 'vide', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'flux', 'résonance', 'résonance', 'transcendance'],
+                S: ['vide','vide','succès','succès','succès','flux','flux','flux','flux','résonance','résonance','transcendance'],
                 // Résonance 2, Flux 3, Succès 5, Vide 2
-                A: ['vide', 'vide', 'succès', 'succès', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'résonance', 'résonance'],
+                A: ['vide','vide','succès','succès','succès','succès','succès','flux','flux','flux','résonance','résonance'],
                 // Résonance 2, Flux 3, Succès 4, Vide 1, Instabilité 2
-                B: ['instabilité', 'instabilité', 'vide', 'succès', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'résonance', 'résonance'],
+                B: ['instabilité','instabilité','vide','succès','succès','succès','succès','flux','flux','flux','résonance','résonance'],
                 // Résonance 1, Flux 3, Succès 4, Vide 1, Instabilité 2, Rupture 1
-                C: ['rupture', 'instabilité', 'instabilité', 'vide', 'succès', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'résonance'],
+                C: ['rupture','instabilité','instabilité','vide','succès','succès','succès','succès','flux','flux','flux','résonance'],
                 // Flux 1, Succès 2, Vide 1, Instabilité 5, Rupture 3
-                D: ['rupture', 'rupture', 'rupture', 'instabilité', 'instabilité', 'instabilité', 'instabilité', 'instabilité', 'vide', 'succès', 'succès', 'flux'],
+                D: ['rupture','rupture','rupture','instabilité','instabilité','instabilité','instabilité','instabilité','vide','succès','succès','flux'],
                 // Succès 2, Vide 2, Rupture 8
-                E: ['rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'vide', 'vide', 'succès', 'succès'],
+                E: ['rupture','rupture','rupture','rupture','rupture','rupture','rupture','rupture','vide','vide','succès','succès'],
             };
             return D[etat] || D['E'];
         }
@@ -3099,7 +3092,7 @@
 
         function getMagicBaseScore() {
             const lvl = getEsoterismeLevel();
-            const bases = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 6, 6: 9, 7: 13, 8: 18 };
+            const bases = { 1:1, 2:2, 3:3, 4:4, 5:6, 6:9, 7:13, 8:18 };
             return bases[Math.min(8, Math.max(1, lvl))] || 0;
         }
 
@@ -3110,8 +3103,8 @@
         function getMagicEtat() {
             const score = getMagicScore();
             if (score >= 10) return 'S';
-            if (score >= 5) return 'A';
-            if (score >= 1) return 'B';
+            if (score >= 5)  return 'A';
+            if (score >= 1)  return 'B';
             if (score >= -3) return 'C';
             if (score >= -7) return 'D';
             return 'E';
@@ -3287,13 +3280,13 @@
         function renderMagicDie(die, delay) {
             const fc = FACE_COLORS[die.type] || FACE_COLORS['vide'];
             const labels = {
-                'succès': 'Succ.',
-                'vide': 'Vide',
-                'flux': 'Flux',
-                'résonance': 'Rés.',
-                'transcendance': 'Trans.',
-                'instabilité': 'Inst.',
-                'rupture': 'Rupt.',
+                'succès':              'Succ.',
+                'vide':                'Vide',
+                'flux':                'Flux',
+                'résonance':           'Rés.',
+                'transcendance':       'Trans.',
+                'instabilité':         'Inst.',
+                'rupture':             'Rupt.',
             };
             const el = document.createElement('div');
             el.className = 'die';
@@ -3328,15 +3321,17 @@
             const bonus = parseInt(document.getElementById('hybrid-bonus').value) || 0;
             const magicDiceCount = parseInt(document.getElementById('hybrid-magic-dice').value) || 0;
             const debridee = document.getElementById('hybrid-debridee')?.checked || false;
+            const nonMaitrise = document.getElementById('hybrid-non-maitrise')?.checked || false;
             const skill = appState.skills.find(s => s.id === skillId);
             if (!skill) return;
 
+            const effectiveLevel = nonMaitrise ? Math.max(1, skill.level - 2) : skill.level;
             const maxInject = getEsoterismeMaxDice();
             const actualMagic = Math.min(magicDiceCount, maxInject);
 
             const attrValue = appState.attributes[attrName];
             const attrLevel = getAttributeLevel(attrValue);
-            const skillLevel = getSkillLevel(skill.level);
+            const skillLevel = getSkillLevel(effectiveLevel);
             const threshold = 13 - attrLevel.faces;
             const skillDice = rollWithExplosions(skillLevel.dice, threshold, skillLevel.explosion);
             const skillCounts = countSuccesses(skillDice, threshold);
@@ -3350,9 +3345,10 @@
             if (actualMagic > 0) applySurchargeDelta(surchargeDelta);
 
             const total = skillCounts.successes + magicSuccesses + attrLevel.bonus + skillLevel.bonus + bonus;
+            const nonMaitriseTag = nonMaitrise ? ` · 🔓 Sans maîtrise (niv.${skill.level}→${effectiveLevel})` : '';
 
             displayHybridResult({
-                skillName: skill.name, attrName: capitalize(attrName),
+                skillName: skill.name + (nonMaitrise ? ` (−2 niv.)` : ''), attrName: capitalize(attrName),
                 skillDice, magicResults, threshold, etat, debridee,
                 skillSuccesses: skillCounts.successes, magicSuccesses,
                 attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus,
@@ -3503,6 +3499,140 @@
             document.getElementById('result-total').textContent = data.successes;
             document.getElementById('result-overlay').classList.add('active');
         }
+        // ========== MAÎTRISES ==========
+
+        const MASTERY_CAT_INFO = {
+            'arme':          { label:'⚔ Arme',             color:'#639922', bg:'rgba(99,153,34,0.12)' },
+            'armure_legere': { label:'🛡 Armure Légère',    color:'#4a90c2', bg:'rgba(74,144,194,0.12)' },
+            'armure_medium': { label:'🛡 Armure Médium',    color:'#4a90c2', bg:'rgba(74,144,194,0.15)' },
+            'armure_lourde': { label:'🛡 Armure Lourde',    color:'#6b4c9a', bg:'rgba(107,76,154,0.15)' },
+            'bouclier':      { label:'🛡 Bouclier',         color:'#4a90c2', bg:'rgba(74,144,194,0.12)' },
+            'monture':       { label:'🐴 Monture/Véhicule', color:'#c9a227', bg:'rgba(201,162,39,0.12)' },
+            'langue':        { label:'🗣 Langue',            color:'#1D9E75', bg:'rgba(29,158,117,0.12)' },
+            'savoir_faire':  { label:'✨ Savoir-faire',      color:'#BA7517', bg:'rgba(186,117,23,0.12)' },
+        };
+
+        function renderMasteries() {
+            const el = document.getElementById('masteries-list');
+            if (!el) return;
+            const masteries = appState.masteries || [];
+
+            const ARMOR_CATS = ['armure_legere','armure_medium','armure_lourde','bouclier'];
+            const armorMasteries = masteries.filter(m => ARMOR_CATS.includes(m.category));
+            const namedMasteries = masteries.filter(m => !ARMOR_CATS.includes(m.category));
+
+            let html = '';
+
+            // ── Armures & Bouclier (toggles) ──────────────────────
+            html += `<div style="margin-bottom:12px;">
+                <div style="font-size:0.7em;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--silver-mist);margin-bottom:6px;">🛡 Armures & Bouclier</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">`;
+
+            // Armure légère — toujours présente
+            html += `<span style="padding:4px 10px;border-radius:5px;font-size:0.78em;font-weight:600;border:1px solid rgba(74,144,194,0.4);background:rgba(74,144,194,0.12);color:#4a90c2;">🛡 Armure Légère <span style="font-size:0.75em;opacity:0.7;">offerte</span></span>`;
+
+            const armorDefs = [
+                {cat:'armure_medium', label:'🛡 Armure Médium', req:null},
+                {cat:'armure_lourde', label:'🛡 Armure Lourde', req:'armure_medium'},
+                {cat:'bouclier',      label:'🛡 Bouclier',      req:null},
+            ];
+            armorDefs.forEach(a => {
+                const has = masteries.some(m => m.category === a.cat);
+                const disabled = a.req && !masteries.some(m => m.category === a.req);
+                const activeStyle = has ? 'background:rgba(74,144,194,0.18);border-color:rgba(74,144,194,0.6);color:#4a90c2;' : 'background:transparent;border-color:var(--moonlight);color:var(--silver-mist);';
+                html += `<button onclick="addMasteryManual('${a.cat}')"
+                    style="padding:4px 10px;border-radius:5px;font-size:0.78em;font-weight:600;border:1px solid;cursor:pointer;${activeStyle}${disabled?'opacity:0.4;cursor:not-allowed;':''}"
+                    ${disabled?'disabled title="Requiert Armure Médium"':''}>
+                    ${a.label}${has?' ✓':''}
+                </button>`;
+            });
+            html += `</div></div>`;
+
+            // ── Maîtrises nommées (groupées par catégorie) ─────────
+            if (namedMasteries.length === 0 && masteries.length === 0) {
+                html += '<div style="font-size:0.82em;color:var(--silver-mist);font-style:italic;padding:4px 0;">Aucune maîtrise. Importez depuis le point-buy ou ajoutez manuellement.</div>';
+            } else if (namedMasteries.length > 0) {
+                const groups = {};
+                namedMasteries.forEach(m => {
+                    const cat = m.category || 'savoir_faire';
+                    if (!groups[cat]) groups[cat] = [];
+                    groups[cat].push(m);
+                });
+                Object.entries(groups).forEach(([cat, items]) => {
+                    const ci = MASTERY_CAT_INFO[cat] || { label:cat, color:'var(--silver-mist)', bg:'transparent' };
+                    html += `<div class="mastery-cat-group-fiche">
+                        <div class="mastery-cat-header" style="color:${ci.color};">${ci.label}</div>`;
+                    items.forEach(m => {
+                        const srcTag = m.source === 'auto'
+                            ? `<span class="mastery-src-tag auto">Débloquée</span>`
+                            : `<span class="mastery-src-tag purch">${m.cost||0} pts</span>`;
+                        html += `<div class="mastery-card" style="border-color:${ci.color}20;background:${ci.bg};">
+                            <div class="mastery-card-top">
+                                <input class="mastery-name-field" type="text" value="${(m.name||'').replace(/"/g,'&quot;')}"
+                                    placeholder="Nom de la maîtrise..."
+                                    oninput="updateMasteryField('${m.id}','name',this.value)"/>
+                                ${srcTag}
+                                <button class="mastery-delete-btn" onclick="deleteMastery('${m.id}')" title="Supprimer">✕</button>
+                            </div>
+                            <div class="mastery-card-bottom">
+                                <label style="font-size:0.73em;color:var(--silver-mist);">Liée à :</label>
+                                <select class="mastery-skill-select" onchange="updateMasteryField('${m.id}','linkedSkill',this.value)">
+                                    <option value="">— aucune —</option>
+                                    ${(appState.skills||[]).map(s=>`<option value="${s.id}" ${m.linkedSkill===s.id?'selected':''}>${s.name} (niv.${s.level})</option>`).join('')}
+                                </select>
+                                ${m.source==='auto'&&m.autoSkill?`<span style="font-size:0.72em;color:var(--silver-mist);">Via ${m.autoSkill} niv.${m.autoLevel}</span>`:''}
+                            </div>
+                        </div>`;
+                    });
+                    html += `</div>`;
+                });
+            }
+
+            el.innerHTML = html;
+        }
+
+        function updateMasteryField(id, field, value) {
+            const m = (appState.masteries||[]).find(x => x.id === id);
+            if (m) m[field] = value;
+        }
+
+        function deleteMastery(id) {
+            appState.masteries = (appState.masteries||[]).filter(x => x.id !== id);
+            renderMasteries();
+        }
+
+        function addMasteryManual(catId) {
+            if (!appState.masteries) appState.masteries = [];
+
+            // Armor/bouclier = toggle (unique, pas de nom custom)
+            if (['armure_medium','armure_lourde','bouclier'].includes(catId)) {
+                const exists = appState.masteries.find(m => m.category === catId);
+                if (exists) {
+                    // Toggle off — cascade si médium retiré
+                    if (catId === 'armure_medium') {
+                        appState.masteries = appState.masteries.filter(m => m.category !== 'armure_medium' && m.category !== 'armure_lourde');
+                    } else {
+                        appState.masteries = appState.masteries.filter(m => m.category !== catId);
+                    }
+                } else {
+                    // Toggle on
+                    if (catId === 'armure_lourde' && !appState.masteries.find(m => m.category === 'armure_medium')) {
+                        alert('Armure Lourde requiert Armure Médium.');
+                        return;
+                    }
+                    const ARMOR_NAMES = { armure_medium:'Armure Médium', armure_lourde:'Armure Lourde', bouclier:'Bouclier' };
+                    const ARMOR_COSTS = { armure_medium:2, armure_lourde:3, bouclier:2 };
+                    appState.masteries.push({ id:`${catId}_toggle`, name:ARMOR_NAMES[catId], category:catId, source:'purchased', linkedSkill:null, cost:ARMOR_COSTS[catId], autoSkill:null, autoLevel:null });
+                }
+                renderMasteries();
+                return;
+            }
+
+            const id = `manual_${Date.now()}_${Math.random().toString(36).substr(2,5)}`;
+            appState.masteries.push({ id, name:'', category:catId, source:'purchased', linkedSkill:null, cost:0, autoSkill:null, autoLevel:null });
+            renderMasteries();
+        }
+
         function closeResult() {
             document.getElementById('result-overlay').classList.remove('active');
         }
@@ -3553,6 +3683,8 @@
                     Object.assign(appState, loaded);
                     if (!appState.magic) appState.magic = { surcharge: 0 };
                     if (appState.magic.surcharge === undefined) appState.magic.surcharge = 0;
+                    if (!appState.masteries) appState.masteries = [];
+                    renderMasteries();
 
                     // Restaurer l'interface
                     document.getElementById('character-name').value = appState.profile.name || '';
@@ -3633,7 +3765,7 @@
                 if (m.results && m.results.length > 0) {
                     const counts = {};
                     m.results.forEach(d => { counts[d.type] = (counts[d.type] || 0) + 1; });
-                    const faceOrder = ['transcendance', 'résonance', 'flux', 'succès', 'vide', 'instabilité', 'rupture'];
+                    const faceOrder = ['transcendance','résonance','flux','succès','vide','instabilité','rupture'];
                     const faceParts = faceOrder
                         .filter(t => counts[t])
                         .map(t => `${FACE_ICONS[t]} ${counts[t]}× ${t.charAt(0).toUpperCase() + t.slice(1)}`);
@@ -3667,14 +3799,14 @@
                 const form = new FormData();
                 form.append('files[0]', blob, 'avatar.png');
                 form.append('payload_json', JSON.stringify({ username: charName, embeds: [embed] }));
-                fetch(DISCORD_WEBHOOK_URL, { method: 'POST', body: form }).catch(() => { });
+                fetch(DISCORD_WEBHOOK_URL, { method: 'POST', body: form }).catch(() => {});
             } else {
                 if (charImage && !charImage.startsWith('data:')) embed.author.icon_url = charImage;
                 fetch(DISCORD_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: charName, embeds: [embed] })
-                }).catch(() => { });
+                }).catch(() => {});
             }
         }
 
@@ -3697,6 +3829,7 @@
             updateCounterDisplay('power');
             syncElanFromHealth();
             updateMagicState();
+            renderMasteries();
 
             // Événements clavier
             document.addEventListener('keydown', e => {
