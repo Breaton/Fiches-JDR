@@ -860,7 +860,7 @@
         <div class="mastery-cat-buttons">
           <div class="mastery-cat-group">
             <span class="cat-group-label">Combat</span>
-            <button class="mastery-add-btn" onclick="addPurchasedMastery('arme')" title="2 pts">⚔ Arme <span
+            <button class="mastery-add-btn" onclick="addPurchasedMastery('arme')" title="3 pts">⚔ Arme <span
                 class="cost-pill">2</span></button>
           </div>
           <div class="mastery-cat-group">
@@ -870,9 +870,9 @@
           </div>
           <div class="mastery-cat-group">
             <span class="cat-group-label">Savoir</span>
-            <button class="mastery-add-btn" onclick="addPurchasedMastery('specialite')" title="1 pt">🧠 Specialité <span
+            <button class="mastery-add-btn" onclick="addPurchasedMastery('specialite')" title="2 pt">🧠 Specialité <span
                 class="cost-pill">1</span></button>
-            <button class="mastery-add-btn" onclick="addPurchasedMastery('savoir_faire')" title="1 pt">✨ Savoir-faire
+            <button class="mastery-add-btn" onclick="addPurchasedMastery('savoir_faire')" title="2 pt">✨ Savoir-faire
               <span class="cost-pill">1</span></button>
           </div>
         </div>
@@ -951,8 +951,8 @@
     // ========================
 
     const MASTERY_UNLOCKS = {
-      'bagarre': [{ level: 3, type: 'arme', hint: 'Arme de mêlée' }, { level: 5, type: 'arme', hint: 'Arme de mêlée' }, { level: 7, type: 'arme', hint: 'Arme de mêlée' }],
-      'tir': [{ level: 3, type: 'arme', hint: 'Arme à distance' }, { level: 5, type: 'arme', hint: 'Arme à distance' }],
+      'bagarre': [{ level: 2, type: 'arme', hint: 'Arme de mêlée' }, { level: 5, type: 'arme', hint: 'Arme de mêlée' }, { level: 7, type: 'arme', hint: 'Arme de mêlée' }],
+      'tir': [{ level: 2, type: 'arme', hint: 'Arme à distance' }, { level: 5, type: 'arme', hint: 'Arme à distance' }],
       'art': [{ level: 3, type: 'savoir_faire', hint: 'Savoir-faire artistique' }, { level: 5, type: 'savoir_faire', hint: 'Savoir-faire artistique' }],
       'dressage': [{ level: 3, type: 'monture', hint: 'Monture standard' }, { level: 5, type: 'monture', hint: 'Monture exotique' }],
       'erudition': [{ level: 3, type: 'specialite', hint: 'specialite' }, { level: 5, type: 'specialite', hint: 'specialite' }],
@@ -960,13 +960,13 @@
     };
 
     const MASTERY_CATS = [
-      { id: 'arme', label: '⚔ Arme', cost: 2, hint: 'Épée, Lance, Hache, Arc...' },
+      { id: 'arme', label: '⚔ Arme', cost: 3, hint: 'Épée, Lance, Hache, Arc...' },
       { id: 'armure_medium', label: '🛡 Armure Médium', cost: 2, hint: 'Requiert Armure Légère (offerte)' },
       { id: 'armure_lourde', label: '🛡 Armure Lourde', cost: 3, hint: 'Requiert Armure Médium' },
       { id: 'bouclier', label: '🛡 Bouclier', cost: 2, hint: 'Permet l\'utilisation d\'un bouclier' },
       { id: 'monture', label: '🐴 Monture/Véhicule', cost: 2, hint: 'Cheval, Navire, Attelage...' },
-      { id: 'specialite', label: '🧠 Spécialite', cost: 1, hint: 'Langue étrangère' },
-      { id: 'savoir_faire', label: '✨ Savoir-faire', cost: 1, hint: 'Cuisine, Instrument, Outil...' },
+      { id: 'specialite', label: '🧠 Spécialite', cost: 2, hint: 'Langue étrangère' },
+      { id: 'savoir_faire', label: '✨ Savoir-faire', cost: 2, hint: 'Cuisine, Instrument, Outil...' },
     ];
 
     // ========================
@@ -975,8 +975,8 @@
 
     let config = {
       budget: 100,
-      attrCosts: [0, -3, -2, -1, 0, 5, 8, 12],
-      compCosts: [0, 0, 1, 2, 3, 5, 8],
+      attrCosts: [0, -4, -3, -2, 0, 6, 8, 12],
+      compCosts: [0, 0, 1, 2, 3, 6, 8],
       maxAttr: { 7: 2, 6: 3 },
       maxComp: { 6: 1, 5: 3 },
     };
