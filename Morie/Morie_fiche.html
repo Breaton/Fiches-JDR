@@ -3482,10 +3482,11 @@
 
         // Définit quelles compétences ont une valeur passive et avec quel attribut par défaut
         const PASSIVE_SKILLS = [
+            { skillName: 'Autorité', attrId: 'presence', icon: '😒', label: 'Autorité passive' },
             { skillName: 'Vigilance', attrId: 'intuition', icon: '👁', label: 'Vigilance passive' },
             { skillName: 'Sagacité', attrId: 'intuition', icon: '❤️', label: 'Sagacité passive' },
-            { skillName: 'Recherche', attrId: 'intelligence', icon: '🔍', label: 'Discrétion passive' },
-            { skillName: 'Érudition', attrId: 'intelligence', icon: '🧠', label: 'Discrétion passive' },
+            { skillName: 'Recherche', attrId: 'intelligence', icon: '🔍', label: 'Investigation passive' },
+            { skillName: 'Érudition', attrId: 'intelligence', icon: '🧠', label: 'Érudition passive' },
         ];
 
         function getPassiveValue(skillName, attrId) {
