@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../GDF/lesbian.PNG" type="image/png">
     <title>Fiche de Personnage — Version Alternative</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1772,6 +1773,11 @@
             }
         }
     
+        .passive-chip { display:flex;align-items:center;gap:6px;padding:5px 10px;background:rgba(255,255,255,0.04);border:1px solid var(--moonlight);border-radius:8px;transition:border-color 0.2s; }
+        .passive-chip:hover { border-color:rgba(29,158,117,0.4); }
+        .passive-icon { font-size:1em; }
+        .passive-label { font-size:0.75em;color:var(--silver-mist);font-weight:500; }
+        .passive-value { font-family:var(--font-display);font-size:1.2em;font-weight:700; }
         .mastery-cat-group-fiche { margin-bottom: 12px; }
         .mastery-cat-header { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
         .mastery-card { border: 1px solid; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; }
@@ -2013,6 +2019,17 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Valeurs Passives -->
+                <div class="card" style="margin-top:0;">
+                    <div class="card-title">
+                        <span class="icon" style="background:rgba(29,158,117,0.12);color:#1D9E75;">◉</span>
+                        Valeurs Passives
+                        <span style="font-size:0.7em;font-weight:400;color:var(--silver-mist);margin-left:auto;">Bonus attribut + ⌊Dés÷2⌋</span>
+                    </div>
+                    <div id="passives-display" style="display:flex;flex-wrap:wrap;gap:8px;padding:4px 0;"></div>
+                </div>
+
             </div>
         </div>
 
@@ -2402,6 +2419,7 @@
             appState.attributes[attr] = newVal;
             updateAttributeDisplay(attr);
             updateMagicState();
+            renderPassives();
         }
 
         function updateAttributeDisplay(attr) {
@@ -2779,6 +2797,7 @@
                 skill.level = Math.max(1, Math.min(8, skill.level + delta));
                 renderSkills();
                 updateMagicState();
+                renderPassives();
             }
         }
 
@@ -3277,6 +3296,65 @@
             return document.getElementById('private-roll-toggle')?.checked || false;
         }
 
+        // ========== VALEURS PASSIVES ==========
+
+        // Définit quelles compétences ont une valeur passive et avec quel attribut par défaut
+        const PASSIVE_SKILLS = [
+            { skillName: 'Vigilance',     attrId: 'intuition',     icon: '👁',  label: 'Vigilance passive' },
+            { skillName: 'Résilience',    attrId: 'endurance',     icon: '🛡',  label: 'Résilience passive' },
+            { skillName: 'Sagacité',      attrId: 'intelligence',  icon: '🧠',  label: 'Sagacité passive' },
+            { skillName: 'Discrétion',    attrId: 'vivacite',      icon: '🌑',  label: 'Discrétion passive' },
+        ];
+
+        function getPassiveValue(skillName, attrId) {
+            const skill = appState.skills.find(s => s.name === skillName);
+            if (!skill) return null;
+            const attrValue = appState.attributes[attrId] || 4;
+            const attrLevel = getAttributeLevel(attrValue);
+            const skillLevel = getSkillLevel(skill.level);
+            return attrLevel.bonus + Math.floor(skillLevel.dice / 2);
+        }
+
+        function renderPassives() {
+            const el = document.getElementById('passives-display');
+            if (!el) return;
+            let html = '';
+            PASSIVE_SKILLS.forEach(p => {
+                const val = getPassiveValue(p.skillName, p.attrId);
+                if (val === null) return;
+                const tier = val >= 7 ? 'exceptional' : val >= 5 ? 'good' : val >= 3 ? 'average' : 'low';
+                const colors = { exceptional:'#D4AF37', good:'#1D9E75', average:'var(--silver-mist)', low:'var(--silver-mist)' };
+                const color = colors[tier];
+                html += `<div class="passive-chip" title="${p.label}">
+                    <span class="passive-icon">${p.icon}</span>
+                    <span class="passive-label">${p.skillName}</span>
+                    <span class="passive-value" style="color:${color};">${val}</span>
+                </div>`;
+            });
+            el.innerHTML = html || '<span style="color:var(--silver-mist);font-size:0.8em;font-style:italic;">—</span>';
+        }
+
+        function renderAll() {
+            renderSkills();
+            renderObjects();
+            renderCustomResources();
+            updateRollSelects();
+            updateAllAttributes();
+            updateCounterDisplay('power');
+            syncElanFromHealth();
+            updateMagicState();
+            renderMasteries();
+            renderPassives();
+        }
+
+        function showNotification(msg) {
+            const el = document.createElement('div');
+            el.textContent = msg;
+            el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(29,158,117,0.95);color:white;padding:10px 20px;border-radius:8px;font-size:0.85em;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 3000);
+        }
+
         function renderMagicDie(die, delay) {
             const fc = FACE_COLORS[die.type] || FACE_COLORS['vide'];
             const labels = {
@@ -3685,6 +3763,7 @@
                     if (appState.magic.surcharge === undefined) appState.magic.surcharge = 0;
                     if (!appState.masteries) appState.masteries = [];
                     renderMasteries();
+                    renderPassives();
 
                     // Restaurer l'interface
                     document.getElementById('character-name').value = appState.profile.name || '';
@@ -3830,6 +3909,21 @@
             syncElanFromHealth();
             updateMagicState();
             renderMasteries();
+            renderPassives();
+
+            // Auto-import depuis point-buy si données en attente
+            const pendingPB = localStorage.getItem('aequor_pb_export');
+            if (pendingPB) {
+                try {
+                    const data = JSON.parse(pendingPB);
+                    localStorage.removeItem('aequor_pb_export');
+                    Object.assign(appState, data);
+                    if (!appState.magic) appState.magic = { surcharge: 0 };
+                    if (!appState.masteries) appState.masteries = [];
+                    renderAll();
+                    showNotification('✓ Personnage importé depuis le point-buy');
+                } catch(e) { localStorage.removeItem('aequor_pb_export'); }
+            }
 
             // Événements clavier
             document.addEventListener('keydown', e => {
