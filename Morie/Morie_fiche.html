@@ -3120,11 +3120,17 @@
             return WOUND_REFERENCE[idx - 1];
         }
 
-        const WOUND_DC_TABLE = { 1: 5, 2: 7, 3: 10, 4: 13, 5: 16, 6: 19 };
+        const WOUND_DC_TABLE  = { 1: 5, 2: 7, 3: 10, 4: 13, 5: 16, 6: 19 };
+        const WOUND_STAB_TABLE = { 1: 2, 2: 5, 3: 7,  4: 10, 5: 13, 6: 15 };
 
         function getWoundDC(gravity) {
             if (gravity >= 7) return gravity * 3;
             return WOUND_DC_TABLE[Math.max(1, gravity)] || WOUND_DC_TABLE[1];
+        }
+
+        function getStabDC(gravity) {
+            if (gravity >= 7) return 14;
+            return WOUND_STAB_TABLE[Math.max(1, gravity)] || WOUND_STAB_TABLE[1];
         }
 
         function toggleWoundReference() {
@@ -3137,7 +3143,8 @@
                     <thead><tr style="background:rgba(139,157,195,0.12);">
                         <th style="padding:5px 8px;text-align:left;">Gravité</th>
                         <th style="padding:5px 8px;text-align:left;">Sévérité</th>
-                        <th style="padding:5px 8px;text-align:left;">DC</th>
+                        <th style="padding:5px 8px;text-align:left;">DC Soin</th>
+                        <th style="padding:5px 8px;text-align:left;">DC Stabilisation</th>
                         <th style="padding:5px 8px;text-align:left;">Convalescence</th>
                         <th style="padding:5px 8px;text-align:left;">Guérison naturelle</th>
                     </tr></thead>
@@ -3146,14 +3153,18 @@
                             <tr style="border-top:1px solid rgba(139,157,195,0.15);">
                                 <td style="padding:5px 8px;">${r.g}${r.g === 7 ? '+' : ''}</td>
                                 <td style="padding:5px 8px;">${r.name}</td>
-                                <td style="padding:5px 8px;">${getWoundDC(r.g)}</td>
+                                <td style="padding:5px 8px;color:var(--vitality-red);font-weight:600;">${getWoundDC(r.g)}</td>
+                                <td style="padding:5px 8px;color:#BA7517;font-weight:600;">${getStabDC(r.g)}</td>
                                 <td style="padding:5px 8px;">${r.conval}</td>
                                 <td style="padding:5px 8px;">${r.guerison}</td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
-                <div style="font-size:0.7em;color:var(--silver-mist);margin-top:6px;">Atteindre le DC stabilise toujours. Soin magique réussi : −⌊Puissance÷2⌋ + Convalescence. Soin non-magique réussi : −1, jamais de Convalescence.</div>
+                <div style="font-size:0.7em;color:var(--silver-mist);margin-top:6px;">
+                    <strong>DC Soin</strong> : stabilise + réduit la gravité (−1 mundain, −⌊Puissance÷2⌋ magique + Convalescence)<br>
+                    <strong>DC Stabilisation</strong> : stabilise uniquement, sans réduction de gravité
+                </div>
             `;
             el.style.display = 'block';
         }
@@ -3261,12 +3272,27 @@
             const result = parseInt(resultInput?.value) || 0;
             const isMagic = magicCheckbox?.checked || false;
             const dc = getWoundDC(w.gravity);
+            const stabDC = getStabDC(w.gravity);
 
-            if (result < dc) {
-                showNotification(`✗ Échec (Résultat ${result} < DC ${dc})`);
+            // Échec total : sous le DC de stabilisation
+            if (result < stabDC) {
+                showNotification(`✗ Échec total (${result} < DC stab. ${stabDC})`);
+                openHealFormId = null;
+                renderWounds();
                 return;
             }
 
+            // Stabilisation seule : entre DC stab et DC soin
+            if (result < dc) {
+                w.stabilized = true;
+                showNotification(`⚖ Stabilisée (${result} ≥ DC stab. ${stabDC}), gravité inchangée`);
+                openHealFormId = null;
+                renderWounds();
+                recalcHealthFromWounds();
+                return;
+            }
+
+            // Soin complet : atteint le DC soin
             w.stabilized = true;
 
             if (isMagic) {
@@ -3310,6 +3336,7 @@
             appState.wounds.forEach(w => {
                 const ref = getWoundRef(w.gravity);
                 const dc = getWoundDC(w.gravity);
+                const stabDC = getStabDC(w.gravity);
                 const row = document.createElement('div');
                 row.className = 'wound-item' + (w.stabilized ? ' stabilized' : '');
                 row.innerHTML = `
@@ -3328,7 +3355,8 @@
                         </div>
                         <div class="wound-tags">
                             <span class="wound-tag severity">${ref.name}</span>
-                            <span class="wound-tag dc">DC ${dc}</span>
+                            <span class="wound-tag dc" title="DC de soin complet">Soin DC ${dc}</span>
+                            <span class="wound-tag" style="background:rgba(186,117,23,0.12);color:#BA7517;" title="DC de stabilisation seule">Stab. DC ${stabDC}</span>
                             <span class="wound-tag ${w.stabilized ? 'stable' : 'unstable'}">${w.stabilized ? '✓ Stabilisée' : '⚠ Instable'}</span>
                         </div>
                         <button class="wound-heal-btn" onclick="toggleHealForm('${w.id}')">🩹 Soigner</button>
@@ -3345,7 +3373,8 @@
                             <div class="heal-form-row">
                                 <label>Résultat du jet</label>
                                 <input type="number" id="heal-result-${w.id}" value="0">
-                                <span class="heal-dc-hint">DC ${dc}</span>
+                                <span class="heal-dc-hint" title="Soin complet">DC ${dc}</span>
+                                <span style="font-size:0.78em;color:#BA7517;font-weight:600;" title="Stabilisation seule">Stab. ${stabDC}</span>
                             </div>
                             <div class="heal-form-row">
                                 <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
