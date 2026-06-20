@@ -766,6 +766,49 @@
             font-size: 0.9em;
         }
 
+        .force-item {
+            align-items: flex-start;
+        }
+
+        .force-name-block {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .force-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .force-name-row .skill-name {
+            flex: 0 1 auto;
+        }
+
+        .verb-attr {
+            font-family: var(--font-display);
+            font-size: 0.58em;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 1px 6px;
+            border: 1px solid;
+            border-radius: 2px;
+            opacity: 0.9;
+            white-space: nowrap;
+        }
+
+        .force-desc {
+            font-size: 0.72em;
+            line-height: 1.35;
+            color: var(--silver-chrome);
+            opacity: 0.85;
+        }
+
         .skill-level {
             display: flex;
             align-items: center;
@@ -2986,25 +3029,35 @@
             lien: { name: "Lien", bonus: ["proteger", "harmoniser"], malus: ["dissiper", "transformer"], bonusText: "+1 Protéger, Harmoniser", malusText: "−1 Dissiper, Transformer" },
             mepris: { name: "Mépris", bonus: ["dissiper", "mouvoir"], malus: ["harmoniser", "lier"], bonusText: "+1 Dissiper, Mouvoir", malusText: "−1 Harmoniser, Lier" }
         };
+        const ATTR_COLORS = {
+            'Présence': 'var(--saber-purple)',
+            'Intelligence': 'var(--saber-blue)',
+            'Intuition': 'var(--saber-cyan)',
+            'Volonté': 'var(--saber-yellow)'
+        };
         const FORCE_VERBS = [
-            { id: 'amplifier', name: 'Amplifier', level: 1 },
-            { id: 'dissiper', name: 'Dissiper', level: 1 },
-            { id: 'harmoniser', name: 'Harmoniser', level: 1 },
-            { id: 'lier', name: 'Lier', level: 1 },
-            { id: 'manifester', name: 'Manifester', level: 1 },
-            { id: 'mouvoir', name: 'Mouvoir', level: 1 },
-            { id: 'percevoir', name: 'Percevoir', level: 1 },
-            { id: 'proteger', name: 'Protéger', level: 1 },
-            { id: 'transformer', name: 'Transformer', level: 1 }
+            { id: 'amplifier', name: 'Amplifier', attr: 'Présence', desc: "Renforcer, exalter, transcender — pousse les capacités au-delà de leurs limites.", level: 1 },
+            { id: 'dissiper', name: 'Dissiper', attr: 'Intelligence', desc: "Défaire la cohésion — désintégrer, annuler, trancher un lien ou un pouvoir.", level: 1 },
+            { id: 'harmoniser', name: 'Harmoniser', attr: 'Intuition', desc: "Guérir, purifier, équilibrer en s'accordant aux flux.", level: 1 },
+            { id: 'mouvoir', name: 'Mouvoir', attr: 'Volonté', desc: "Déplacer, propulser, contraindre par la seule volonté.", level: 1 },
+            { id: 'lier', name: 'Lier', attr: 'Présence', desc: "Connecter, asservir, entraver — liens, domination, paralysie.", level: 1 },
+            { id: 'manifester', name: 'Manifester', attr: 'Volonté', desc: "Créer et projeter une forme vers l'extérieur — éclairs, illusion, énergie.", level: 1 },
+            { id: 'percevoir', name: 'Percevoir', attr: 'Intuition', desc: "Révéler, sentir, prévoir — Force Sense, visions.", level: 1 },
+            { id: 'absorber', name: 'Absorber', attr: 'Présence', desc: "Voler, drainer, dévorer l'essence d'autrui — vie, énergie, Force.", level: 1 },
+            { id: 'proteger', name: 'Protéger', attr: 'Volonté', desc: "Bloquer, encaisser, endiguer ce qui arrive au seuil — bouclier, Tutaminis.", level: 1 },
+            { id: 'transformer', name: 'Transformer', attr: 'Intelligence', desc: "Altérer, muter, corrompre la nature d'une chose — alchimie Sith.", level: 1 }
         ];
         const FORCE_TARGETS = [
-            { id: 'matiere', name: 'Matière', level: 1 },
-            { id: 'energie', name: 'Énergie', level: 1 },
-            { id: 'corps', name: 'Corps', level: 1 },
-            { id: 'esprit', name: 'Esprit', level: 1 },
-            { id: 'vie', name: 'Vie', level: 1 },
-            { id: 'force', name: 'Force', level: 1 },
-            { id: 'temps', name: 'Temps', level: 1 }
+            { id: 'ame', name: 'Âme', desc: "Le soi durable — identité, alignement, ce qui persiste. Corruption, rédemption, esprits.", level: 1 },
+            { id: 'bete', name: 'Bête', desc: "Le vivant non-sapient — faune, instinct, créatures. Apprivoiser, monstre Sith.", level: 1 },
+            { id: 'corps', name: 'Corps', desc: "La chair — anatomie, blessures, membres, sens physiques.", level: 1 },
+            { id: 'energie', name: 'Énergie', desc: "Le flux brut — thermique, électrique, lumineux. Feu, foudre, tir.", level: 1 },
+            { id: 'vie', name: 'Énergie Vitale', desc: "Le souffle vital — vitalité, énergie organique, détection du vivant.", level: 1 },
+            { id: 'esprit', name: 'Esprit', desc: "Le mental — pensée, émotion, volonté, mémoire. Mind Trick, terreur.", level: 1 },
+            { id: 'flore', name: 'Flore', desc: "Le végétal — racines, croissance. Lianes, ronces, forêt.", level: 1 },
+            { id: 'force', name: 'Force', desc: "Le flux métaphysique — pouvoirs, connexion, présence. Dissiper, précognition.", level: 1 },
+            { id: 'matiere', name: 'Matière', desc: "L'inerte brut — roche, métal, structure, murs.", level: 1 },
+            { id: 'mecanismes', name: 'Mécanismes', desc: "L'artifice — droïdes, ordinateurs, vaisseaux, systèmes.", level: 1 }
         ];
         const defaultSkills = ['Art', 'Athlétisme', 'Autorité', 'Bagarre', 'Combat de Force', 'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Informatique', 'Ingénierie', 'Médecine', 'Pilotage', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Tir', 'Tromperie', 'Vigilance'];
         const appState = {
@@ -3283,18 +3336,22 @@
             verbsList.innerHTML = '';
             appState.forceVerbs.forEach((verb, index) => {
                 const item = document.createElement('div');
-                item.className = 'skill-item';
+                item.className = 'skill-item force-item';
                 const level = MAGIC_LEVELS[verb.level] || MAGIC_LEVELS[1];
-                item.innerHTML = `<div class="skill-name">${verb.name}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceVerb(${index}, -1)" ${verb.level <= 1 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${verb.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${verb.level}</sub></span><button class="skill-level-btn" onclick="modifyForceVerb(${index}, 1)" ${verb.level >= 5 ? 'disabled' : ''}>+</button></div>`;
+                const attrColor = ATTR_COLORS[verb.attr] || 'var(--saber-purple)';
+                const attrBadge = verb.attr ? `<span class="verb-attr" style="color:${attrColor};border-color:${attrColor}">${verb.attr}</span>` : '';
+                const desc = verb.desc ? `<div class="force-desc">${verb.desc}</div>` : '';
+                item.innerHTML = `<div class="force-name-block"><div class="force-name-row"><span class="skill-name">${verb.name}</span>${attrBadge}</div>${desc}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceVerb(${index}, -1)" ${verb.level <= 1 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${verb.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${verb.level}</sub></span><button class="skill-level-btn" onclick="modifyForceVerb(${index}, 1)" ${verb.level >= 5 ? 'disabled' : ''}>+</button></div>`;
                 verbsList.appendChild(item);
             });
             const targetsList = document.getElementById('force-targets-list');
             targetsList.innerHTML = '';
             appState.forceTargets.forEach((target, index) => {
                 const item = document.createElement('div');
-                item.className = 'skill-item';
+                item.className = 'skill-item force-item';
                 const level = MAGIC_LEVELS[target.level] || MAGIC_LEVELS[1];
-                item.innerHTML = `<div class="skill-name">${target.name}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceTarget(${index}, -1)" ${target.level <= 1 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${target.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${target.level}</sub></span><button class="skill-level-btn" onclick="modifyForceTarget(${index}, 1)" ${target.level >= 5 ? 'disabled' : ''}>+</button></div>`;
+                const desc = target.desc ? `<div class="force-desc">${target.desc}</div>` : '';
+                item.innerHTML = `<div class="force-name-block"><div class="force-name-row"><span class="skill-name">${target.name}</span></div>${desc}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceTarget(${index}, -1)" ${target.level <= 1 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${target.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${target.level}</sub></span><button class="skill-level-btn" onclick="modifyForceTarget(${index}, 1)" ${target.level >= 5 ? 'disabled' : ''}>+</button></div>`;
                 targetsList.appendChild(item);
             });
         }
@@ -3420,7 +3477,7 @@
                     appState.forceVerbs.forEach(verb => {
                         const opt = document.createElement('option');
                         opt.value = verb.id;
-                        opt.textContent = `${verb.name} (${verb.level})`;
+                        opt.textContent = `${verb.name}${verb.attr ? ' · ' + verb.attr : ''} (${verb.level})`;
                         verbSelect.appendChild(opt);
                     });
                     verbSelect.value = currentValue;
@@ -3756,6 +3813,21 @@
             a.click();
             URL.revokeObjectURL(url);
         }
+        function reconcileForceLists() {
+            // Rebase les listes chargées sur les définitions courantes :
+            // on ne récupère que le niveau d'une ancienne sauvegarde (par id, sinon par nom),
+            // et on jette les entrées obsolètes (ex. Temps). Attribut/description/nouveaux verbes
+            // proviennent toujours des définitions à jour.
+            const carryLevel = (defs, loaded) => {
+                const prev = Array.isArray(loaded) ? loaded : [];
+                return defs.map(def => {
+                    const match = prev.find(p => p.id === def.id) || prev.find(p => p.name === def.name);
+                    return { ...def, level: match ? Math.max(1, Math.min(5, match.level || 1)) : def.level };
+                });
+            };
+            appState.forceVerbs = carryLevel(FORCE_VERBS, appState.forceVerbs);
+            appState.forceTargets = carryLevel(FORCE_TARGETS, appState.forceTargets);
+        }
         function loadFromFile() { document.getElementById('file-input').click(); }
         function handleFileLoad(event) {
             const file = event.target.files[0];
@@ -3765,6 +3837,7 @@
                 try {
                     const loaded = JSON.parse(e.target.result);
                     Object.assign(appState, loaded);
+                    reconcileForceLists();
                     document.getElementById('character-name').value = appState.profile.name || '';
                     if (appState.profile.image) document.getElementById('profile-image-display').innerHTML = `<img src="${appState.profile.image}" alt="Portrait">`;
                     updateAllAttributes();
