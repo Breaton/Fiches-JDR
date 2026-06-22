@@ -538,6 +538,63 @@
             font-size: 0.9rem;
         }
 
+        /* Table de passifs (toutes compétences, attribut ajustable) */
+        .passive-table {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .passive-line {
+            display: grid;
+            grid-template-columns: 1fr auto 28px;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 4px;
+            border-bottom: 1px solid rgba(139, 157, 195, 0.07);
+            font-size: 0.78rem;
+        }
+
+        .passive-line:last-child {
+            border-bottom: none;
+        }
+
+        .passive-line .pl-name {
+            color: var(--moonlight);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .passive-line .pl-attr {
+            background: rgba(15, 23, 41, 0.7);
+            color: var(--silver-mist);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 0.72rem;
+            padding: 2px 4px;
+            cursor: pointer;
+            max-width: 110px;
+        }
+
+        .passive-line .pl-attr:focus {
+            outline: none;
+            border-color: var(--alt-teal);
+            color: var(--moonlight);
+        }
+
+        .passive-line .pl-attr option {
+            background: var(--deep-navy);
+            color: var(--moonlight);
+        }
+
+        .passive-line .pl-val {
+            font-weight: 800;
+            font-size: 0.95rem;
+            text-align: right;
+        }
+
         /* ─── REFERENCE PANEL ─── */
         .ref-panel {
             background: var(--card-bg);
@@ -677,27 +734,6 @@
             <a class="back-link" href="../index.html">← Retour au hub</a>
         </header>
 
-        <!-- IMPORT -->
-        <section class="import-zone">
-            <h2>Importer un état de fiche</h2>
-            <p class="hint">Colle un ou plusieurs <strong>codes MJ</strong> (un par ligne) que tes joueurs t'envoient, ou
-                dépose leurs fichiers <code>.json</code>. Chaque joueur écrase sa propre entrée — le roster reste
-                en mémoire sur cette machine entre les sessions.</p>
-            <div class="import-row">
-                <textarea id="code-input" placeholder="Colle ici les codes MJ (un par ligne)…"></textarea>
-                <div class="btn-col">
-                    <button class="act" onclick="importCodes()">📥 Importer le(s) code(s)</button>
-                    <button class="act ghost" onclick="document.getElementById('file-input').click()">📂 Importer
-                        .json</button>
-                    <input type="file" id="file-input" accept=".json" multiple style="display:none"
-                        onchange="importFiles(event.target.files)">
-                </div>
-            </div>
-            <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
-                Glisse-dépose les fichiers <code>.json</code> de tes joueurs ici
-            </div>
-        </section>
-
         <!-- SYNCHRO GITHUB -->
         <section class="import-zone" style="border-color:rgba(74,155,110,0.35);">
             <h2>Sauvegardes en ligne (GitHub)</h2>
@@ -786,13 +822,40 @@
         };
 
         // Compétences à valeur passive (mêmes mappings que la fiche joueur)
-        const PASSIVE_SKILLS = [
-            { skillName: 'Autorité', attrId: 'presence', icon: '😠' },
-            { skillName: 'Vigilance', attrId: 'intuition', icon: '👁' },
-            { skillName: 'Recherche', attrId: 'intelligence', icon: '🔍' },
-            { skillName: 'Sagacité', attrId: 'intuition', icon: '❤️' },
-            { skillName: 'Érudition', attrId: 'intelligence', icon: '🧠' }
-        ];
+        // Attribut PAR DÉFAUT du passif de chaque compétence (modifiable par le MJ, cf. override ci-dessous).
+        // Sert de point de départ « raisonnable » ; le MJ ajuste librement par compétence.
+        const DEFAULT_PASSIVE_ATTR = {
+            'art': 'intuition', 'athletisme': 'endurance', 'autorite': 'presence',
+            'apothicairerie': 'intelligence', 'bagarre': 'puissance', 'combat occulte': 'precision',
+            'discretion': 'precision', 'dressage': 'presence', 'eloquence': 'presence',
+            'erudition': 'intelligence', 'escamotage': 'precision', 'esoterisme': 'intuition',
+            'medecine': 'intelligence', 'recherche': 'intelligence', 'resilience': 'volonte',
+            'sagacite': 'intuition', 'strategie': 'intelligence', 'technologie': 'intelligence',
+            'tir': 'precision', 'tromperie': 'presence', 'vigilance': 'intuition'
+        };
+        // Les 5 compétences historiquement « passives » sur la fiche joueur (mises en avant).
+        const CLASSIC_PASSIVES = {
+            'autorite': '😠', 'vigilance': '👁', 'recherche': '🔍', 'sagacite': '❤️', 'erudition': '🧠'
+        };
+
+        // Override global de l'attribut de calcul d'un passif, persisté (clé = nom de compétence normalisé)
+        const PASSIVE_ATTR_KEY = 'aequor_mj_passive_attr';
+        function loadPassiveOverrides() {
+            try { return JSON.parse(localStorage.getItem(PASSIVE_ATTR_KEY)) || {}; }
+            catch (e) { return {}; }
+        }
+        function getPassiveAttr(skillName) {
+            const k = norm(skillName);
+            const ov = loadPassiveOverrides();
+            return ov[k] || DEFAULT_PASSIVE_ATTR[k] || 'intuition';
+        }
+        function setPassiveAttr(skillName, attrId) {
+            const ov = loadPassiveOverrides();
+            const k = norm(skillName);
+            if (attrId === DEFAULT_PASSIVE_ATTR[k]) delete ov[k]; else ov[k] = attrId;
+            try { localStorage.setItem(PASSIVE_ATTR_KEY, JSON.stringify(ov)); } catch (e) { }
+            render(); // recalcul sur toutes les cartes
+        }
 
         // ── Définitions (aide-mémoire), telles que fournies ──
         const ATTR_DEFS = [
@@ -938,63 +1001,6 @@
         }
 
         /* ===================================================================
-           IMPORT
-        =================================================================== */
-        function decodeCode(str) {
-            const code = str.trim();
-            if (!code) return null;
-            try {
-                const json = decodeURIComponent(escape(atob(code)));
-                return JSON.parse(json);
-            } catch (e) { return null; }
-        }
-
-        function importCodes() {
-            const raw = document.getElementById('code-input').value;
-            const lines = raw.split(/\n+/).map(l => l.trim()).filter(Boolean);
-            if (!lines.length) { toast('Aucun code à importer', true); return; }
-            let ok = 0, fail = 0;
-            lines.forEach(line => {
-                const obj = decodeCode(line);
-                const rec = normalizeRecord(obj);
-                if (rec) { upsertRecord(rec); ok++; } else { fail++; }
-            });
-            document.getElementById('code-input').value = '';
-            render();
-            if (ok && !fail) toast(ok + ' fiche(s) importée(s)');
-            else if (ok && fail) toast(ok + ' importée(s), ' + fail + ' code(s) invalide(s)', true);
-            else toast('Code(s) invalide(s)', true);
-        }
-
-        function importFiles(files) {
-            const list = Array.from(files || []);
-            if (!list.length) return;
-            let pending = list.length, ok = 0;
-            list.forEach(file => {
-                const reader = new FileReader();
-                reader.onload = e => {
-                    try {
-                        const rec = normalizeRecord(JSON.parse(e.target.result));
-                        if (rec) { upsertRecord(rec); ok++; }
-                    } catch (err) { /* fichier illisible */ }
-                    if (--pending === 0) { render(); toast(ok + ' fiche(s) importée(s)'); }
-                };
-                reader.onerror = () => { if (--pending === 0) { render(); } };
-                reader.readAsText(file);
-            });
-        }
-
-        // Drag & drop
-        const dz = document.getElementById('dropzone');
-        ['dragenter', 'dragover'].forEach(ev => dz.addEventListener(ev, e => {
-            e.preventDefault(); dz.classList.add('drag');
-        }));
-        ['dragleave', 'drop'].forEach(ev => dz.addEventListener(ev, e => {
-            e.preventDefault(); dz.classList.remove('drag');
-        }));
-        dz.addEventListener('drop', e => importFiles(e.dataTransfer.files));
-
-        /* ===================================================================
            RENDU
         =================================================================== */
         function timeAgo(ts) {
@@ -1043,18 +1049,30 @@
                 skillHtml += `<div class="skills-untrained"><strong>Ignorant (niv. 1) :</strong> ${untrained.join(', ')}.</div>`;
             }
 
-            // Passifs
+            // Passifs — toutes les compétences, attribut de calcul ajustable
+            const attrOptions = (sel) => ATTR_ORDER.map(a =>
+                `<option value="${a}"${a === sel ? ' selected' : ''}>${ATTR_LABEL[a]}</option>`).join('');
+            const passSkills = rec.skills.slice().sort((a, b) => {
+                const ca = CLASSIC_PASSIVES[norm(a.name)] ? 0 : 1;
+                const cb = CLASSIC_PASSIVES[norm(b.name)] ? 0 : 1;
+                if (ca !== cb) return ca - cb;
+                return a.name.localeCompare(b.name);
+            });
             let passHtml = '';
-            PASSIVE_SKILLS.forEach(p => {
-                const val = getPassiveValue(rec, p.skillName, p.attrId);
+            passSkills.forEach(s => {
+                const attrId = getPassiveAttr(s.name);
+                const val = getPassiveValue(rec, s.name, attrId);
                 if (val === null) return;
                 const color = val >= 7 ? '#D4AF37' : val >= 5 ? '#4a9b6e' : 'var(--silver-mist)';
-                passHtml += `<div class="pchip" title="${p.skillName} passive (${ATTR_LABEL[p.attrId]})">
-                    <span>${p.icon}</span><span>${p.skillName}</span>
-                    <span class="pv" style="color:${color}">${val}</span>
+                const icon = CLASSIC_PASSIVES[norm(s.name)] || '';
+                const safeName = s.name.replace(/'/g, "\\'");
+                passHtml += `<div class="passive-line">
+                    <span class="pl-name">${icon ? icon + ' ' : ''}${s.name}<sub style="opacity:.5;font-size:.7em;"> ${s.level}</sub></span>
+                    <select class="pl-attr" onchange="setPassiveAttr('${safeName}', this.value)" title="Attribut de calcul du passif">${attrOptions(attrId)}</select>
+                    <span class="pl-val" style="color:${color}">${val}</span>
                 </div>`;
             });
-            if (!passHtml) passHtml = '<span class="skills-untrained">Aucune compétence passive entraînée.</span>';
+            if (!passHtml) passHtml = '<span class="skills-untrained">Aucune compétence.</span>';
 
             const portrait = rec.image
                 ? `<img class="pcard-portrait" src="${rec.image}" alt="">`
@@ -1092,8 +1110,8 @@
                     <div class="attr-grid">${attrHtml}</div>
                     <div class="detail-section-label">Compétences</div>
                     <div>${skillHtml}</div>
-                    <div class="detail-section-label">Valeurs passives</div>
-                    <div class="passives-row">${passHtml}</div>
+                    <div class="detail-section-label">Valeurs passives <span style="text-transform:none;letter-spacing:0;color:var(--silver-mist);font-weight:400;">· attribut ajustable</span></div>
+                    <div class="passive-table">${passHtml}</div>
                 </div>
             </div>`;
         }
@@ -1105,7 +1123,7 @@
             const countEl = document.getElementById('roster-count');
             countEl.textContent = keys.length + ' personnage' + (keys.length > 1 ? 's' : '');
             if (!keys.length) {
-                container.innerHTML = '<div class="empty-state">Aucune fiche suivie pour l\'instant.<br>Importe un code MJ ou un fichier <code>.json</code> ci-dessus.</div>';
+                container.innerHTML = '<div class="empty-state">Aucune fiche suivie pour l\'instant.<br>Clique sur <strong>🔄 Rafraîchir depuis GitHub</strong> une fois que tes joueurs ont sauvegardé en ligne.</div>';
                 return;
             }
             container.innerHTML = keys.map(k => renderPlayerCard(k, roster[k])).join('');
@@ -1121,15 +1139,15 @@
             });
             const sEl = document.getElementById('ref-skills');
             SKILL_DEFS.forEach(([name, def]) => {
-                const isPassive = PASSIVE_SKILLS.some(p => norm(p.skillName) === norm(name));
+                const isClassic = !!CLASSIC_PASSIVES[norm(name)];
                 const div = document.createElement('div');
                 div.className = 'ref-item';
-                div.innerHTML = `<span class="rt">${name}${isPassive ? ' <span class="axis">passive</span>' : ''}</span><span class="rd"> — ${def}</span>`;
+                div.innerHTML = `<span class="rt">${name}${isClassic ? ' <span class="axis">passif mis en avant</span>' : ''}</span><span class="rd"> — ${def}</span>`;
                 sEl.appendChild(div);
             });
             const note = document.createElement('div');
             note.className = 'ref-passive-note';
-            note.innerHTML = 'Passif = bonus d\'attribut + ⌊dés de compétence ÷ 2⌋. Attributs par défaut : Autorité→Présence, Vigilance/Sagacité→Intuition, Recherche/Érudition→Intelligence.';
+            note.innerHTML = 'Passif = bonus d\'attribut + ⌊dés de compétence ÷ 2⌋. Chaque compétence a désormais un passif, calculé sur un attribut par défaut que tu peux changer directement sur la carte du joueur (le choix s\'applique à tout le groupe et reste mémorisé).';
             sEl.appendChild(note);
         }
 
@@ -1184,20 +1202,27 @@
 
                 const files = (await res.json()).filter(f => f.type === 'file' && f.name.endsWith('.json'));
                 let ok = 0;
+                // Lecture du contenu via l'API authentifiée (Accept: raw) : marche en privé comme en public,
+                // pas de cache CDN, pas d'URL à jeton temporaire à manipuler.
+                const rawHeaders = Object.assign({}, ghHeaders(), { 'Accept': 'application/vnd.github.raw+json' });
                 for (const f of files) {
                     try {
-                        // download_url + sha en query : l'URL change quand le contenu change -> contourne le cache CDN
-                        const raw = await fetch(`${f.download_url}?v=${f.sha}`, { cache: 'no-store' });
-                        if (!raw.ok) continue;
+                        const raw = await fetch(f.url, { headers: rawHeaders, cache: 'no-store' });
+                        if (!raw.ok) { console.warn('Lecture impossible', f.name, raw.status); continue; }
                         const data = JSON.parse(await raw.text());
                         const rec = normalizeRecord(data);
                         if (rec) { upsertRecord(rec); ok++; }
-                    } catch (e) { /* fichier illisible, on saute */ }
+                    } catch (e) { console.warn('Fichier illisible', f.name, e); }
                 }
                 render();
                 const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-                setPullStatus(`${ok} fiche(s) · ${now}`);
-                if (manual) toast(ok + ' fiche(s) synchronisée(s)');
+                if (files.length && ok === 0) {
+                    setPullStatus(`${files.length} fichier(s) trouvé(s), 0 lisible · ${now}`);
+                    if (manual) toast(files.length + ' fichier(s) trouvé(s) mais illisibles — voir la console (F12)', true);
+                } else {
+                    setPullStatus(`${ok} fiche(s) · ${now}`);
+                    if (manual) toast(ok + ' fiche(s) synchronisée(s)');
+                }
             } catch (e) {
                 setPullStatus('Réseau indisponible');
                 if (manual) toast('Impossible de joindre GitHub', true);
@@ -1222,16 +1247,6 @@
         =================================================================== */
         (function init() {
             renderReference();
-            // Import direct via lien : MJ.html#c=<code>  (ou #code=)
-            const hash = location.hash.replace(/^#/, '');
-            if (hash) {
-                const m = hash.match(/(?:^|&)c(?:ode)?=([^&]+)/);
-                if (m) {
-                    const rec = normalizeRecord(decodeCode(decodeURIComponent(m[1])));
-                    if (rec) { upsertRecord(rec); toast(rec.name + ' importé depuis le lien'); }
-                    history.replaceState(null, '', location.pathname);
-                }
-            }
             render();
             // Première synchro automatique au chargement (silencieuse)
             pullFromGitHub(false);
