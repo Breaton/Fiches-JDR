@@ -182,17 +182,16 @@
 
         .save-menu {
             display: none;
-            position: absolute;
-            top: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
+            position: fixed;
+            top: 0;
+            left: 0;
             min-width: 280px;
             background: var(--deep-navy, #1a2744);
             border: 1px solid rgba(139, 157, 195, 0.25);
             border-radius: 10px;
             box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
             padding: 8px;
-            z-index: 200;
+            z-index: 3000;
             flex-direction: column;
             gap: 2px;
         }
@@ -4950,14 +4949,32 @@
         }
 
         // ----- Menu déroulant de sauvegarde -----
+        function positionSaveMenu() {
+            const m = document.getElementById('save-menu');
+            if (!m || !m.classList.contains('open')) return;
+            const wrap = m.closest('.save-menu-wrap');
+            const btn = wrap && wrap.querySelector('button');
+            if (!btn) return;
+            const r = btn.getBoundingClientRect();
+            const w = m.offsetWidth || 280;
+            let left = r.left + r.width / 2 - w / 2;
+            left = Math.max(8, Math.min(left, window.innerWidth - w - 8));
+            m.style.top = (r.bottom + 8) + 'px';
+            m.style.left = left + 'px';
+        }
         function toggleSaveMenu() {
             const m = document.getElementById('save-menu');
-            if (m) m.classList.toggle('open');
+            if (!m) return;
+            const willOpen = !m.classList.contains('open');
+            m.classList.toggle('open');
+            if (willOpen) positionSaveMenu();
         }
         function closeSaveMenu() {
             const m = document.getElementById('save-menu');
             if (m) m.classList.remove('open');
         }
+        window.addEventListener('resize', positionSaveMenu);
+        window.addEventListener('scroll', positionSaveMenu, true);
 
         // ========== PARTAGE MJ (code compact — repli hors-ligne) ==========
         // Construit un instantané allégé (sans portrait/objets/notes) destiné à la console MJ.
