@@ -2224,6 +2224,13 @@
             <div class="save-controls">
                 <button onclick="saveToFile()">💾 Sauvegarder</button>
                 <button onclick="loadFromFile()">📂 Charger</button>
+                <button onclick="event.stopPropagation(); pushToGitHub()"
+                    title="Sauvegarder cette fiche dans le dépôt GitHub (lue par la console MJ)">☁️ Sauver en ligne</button>
+                <button onclick="event.stopPropagation(); setGhToken()"
+                    title="Configurer le jeton GitHub (stocké uniquement dans ce navigateur)"
+                    style="font-size:0.82em;opacity:0.85;padding:0 10px;">⚙️</button>
+                <span id="gh-status"
+                    style="font-size:0.72em;color:rgba(255,255,255,0.6);align-self:center;white-space:nowrap;"></span>
                 <input type="file" id="file-input" style="display: none;" accept=".json"
                     onchange="handleFileLoad(event)">
                 <span id="autosave-indicator"
@@ -4626,6 +4633,129 @@
             URL.revokeObjectURL(url);
         }
 
+        // ========== SAUVEGARDE EN LIGNE (dépôt GitHub) ==========
+        // Le dépôt de saves, lu par la console MJ. Branche par défaut d'un repo récent : main.
+        const GH_CFG = { owner: 'Breaton', repo: 'Saves-Fiches-JDR', branch: 'main', dir: 'saves' };
+        const GH_TOKEN_KEY = 'gh_save_token';
+
+        function ghToken() { return localStorage.getItem(GH_TOKEN_KEY) || ''; }
+
+        function setGhToken() {
+            const current = ghToken();
+            const masked = current ? '(un jeton est déjà enregistré)' : '(aucun jeton enregistré)';
+            const val = window.prompt(
+                'Jeton GitHub à usage de sauvegarde ' + masked + '.\n\n' +
+                '• Type recommandé : Fine-grained, dépôt « ' + GH_CFG.repo + ' » uniquement, permission Contents = Read and write.\n' +
+                '• Il est stocké UNIQUEMENT dans ce navigateur, jamais envoyé ailleurs que vers GitHub.\n\n' +
+                'Laisse vide et valide pour effacer le jeton enregistré.',
+                ''
+            );
+            if (val === null) return; // annulé
+            if (val.trim() === '') {
+                localStorage.removeItem(GH_TOKEN_KEY);
+                updateGhStatus('Jeton effacé');
+            } else {
+                localStorage.setItem(GH_TOKEN_KEY, val.trim());
+                updateGhStatus('Jeton enregistré');
+            }
+        }
+
+        function updateGhStatus(msg) {
+            const el = document.getElementById('gh-status');
+            if (el) el.textContent = msg ? '☁️ ' + msg : (ghToken() ? '☁️ Prêt' : '☁️ Jeton requis (⚙️)');
+        }
+
+        function ghSlug(s) {
+            return (s || 'perso').toString().toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'perso';
+        }
+
+        async function pushToGitHub() {
+            let token = ghToken();
+            if (!token) { setGhToken(); token = ghToken(); if (!token) return; }
+
+            const name = (appState.profile && appState.profile.name) || 'perso';
+            const path = `${GH_CFG.dir}/${ghSlug(name)}.json`;
+            const api = `https://api.github.com/repos/${GH_CFG.owner}/${GH_CFG.repo}/contents/${path}`;
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            };
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(appState, null, 2))));
+
+            updateGhStatus('Envoi…');
+            try {
+                // Récupérer le sha si le fichier existe déjà (requis pour une mise à jour)
+                let sha;
+                const head = await fetch(`${api}?ref=${GH_CFG.branch}&t=${Date.now()}`, { headers });
+                if (head.status === 200) sha = (await head.json()).sha;
+                else if (head.status === 401) { updateGhStatus('Jeton invalide'); showNotification('⚠️ Jeton GitHub refusé (401) — vérifie-le via ⚙️'); return; }
+                else if (head.status === 404 && !sha) { /* fichier neuf ou repo/chemin absent : on tente la création */ }
+
+                const res = await fetch(api, {
+                    method: 'PUT',
+                    headers,
+                    body: JSON.stringify({
+                        message: `save ${name} — ${new Date().toISOString()}`,
+                        content,
+                        branch: GH_CFG.branch,
+                        ...(sha ? { sha } : {})
+                    })
+                });
+
+                if (res.ok) {
+                    updateGhStatus('Sauvé ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                    showNotification('☁️ Fiche sauvegardée sur GitHub');
+                } else {
+                    const err = await res.json().catch(() => ({}));
+                    updateGhStatus('Échec ' + res.status);
+                    showNotification('⚠️ Échec GitHub (' + res.status + ') : ' + (err.message || 'voir la console'));
+                    console.error('GitHub push', res.status, err);
+                }
+            } catch (e) {
+                updateGhStatus('Erreur réseau');
+                showNotification('⚠️ Impossible de joindre GitHub (réseau ?)');
+                console.error(e);
+            }
+        }
+
+        // ========== PARTAGE MJ (code compact — repli hors-ligne) ==========
+        // Construit un instantané allégé (sans portrait/objets/notes) destiné à la console MJ.
+        function buildMjSnapshot() {
+            return {
+                v: 1,
+                name: (appState.profile && appState.profile.name) || 'Sans nom',
+                attributes: appState.attributes,
+                skills: (appState.skills || []).map(s => ({ name: s.name, level: s.level })),
+                counters: { health: appState.counters.health },
+                wounds: (appState.wounds || []).map(w => ({ gravity: w.gravity || 0 })),
+                magic: { surcharge: (appState.magic && appState.magic.surcharge) || 0 },
+                vitesseBonus: appState.vitesseBonus || 0,
+                ts: Date.now()
+            };
+        }
+
+        function encodeMjSnapshot(o) {
+            // base64 unicode-safe
+            return btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+        }
+
+        function copyMjCode() {
+            const code = encodeMjSnapshot(buildMjSnapshot());
+            const fallback = () => {
+                window.prompt('Copie ce code MJ et envoie-le au MJ :', code);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code)
+                    .then(() => showNotification('📡 Code MJ copié — envoie-le au MJ'))
+                    .catch(fallback);
+            } else {
+                fallback();
+            }
+        }
+
         function loadFromFile() {
             document.getElementById('file-input').click();
         }
@@ -4850,6 +4980,7 @@
             }
 
             renderAll();
+            updateGhStatus();
 
             if (pendingPB) showNotification('✓ Personnage importé depuis le point-buy');
             else if (restoredFromAutosave) showNotification('💾 Session précédente restaurée automatiquement');
