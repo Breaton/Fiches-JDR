@@ -175,6 +175,152 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
+        /* Menu déroulant de sauvegarde */
+        .save-menu-wrap {
+            position: relative;
+        }
+
+        .save-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            min-width: 280px;
+            background: var(--deep-navy, #1a2744);
+            border: 1px solid rgba(139, 157, 195, 0.25);
+            border-radius: 10px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+            padding: 8px;
+            z-index: 200;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .save-menu.open {
+            display: flex;
+        }
+
+        .save-menu button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 9px 12px;
+            background: transparent;
+            color: var(--pure-white, #f8fafc);
+            border: none;
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-weight: 500;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        .save-menu button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .save-menu-sep {
+            height: 1px;
+            background: rgba(139, 157, 195, 0.18);
+            margin: 5px 4px;
+        }
+
+        .save-menu-status {
+            font-size: 0.72em;
+            color: rgba(201, 212, 232, 0.7);
+            padding: 2px 12px 4px;
+            min-height: 14px;
+        }
+
+        /* Overlay de chargement en ligne */
+        .gh-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(8, 12, 24, 0.72);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .gh-load-box {
+            width: 100%;
+            max-width: 460px;
+            max-height: 70vh;
+            background: var(--deep-navy, #1a2744);
+            border: 1px solid rgba(139, 157, 195, 0.25);
+            border-radius: 14px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .gh-load-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 18px;
+            font-family: var(--font-display, serif);
+            font-size: 1.2em;
+            font-weight: 600;
+            color: var(--pure-white, #f8fafc);
+            border-bottom: 1px solid rgba(139, 157, 195, 0.18);
+        }
+
+        .gh-load-close {
+            background: none;
+            border: none;
+            color: var(--silver-mist, #8b9dc3);
+            font-size: 1.1em;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .gh-load-close:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--pure-white, #f8fafc);
+        }
+
+        .gh-load-list {
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            color: var(--moonlight, #c9d4e8);
+            font-size: 0.85em;
+        }
+
+        .gh-load-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 11px 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(139, 157, 195, 0.15);
+            border-radius: 8px;
+            color: var(--moonlight, #c9d4e8);
+            font-family: var(--font-body);
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.1s;
+        }
+
+        .gh-load-item:hover {
+            background: rgba(45, 138, 138, 0.15);
+            border-color: rgba(45, 138, 138, 0.4);
+            transform: translateX(3px);
+        }
+
         /* PAGES */
         .page {
             display: none;
@@ -2222,22 +2368,35 @@
                 <button class="nav-tab" onclick="switchPage('objects', this)">Objets</button>
             </div>
             <div class="save-controls">
-                <button onclick="saveToFile()">💾 Sauvegarder</button>
-                <button onclick="loadFromFile()">📂 Charger</button>
-                <button onclick="event.stopPropagation(); pushToGitHub()"
-                    title="Sauvegarder cette fiche dans le dépôt GitHub (lue par la console MJ)">☁️ Sauver en ligne</button>
-                <button onclick="event.stopPropagation(); setGhToken()"
-                    title="Configurer le jeton GitHub (stocké uniquement dans ce navigateur)"
-                    style="font-size:0.82em;opacity:0.85;padding:0 10px;">⚙️</button>
-                <span id="gh-status"
-                    style="font-size:0.72em;color:rgba(255,255,255,0.6);align-self:center;white-space:nowrap;"></span>
+                <div class="save-menu-wrap">
+                    <button onclick="event.stopPropagation(); toggleSaveMenu()">💾 Sauvegarde ▾</button>
+                    <div class="save-menu" id="save-menu">
+                        <button onclick="event.stopPropagation(); saveToFile(); closeSaveMenu();">💾 Exporter en fichier (.json)</button>
+                        <button onclick="event.stopPropagation(); loadFromFile();">📂 Charger un fichier (.json)</button>
+                        <div class="save-menu-sep"></div>
+                        <button onclick="event.stopPropagation(); pushToGitHub(); closeSaveMenu();">☁️ Sauver en ligne (GitHub)</button>
+                        <button onclick="event.stopPropagation(); openGhLoad();">📥 Charger depuis les saves en ligne</button>
+                        <button onclick="event.stopPropagation(); setGhToken();">⚙️ Configurer le jeton GitHub</button>
+                        <div class="save-menu-status" id="gh-status"></div>
+                        <div class="save-menu-sep"></div>
+                        <button onclick="event.stopPropagation(); clearAutosave(); closeSaveMenu();">🗑 Effacer la sauvegarde locale</button>
+                        <div class="save-menu-status" id="autosave-indicator"></div>
+                    </div>
+                </div>
                 <input type="file" id="file-input" style="display: none;" accept=".json"
                     onchange="handleFileLoad(event)">
-                <span id="autosave-indicator"
-                    style="font-size:0.75em;color:rgba(255,255,255,0.65);align-self:center;white-space:nowrap;"></span>
-                <button onclick="event.stopPropagation(); clearAutosave()"
-                    title="Effacer la sauvegarde locale automatique" style="font-size:0.78em;opacity:0.7;">🗑 Sauvegarde
-                    locale</button>
+            </div>
+
+            <!-- Overlay : chargement depuis les sauvegardes en ligne -->
+            <div id="gh-load-overlay" class="gh-overlay" style="display:none;"
+                onclick="if (event.target === this) closeGhLoad()">
+                <div class="gh-load-box">
+                    <div class="gh-load-head">
+                        <span>📥 Charger une fiche en ligne</span>
+                        <button class="gh-load-close" onclick="closeGhLoad()">✕</button>
+                    </div>
+                    <div id="gh-load-list" class="gh-load-list"></div>
+                </div>
             </div>
         </div>
 
@@ -4721,6 +4880,85 @@
             }
         }
 
+        // ----- Chargement depuis les sauvegardes en ligne -----
+        function ghReadHeaders(raw) {
+            const h = {
+                'Accept': raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            };
+            const t = ghToken();
+            if (t) h['Authorization'] = `Bearer ${t}`;
+            return h;
+        }
+
+        async function openGhLoad() {
+            closeSaveMenu();
+            const overlay = document.getElementById('gh-load-overlay');
+            const listEl = document.getElementById('gh-load-list');
+            overlay.style.display = 'flex';
+            listEl.innerHTML = '<div style="opacity:.7;padding:12px;">Lecture du dépôt…</div>';
+
+            const listApi = `https://api.github.com/repos/${GH_CFG.owner}/${GH_CFG.repo}/contents/${GH_CFG.dir}?ref=${GH_CFG.branch}&t=${Date.now()}`;
+            try {
+                const res = await fetch(listApi, { headers: ghReadHeaders(false), cache: 'no-store' });
+                if (res.status === 404) {
+                    listEl.innerHTML = '<div style="padding:12px;">Aucune sauvegarde trouvée (dossier <code>saves/</code> vide). Fais d\'abord « Sauver en ligne ».</div>';
+                    return;
+                }
+                if (res.status === 401 || res.status === 403) {
+                    listEl.innerHTML = '<div style="padding:12px;">Accès refusé (' + res.status + '). Si le dépôt est privé, configure le jeton via ⚙️.</div>';
+                    return;
+                }
+                if (!res.ok) { listEl.innerHTML = '<div style="padding:12px;">Erreur ' + res.status + '.</div>'; return; }
+
+                const files = (await res.json())
+                    .filter(f => f.type === 'file' && f.name.endsWith('.json'))
+                    .sort((a, b) => a.name.localeCompare(b.name));
+                if (!files.length) { listEl.innerHTML = '<div style="padding:12px;">Aucune fiche trouvée.</div>'; return; }
+
+                listEl.innerHTML = files.map(f => {
+                    const label = f.name.replace(/\.json$/, '');
+                    return `<button class="gh-load-item" onclick="loadFromGitHub('${encodeURIComponent(f.url)}', '${label.replace(/'/g, "\\'")}')">
+                        <span>📄 ${label}</span><span style="opacity:.5;">charger →</span>
+                    </button>`;
+                }).join('');
+            } catch (e) {
+                listEl.innerHTML = '<div style="padding:12px;">Impossible de joindre GitHub (réseau ?).</div>';
+                console.error(e);
+            }
+        }
+
+        async function loadFromGitHub(encodedUrl, label) {
+            const url = decodeURIComponent(encodedUrl);
+            try {
+                const res = await fetch(url, { headers: ghReadHeaders(true), cache: 'no-store' });
+                if (!res.ok) { showNotification('⚠️ Lecture impossible (' + res.status + ')'); return; }
+                const data = JSON.parse(await res.text());
+                if (!confirm(`Charger « ${label} » ? L'état actuel de la fiche sera remplacé (pense à sauvegarder avant si besoin).`)) return;
+                applyLoadedState(data);
+                closeGhLoad();
+                showNotification('📥 « ' + label + ' » chargé depuis GitHub');
+            } catch (e) {
+                showNotification('⚠️ Fichier illisible');
+                console.error(e);
+            }
+        }
+
+        function closeGhLoad() {
+            const overlay = document.getElementById('gh-load-overlay');
+            if (overlay) overlay.style.display = 'none';
+        }
+
+        // ----- Menu déroulant de sauvegarde -----
+        function toggleSaveMenu() {
+            const m = document.getElementById('save-menu');
+            if (m) m.classList.toggle('open');
+        }
+        function closeSaveMenu() {
+            const m = document.getElementById('save-menu');
+            if (m) m.classList.remove('open');
+        }
+
         // ========== PARTAGE MJ (code compact — repli hors-ligne) ==========
         // Construit un instantané allégé (sans portrait/objets/notes) destiné à la console MJ.
         function buildMjSnapshot() {
@@ -4760,32 +4998,34 @@
             document.getElementById('file-input').click();
         }
 
+        function applyLoadedState(loaded) {
+            Object.assign(appState, loaded);
+            applyBackwardCompatDefaults();
+            renderMasteries();
+            renderPassives();
+            restoreProfileUI();
+
+            updateAllAttributes();
+            updateCounterDisplay('power');
+            renderSkills();
+            renderObjects();
+            renderCustomResources();
+            updateElanMax();
+            renderWounds();
+            renderVitesse();
+            renderActiveSpells();
+            updateRollSelects();
+            updateMagicState();
+            scheduleAutosave();
+        }
+
         function handleFileLoad(event) {
             const file = event.target.files[0];
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function (e) {
                 try {
-                    const loaded = JSON.parse(e.target.result);
-                    Object.assign(appState, loaded);
-                    applyBackwardCompatDefaults();
-                    renderMasteries();
-                    renderPassives();
-                    restoreProfileUI();
-
-                    updateAllAttributes();
-                    updateCounterDisplay('power');
-                    renderSkills();
-                    renderObjects();
-                    renderCustomResources();
-                    updateElanMax();
-                    renderWounds();
-                    renderVitesse();
-                    renderActiveSpells();
-                    updateRollSelects();
-                    updateMagicState();
-                    scheduleAutosave();
-
+                    applyLoadedState(JSON.parse(e.target.result));
                     alert('Personnage chargé avec succès !');
                 } catch (err) {
                     alert('Erreur lors du chargement');
@@ -4991,9 +5231,17 @@
             document.addEventListener('change', scheduleAutosave);
             document.addEventListener('click', scheduleAutosave);
 
+            // Fermer le menu de sauvegarde si on clique en dehors
+            document.addEventListener('click', e => {
+                const menu = document.getElementById('save-menu');
+                if (menu && menu.classList.contains('open') && !e.target.closest('.save-menu-wrap')) {
+                    closeSaveMenu();
+                }
+            });
+
             // Événements clavier
             document.addEventListener('keydown', e => {
-                if (e.key === 'Escape') { closeModal(); closeResult(); }
+                if (e.key === 'Escape') { closeModal(); closeResult(); closeSaveMenu(); closeGhLoad(); }
                 if (e.key === 'Enter' && document.getElementById('modal').classList.contains('active')) confirmModal();
             });
 
