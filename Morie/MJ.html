@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Console MJ — Aequor</title>
+    <title>Console MJ pour Aequor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -874,15 +874,18 @@
             <p class="hint">Lit le dossier <code>saves/</code> du dépôt
                 <strong>Breaton/Saves-Fiches-JDR</strong> où les joueurs poussent leur fiche. Chaque rafraîchissement
                 récupère la dernière version de chacun. Le jeton de lecture n'est nécessaire que si le dépôt est privé
-                ou pour lever la limite de requêtes en mode automatique.</p>
+                ou pour lever la limite de requêtes en mode automatique.
+            </p>
             <div class="import-row" style="align-items:center;">
                 <button class="act" onclick="pullFromGitHub(true)">🔄 Rafraîchir depuis GitHub</button>
-                <label style="display:flex;align-items:center;gap:7px;font-size:0.8rem;color:var(--moonlight);cursor:pointer;">
+                <label
+                    style="display:flex;align-items:center;gap:7px;font-size:0.8rem;color:var(--moonlight);cursor:pointer;">
                     <input type="checkbox" id="auto-poll" onchange="toggleAutoPoll(this.checked)"
                         style="width:16px;height:16px;accent-color:var(--alt-green);">
                     Auto (toutes les 60 s)
                 </label>
-                <button class="act ghost" onclick="setMjReadToken()" style="font-size:0.78rem;">⚙️ Jeton de lecture</button>
+                <button class="act ghost" onclick="setMjReadToken()" style="font-size:0.78rem;">⚙️ Jeton de
+                    lecture</button>
                 <span id="gh-pull-status" style="font-size:0.74rem;color:var(--silver-mist);"></span>
             </div>
         </section>
@@ -901,7 +904,7 @@
         <!-- REFERENCE -->
         <section class="ref-panel" id="ref-panel">
             <button class="ref-toggle" onclick="document.getElementById('ref-panel').classList.toggle('open')">
-                <span>Aide-mémoire — Attributs &amp; Compétences</span>
+                <span>Les Attributs &amp; Compétences</span>
                 <span class="chev">▼</span>
             </button>
             <div class="ref-body">
@@ -916,7 +919,7 @@
             </div>
         </section>
 
-        <p class="footer">Console MJ · Aequor — données importées localement, aucune connexion requise</p>
+        <p class="footer">Console MJ · Aequor : les données importées localement, aucune connexion requise</p>
     </div>
 
     <div id="toast"></div>
@@ -1009,14 +1012,14 @@
 
         // ── Définitions (aide-mémoire), telles que fournies ──
         const ATTR_DEFS = [
-            ['Puissance', 'Impact', "Projeter de la force brute sur le monde matériel : frapper, soulever, briser, plier, contraindre par la masse."],
-            ['Présence', 'Impact', "Projeter son aura sur les esprits : marquer, inspirer, charmer, intimider, capter (ou détourner) l'attention."],
-            ['Vivacité', 'Acuité', "Agir et réagir dans l'instant : réflexes, esquive, dégainer, saisir une fenêtre, devancer."],
-            ['Intelligence', 'Acuité', "Traiter le monde par l'analyse : comprendre, déduire, planifier, calculer, déchiffrer, concevoir."],
-            ['Précision', 'Finesse', "La justesse du geste produit : viser, crocheter, suturer, tenir l'équilibre ou se mouvoir en silence."],
-            ['Intuition', 'Finesse', "La justesse de la perception reçue : sentir les intentions, remarquer le caché, anticiper, flairer."],
-            ['Endurance', 'Tenue', "La résistance de la chair dans la durée : encaisser, persévérer malgré la douleur ou la fatigue, résister au poison, tenir l'effort long."],
-            ['Volonté', 'Tenue', "La force de l'esprit qui ne cède pas : sang-froid, ne pas plier, imposer sa détermination, résister à la peur et à la manipulation."]
+            ['Puissance', '', "Projeter de la force brute sur le monde matériel : frapper, soulever, briser, plier, contraindre par la masse."],
+            ['Présence', '', "Projeter son aura sur les esprits : marquer, inspirer, charmer, intimider, capter (ou détourner) l'attention."],
+            ['Vivacité', '', "Agir et réagir dans l'instant : réflexes, esquive, dégainer, saisir une fenêtre, devancer."],
+            ['Intelligence', '', "Traiter le monde par l'analyse : comprendre, déduire, planifier, calculer, déchiffrer, concevoir."],
+            ['Précision', '', "La justesse du geste produit : viser, crocheter, suturer, tenir l'équilibre ou se mouvoir en silence."],
+            ['Intuition', '', "La justesse de la perception reçue : sentir les intentions, remarquer le caché, anticiper, flairer."],
+            ['Endurance', '', "La résistance de la chair dans la durée : encaisser, persévérer malgré la douleur ou la fatigue, résister au poison, tenir l'effort long."],
+            ['Volonté', '', "La force de l'esprit qui ne cède pas : sang-froid, ne pas plier, imposer sa détermination, résister à la peur et à la manipulation."]
         ];
 
         const SKILL_DEFS = [
@@ -1031,7 +1034,7 @@
             ['Éloquence', "Agir sur autrui par l'échange sincère : convaincre, négocier, séduire, apaiser."],
             ['Érudition', "Le savoir constitué que l'on possède ou que l'on retrouve dans les sources : histoire, théorie, lois, cultures."],
             ['Escamotage', "La dextérité fine sur les objets et les serrures : crocheter, subtiliser, dissimuler."],
-            ['Ésotérisme', "Compétence de magie / pouvoir — l'usage canalisé de la magie (compétence ✨ propre à la fiche)."],
+            ['Ésotérisme', "Technique magique et éngergie manipulable."],
             ['Médecine', "Intervenir sur le corps vivant pour le soigner : diagnostiquer, opérer, stabiliser une blessure."],
             ['Recherche', "Produire de l'information par l'investigation : enquêter, pister, fouiller, recouper des indices."],
             ['Résilience', "Continuer de fonctionner sous une pression qui devrait faire céder : peur, douleur, panique, conditions extrêmes."],
@@ -1299,7 +1302,7 @@
             ATTR_DEFS.forEach(([name, axis, def]) => {
                 const div = document.createElement('div');
                 div.className = 'ref-item';
-                div.innerHTML = `<span class="rt">${name}<span class="axis">${axis}</span></span><span class="rd"> — ${def}</span>`;
+                div.innerHTML = `<span class="rt">${name}<span class="axis">${axis}</span></span><span class="rd"> - ${def}</span>`;
                 aEl.appendChild(div);
             });
             const sEl = document.getElementById('ref-skills');
@@ -1307,7 +1310,7 @@
                 const isClassic = !!CLASSIC_PASSIVES[norm(name)];
                 const div = document.createElement('div');
                 div.className = 'ref-item';
-                div.innerHTML = `<span class="rt">${name}${isClassic ? ' <span class="axis">passif mis en avant</span>' : ''}</span><span class="rd"> — ${def}</span>`;
+                div.innerHTML = `<span class="rt">${name}${isClassic ? ' <span class="axis"></span>' : ''}</span><span class="rd"> - ${def}</span>`;
                 sEl.appendChild(div);
             });
             const note = document.createElement('div');
@@ -1360,7 +1363,7 @@
                 if (res.status === 404) { setPullStatus('Dossier saves/ introuvable (vide ?)'); if (manual) toast('Aucune sauvegarde trouvée', true); return; }
                 if (res.status === 401 || res.status === 403) {
                     setPullStatus('Accès refusé (' + res.status + ')');
-                    if (manual) toast('Accès GitHub refusé — dépôt privé ? Ajoute un jeton de lecture', true);
+                    if (manual) toast('Accès GitHub refusé : dépôt privé ? Ajoute un jeton de lecture', true);
                     return;
                 }
                 if (!res.ok) { setPullStatus('Erreur ' + res.status); return; }
@@ -1383,7 +1386,7 @@
                 const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                 if (files.length && ok === 0) {
                     setPullStatus(`${files.length} fichier(s) trouvé(s), 0 lisible · ${now}`);
-                    if (manual) toast(files.length + ' fichier(s) trouvé(s) mais illisibles — voir la console (F12)', true);
+                    if (manual) toast(files.length + ' fichier(s) trouvé(s) mais illisibles - voir la console (F12)', true);
                 } else {
                     setPullStatus(`${ok} fiche(s) · ${now}`);
                     if (manual) toast(ok + ' fiche(s) synchronisée(s)');
