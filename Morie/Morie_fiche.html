@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../GDF/lesbian.PNG" type="image/png">
-    <title>Fiche de Personnage — Version Alternative</title>
+    <title>Fiche Aequor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -2370,15 +2370,20 @@
                 <div class="save-menu-wrap">
                     <button onclick="event.stopPropagation(); toggleSaveMenu()">💾 Sauvegarde ▾</button>
                     <div class="save-menu" id="save-menu">
-                        <button onclick="event.stopPropagation(); saveToFile(); closeSaveMenu();">💾 Exporter en fichier (.json)</button>
-                        <button onclick="event.stopPropagation(); loadFromFile();">📂 Charger un fichier (.json)</button>
+                        <button onclick="event.stopPropagation(); saveToFile(); closeSaveMenu();">💾 Exporter en fichier
+                            (.json)</button>
+                        <button onclick="event.stopPropagation(); loadFromFile();">📂 Charger un fichier
+                            (.json)</button>
                         <div class="save-menu-sep"></div>
-                        <button onclick="event.stopPropagation(); pushToGitHub(); closeSaveMenu();">☁️ Sauver en ligne (GitHub)</button>
-                        <button onclick="event.stopPropagation(); openGhLoad();">📥 Charger depuis les saves en ligne</button>
+                        <button onclick="event.stopPropagation(); pushToGitHub(); closeSaveMenu();">☁️ Sauver en ligne
+                            (GitHub)</button>
+                        <button onclick="event.stopPropagation(); openGhLoad();">📥 Charger depuis les saves en
+                            ligne</button>
                         <button onclick="event.stopPropagation(); setGhToken();">⚙️ Configurer le jeton GitHub</button>
                         <div class="save-menu-status" id="gh-status"></div>
                         <div class="save-menu-sep"></div>
-                        <button onclick="event.stopPropagation(); clearAutosave(); closeSaveMenu();">🗑 Effacer la sauvegarde locale</button>
+                        <button onclick="event.stopPropagation(); clearAutosave(); closeSaveMenu();">🗑 Effacer la
+                            sauvegarde locale</button>
                         <div class="save-menu-status" id="autosave-indicator"></div>
                     </div>
                 </div>
@@ -3285,8 +3290,8 @@
             return WOUND_REFERENCE[idx - 1];
         }
 
-        const WOUND_DC_TABLE  = { 1: 5, 2: 7, 3: 10, 4: 13, 5: 16, 6: 19 };
-        const WOUND_STAB_TABLE = { 1: 2, 2: 5, 3: 7,  4: 10, 5: 13, 6: 15 };
+        const WOUND_DC_TABLE = { 1: 5, 2: 7, 3: 10, 4: 13, 5: 16, 6: 19 };
+        const WOUND_STAB_TABLE = { 1: 2, 2: 5, 3: 7, 4: 10, 5: 13, 6: 15 };
 
         function getWoundDC(gravity) {
             if (gravity >= 7) return gravity * 3;
