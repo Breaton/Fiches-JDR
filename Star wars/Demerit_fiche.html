@@ -2759,13 +2759,15 @@
                 <div class="registre-selector">
                     <label class="registre-active-label" for="registre-select">Registre actif</label>
                     <select id="registre-select" class="form-select" onchange="setRegistre(this.value)">
-                        <option value="neutre">⚖️ Neutre — Calme, équilibre</option>
+                        <option value="neutre">⚖️ Neutre — Aucune émotion dominante</option>
                         <option value="ardeur">🔥 Ardeur — Colère, rage, passion</option>
                         <option value="terreur">😱 Terreur — Peur, angoisse</option>
-                        <option value="lumiere">✨ Lumière — Joie, espoir</option>
-                        <option value="ombre">🌑 Ombre — Tristesse, mélancolie</option>
-                        <option value="lien">💗 Lien — Amour, loyauté</option>
                         <option value="mepris">😤 Mépris — Dégoût, dédain</option>
+                        <option value="ombre">🌑 Ombre — Deuil, tristesse</option>
+                        <option value="acier">🛡️ Acier — Calme, contrôle, sang-froid</option>
+                        <option value="determination">🎯 Détermination — Confiance, élan</option>
+                        <option value="lumiere">✨ Lumière — Joie, espoir</option>
+                        <option value="lien">💗 Lien — Amour, loyauté</option>
                     </select>
                     <div class="registre-active-effects"><span id="registre-active-bonus"
                             class="registre-bonus"></span><span id="registre-active-malus"
@@ -3224,13 +3226,15 @@
         }
 
         const REGISTRES = {
-            neutre: { name: "Neutre", bonus: [], malus: [], bonusText: "", malusText: "" },
-            ardeur: { name: "Ardeur", bonus: ["amplifier", "dissiper"], malus: ["harmoniser", "proteger"], bonusText: "+1 Amplifier, Dissiper", malusText: "−1 Harmoniser, Protéger" },
-            terreur: { name: "Terreur", bonus: ["percevoir", "proteger"], malus: ["manifester", "lier"], bonusText: "+1 Percevoir, Protéger", malusText: "−1 Manifester, Lier" },
-            lumiere: { name: "Lumière", bonus: ["harmoniser", "manifester"], malus: ["dissiper", "transformer"], bonusText: "+1 Harmoniser, Manifester", malusText: "−1 Dissiper, Transformer" },
-            ombre: { name: "Ombre", bonus: ["percevoir", "lier"], malus: ["amplifier", "manifester"], bonusText: "+1 Percevoir, Lier", malusText: "−1 Amplifier, Manifester" },
-            lien: { name: "Lien", bonus: ["proteger", "harmoniser"], malus: ["dissiper", "transformer"], bonusText: "+1 Protéger, Harmoniser", malusText: "−1 Dissiper, Transformer" },
-            mepris: { name: "Mépris", bonus: ["dissiper", "mouvoir"], malus: ["harmoniser", "lier"], bonusText: "+1 Dissiper, Mouvoir", malusText: "−1 Harmoniser, Lier" }
+            neutre: { name: "Neutre", align: 0, bonus: [], malus: [], bonusText: "", malusText: "" },
+            ardeur: { name: "Ardeur", align: -3, bonus: ["amplifier", "dissiper"], malus: ["harmoniser", "proteger"], bonusText: "Sublime : Amplifier, Dissiper", malusText: "Corrompt : Harmoniser, Protéger" },
+            terreur: { name: "Terreur", align: -2, bonus: ["percevoir", "proteger"], malus: ["manifester", "lier"], bonusText: "Sublime : Percevoir, Protéger", malusText: "Corrompt : Manifester, Lier" },
+            mepris: { name: "Mépris", align: -2, bonus: ["dissiper", "transformer"], malus: ["harmoniser", "lier"], bonusText: "Sublime : Dissiper, Transformer", malusText: "Corrompt : Harmoniser, Lier" },
+            ombre: { name: "Ombre", align: 0, bonus: ["lier", "absorber"], malus: ["amplifier", "manifester"], bonusText: "Sublime : Lier, Absorber", malusText: "Corrompt : Amplifier, Manifester" },
+            acier: { name: "Acier", align: 1, bonus: ["proteger", "percevoir"], malus: ["amplifier", "manifester"], bonusText: "Sublime : Protéger, Percevoir", malusText: "Corrompt : Amplifier, Manifester" },
+            determination: { name: "Détermination", align: 0, bonus: ["mouvoir", "manifester"], malus: ["percevoir", "absorber"], bonusText: "Sublime : Mouvoir, Manifester", malusText: "Corrompt : Percevoir, Absorber" },
+            lumiere: { name: "Lumière", align: 3, bonus: ["harmoniser", "manifester"], malus: ["absorber", "transformer"], bonusText: "Sublime : Harmoniser, Manifester", malusText: "Corrompt : Absorber, Transformer" },
+            lien: { name: "Lien", align: 2, bonus: ["proteger", "harmoniser"], malus: ["dissiper", "mouvoir"], bonusText: "Sublime : Protéger, Harmoniser", malusText: "Corrompt : Dissiper, Mouvoir" }
         };
         const ATTR_COLORS = {
             'Présence': 'var(--saber-purple)',
@@ -3277,6 +3281,7 @@
             notes: "",
             saber: { colors: [], crystal: '', form: '', type: 'standard' },
             registre: "neutre",
+            resonance: 0,
             currentModal: null
         };
         function switchPage(pageName, tabEl) {
@@ -3872,6 +3877,7 @@
             const offCost = ctx.offAttribute ? 3 : 0;
             const coutTotal = Math.max(0, roll.coutDelta + offCost);   // pas de coût de base : Bad1 −Résonance +3 si incohérent
             consumeForce(coutTotal);
+            applySublimationDrift(ctx.etat);
             const attrLabel = capitalize(ctx.attrName);
             const etatLbl = NV_ETAT_LABEL[ctx.etat][0];
             const titre = ctx.verb.name + (target ? ' + ' + target.name : '');
@@ -3967,6 +3973,7 @@
             const offCost = ctxF.offAttribute ? 3 : 0;
             const forceCout = Math.max(0, rollF.coutDelta + offCost);  // pas de coût de base
             consumeForce(forceCout);
+            applySublimationDrift(ctxF.etat);
 
             // --- Partie Compétence (inchangée) ---
             const skillAttr = appState.attributes[skillAttrName];
@@ -4152,6 +4159,8 @@
             updateCrystal();
             updateForm();
             if (appState.registre) setRegistre(appState.registre);
+            resonanceValue = (typeof appState.resonance === 'number') ? appState.resonance : 0;
+            renderResonance();
         }
         function handleFileLoad(event) {
             const file = event.target.files[0];
@@ -4570,7 +4579,23 @@
 
         function applyResonanceDelta(delta) {
             resonanceValue = Math.max(-90, Math.min(100, resonanceValue + delta));
+            appState.resonance = resonanceValue;       // persiste avec la fiche
             renderResonance();
+        }
+
+        // Dérive automatique d'alignement quand un pouvoir est SUBLIMÉ par le registre actif.
+        // Se laisser porter par l'émotion déplace l'alignement selon l'orientation du registre
+        // (Ardeur −3 obscur … Lumière +3 lumineux ; registres neutres = aucun effet).
+        function applySublimationDrift(etat) {
+            if (etat !== 'sublime') return 0;
+            const reg = REGISTRES[appState.registre];
+            const delta = (reg && reg.align) || 0;
+            if (delta !== 0) {
+                applyResonanceDelta(delta);
+                const dir = delta < 0 ? '🔥 Corruption' : '✨ Résonance';
+                showNotification(`${dir} ${delta > 0 ? '+' + delta : delta} — sublimation « ${reg.name} »`);
+            }
+            return delta;
         }
 
         document.addEventListener('DOMContentLoaded', function () {
