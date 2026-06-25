@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Console MJ pour Aequor</title>
+    <title>Console MJ pour Demerit</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -863,7 +863,7 @@
         <header class="mj-header">
             <div class="titles">
                 <p class="eyebrow">Console du Maître de Jeu</p>
-                <h1>Suivi des <em>fiches</em></h1>
+                <h1>Suivi des <em>fiches</em> · Demerit</h1>
             </div>
             <a class="back-link" href="../index.html">← Retour au hub</a>
         </header>
@@ -871,7 +871,7 @@
         <!-- SYNCHRO GITHUB -->
         <section class="import-zone" style="border-color:rgba(74,155,110,0.35);">
             <h2>Sauvegardes en ligne (GitHub)</h2>
-            <p class="hint">Lit le dossier <code>saves/</code> du dépôt
+            <p class="hint">Lit le dossier <code>saves/Demerit/</code> du dépôt
                 <strong>Breaton/Saves-Fiches-JDR</strong> où les joueurs poussent leur fiche. Chaque rafraîchissement
                 récupère la dernière version de chacun. Le jeton de lecture n'est nécessaire que si le dépôt est privé
                 ou pour lever la limite de requêtes en mode automatique.
@@ -919,7 +919,7 @@
             </div>
         </section>
 
-        <p class="footer">Console MJ · Aequor : les données importées localement, aucune connexion requise</p>
+        <p class="footer">Console MJ · Demerit (Star Wars) · données importées localement</p>
     </div>
 
     <div id="toast"></div>
@@ -972,6 +972,11 @@
         const ATTR_LABEL = {
             puissance: 'Puissance', vivacite: 'Vivacité', precision: 'Précision', endurance: 'Endurance',
             intelligence: 'Intelligence', intuition: 'Intuition', volonte: 'Volonté', presence: 'Présence'
+        };
+
+        const REGISTRE_LABELS = {
+            neutre: '⚖️ Neutre', ardeur: '🔥 Ardeur', terreur: '😱 Terreur', lumiere: '✨ Lumière',
+            ombre: '🌑 Ombre', lien: '💗 Lien', mepris: '😤 Mépris'
         };
 
         // Compétences à valeur passive (mêmes mappings que la fiche joueur)
@@ -1049,7 +1054,7 @@
         /* ===================================================================
            OUTILS
         =================================================================== */
-        const STORE_KEY = 'aequor_mj_roster';
+        const STORE_KEY = 'demerit_mj_roster';
 
         function norm(s) {
             return (s || '').toString().toLowerCase()
@@ -1093,6 +1098,10 @@
                 convalescenceLabel: (w.convalescenceLabel || '').toString()
             })).filter(w => w.gravity > 0);
             const storedHealth = (obj.counters && obj.counters.health) ? obj.counters.health : null;
+            const forcePoints = (obj.counters && obj.counters.force) ? obj.counters.force : null;
+            const forceVerbs = (obj.forceVerbs || []).filter(v => v && v.name).map(v => ({ name: v.name, attr: v.attr || '', level: clampLvl(v.level) }));
+            const forceTargets = (obj.forceTargets || []).filter(t => t && t.name).map(t => ({ name: t.name, level: clampLvl(t.level) }));
+            const registre = (obj.registre || 'neutre').toString();
 
             return {
                 name,
@@ -1101,7 +1110,10 @@
                 skills,
                 wounds,
                 storedHealth,
-                surcharge: (obj.magic && obj.magic.surcharge) ? parseInt(obj.magic.surcharge) || 0 : 0,
+                forcePoints,
+                forceVerbs,
+                forceTargets,
+                registre,
                 vitesseBonus: parseInt(obj.vitesseBonus) || 0,
                 updatedAt: obj.ts || Date.now()
             };
@@ -1241,6 +1253,19 @@
             });
             if (!skillHtml) skillHtml = '<span class="skills-untrained">Aucune compétence.</span>';
 
+            // Force — verbes & cibles avec niveaux
+            const verbHtml = rec.forceVerbs.length
+                ? rec.forceVerbs.slice().sort((a, b) => b.level - a.level).map(v =>
+                    `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 2px;border-bottom:1px solid rgba(139,157,195,0.08);font-size:0.82rem;">
+                        <span>${v.name} <span style="opacity:.5;font-size:0.85em;">${v.attr || ''}</span></span>
+                        <strong style="color:#00a8ff;">Nv ${v.level}</strong>
+                    </div>`).join('')
+                : '<span class="skills-untrained">Aucun verbe.</span>';
+            const targetHtml = rec.forceTargets.length
+                ? rec.forceTargets.slice().sort((a, b) => b.level - a.level).map(t =>
+                    `<span style="display:inline-block;margin:2px 4px 2px 0;padding:3px 9px;border:1px solid rgba(0,168,255,0.3);border-radius:10px;font-size:0.78rem;color:var(--moonlight);">${t.name} <strong style="color:#00a8ff;">${t.level}</strong></span>`).join('')
+                : '<span class="skills-untrained">Aucune cible.</span>';
+
             const portrait = rec.image
                 ? `<img class="pcard-portrait" src="${rec.image}" alt="">`
                 : `<div class="pcard-portrait placeholder">👤</div>`;
@@ -1250,7 +1275,7 @@
                     ${portrait}
                     <div class="pcard-id">
                         <div class="pcard-name">${rec.name}</div>
-                        <div class="pcard-updated">${timeAgo(rec.updatedAt)}</div>
+                        <div class="pcard-updated">${REGISTRE_LABELS[rec.registre] || rec.registre} · ${timeAgo(rec.updatedAt)}</div>
                     </div>
                     <button class="pcard-remove" title="Retirer du suivi" onclick="removeRecord('${key}')">✕</button>
                 </div>
@@ -1265,18 +1290,22 @@
                         <div class="kv">${vitesse}<span style="font-size:0.5em;opacity:0.6;">ft</span></div>
                     </div>
                     <div class="keystat">
-                        <div class="kl">Surcharge</div>
-                        <div class="kv">${rec.surcharge}</div>
+                        <div class="kl">Points de Force</div>
+                        <div class="kv">${rec.forcePoints ? rec.forcePoints.current : '—'}<span style="font-size:0.5em;opacity:0.6;">${rec.forcePoints ? ' / ' + rec.forcePoints.max : ''}</span></div>
                     </div>
                 </div>
                 <button class="pcard-detail-toggle" onclick="document.getElementById('pc-${key}').classList.toggle('open')">
-                    Blessures · Attributs · Compétences ▾
+                    Blessures · Attributs · Force · Compétences ▾
                 </button>
                 <div class="pcard-detail">
                     <div class="detail-section-label">Blessures</div>
                     <div class="wound-list">${woundHtml}</div>
                     <div class="detail-section-label">Attributs</div>
                     <div class="attr-grid">${attrHtml}</div>
+                    <div class="detail-section-label">Verbes de Force</div>
+                    <div>${verbHtml}</div>
+                    <div class="detail-section-label">Cibles de Force</div>
+                    <div style="display:flex;flex-wrap:wrap;margin-top:2px;">${targetHtml}</div>
                     <div class="detail-section-label">Compétences <span style="text-transform:none;letter-spacing:0;color:var(--silver-mist);font-weight:400;">· niveau &amp; passif</span></div>
                     <div class="skill-head"><span>Compétence</span><span>Niveau</span><span>Attr. passif</span><span>Pass.</span></div>
                     <div class="skill-list">${skillHtml}</div>
@@ -1322,7 +1351,7 @@
         /* ===================================================================
            SYNCHRO GITHUB (lecture du dépôt de saves)
         =================================================================== */
-        const GH_CFG = { owner: 'Breaton', repo: 'Saves-Fiches-JDR', branch: 'main', dir: 'saves/Aequor' };
+        const GH_CFG = { owner: 'Breaton', repo: 'Saves-Fiches-JDR', branch: 'main', dir: 'saves/Demerit' };
         const GH_READ_KEY = 'gh_mj_read_token';
         let pollTimer = null;
 
