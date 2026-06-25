@@ -177,6 +177,44 @@
             position: relative;
         }
 
+        .private-roll-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 0.8em;
+            color: var(--silver-chrome);
+            cursor: pointer;
+            user-select: none;
+            margin-top: 10px;
+        }
+
+        .force-refill-btn {
+            display: block;
+            width: 100%;
+            margin: 0 0 16px;
+            padding: 8px 12px;
+            background: rgba(255, 204, 0, 0.08);
+            border: 1px solid rgba(255, 204, 0, 0.3);
+            border-radius: 4px;
+            color: #ffcc00;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.82em;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s;
+        }
+
+        .force-refill-btn:hover {
+            background: rgba(255, 204, 0, 0.16);
+            border-color: rgba(255, 204, 0, 0.55);
+        }
+
+        .private-roll-toggle input {
+            cursor: pointer;
+            accent-color: var(--saber-blue);
+        }
+
         .save-menu {
             display: none;
             position: fixed;
@@ -2508,7 +2546,8 @@
                         & Blessures</div>
                     <div class="elan-header">
                         <div class="elan-capacity"><span class="elan-capacity-label">CAPACITÉ :</span><input
-                                type="number" id="elan-max" value="10" min="1" onchange="updateElan()"></div>
+                                type="number" id="elan-max" value="10" min="1" readonly
+                                title="Auto : Endurance + Volonté" style="opacity:0.75;cursor:not-allowed;"></div>
                         <div class="elan-used"><span id="elan-current">10</span> / <span id="elan-total">10</span></div>
                     </div>
                     <div class="elan-bar">
@@ -2536,12 +2575,17 @@
                     <div class="card-title"><span class="icon">✧</span>Ressources</div>
                     <div class="counters-grid">
                         <div class="counter-item">
-                            <div class="counter-label"><span class="emoji">⚡</span> Points de Force</div>
+                            <div class="counter-label"><span class="emoji">⚡</span> Points de Force <span
+                                    style="font-size:0.72em;color:var(--silver-chrome);font-weight:400;">· auto :
+                                    Intuition
+                                    + Présence</span></div>
                             <div class="counter-controls">
                                 <button class="counter-btn minus" onclick="modifyCounter('force', -1)">−</button>
                                 <div class="counter-value"><input type="number" id="force-current" value="10" min="0"
                                         onchange="updateCounters()"><span class="counter-separator">/</span><input
-                                        type="number" id="force-max" value="10" min="1" onchange="updateCounters()">
+                                        type="number" id="force-max" value="10" min="1" readonly
+                                        title="Calculé automatiquement : contribution d'Intuition + contribution de Présence"
+                                        style="opacity:0.75;cursor:not-allowed;">
                                 </div>
                                 <button class="counter-btn plus" onclick="modifyCounter('force', 1)">+</button>
                             </div>
@@ -2647,6 +2691,8 @@
                         </div>
                         <button class="roll-btn skill" id="simple-roll-btn" onclick="rollSimple()" disabled>🎲 LANCER LE
                             JET</button>
+                        <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
+                                onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
                     </div>
                 </div>
             </div>
@@ -2692,6 +2738,8 @@
                     </div>
                     <button class="roll-btn skill" id="skill-page-roll-btn" onclick="rollSkillPage()" disabled>🎲 LANCER
                         LE JET</button>
+                    <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
+                            onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
                     <div class="roll-info">
                         <div class="roll-info-title">MÉCANIQUE</div>
                         <div class="roll-info-content">L'attribut détermine le seuil de réussite sur les d10.<br>La
@@ -2795,8 +2843,11 @@
                 </div>
 
                 <div id="force-pa-readout"
-                    style="margin: 0 0 16px; padding: 10px 14px; background: rgba(255,204,0,0.06); border: 1px solid rgba(255,204,0,0.2); border-radius: 4px; font-size: 0.85em; color: var(--light-steel);">
+                    style="margin: 0 0 8px; padding: 10px 14px; background: rgba(255,204,0,0.06); border: 1px solid rgba(255,204,0,0.2); border-radius: 4px; font-size: 0.85em; color: var(--light-steel);">
                 </div>
+                <button class="force-refill-btn" onclick="refillForce()"
+                    title="Rétablit les Points de Force au maximum (repos / méditation). Synchronise le compteur de la page Personnage.">↻
+                    Régénérer les Points de Force</button>
 
                 <div class="force-roll-tabs">
                     <button class="force-roll-tab active" onclick="switchForceRollMode('simple', this)">⚡ Force
@@ -2849,6 +2900,8 @@
                             style="margin-top: 16px;">
                             ⚡ Lancer le jet de Force
                         </button>
+                        <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
+                                onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">MÉCANIQUE</div>
@@ -2857,8 +2910,8 @@
                             <strong>+3 PA</strong> si différent du verbe). Le <strong>registre actif</strong> sublime /
                             laisse composé / corrompt le dé selon le verbe. Le jet produit une
                             <strong>Puissance</strong>
-                            (+ cascade) et d'éventuels <strong>effets néfastes</strong>. Coût PA = Bad1 (−1 si
-                            Résonance)
+                            (+ cascade) et d'éventuels <strong>effets néfastes</strong>. Coût PA = nombre de dés + Bad1
+                            − (Résonance + Transcendance)
                             + 3 si attribut incohérent.
                         </div>
                     </div>
@@ -2938,13 +2991,16 @@
                         style="margin-top: 20px;">
                         ⚡⚔ Lancer le jet Force + Compétence
                     </button>
+                    <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
+                            onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">MÉCANIQUE</div>
                         <div class="roll-info-content">La <strong>Force</strong> roule le nombre de dés choisi (défaut
                             = niveau du verbe), qualité = attribut (modifiable, +3 PA si différent du verbe). Elle
                             produit
                             une <strong>Puissance</strong> (+ Mod. Puissance) qui s'<strong>ajoute au jet de
-                                compétence</strong>. Bad1/Bad2 génèrent surcoût et effet incontrôlé.</div>
+                                compétence</strong>. Coût PA = nombre de dés + Bad1 − (Résonance + Transcendance) (+3
+                            hors-attribut) ; Bad2 = effet incontrôlé.</div>
                     </div>
                 </div>
             </div>
@@ -3231,7 +3287,7 @@
             terreur: { name: "Terreur", align: -2, bonus: ["percevoir", "proteger"], malus: ["manifester", "lier"], bonusText: "Sublime : Percevoir, Protéger", malusText: "Corrompt : Manifester, Lier" },
             mepris: { name: "Mépris", align: -2, bonus: ["dissiper", "transformer"], malus: ["harmoniser", "lier"], bonusText: "Sublime : Dissiper, Transformer", malusText: "Corrompt : Harmoniser, Lier" },
             ombre: { name: "Ombre", align: 0, bonus: ["lier", "absorber"], malus: ["amplifier", "manifester"], bonusText: "Sublime : Lier, Absorber", malusText: "Corrompt : Amplifier, Manifester" },
-            acier: { name: "Acier", align: 1, bonus: ["proteger", "percevoir"], malus: ["amplifier", "manifester"], bonusText: "Sublime : Protéger, Percevoir", malusText: "Corrompt : Amplifier, Manifester" },
+            acier: { name: "Acier", align: 1, bonus: ["proteger", "percevoir"], malus: ["Absorber", "manifester"], bonusText: "Sublime : Protéger, Percevoir", malusText: "Corrompt : Amplifier, Manifester" },
             determination: { name: "Détermination", align: 0, bonus: ["mouvoir", "manifester"], malus: ["percevoir", "absorber"], bonusText: "Sublime : Mouvoir, Manifester", malusText: "Corrompt : Percevoir, Absorber" },
             lumiere: { name: "Lumière", align: 3, bonus: ["harmoniser", "manifester"], malus: ["absorber", "transformer"], bonusText: "Sublime : Harmoniser, Manifester", malusText: "Corrompt : Absorber, Transformer" },
             lien: { name: "Lien", align: 2, bonus: ["proteger", "harmoniser"], malus: ["dissiper", "mouvoir"], bonusText: "Sublime : Protéger, Harmoniser", malusText: "Corrompt : Dissiper, Mouvoir" }
@@ -3282,6 +3338,7 @@
             saber: { colors: [], crystal: '', form: '', type: 'standard' },
             registre: "neutre",
             resonance: 0,
+            privateRoll: false,
             currentModal: null
         };
         function switchPage(pageName, tabEl) {
@@ -3319,6 +3376,8 @@
                 el.innerHTML = `<span style="color: ${level.color}">${level.name}</span><sub style="opacity: 0.6; font-size: 0.6em; margin-left: 2px;">${val}</sub>`;
                 el.title = `Niveau ${val} • ${level.faces} faces • +${level.bonus} bonus`;
             });
+            if (typeof updateForceMax === 'function') updateForceMax();
+            if (typeof updateElan === 'function') updateElan();
         }
         function modifyCounter(type, delta) {
             const counter = appState.counters[type];
@@ -3342,7 +3401,9 @@
             document.getElementById(`${type}-bar`).style.width = `${(counter.current / counter.max) * 100}%`;
         }
         function updateElan() {
-            appState.counters.health.max = parseInt(document.getElementById('elan-max').value) || 10;
+            appState.counters.health.max = (ATTR_CONTRIB[appState.attributes.endurance] || 5) + (ATTR_CONTRIB[appState.attributes.volonte] || 5);
+            const el = document.getElementById('elan-max');
+            if (el) el.value = appState.counters.health.max;
             recalcHealthFromWounds();
             syncElanFromHealth();
         }
@@ -3724,7 +3785,7 @@
         // [Bad2, Bad1, Vide, Succès, Résonance, Transcendance] sur 12
         const FORCE_DIE_TABLE = {
             1: [2, 2, 5, 3, 0, 0], 2: [2, 1, 5, 4, 0, 0], 3: [1, 1, 5, 4, 1, 0], 4: [1, 1, 4, 5, 1, 0],
-            5: [0, 1, 4, 5, 2, 0], 6: [0, 1, 3, 6, 2, 0], 7: [0, 0, 3, 6, 2, 1], 8: [0, 0, 2, 6, 2, 2]
+            5: [0, 1, 4, 6, 1, 0], 6: [0, 1, 3, 7, 1, 0], 7: [0, 0, 3, 7, 2, 0], 8: [0, 0, 2, 7, 2, 1]
         };
         const NV_FACE_ORDER = ['Bad2', 'Bad1', 'Vide', 'Succès', 'Résonance', 'Transcendance'];
         const NV_FACE_STYLE = { 'Transcendance': '#ffcc00', 'Résonance': '#b366ff', 'Succès': '#3fb950', 'Vide': '#8b949e', 'Bad1': '#ff9944', 'Bad2': '#ff4444' };
@@ -3784,20 +3845,43 @@
                 `<strong style="color:${col};font-size:1.15em;">${c.current}</strong> <span style="color:var(--silver-chrome)">/ ${c.max}</span>` +
                 `<div style="height:5px;background:rgba(255,255,255,0.08);border-radius:3px;margin-top:6px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${col};border-radius:3px;transition:width .3s;"></div></div>`;
         }
+        // Courbe de contribution partagée : Élan = Endurance + Volonté ; Points de Force = (Intuition + Présence) × multiplicateur
+        const ATTR_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
+        const FORCE_POOL_MULT = 3;   // réserve plus large : un sort coûte son nombre de dés, il faut pouvoir en lancer beaucoup
+        function updateForceMax() {
+            const c = appState.counters.force;
+            const newMax = ((ATTR_CONTRIB[appState.attributes.intuition] || 5) + (ATTR_CONTRIB[appState.attributes.presence] || 5)) * FORCE_POOL_MULT;
+            const wasFull = c.current >= c.max;       // si la réserve était pleine, elle suit le nouveau max
+            c.max = newMax;
+            c.current = wasFull ? newMax : Math.min(c.current, newMax);
+            updateCounterDisplay('force');
+            updateForcePA();
+        }
+        // Rétablit les Points de Force au maximum (repos / méditation) — met à jour le compteur ET le bandeau
+        function refillForce() {
+            const c = appState.counters.force;
+            c.current = c.max;
+            updateCounterDisplay('force');
+            updateForcePA();
+            showNotification('⚡ Points de Force rétablis au maximum');
+        }
         // Lance ctx.nDice dés et résout la Puissance, la cascade, le coût et l'effet incontrôlé
         function nvRoll(ctx) {
-            let rolled = [], puissance = 0, bad1 = 0, bad2 = 0, cascade = 0, resonated = false;
+            let rolled = [], puissance = 0, bad1 = 0, bad2 = 0, cascade = 0, nRes = 0, nTr = 0;
             for (let i = 0; i < ctx.nDice; i++) {
                 const f = nvRollDie(ctx.faces); rolled.push(f);
                 if (f === 'Succès') puissance++;
-                else if (f === 'Résonance') { puissance++; cascade += 1; resonated = true; }
-                else if (f === 'Transcendance') { puissance++; cascade += 2; resonated = true; }
+                else if (f === 'Résonance') { puissance++; cascade += 1; nRes++; }
+                else if (f === 'Transcendance') { puissance++; cascade += 2; nTr++; }
                 else if (f === 'Bad1') bad1++;
                 else if (f === 'Bad2') bad2++;
             }
+            // Dés de cascade : simples succès (d12 ≥ 5). Ils ne produisent JAMAIS de Résonance ni de Transcendance,
+            // donc ils ne re-cascadent pas et ne réduisent pas le coût.
             let casc = [];
             for (let i = 0; i < cascade; i++) { const s = (Math.floor(Math.random() * 12) + 1) >= 5; casc.push(s); if (s) puissance++; }
-            return { rolled, casc, puissance, bad1, bad2, coutDelta: bad1 - (resonated ? 1 : 0), effet: bad2 > 0 ? 2 * bad2 : 0, etat: ctx.etat };
+            // Coût : nombre de dés − (Résonance + Transcendance). Bad1 ajoute ; attribut incohérent ajoute (+3) en amont.
+            return { rolled, casc, puissance, bad1, bad2, nRes, nTr, coutDelta: bad1 - (nRes + nTr), effet: bad2 > 0 ? 2 * bad2 : 0, etat: ctx.etat };
         }
         // Choisir un verbe pré-remplit son attribut par défaut + son niveau en dés (modifiables ensuite)
         function onForceSimpleVerbChange() {
@@ -3875,7 +3959,7 @@
             const roll = nvRoll(ctx);
             const puissance = roll.puissance + bonus;
             const offCost = ctx.offAttribute ? 3 : 0;
-            const coutTotal = Math.max(0, roll.coutDelta + offCost);   // pas de coût de base : Bad1 −Résonance +3 si incohérent
+            const coutTotal = Math.max(0, ctx.nDice + roll.coutDelta + offCost);   // base = nombre de dés ; + Bad1, −1 si Résonance, +3 si attribut incohérent
             consumeForce(coutTotal);
             applySublimationDrift(ctx.etat);
             const attrLabel = capitalize(ctx.attrName);
@@ -3971,7 +4055,7 @@
             const rollF = nvRoll(ctxF);
             const spellPuissance = rollF.puissance + puissanceMod;     // Puissance du sort
             const offCost = ctxF.offAttribute ? 3 : 0;
-            const forceCout = Math.max(0, rollF.coutDelta + offCost);  // pas de coût de base
+            const forceCout = Math.max(0, ctxF.nDice + rollF.coutDelta + offCost);  // base = nombre de dés + modificateurs
             consumeForce(forceCout);
             applySublimationDrift(ctxF.etat);
 
@@ -4161,6 +4245,7 @@
             if (appState.registre) setRegistre(appState.registre);
             resonanceValue = (typeof appState.resonance === 'number') ? appState.resonance : 0;
             renderResonance();
+            setPrivateRoll(!!appState.privateRoll);
         }
         function handleFileLoad(event) {
             const file = event.target.files[0];
@@ -4369,7 +4454,12 @@
         // ========== DISCORD WEBHOOK ==========
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1509003659407524041/plYUTg3J6tuwaSDM32dEhjjH3n9kj9JQm1e-Okit0vFT66ivfBuIsH6DULNJgkIR9iiN';
 
+        function setPrivateRoll(checked) {
+            appState.privateRoll = !!checked;
+            document.querySelectorAll('.private-roll-check').forEach(cb => { cb.checked = appState.privateRoll; });
+        }
         function sendDiscordRoll(skillName, baseName, total, attrName, details) {
+            if (appState.privateRoll) return;   // jets privés : aucun envoi Discord
             const charName = appState.profile.name || 'Personnage';
             const charImage = appState.profile.image;
             const base = baseName || skillName;
