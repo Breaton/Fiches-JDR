@@ -2576,8 +2576,7 @@
                     <div class="counters-grid">
                         <div class="counter-item">
                             <div class="counter-label"><span class="emoji">⚡</span> Points de Force <span
-                                    style="font-size:0.72em;color:var(--silver-chrome);font-weight:400;">· auto :
-                                    Intuition
+                                    style="font-size:0.72em;color:var(--silver-chrome);font-weight:400;">· auto : Intuition
                                     + Présence</span></div>
                             <div class="counter-controls">
                                 <button class="counter-btn minus" onclick="modifyCounter('force', -1)">−</button>
@@ -2757,7 +2756,7 @@
                 <div class="card-title">
                     <span class="icon"
                         style="background: linear-gradient(135deg, rgba(100,160,255,0.15), rgba(200,80,80,0.15)); color: #b0a0d0;">☯</span>
-                    Résonance &amp; Corruption
+                    Harmonie &amp; Corruption
                 </div>
 
                 <div class="resonance-gauge-wrap">
@@ -2790,7 +2789,7 @@
                             Corrompre</button>
                         <button class="resonance-apply-btn light"
                             onclick="applyResonanceDelta(+Math.abs(parseInt(document.getElementById('res-delta').value)||1))">+
-                            Résonance</button>
+                            Harmonie</button>
                     </div>
                     <button class="resonance-btn light" onclick="applyResonanceDelta(+1)" title="+1">+</button>
                 </div>
@@ -2910,7 +2909,8 @@
                             <strong>+3 PA</strong> si différent du verbe). Le <strong>registre actif</strong> sublime /
                             laisse composé / corrompt le dé selon le verbe. Le jet produit une
                             <strong>Puissance</strong>
-                            (+ cascade) et d'éventuels <strong>effets néfastes</strong>. Coût PA = nombre de dés + Bad1
+                            (+ cascade) et d'éventuels <strong>effets néfastes</strong>. Coût PA = nombre de dés +
+                            Dissonance
                             − (Résonance + Transcendance)
                             + 3 si attribut incohérent.
                         </div>
@@ -2999,8 +2999,9 @@
                             = niveau du verbe), qualité = attribut (modifiable, +3 PA si différent du verbe). Elle
                             produit
                             une <strong>Puissance</strong> (+ Mod. Puissance) qui s'<strong>ajoute au jet de
-                                compétence</strong>. Coût PA = nombre de dés + Bad1 − (Résonance + Transcendance) (+3
-                            hors-attribut) ; Bad2 = effet incontrôlé.</div>
+                                compétence</strong>. Coût PA = nombre de dés + Dissonance − (Résonance + Transcendance)
+                            (+3
+                            hors-attribut) ; Rupture = effet incontrôlé.</div>
                     </div>
                 </div>
             </div>
@@ -3287,7 +3288,7 @@
             terreur: { name: "Terreur", align: -2, bonus: ["percevoir", "proteger"], malus: ["manifester", "lier"], bonusText: "Sublime : Percevoir, Protéger", malusText: "Corrompt : Manifester, Lier" },
             mepris: { name: "Mépris", align: -2, bonus: ["dissiper", "transformer"], malus: ["harmoniser", "lier"], bonusText: "Sublime : Dissiper, Transformer", malusText: "Corrompt : Harmoniser, Lier" },
             ombre: { name: "Ombre", align: 0, bonus: ["lier", "absorber"], malus: ["amplifier", "manifester"], bonusText: "Sublime : Lier, Absorber", malusText: "Corrompt : Amplifier, Manifester" },
-            acier: { name: "Acier", align: 1, bonus: ["proteger", "percevoir"], malus: ["Absorber", "manifester"], bonusText: "Sublime : Protéger, Percevoir", malusText: "Corrompt : Amplifier, Manifester" },
+            acier: { name: "Acier", align: 1, bonus: ["proteger", "percevoir"], malus: ["amplifier", "manifester"], bonusText: "Sublime : Protéger, Percevoir", malusText: "Corrompt : Amplifier, Manifester" },
             determination: { name: "Détermination", align: 0, bonus: ["mouvoir", "manifester"], malus: ["percevoir", "absorber"], bonusText: "Sublime : Mouvoir, Manifester", malusText: "Corrompt : Percevoir, Absorber" },
             lumiere: { name: "Lumière", align: 3, bonus: ["harmoniser", "manifester"], malus: ["absorber", "transformer"], bonusText: "Sublime : Harmoniser, Manifester", malusText: "Corrompt : Absorber, Transformer" },
             lien: { name: "Lien", align: 2, bonus: ["proteger", "harmoniser"], malus: ["dissiper", "mouvoir"], bonusText: "Sublime : Protéger, Harmoniser", malusText: "Corrompt : Dissiper, Mouvoir" }
@@ -3792,6 +3793,9 @@
         const NV_ATTR_KEY = { 'Présence': 'presence', 'Intelligence': 'intelligence', 'Intuition': 'intuition', 'Volonté': 'volonte' };
         const NV_ETAT_LABEL = { compose: ['Composé', '#8b949e'], sublime: ['Sublimé', '#ffcc00'], corrompu: ['Corrompu', '#ff4444'] };
         const NV_FACE_GLYPH = { 'Transcendance': '✦', 'Résonance': '◈', 'Succès': '✓', 'Vide': '·', 'Bad1': '▲', 'Bad2': '✕' };
+        // Libellés affichés (les IDs internes restent Bad1/Bad2 pour le moteur) :
+        // Dissonance = miroir négatif de Résonance (la Force se désaccorde, +coût) ; Rupture = la Force se déchire (effet incontrôlé).
+        const NV_FACE_LABEL = { 'Transcendance': 'Transcendance', 'Résonance': 'Résonance', 'Succès': 'Succès', 'Vide': 'Vide', 'Bad1': 'Dissonance', 'Bad2': 'Rupture' };
         // L'état émotionnel dépend du VERBE : s'il est favorisé (bonus) par le registre actif → sublime ;
         // s'il est pénalisé (malus) → corrompu ; sinon composé. (Réutilise les listes de REGISTRES.)
         function nvResolveEtat(registreId, verbId) {
@@ -3866,8 +3870,7 @@
             showNotification('⚡ Points de Force rétablis au maximum');
         }
         // Lance ctx.nDice dés et résout la Puissance, la cascade, le coût et l'effet incontrôlé
-        function nvRoll(ctx) {
-            let rolled = [], puissance = 0, bad1 = 0, bad2 = 0, cascade = 0, nRes = 0, nTr = 0;
+        function nvRoll(ctx) {            let rolled = [], puissance = 0, bad1 = 0, bad2 = 0, cascade = 0, nRes = 0, nTr = 0;
             for (let i = 0; i < ctx.nDice; i++) {
                 const f = nvRollDie(ctx.faces); rolled.push(f);
                 if (f === 'Succès') puissance++;
@@ -3876,12 +3879,25 @@
                 else if (f === 'Bad1') bad1++;
                 else if (f === 'Bad2') bad2++;
             }
-            // Dés de cascade : simples succès (d12 ≥ 5). Ils ne produisent JAMAIS de Résonance ni de Transcendance,
-            // donc ils ne re-cascadent pas et ne réduisent pas le coût.
-            let casc = [];
-            for (let i = 0; i < cascade; i++) { const s = (Math.floor(Math.random() * 12) + 1) >= 5; casc.push(s); if (s) puissance++; }
-            // Coût : nombre de dés − (Résonance + Transcendance). Bad1 ajoute ; attribut incohérent ajoute (+3) en amont.
-            return { rolled, casc, puissance, bad1, bad2, nRes, nTr, coutDelta: bad1 - (nRes + nTr), effet: bad2 > 0 ? 2 * bad2 : 0, etat: ctx.etat };
+            // Capstones d'alignement : à ±90, sublimer un registre de SON camp débloque la RECASCADE (un dé ≥ 9 relance un dé).
+            const reg = REGISTRES[appState.registre] || { align: 0 };
+            const subl = ctx.etat === 'sublime';
+            const communion = subl && reg.align > 0 && resonanceValue >= 90;    // Harmonie : la cascade allège le coût (plancher 0)
+            const deferlante = subl && reg.align < 0 && resonanceValue <= -90;  // Corruption : la cascade ajoute de la Puissance
+            const recascade = communion || deferlante;
+
+            // Dés de cascade : succès à ≥ 5. Sans capstone, pas de recascade ; avec capstone, un ≥ 9 relance un dé.
+            let casc = [], cascReduc = 0, pool = cascade, guard = 0;
+            while (pool > 0 && guard < 500) {
+                pool--; guard++;
+                const d = Math.floor(Math.random() * 12) + 1;
+                const success = d >= 5;
+                casc.push(success);
+                if (success) { puissance++; if (communion) cascReduc++; }   // cascade : toujours +Puissance ; Communion ajoute −coût par-dessus
+                if (recascade && d >= 9) pool++;                              // recascade des deux côtés (Communion ET Déferlante)
+            }
+            // Coût : nombre de dés − (Résonance + Transcendance) − allègement Communion. Bad1 ajoute ; +3 hors-attribut en amont.
+            return { rolled, casc, puissance, bad1, bad2, nRes, nTr, communion, deferlante, cascReduc, coutDelta: bad1 - (nRes + nTr) - cascReduc, effet: bad2 > 0 ? 2 * bad2 : 0, etat: ctx.etat };
         }
         // Choisir un verbe pré-remplit son attribut par défaut + son niveau en dés (modifiables ensuite)
         function onForceSimpleVerbChange() {
@@ -3911,7 +3927,7 @@
             const [lbl, col] = NV_ETAT_LABEL[ctx.etat];
             const reg = REGISTRES[appState.registre] ? REGISTRES[appState.registre].name : 'Neutre';
             const attrLabel = capitalize(ctx.attrName);
-            const facesTxt = NV_FACE_ORDER.map((f, i) => ctx.faces[i] ? `<span style="color:${NV_FACE_STYLE[f]}">${ctx.faces[i]} ${f}</span>` : null).filter(Boolean).join(' · ');
+            const facesTxt = NV_FACE_ORDER.map((f, i) => ctx.faces[i] ? `<span style="color:${NV_FACE_STYLE[f]}">${ctx.faces[i]} ${NV_FACE_LABEL[f]}</span>` : null).filter(Boolean).join(' · ');
             prev.innerHTML = `${ctx.verb.name} → <strong>${attrLabel} ${ctx.attrValue}</strong> (${ctx.attrLevel.name}) · <strong>${ctx.nDice}</strong> dé${ctx.nDice > 1 ? 's' : ''}${ctx.offAttribute ? ' <span style="color:#ff9944">(attribut différent +3 PA)</span>' : ''}<br>` +
                 `Registre <strong>${reg}</strong> → verbe <span class="etat-badge" style="background:${col}22;color:${col}">${lbl}</span><br>` +
                 `<span style="font-size:0.9em">Dé : ${facesTxt}</span>`;
@@ -3919,7 +3935,7 @@
         // ----- Affichage via la modale de résultat existante -----
         function nvDieEl(face, i) {
             const d = document.createElement('div');
-            d.className = 'die'; d.textContent = NV_FACE_GLYPH[face] || '?'; d.title = face;
+            d.className = 'die'; d.textContent = NV_FACE_GLYPH[face] || '?'; d.title = NV_FACE_LABEL[face] || face;
             d.style.animationDelay = `${i * 0.08}s`;
             d.style.background = NV_FACE_STYLE[face] + '22'; d.style.color = NV_FACE_STYLE[face];
             d.style.border = '1px solid ' + NV_FACE_STYLE[face];
@@ -3937,12 +3953,17 @@
             document.getElementById('result-subtitle').textContent = data.subtitle;
             const container = document.getElementById('dice-container'); container.innerHTML = '';
             r.rolled.forEach((f, i) => container.appendChild(nvDieEl(f, i)));
-            r.casc.forEach((s, i) => { const d = nvDieEl(s ? 'Succès' : 'Vide', r.rolled.length + i); d.style.opacity = '0.5'; container.appendChild(d); });
-            setStatLabels(['Coût PA', 'Effet incontrôlé', 'État', 'Cascade', 'Faces B1 / B2']);
+            r.casc.forEach((s, i) => {
+                const d = nvDieEl(s ? 'Succès' : 'Vide', r.rolled.length + i); d.style.opacity = '0.5';
+                container.appendChild(d);
+            });
+            const cascSucc = r.casc.filter(Boolean).length;
+            const cascTxt = cascSucc === 0 ? '—' : (r.communion ? `${cascSucc} → +${cascSucc} P & −${cascSucc} PA` : `${cascSucc} → +${cascSucc} Puiss.`);
+            setStatLabels(['Coût PA', 'Effet incontrôlé', 'État', 'Cascade', 'Dissonance / Rupture']);
             document.getElementById('stat-successes').textContent = data.coutTotal;
             document.getElementById('stat-failures').textContent = r.effet > 0 ? r.effet : '—';
             document.getElementById('stat-explosions').textContent = etatLbl;
-            document.getElementById('stat-attribute-bonus').textContent = r.casc.length;
+            document.getElementById('stat-attribute-bonus').textContent = cascTxt;
             document.getElementById('stat-skill-bonus').textContent = `${r.bad1} / ${r.bad2}`;
             document.getElementById('result-total-label').textContent = 'PUISSANCE DU SORT';
             document.getElementById('result-total').textContent = data.puissance;
@@ -3966,9 +3987,10 @@
             const etatLbl = NV_ETAT_LABEL[ctx.etat][0];
             const titre = ctx.verb.name + (target ? ' + ' + target.name : '');
             const offTxt = ctx.offAttribute ? ' · attribut différent +3 PA' : '';
+            const capTxt = roll.communion ? ' · ☀️ COMMUNION (cascade → coût allégé)' : roll.deferlante ? ' · 🌑 DÉFERLANTE (cascade → +Puissance)' : '';
             displayForceResult({
                 title: titre,
-                subtitle: `${attrLabel} ${ctx.attrValue} (${ctx.attrLevel.name}) · ${ctx.nDice} dés · ${REGISTRES[appState.registre].name} → ${etatLbl}${offTxt}`,
+                subtitle: `${attrLabel} ${ctx.attrValue} (${ctx.attrLevel.name}) · ${ctx.nDice} dés · ${REGISTRES[appState.registre].name} → ${etatLbl}${offTxt}${capTxt}`,
                 roll, puissance, coutTotal
             });
             sendDiscordRoll(titre, null, puissance, attrLabel, { successes: roll.puissance, attrBonus: 0, bonus });
@@ -4075,7 +4097,7 @@
 
             displayConjointResult({
                 title: `${ctxF.verb.name}${target ? ' + ' + target.name : ''} → ${skill.name}`,
-                subtitle: `Force: ${capitalize(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${REGISTRES[appState.registre].name} → ${NV_ETAT_LABEL[ctxF.etat][0]} | Compétence: ${capitalize(skillAttrName)}`,
+                subtitle: `Force: ${capitalize(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${REGISTRES[appState.registre].name} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence: ${capitalize(skillAttrName)}`,
                 forceRoll: rollF,
                 forceEtat: ctxF.etat,
                 spellPuissance,
@@ -4135,7 +4157,10 @@
             const forceDiceDiv = document.createElement('div');
             forceDiceDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; width: 100%;';
             data.forceRoll.rolled.forEach((f, i) => forceDiceDiv.appendChild(nvDieEl(f, i)));
-            data.forceRoll.casc.forEach((s, i) => { const d = nvDieEl(s ? 'Succès' : 'Vide', data.forceRoll.rolled.length + i); d.style.opacity = '0.5'; forceDiceDiv.appendChild(d); });
+            data.forceRoll.casc.forEach((s, i) => {
+                const d = nvDieEl(s ? 'Succès' : 'Vide', data.forceRoll.rolled.length + i); d.style.opacity = '0.5';
+                forceDiceDiv.appendChild(d);
+            });
             container.appendChild(forceDiceDiv);
             // Compétence — dés classiques
             const skillLabel = document.createElement('div');
@@ -4160,7 +4185,10 @@
             const forceSummary = document.createElement('div');
             forceSummary.style.cssText = 'width:100%;margin-top:12px;padding:8px 12px;border-radius:4px;background:rgba(107,63,160,0.10);border:1px solid rgba(107,63,160,0.25);text-align:center;font-size:0.82rem;color:var(--saber-purple);font-family:var(--font-body);';
             const extra = data.forceRoll.effet > 0 ? ` · <span style="color:#ff4444">⚠ effet incontrôlé puissance ${data.forceRoll.effet}</span>` : '';
-            forceSummary.innerHTML = `<strong>⚡ Sort</strong> (${etatLbl}) : <strong style="color:var(--saber-purple)">${data.spellPuissance} Puissance</strong> · coût ${data.forceCout} PA${extra}<br><span style="color:var(--silver-chrome)">Puissance ajoutée au jet de compétence : +${data.spellPuissance}</span>`;
+            const cSucc = data.forceRoll.casc.filter(Boolean).length;
+            const capNote = data.forceRoll.communion ? `<br><span style="color:#ffcc00">☀️ Communion : cascade ${cSucc} → +${cSucc} Puissance & −${cSucc} PA</span>`
+                : data.forceRoll.deferlante ? `<br><span style="color:#c06040">🌑 Déferlante : cascade ${cSucc} → +${cSucc} Puissance</span>` : '';
+            forceSummary.innerHTML = `<strong>⚡ Sort</strong> (${etatLbl}) : <strong style="color:var(--saber-purple)">${data.spellPuissance} Puissance</strong> · coût ${data.forceCout} PA${extra}${capNote}<br><span style="color:var(--silver-chrome)">Puissance ajoutée au jet de compétence : +${data.spellPuissance}</span>`;
             container.appendChild(forceSummary);
             // Stats compétence + total
             document.getElementById('stat-successes').textContent = data.skillSuccesses;
@@ -4519,41 +4547,42 @@
             { threshold: -20, label: 'Corruption Émergente', color: '#808830', bg: 'rgba(128,136,48,0.10)' },
             { threshold: -10, label: 'Corruption Naissante', color: '#909090', bg: 'rgba(144,144,144,0.08)' },
             { threshold: 0, label: 'Équilibre', color: '#b0a0d0', bg: 'rgba(176,160,208,0.08)' },
-            { threshold: 10, label: 'Résonance Naissante', color: '#8090a8', bg: 'rgba(128,144,168,0.08)' },
-            { threshold: 20, label: 'Résonance Émergente', color: '#7098b8', bg: 'rgba(112,152,184,0.10)' },
-            { threshold: 30, label: 'Résonance Ancrée', color: '#60a8c8', bg: 'rgba(96,168,200,0.10)' },
-            { threshold: 40, label: 'Résonance Établie', color: '#50a8d0', bg: 'rgba(80,168,208,0.10)' },
-            { threshold: 50, label: 'Résonance Profonde', color: '#40a0e0', bg: 'rgba(64,160,224,0.10)' },
-            { threshold: 60, label: 'Résonance Rayonnante', color: '#3898e8', bg: 'rgba(56,152,232,0.10)' },
-            { threshold: 70, label: 'Résonance Ascendante', color: '#3090f0', bg: 'rgba(48,144,240,0.10)' },
-            { threshold: 80, label: 'Résonance Sanctifiée', color: '#2888f8', bg: 'rgba(40,136,248,0.10)' },
-            { threshold: 90, label: 'Résonance Transcendante', color: '#6ab0ff', bg: 'rgba(106,176,255,0.12)' },
-            { threshold: 100, label: 'Résonance Absolue', color: '#90d0ff', bg: 'rgba(144,208,255,0.14)' },
+            { threshold: 10, label: 'Harmonie Naissante', color: '#8090a8', bg: 'rgba(128,144,168,0.08)' },
+            { threshold: 20, label: 'Harmonie Émergente', color: '#7098b8', bg: 'rgba(112,152,184,0.10)' },
+            { threshold: 30, label: 'Harmonie Ancrée', color: '#60a8c8', bg: 'rgba(96,168,200,0.10)' },
+            { threshold: 40, label: 'Harmonie Établie', color: '#50a8d0', bg: 'rgba(80,168,208,0.10)' },
+            { threshold: 50, label: 'Harmonie Profonde', color: '#40a0e0', bg: 'rgba(64,160,224,0.10)' },
+            { threshold: 60, label: 'Harmonie Rayonnante', color: '#3898e8', bg: 'rgba(56,152,232,0.10)' },
+            { threshold: 70, label: 'Harmonie Ascendante', color: '#3090f0', bg: 'rgba(48,144,240,0.10)' },
+            { threshold: 80, label: 'Harmonie Sanctifiée', color: '#2888f8', bg: 'rgba(40,136,248,0.10)' },
+            { threshold: 90, label: 'Harmonie Transcendante', color: '#6ab0ff', bg: 'rgba(106,176,255,0.12)' },
+            { threshold: 100, label: 'Harmonie Absolue', color: '#90d0ff', bg: 'rgba(144,208,255,0.14)' },
         ];
 
         // group = key pour dédupliquer les effets mis à jour
         const RESONANCE_EFFECTS = [
-            // Côté obscur (valeurs négatives), du plus proche de 0 au plus loin
-            { threshold: -20, group: 'auth_intimidate', side: 'dark', icon: '🗣', text: '+1 sur les jets d\'Autorité (intimidation)' },
-            { threshold: -30, group: 'auth_intimidate', side: 'dark', icon: '🗣', text: '+2 sur les jets d\'Autorité (intimidation)', updates: true },
-            { threshold: -40, group: 'cout_dark40', side: 'dark', icon: '⚡', text: 'Pouvoirs obscurs −1 coût · Pouvoirs lumineux +1 coût' },
-            { threshold: -40, group: 'animaux', side: 'dark', icon: '🐾', text: 'Animaux méfiants' },
-            { threshold: -50, group: 'registres_dark', side: 'dark', icon: '🔥', text: 'Modificateurs des registres Ardeur et Mépris +1' },
-            { threshold: -60, group: 'degats_min', side: 'dark', icon: '🛡', text: 'Pouvoirs obscurs adverses : plus de dégâts minimum garantis' },
-            { threshold: -60, group: 'soins', side: 'dark', icon: '💊', text: 'Pouvoirs de soin −2 de Puissance' },
-            { threshold: -70, group: 'cout_dark40', side: 'dark', icon: '⚡', text: 'Pouvoirs obscurs −2 coût · Pouvoirs lumineux +2 coût', updates: true },
-            { threshold: -80, group: 'soins', side: 'dark', icon: '💊', text: 'Pouvoirs de soin impossibles sur vous', updates: true },
-            { threshold: -80, group: 'pa_meurtre', side: 'dark', icon: '💀', text: '+5 Points de Force par meurtre' },
-            { threshold: -90, group: 'cout_dark40', side: 'dark', icon: '⚡', text: 'Pouvoirs obscurs −3 coût +2 de Puissance · Pouvoirs lumineux +3 coût', updates: true },
-            // Côté lumineux (valeurs positives), du plus proche de 0 au plus loin
-            { threshold: 20, group: 'eloquence', side: 'light', icon: '🕊', text: '+1 sur les jets d\'Éloquence (connexion empathique, alliances, paix)' },
-            { threshold: 30, group: 'eloquence', side: 'light', icon: '🕊', text: '+2 sur les jets d\'Éloquence (connexion empathique, alliances, paix)', updates: true },
-            { threshold: 40, group: 'cout_light40', side: 'light', icon: '✨', text: 'Pouvoirs obscurs +1 coût · Pouvoirs lumineux −1 coût' },
-            { threshold: 40, group: 'animaux', side: 'light', icon: '🐾', text: 'Animaux à l\'aise en votre présence' },
-            { threshold: 50, group: 'registres_light', side: 'light', icon: '💫', text: 'Modificateurs des registres Lumière et Lien +1' },
-            { threshold: 70, group: 'cout_light40', side: 'light', icon: '✨', text: 'Pouvoirs obscurs +1 coût · Pouvoirs lumineux −1 coût', updates: true },
-            { threshold: 80, group: 'soin_reflet', side: 'light', icon: '💖', text: 'Les pouvoirs bénéfiques que vous appliquez aux autres vous affectent aussi' },
-            { threshold: 90, group: 'cout_light40', side: 'light', icon: '✨', text: 'Pouvoirs lumineux −3 coût +2 de Puissance · Pouvoirs obscurs +3 coût', updates: true },
+            // ─── Côté obscur (Corruption, valeurs négatives) : volonté qui domine + malédiction ───
+            { threshold: -20, group: 'autorite', side: 'dark', icon: '👑', text: '+1 aux jets d\'Autorité (intimider, dominer, contraindre)' },
+            { threshold: -30, group: 'animaux', side: 'dark', icon: '🐾', text: 'Les animaux se méfient de toi' },
+            { threshold: -40, group: 'sublim_dark', side: 'dark', icon: '🔥', text: 'Sublimer un registre obscur → +1 Puissance' },
+            { threshold: -50, group: 'cout_dark', side: 'dark', icon: '⚡', text: 'Tes pouvoirs obscurs coûtent −1 Point de Force' },
+            { threshold: -50, group: 'soins', side: 'dark', icon: '💊', text: 'Les soins reçus sur toi : −2 de Puissance' },
+            { threshold: -60, group: 'ardeur_cmd', side: 'dark', icon: '🌋', text: 'Tu peux entrer dans le registre Ardeur sans coût ni restriction (la rage à volonté)' },
+            { threshold: -70, group: 'predation', side: 'dark', icon: '💀', text: 'Prédation : chaque mise à mort par un pouvoir obscur te rend des Points de Force' },
+            { threshold: -70, group: 'soins', side: 'dark', icon: '🚫', text: 'Les soins sont désormais impossibles sur toi', updates: true },
+            { threshold: -80, group: 'endurci', side: 'dark', icon: '🪨', text: 'Endurci : tu es immunisé au seuil de dégâts garanti des pouvoirs obscurs adverses' },
+            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: 'Déferlante : en sublimant un registre obscur, Résonance et Transcendance se relancent (dé ≥ 9) et chaque relance ajoute sa Puissance · corruption physique visible, isolement total' },
+            // ─── Côté lumineux (Harmonie, valeurs positives) : le conduit, sûr et durable ───
+            { threshold: 20, group: 'eloquence', side: 'light', icon: '🕊', text: '+1 aux jets d\'Éloquence (calmer, aider, persuader)' },
+            { threshold: 30, group: 'initiative', side: 'light', icon: '🔮', text: 'Bonus aux jets d\'initiative (sentir dans la Force)' },
+            { threshold: 30, group: 'animaux', side: 'light', icon: '🐾', text: 'Les animaux sont à l\'aise en ta présence' },
+            { threshold: 40, group: 'sublim_light', side: 'light', icon: '✨', text: 'Sublimer un registre lumineux → +1 Puissance' },
+            { threshold: 50, group: 'dissonance', side: 'light', icon: '🎐', text: 'Les Dissonance ne te coûtent plus de Points de Force' },
+            { threshold: 50, group: 'percoit', side: 'light', icon: '👁', text: 'Tu perçois la corruption chez autrui (un Sith, un lieu souillé, une intention obscure)' },
+            { threshold: 60, group: 'acier_cmd', side: 'light', icon: '🛡', text: 'Tu peux entrer dans le registre Acier sans coût ni restriction (le calme à volonté)' },
+            { threshold: 70, group: 'reciprocite', side: 'light', icon: '💞', text: 'Réciprocité : tout pouvoir bénéfique que tu appliques à un allié t\'affecte aussi' },
+            { threshold: 80, group: 'rupture', side: 'light', icon: '🌟', text: 'Les Rupture ne se déclenchent plus (la Force ne mord pas le vaisseau consentant)' },
+            { threshold: 90, group: 'communion', side: 'light', icon: '☀️', text: 'Communion : en sublimant un registre lumineux, Résonance et Transcendance se relancent (dé ≥ 9) et chaque relance réduit le coût en Points de Force (plancher 0)' },
         ];
 
         function getResonanceStage(val) {
@@ -4664,7 +4693,7 @@
 
             list.innerHTML =
                 renderSection(darkEffects.reverse(), '🌑 Effets de corruption', '#c06040') +
-                renderSection(lightEffects, '✨ Effets de résonance', '#60a8e0');
+                renderSection(lightEffects, '✨ Effets d\'Harmonie', '#60a8e0');
         }
 
         function applyResonanceDelta(delta) {
