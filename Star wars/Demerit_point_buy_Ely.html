@@ -180,6 +180,7 @@
       <span class="total" id="totalDisplay">150</span>
     </div>
     <div class="budget-remaining" id="budgetRemaining">150 restants</div>
+    <button class="settings-toggle" onclick="importFromFile()">↑ Importer un perso</button>
     <button class="settings-toggle" onclick="exportToFiche()">↓ Exporter vers Fiche</button>
     <button class="settings-toggle" onclick="toggleSettings()">⚙ Paramètres</button>
   </div>
@@ -454,6 +455,37 @@
     const saber=hasSaberType();const fb=document.getElementById('formeBtn');if(fb)fb.disabled=!saber;const fh=document.getElementById('formeHint');if(fh)fh.style.display=saber?'none':'block';
     const purchEl=document.getElementById('purchasedMasteriesDiv');
     purchEl.innerHTML=purchasedMasteries.length===0?'<p class="forme-hint">Aucune maîtrise achetée.</p>':purchasedMasteries.map(m=>{const cat=MASTERY_CATS.find(c=>c.id===m.category);let field;if(cat&&cat.preset){field=`<select class="mastery-name-select" onchange="updatePurchasedName('${m.id}',this.value)">${cat.preset.map(o=>`<option ${o===m.name?'selected':''}>${o}</option>`).join('')}</select>`;}else{field=`<input class="mastery-name-input" type="text" placeholder="${cat?.hint||'Nom'}…" value="${(m.name||'').replace(/"/g,'&quot;')}" oninput="updatePurchasedName('${m.id}',this.value)">`;}return `<div class="mastery-row"><div class="mastery-cat-badge">${cat?.label||m.category}</div>${field}<span class="mastery-cost">${m.cost} pts</span><button class="mastery-del" onclick="removePurchasedMastery('${m.id}')">✕</button></div>`;}).join('');
+  }
+
+  // ===== IMPORT (recharger un personnage exporté) =====
+  function importFromFile(){
+    const inp=document.createElement('input');inp.type='file';inp.accept='.json,application/json';
+    inp.onchange=e=>{const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=ev=>{try{applyImport(JSON.parse(ev.target.result));}catch(err){alert('Import impossible : fichier illisible ('+err.message+')');}};r.readAsText(file);};
+    inp.click();
+  }
+  function applyImport(data){
+    const aMax=ATTR_LEVELS[ATTR_LEVELS.length-1].val,cMax=COMP_LEVELS[COMP_LEVELS.length-1].val,fMax=FORCE_LEVELS[FORCE_LEVELS.length-1].val;
+    const cl=(v,mx)=>Math.max(1,Math.min(mx,parseInt(v)||1));
+    if(data.attributes){ATTRIBUTES.forEach(a=>{if(data.attributes[a.id]!=null)attrValues[a.id]=cl(data.attributes[a.id],aMax);});}
+    if(Array.isArray(data.skills)){const nameToId={};COMPETENCES.forEach(c=>nameToId[c.name.toLowerCase().trim()]=c.id);data.skills.forEach(sk=>{let id=null;const nm=(sk.baseName||sk.name||'').toLowerCase().trim();if(nm&&nameToId[nm])id=nameToId[nm];else if(sk.id&&/^skill_\d+$/.test(sk.id)){const i=parseInt(sk.id.slice(6));if(COMPETENCES[i])id=COMPETENCES[i].id;}else if(sk.id&&compValues[sk.id]!=null)id=sk.id;if(id)compValues[id]=cl(sk.level,cMax);});}
+    if(Array.isArray(data.forceVerbs))data.forceVerbs.forEach(v=>{if(v&&verbValues[v.id]!=null)verbValues[v.id]=cl(v.level,fMax);});
+    if(Array.isArray(data.forceTargets))data.forceTargets.forEach(t=>{if(t&&targetValues[t.id]!=null)targetValues[t.id]=cl(t.level,fMax);});
+    masteryNames={};purchasedMasteries=[];armorToggles={medium:false,lourde:false,bouclier:false};
+    (data.masteries||[]).forEach(m=>{
+      if(m.source==='auto'){const ul=MASTERY_UNLOCKS[m.autoSkill];if(ul){const idx=ul.findIndex(u=>u.level===m.autoLevel);if(idx!==-1&&m.name)masteryNames[`${m.autoSkill}_${idx}`]=m.name;}}
+      else if(m.category==='armure_medium')armorToggles.medium=true;
+      else if(m.category==='armure_lourde')armorToggles.lourde=true;
+      else if(m.category==='bouclier')armorToggles.bouclier=true;
+      else{const cat=MASTERY_CATS.find(c=>c.id===m.category);if(cat)purchasedMasteries.push({id:m.id||`pm_${Date.now()}_${Math.random().toString(36).substr(2,5)}`,category:m.category,name:m.name||'',cost:m.cost??cat.cost});}
+    });
+    if(armorToggles.lourde)armorToggles.medium=true;
+    if((!data.masteries||!data.masteries.length)&&data.saber){
+      if(data.saber.type&&data.saber.type!=='standard'&&SABER_TYPES.includes(data.saber.type))purchasedMasteries.push({id:'pm_imp_t',category:'sabre_type',name:data.saber.type,cost:3});
+      if(data.saber.form&&SABER_FORMS.includes(data.saber.form))purchasedMasteries.push({id:'pm_imp_f',category:'forme',name:data.saber.form,cost:2});
+    }
+    render();
+    const spent=totalSpent();
+    alert('Personnage importé — '+spent+' / '+config.budget+' points'+(spent>config.budget?' (\u26a0 au-dessus du budget)':''));
   }
 
   render();
