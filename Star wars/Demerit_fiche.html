@@ -923,6 +923,23 @@
             overflow-y: auto;
         }
 
+        .masteries-list { display:flex; flex-direction:column; gap:6px; }
+        .mastery-item { display:flex; align-items:center; gap:10px; padding:8px 12px; background:rgba(255,255,255,0.02); border-radius:2px; border:1px solid transparent; }
+        .mastery-item:hover { background:rgba(0,168,255,0.05); border-color:rgba(0,168,255,0.2); }
+        .mastery-cat { font-size:0.75em; font-weight:600; color:var(--light-steel); opacity:0.6; white-space:nowrap; }
+        .mastery-nm { flex:1; font-weight:500; color:var(--light-steel); font-size:0.9em; }
+        .mastery-tag { font-size:0.68em; padding:2px 8px; border-radius:10px; white-space:nowrap; }
+        .mastery-tag.offerte { background:rgba(0,168,255,0.12); color:#7fd4ff; }
+        .mastery-tag.achetee { background:rgba(255,200,90,0.12); color:#ffd486; }
+        .masteries-empty { padding:10px 12px; color:var(--light-steel); opacity:0.55; font-size:0.85em; }
+        .mastery-add-row { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+        .m-add-btn { background:rgba(0,168,255,0.08); border:1px solid rgba(0,168,255,0.25); color:var(--light-steel); font-size:0.74em; padding:5px 9px; border-radius:3px; cursor:pointer; white-space:nowrap; }
+        .m-add-btn:hover { background:rgba(0,168,255,0.16); }
+        .mastery-edit-input, .mastery-edit-select { flex:1; min-width:0; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12); color:var(--light-steel); font-size:0.85em; padding:4px 8px; border-radius:3px; }
+        .mastery-tag.ajoutee { background:rgba(120,200,120,0.14); color:#9fdca0; }
+        .mastery-del-btn { background:transparent; border:none; color:var(--light-steel); opacity:0.5; cursor:pointer; font-size:0.95em; padding:2px 4px; line-height:1; }
+        .mastery-del-btn:hover { opacity:1; color:#ff7a7a; }
+
         .skill-item {
             display: flex;
             align-items: center;
@@ -2705,6 +2722,23 @@
                     <div class="column-title">Compétences</div>
                 </div>
                 <div class="skills-list" id="skills-list"></div>
+                <div class="column-header" style="margin-top:22px;">
+                    <div class="column-icon skills">🎓</div>
+                    <div class="column-title">Maîtrises</div>
+                </div>
+                <div class="mastery-add-row">
+                    <button class="m-add-btn" onclick="addMastery('arme')">⚔ Arme</button>
+                    <button class="m-add-btn" onclick="addMastery('sabre_type')">🗡 Sabre</button>
+                    <button class="m-add-btn" onclick="addMastery('forme')">🌀 Forme</button>
+                    <button class="m-add-btn" onclick="addMastery('armure_medium')">🛡 Médium</button>
+                    <button class="m-add-btn" onclick="addMastery('armure_lourde')">🛡 Lourde</button>
+                    <button class="m-add-btn" onclick="addMastery('bouclier')">🛡 Déflecteur</button>
+                    <button class="m-add-btn" onclick="addMastery('vehicule')">🚀 Véhicule</button>
+                    <button class="m-add-btn" onclick="addMastery('monture')">🦎 Monture</button>
+                    <button class="m-add-btn" onclick="addMastery('specialite')">🧠 Spécialité</button>
+                    <button class="m-add-btn" onclick="addMastery('savoir_faire')">🔧 Savoir-faire</button>
+                </div>
+                <div class="masteries-list" id="masteries-list"></div>
             </div>
             <div class="roll-section skill">
                 <div class="roll-header">
@@ -3335,6 +3369,7 @@
             forceTargets: JSON.parse(JSON.stringify(FORCE_TARGETS)),
             wounds: [],
             objects: [],
+            masteries: [],
             notes: "",
             saber: { colors: [], crystal: '', form: '', type: 'standard' },
             registre: "neutre",
@@ -3599,6 +3634,36 @@
                 list.appendChild(item);
             });
         }
+        const M_SABER_TYPES = ['Standard','Claymore','Dual wield','Pique laser','Sabre double'];
+        const M_SABER_FORMS = ['Forme I — Shii-Cho','Forme II — Makashi','Forme III — Soresu','Forme IV — Ataru','Forme V — Shien','Forme V — Djem So','Forme VI — Niman','Forme VII — Juyo','Forme VII — Vaapad',"Jar'Kai",'Ysannanite','Praetoria Ishu','Praetoria Vonil'];
+        const M_CAT = { arme:'⚔ Arme', sabre_type:'🗡 Type de sabre', forme:'🌀 Forme de sabre', armure_medium:'🛡 Armure Médium', armure_lourde:'🛡 Armure Lourde', bouclier:'🛡 Déflecteur', vehicule:'🚀 Véhicule', monture:'🦎 Monture', specialite:'🧠 Spécialité', savoir_faire:'🔧 Savoir-faire' };
+        function renderMasteries() {
+            const list = document.getElementById('masteries-list');
+            if (!list) return;
+            const esc = v => String(v).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+            const ms = Array.isArray(appState.masteries) ? appState.masteries : [];
+            ms.forEach(m => { if (!m.id) m.id = `m_${Date.now()}_${Math.random().toString(36).substr(2,5)}`; });
+            if (!ms.length) { list.innerHTML = '<div class="masteries-empty">Aucune maîtrise. Ajoute-en avec les boutons ci-dessus, ou importe un personnage depuis le créateur.</div>'; return; }
+            list.innerHTML = ms.map(m => {
+                const cat = M_CAT[m.category] || m.category;
+                let tag;
+                if (m.source === 'auto' || m.source === 'offerte') tag = '<span class="mastery-tag offerte">Offerte</span>';
+                else if (m.source === 'purchased') tag = '<span class="mastery-tag achetee">Achetée</span>';
+                else tag = '<span class="mastery-tag ajoutee">Ajoutée</span>';
+                let field;
+                if (m.category === 'sabre_type') field = `<select class="mastery-edit-select" onchange="updateMasteryName('${m.id}',this.value)"><option value="">— Type —</option>${M_SABER_TYPES.map(o=>`<option ${o===m.name?'selected':''}>${o}</option>`).join('')}</select>`;
+                else if (m.category === 'forme') field = `<select class="mastery-edit-select" onchange="updateMasteryName('${m.id}',this.value)"><option value="">— Forme —</option>${M_SABER_FORMS.map(o=>`<option ${o===m.name?'selected':''}>${o}</option>`).join('')}</select>`;
+                else field = `<input class="mastery-edit-input" type="text" placeholder="Nom…" value="${esc(m.name||'')}" oninput="updateMasteryName('${m.id}',this.value)">`;
+                return `<div class="mastery-item"><span class="mastery-cat">${cat}</span>${field}${tag}<button class="mastery-del-btn" onclick="removeMastery('${m.id}')" title="Retirer">✕</button></div>`;
+            }).join('');
+        }
+        function addMastery(category) {
+            if (!Array.isArray(appState.masteries)) appState.masteries = [];
+            appState.masteries.push({ id: `m_${Date.now()}_${Math.random().toString(36).substr(2,5)}`, category, name: '', source: 'manuelle', cost: 0 });
+            renderMasteries();
+        }
+        function updateMasteryName(id, name) { const m = (appState.masteries||[]).find(x => x.id === id); if (m) m.name = name; }
+        function removeMastery(id) { appState.masteries = (appState.masteries||[]).filter(x => x.id !== id); renderMasteries(); }
         function modifySkillById(id, delta) {
             const skill = appState.skills.find(s => s.id === id);
             if (skill) { skill.level = Math.max(1, Math.min(8, skill.level + delta)); renderSkills(); updateRollSelects(); }
@@ -4258,6 +4323,7 @@
             updateCounterDisplay('force');
             if (typeof updateForcePA === 'function') updateForcePA();
             renderSkills();
+            renderMasteries();
             renderForceSkills();
             renderWounds();
             renderObjects();
@@ -4721,6 +4787,7 @@
             renderResonance();
             defaultSkills.forEach((name, i) => appState.skills.push({ id: `skill_${i}`, name, level: 1, baseName: name }));
             renderSkills();
+            renderMasteries();
             renderForceSkills();
             renderWounds();
             renderObjects();
