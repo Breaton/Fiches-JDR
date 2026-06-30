@@ -154,9 +154,9 @@
     <div class="budget-numbers" id="budgetNumbers">
       <span class="spent" id="spentDisplay">0</span>
       <span class="sep">/</span>
-      <span class="total" id="totalDisplay">125</span>
+      <span class="total" id="totalDisplay">130</span>
     </div>
-    <div class="budget-remaining" id="budgetRemaining">125 restants</div>
+    <div class="budget-remaining" id="budgetRemaining">130 restants</div>
     <button class="settings-toggle" onclick="importFromFile()">↑ Importer un perso</button>
     <button class="settings-toggle" onclick="exportToFiche()">↓ Exporter vers Fiche</button>
     <button class="settings-toggle" onclick="toggleSettings()">⚙ Paramètres</button>
@@ -166,7 +166,7 @@
     <h3>Paramètres — Coûts & Limites</h3>
     <div class="settings-grid">
       <div class="settings-section-title">Budget total</div>
-      <div class="setting-item"><label>Budget total</label><input type="number" id="s_budget" value="125" min="10" max="400" onchange="updateSettings()"></div>
+      <div class="setting-item"><label>Budget total</label><input type="number" id="s_budget" value="130" min="10" max="400" onchange="updateSettings()"></div>
       <div class="settings-section-title">Coûts cumulatifs — Attributs</div>
       <div class="setting-item"><label>Déficient (1)</label><input type="number" id="s_ac1" value="-3" min="-20" max="0" onchange="updateSettings()"></div>
       <div class="setting-item"><label>Faible (2)</label><input type="number" id="s_ac2" value="-2" min="-20" max="0" onchange="updateSettings()"></div>
@@ -297,10 +297,10 @@
   ];
 
   let config={
-    budget:125,
-    attrCosts:[0,-3,-2,-1,0,5,8,12],
+    budget:130,
+    attrCosts:[0,-4,-3,-2,0,5,8,12],
     compCosts:[0,0,1,2,3,5,8],
-    magicCosts:[0,0,2,3,5,7],
+    magicCosts:[0,2,3,4,6,9],
     maxAttr:{7:2,6:3},
     maxComp:{6:1,5:3},
     maxMagic:{5:1,4:2},
@@ -308,8 +308,8 @@
   let attrValues={},compValues={},verbValues={},targetValues={};
   ATTRIBUTES.forEach(a=>attrValues[a.id]=4);
   COMPETENCES.forEach(c=>compValues[c.id]=1);
-  FORCE_VERBS.forEach(v=>verbValues[v.id]=1);
-  FORCE_TARGETS.forEach(t=>targetValues[t.id]=1);
+  FORCE_VERBS.forEach(v=>verbValues[v.id]=0);
+  FORCE_TARGETS.forEach(t=>targetValues[t.id]=0);
 
   const attrCost=v=>config.attrCosts[v]||0;
   const compCost=v=>config.compCosts[v]||0;
@@ -332,8 +332,8 @@
 
   function buildAttrRow(a){const val=attrValues[a.id],label=ATTR_LEVELS.find(l=>l.val===val)?.label||'',cost=attrCost(val),canUp=canIncreaseAttr(a.id);const costHtml=cost<0?`<span class="cost-neg">${cost}</span> pts`:`<span class="cost-num">${cost}</span> pts`;const dots=ATTR_LEVELS.map(l=>`<div class="dot ${l.val<=val?'filled':''}"></div>`).join('');return`<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${a.name}</div><div class="stat-alt">${a.alt}</div></div><div class="dots">${dots}</div><div class="stat-level">${label}</div><div class="stat-cost">${costHtml}</div><div class="controls"><button class="btn" onclick="changeAttr('${a.id}',-1)" ${val<=1?'disabled':''}>−</button><span class="value-display">${val}</span><button class="btn" onclick="changeAttr('${a.id}',1)" ${!canUp.ok?'disabled':''} title="${canUp.ok?'':canUp.reason}">+</button></div></div>`;}
   function buildCompRow(c){const val=compValues[c.id],label=COMP_LEVELS.find(l=>l.val===val)?.label||'',cost=compCost(val),canUp=canIncreaseComp(c.id);const dots=COMP_LEVELS.map(l=>`<div class="dot ${l.val<=val?'filled':''}"></div>`).join('');return`<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${c.name}</div><div class="stat-alt">${c.alt}</div></div><div class="dots">${dots}</div><div class="stat-level">${label}</div><div class="stat-cost"><span class="cost-num">${cost}</span> pts</div><div class="controls"><button class="btn" onclick="changeComp('${c.id}',-1)" ${val<=1?'disabled':''}>−</button><span class="value-display">${val}</span><button class="btn" onclick="changeComp('${c.id}',1)" ${!canUp.ok?'disabled':''} title="${canUp.ok?'':canUp.reason}">+</button></div></div>`;}
-  function buildVerbRow(v){const val=verbValues[v.id],label=FORCE_LEVELS.find(l=>l.val===val)?.label||'',cost=magicCost(val),canUp=canIncreaseVerb(v.id);const dots=FORCE_LEVELS.map(l=>`<div class="dot ${l.val<=val?'filled force':''}"></div>`).join('');return`<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${v.name}</div><div class="stat-alt">${v.alt}</div></div><div class="dots">${dots}</div><div class="stat-level">${label}</div><div class="stat-cost"><span class="cost-num">${cost}</span> pts</div><div class="controls"><button class="btn" onclick="changeVerb('${v.id}',-1)" ${val<=1?'disabled':''}>−</button><span class="value-display">${val}</span><button class="btn" onclick="changeVerb('${v.id}',1)" ${!canUp.ok?'disabled':''} title="${canUp.ok?'':canUp.reason}">+</button></div></div>`;}
-  function buildTargetRow(t){const val=targetValues[t.id],label=FORCE_LEVELS.find(l=>l.val===val)?.label||'',cost=magicCost(val),canUp=canIncreaseTarget(t.id);const dots=FORCE_LEVELS.map(l=>`<div class="dot ${l.val<=val?'filled force':''}"></div>`).join('');return`<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${t.name}</div><div class="stat-alt">${t.alt}</div></div><div class="dots">${dots}</div><div class="stat-level">${label}</div><div class="stat-cost"><span class="cost-num">${cost}</span> pts</div><div class="controls"><button class="btn" onclick="changeTarget('${t.id}',-1)" ${val<=1?'disabled':''}>−</button><span class="value-display">${val}</span><button class="btn" onclick="changeTarget('${t.id}',1)" ${!canUp.ok?'disabled':''} title="${canUp.ok?'':canUp.reason}">+</button></div></div>`;}
+  function buildVerbRow(v){const val=verbValues[v.id],label=FORCE_LEVELS.find(l=>l.val===val)?.label||(val===0?'Non appris':''),cost=magicCost(val),canUp=canIncreaseVerb(v.id);const dots=FORCE_LEVELS.map(l=>`<div class="dot ${l.val<=val?'filled force':''}"></div>`).join('');return`<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${v.name}</div><div class="stat-alt">${v.alt}</div></div><div class="dots">${dots}</div><div class="stat-level">${label}</div><div class="stat-cost"><span class="cost-num">${cost}</span> pts</div><div class="controls"><button class="btn" onclick="changeVerb('${v.id}',-1)" ${val<=0?'disabled':''}>−</button><span class="value-display">${val}</span><button class="btn" onclick="changeVerb('${v.id}',1)" ${!canUp.ok?'disabled':''} title="${canUp.ok?'':canUp.reason}">+</button></div></div>`;}
+  function buildTargetRow(t){const val=targetValues[t.id],label=FORCE_LEVELS.find(l=>l.val===val)?.label||(val===0?'Non appris':''),cost=magicCost(val),canUp=canIncreaseTarget(t.id);const dots=FORCE_LEVELS.map(l=>`<div class="dot ${l.val<=val?'filled force':''}"></div>`).join('');return`<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${t.name}</div><div class="stat-alt">${t.alt}</div></div><div class="dots">${dots}</div><div class="stat-level">${label}</div><div class="stat-cost"><span class="cost-num">${cost}</span> pts</div><div class="controls"><button class="btn" onclick="changeTarget('${t.id}',-1)" ${val<=0?'disabled':''}>−</button><span class="value-display">${val}</span><button class="btn" onclick="changeTarget('${t.id}',1)" ${!canUp.ok?'disabled':''} title="${canUp.ok?'':canUp.reason}">+</button></div></div>`;}
 
   function renderAttrList(){document.getElementById('attrList').innerHTML=ATTRIBUTES.map(buildAttrRow).join('');}
   function renderCompList(){document.getElementById('compList').innerHTML=COMPETENCES.map(buildCompRow).join('');}
@@ -345,8 +345,8 @@
   function renderSummary(){
     const ai=ATTRIBUTES.filter(a=>attrValues[a.id]!==4).sort((a,b)=>attrValues[b.id]-attrValues[a.id]);
     const ci=COMPETENCES.filter(c=>compValues[c.id]>1).sort((a,b)=>compValues[b.id]-compValues[a.id]);
-    const vi=FORCE_VERBS.filter(v=>verbValues[v.id]>1).sort((a,b)=>verbValues[b.id]-verbValues[a.id]);
-    const ti=FORCE_TARGETS.filter(t=>targetValues[t.id]>1).sort((a,b)=>targetValues[b.id]-targetValues[a.id]);
+    const vi=FORCE_VERBS.filter(v=>verbValues[v.id]>0).sort((a,b)=>verbValues[b.id]-verbValues[a.id]);
+    const ti=FORCE_TARGETS.filter(t=>targetValues[t.id]>0).sort((a,b)=>targetValues[b.id]-targetValues[a.id]);
     const autoM=getAutoMasteries().filter(({key})=>masteryNames[key]);
     const purchM=purchasedMasteries.filter(m=>m.name);
     const armorM=Object.entries(armorToggles).filter(([k,v])=>v);
@@ -363,9 +363,9 @@
   function render(){renderBudget();renderAttrPyramid();renderCompPyramid();renderVerbPyramid();renderTargetPyramid();renderAttrList();renderCompList();renderVerbList();renderTargetList();renderMasteries();renderSummary();}
   function changeAttr(id,delta){if(delta>0){if(!canIncreaseAttr(id).ok)return;attrValues[id]++;}else{if(attrValues[id]<=1)return;attrValues[id]--;}render();}
   function changeComp(id,delta){if(delta>0){if(!canIncreaseComp(id).ok)return;compValues[id]++;}else{if(compValues[id]<=1)return;compValues[id]--;}render();}
-  function changeVerb(id,delta){if(delta>0){if(!canIncreaseVerb(id).ok)return;verbValues[id]++;}else{if(verbValues[id]<=1)return;verbValues[id]--;}render();}
-  function changeTarget(id,delta){if(delta>0){if(!canIncreaseTarget(id).ok)return;targetValues[id]++;}else{if(targetValues[id]<=1)return;targetValues[id]--;}render();}
-  function resetAll(){ATTRIBUTES.forEach(a=>attrValues[a.id]=4);COMPETENCES.forEach(c=>compValues[c.id]=1);FORCE_VERBS.forEach(v=>verbValues[v.id]=1);FORCE_TARGETS.forEach(t=>targetValues[t.id]=1);masteryNames={};purchasedMasteries=[];armorToggles={medium:false,lourde:false,bouclier:false};render();}
+  function changeVerb(id,delta){if(delta>0){if(!canIncreaseVerb(id).ok)return;verbValues[id]++;}else{if(verbValues[id]<=0)return;verbValues[id]--;}render();}
+  function changeTarget(id,delta){if(delta>0){if(!canIncreaseTarget(id).ok)return;targetValues[id]++;}else{if(targetValues[id]<=0)return;targetValues[id]--;}render();}
+  function resetAll(){ATTRIBUTES.forEach(a=>attrValues[a.id]=4);COMPETENCES.forEach(c=>compValues[c.id]=1);FORCE_VERBS.forEach(v=>verbValues[v.id]=0);FORCE_TARGETS.forEach(t=>targetValues[t.id]=0);masteryNames={};purchasedMasteries=[];armorToggles={medium:false,lourde:false,bouclier:false};render();}
   function toggleSettings(){document.getElementById('settingsPanel').classList.toggle('open');}
   function updateSettings(){
     config.budget=parseInt(document.getElementById('s_budget').value)||100;
@@ -397,7 +397,7 @@
       profile:{name:'',image:null},
       attributes:{puissance:attrValues['puissance'],vivacite:attrValues['vivacite'],precision:attrValues['precision'],endurance:attrValues['endurance'],intelligence:attrValues['intelligence'],intuition:attrValues['intuition'],volonte:attrValues['volonte'],presence:attrValues['presence']},
       counters:{health:{current:elan,max:elan},force:{current:powerMax,max:powerMax}},
-      skills, forceVerbs, forceTargets,
+      skills, forceVerbs, forceTargets, forceBaseZero:true,
       wounds:[],objects:[],masteries:masteriesExport,
       saber:{colors:[],crystal:'',form:sabreForme?sabreForme.name:'',type:sabreType?sabreType.name:'standard'},
       registre:'neutre',currentModal:null
@@ -471,8 +471,10 @@
     const cl=(v,mx)=>Math.max(1,Math.min(mx,parseInt(v)||1));
     if(data.attributes){ATTRIBUTES.forEach(a=>{if(data.attributes[a.id]!=null)attrValues[a.id]=cl(data.attributes[a.id],aMax);});}
     if(Array.isArray(data.skills)){const nameToId={};COMPETENCES.forEach(c=>nameToId[c.name.toLowerCase().trim()]=c.id);data.skills.forEach(sk=>{let id=null;const nm=(sk.baseName||sk.name||'').toLowerCase().trim();if(nm&&nameToId[nm])id=nameToId[nm];else if(sk.id&&/^skill_\d+$/.test(sk.id)){const i=parseInt(sk.id.slice(6));if(COMPETENCES[i])id=COMPETENCES[i].id;}else if(sk.id&&compValues[sk.id]!=null)id=sk.id;if(id)compValues[id]=cl(sk.level,cMax);});}
-    if(Array.isArray(data.forceVerbs))data.forceVerbs.forEach(v=>{if(v&&verbValues[v.id]!=null)verbValues[v.id]=cl(v.level,fMax);});
-    if(Array.isArray(data.forceTargets))data.forceTargets.forEach(t=>{if(t&&targetValues[t.id]!=null)targetValues[t.id]=cl(t.level,fMax);});
+    const cl0=(v,mx)=>Math.max(0,Math.min(mx,parseInt(v)||0));
+    const fOld=data.forceBaseZero!==true;
+    if(Array.isArray(data.forceVerbs))data.forceVerbs.forEach(v=>{if(v&&verbValues[v.id]!=null){let lv=parseInt(v.level)||0;if(fOld&&lv===1)lv=0;verbValues[v.id]=cl0(lv,fMax);}});
+    if(Array.isArray(data.forceTargets))data.forceTargets.forEach(t=>{if(t&&targetValues[t.id]!=null){let lv=parseInt(t.level)||0;if(fOld&&lv===1)lv=0;targetValues[t.id]=cl0(lv,fMax);}});
     masteryNames={};purchasedMasteries=[];armorToggles={medium:false,lourde:false,bouclier:false};
     (data.masteries||[]).forEach(m=>{
       if(m.source==='auto'){const ul=MASTERY_UNLOCKS[m.autoSkill];if(ul){const idx=ul.findIndex(u=>u.level===m.autoLevel);if(idx!==-1&&m.name)masteryNames[`${m.autoSkill}_${idx}`]=m.name;}}
