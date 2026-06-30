@@ -277,7 +277,8 @@
           <button class="mastery-add-btn" onclick="addPurchasedMastery('specialite')">🧠 Spécialité <span class="cost-pill">2</span></button>
           <button class="mastery-add-btn" onclick="addPurchasedMastery('savoir_faire')">🔧 Savoir-faire <span class="cost-pill">2</span></button>
         </div>
-        <div id="formeHint" class="forme-hint">🌀 Prends un <strong>Type de sabre</strong> — ou choisis-en un sur une maîtrise de <strong>Bagarre</strong> — pour débloquer les Formes de sabre.</div>
+        <div id="formeHint" class="forme-hint">🌀 Prends un <strong>Type de sabre</strong> — ou choisis-en un sur une maîtrise de <strong>Bagarre</strong> — pour obtenir une <strong>forme offerte</strong> et pouvoir en acheter d'autres.</div>
+        <div id="freeFormsDiv"></div>
         <div id="purchasedMasteriesDiv"></div>
       </div>
     </div>
@@ -389,7 +390,7 @@
   function changeComp(id,delta){if(delta>0){if(!canIncreaseComp(id).ok)return;compValues[id]++;}else{if(compValues[id]<=1)return;compValues[id]--;}render();}
   function changeVerb(id,delta){if(delta>0){if(!canIncreaseVerb(id).ok)return;verbValues[id]++;}else{if(verbValues[id]<=0)return;verbValues[id]--;}render();}
   function changeTarget(id,delta){if(delta>0){if(!canIncreaseTarget(id).ok)return;targetValues[id]++;}else{if(targetValues[id]<=0)return;targetValues[id]--;}render();}
-  function resetAll(){ATTRIBUTES.forEach(a=>attrValues[a.id]=4);COMPETENCES.forEach(c=>compValues[c.id]=1);FORCE_VERBS.forEach(v=>verbValues[v.id]=0);FORCE_TARGETS.forEach(t=>targetValues[t.id]=0);masteryNames={};purchasedMasteries=[];armorToggles={medium:false,lourde:false,bouclier:false};render();}
+  function resetAll(){ATTRIBUTES.forEach(a=>attrValues[a.id]=4);COMPETENCES.forEach(c=>compValues[c.id]=1);FORCE_VERBS.forEach(v=>verbValues[v.id]=0);FORCE_TARGETS.forEach(t=>targetValues[t.id]=0);masteryNames={};purchasedMasteries=[];armorToggles={medium:false,lourde:false,bouclier:false};freeFormNames=[];render();}
   function toggleSettings(){document.getElementById('settingsPanel').classList.toggle('open');}
   function updateSettings(){
     config.budget=parseInt(document.getElementById('s_budget').value)||150;
@@ -411,12 +412,13 @@
     const armorMap={medium:['Armure Médium','armure_medium',2],lourde:['Armure Lourde','armure_lourde',3],bouclier:['Déflecteur','bouclier',2]};
     Object.entries(armorToggles).forEach(([k,v])=>{if(v){const[nm,cat,cost]=armorMap[k];masteriesExport.push({id:`armor_${k}`,name:nm,category:cat,source:'purchased',cost});}});
     purchasedMasteries.forEach(m=>{masteriesExport.push({id:m.id,name:m.name,category:m.category,source:'purchased',cost:m.cost});});
+    freeFormNames.forEach((nm,i)=>{if(nm)masteriesExport.push({id:`freeform_${i}`,name:nm,category:'forme',source:'offerte',cost:0});});
     const autoSaber=getAutoMasteries().map(({skillId,slot,key})=>({skillId,slot,nm:masteryNames[key]||''})).find(x=>x.skillId==='bagarre'&&x.slot.type==='arme'&&SABER_TYPES.includes(x.nm));
     const sabreTypePurch=purchasedMasteries.find(m=>m.category==='sabre_type');
     const sabreType=sabreTypePurch?{name:sabreTypePurch.name}:(autoSaber?{name:autoSaber.nm}:null);
-    const sabreForme=purchasedMasteries.find(m=>m.category==='forme');
+    const firstForm=freeFormNames.find(Boolean)||(purchasedMasteries.find(m=>m.category==='forme')||{}).name||'';
     const powerMax=forceMax(), elan=elanMax();
-    const state={profile:{name:'',image:null},attributes:{puissance:attrValues['puissance'],vivacite:attrValues['vivacite'],precision:attrValues['precision'],endurance:attrValues['endurance'],intelligence:attrValues['intelligence'],intuition:attrValues['intuition'],volonte:attrValues['volonte'],presence:attrValues['presence']},counters:{health:{current:elan,max:elan},force:{current:powerMax,max:powerMax}},skills,forceVerbs,forceTargets, forceBaseZero:true,wounds:[],objects:[],masteries:masteriesExport,saber:{colors:[],crystal:'',form:sabreForme?sabreForme.name:'',type:sabreType?sabreType.name:'standard'},registre:'neutre',currentModal:null};
+    const state={profile:{name:'',image:null},attributes:{puissance:attrValues['puissance'],vivacite:attrValues['vivacite'],precision:attrValues['precision'],endurance:attrValues['endurance'],intelligence:attrValues['intelligence'],intuition:attrValues['intuition'],volonte:attrValues['volonte'],presence:attrValues['presence']},counters:{health:{current:elan,max:elan},force:{current:powerMax,max:powerMax}},skills,forceVerbs,forceTargets, forceBaseZero:true,wounds:[],objects:[],masteries:masteriesExport,saber:{colors:[],crystal:'',form:firstForm,type:sabreType?sabreType.name:'standard'},registre:'neutre',currentModal:null};
     const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
     const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='personnage_starwars_veteran.json';a.click();URL.revokeObjectURL(url);
   }
@@ -453,11 +455,15 @@
   const ARMOR_COSTS={medium:2,lourde:3,bouclier:2};
   let masteryNames={};
   let purchasedMasteries=[];
+  let freeFormNames=[];
   let armorToggles={medium:false,lourde:false,bouclier:false};
 
   function masteryTotal(){let t=0;purchasedMasteries.forEach(m=>t+=m.cost);Object.entries(armorToggles).forEach(([k,v])=>{if(v)t+=ARMOR_COSTS[k];});return t;}
   function hasSaberType(){if(purchasedMasteries.some(m=>m.category==='sabre_type'))return true;return getAutoMasteries().some(({skillId,slot,key})=>skillId==='bagarre'&&slot.type==='arme'&&SABER_TYPES.includes(masteryNames[key]));}
   function getAutoMasteries(){const r=[];Object.entries(MASTERY_UNLOCKS).forEach(([sk,uls])=>{const cur=compValues[sk]||1;uls.forEach((slot,idx)=>{if(cur>=slot.level)r.push({skillId:sk,idx,slot,key:`${sk}_${idx}`});});});return r;}
+  function nSaberTypes(){let n=purchasedMasteries.filter(m=>m.category==='sabre_type').length;n+=getAutoMasteries().filter(({skillId,slot,key})=>skillId==='bagarre'&&slot.type==='arme'&&SABER_TYPES.includes(masteryNames[key])).length;return n;}
+  function syncFreeForms(){const n=nSaberTypes();while(freeFormNames.length<n)freeFormNames.push('');while(freeFormNames.length>n)freeFormNames.pop();}
+  function setFreeForm(i,val){freeFormNames[i]=val;render();}
   function toggleArmor(type){if(type==='lourde'&&!armorToggles.medium){alert('Armure Lourde requiert Armure Médium.');return;}armorToggles[type]=!armorToggles[type];if(!armorToggles.medium)armorToggles.lourde=false;render();}
   function addPurchasedMastery(catId){if(catId==='forme'&&!hasSaberType()){alert('Prends d\'abord un Type de sabre pour débloquer les Formes.');return;}const cat=MASTERY_CATS.find(c=>c.id===catId);if(!cat)return;const id=`pm_${Date.now()}_${Math.random().toString(36).substr(2,5)}`;purchasedMasteries.push({id,category:catId,name:cat.preset?cat.preset[0]:'',cost:cat.cost});render();}
   function removePurchasedMastery(id){const m=purchasedMasteries.find(x=>x.id===id);purchasedMasteries=purchasedMasteries.filter(x=>x.id!==id);if(m&&m.category==='sabre_type'&&!hasSaberType()){purchasedMasteries=purchasedMasteries.filter(x=>x.category!=='forme');}render();}
@@ -465,12 +471,14 @@
   function updateAutoName(key,name){masteryNames[key]=name;renderSummary();}
   function setAutoSlot(key,value){masteryNames[key]=value;render();}
   function renderMasteries(){
+    syncFreeForms();
     const autoList=getAutoMasteries();const compNames=Object.fromEntries(COMPETENCES.map(c=>[c.id,c.name]));
     const autoEl=document.getElementById('autoMasteriesDiv');
     autoEl.innerHTML=autoList.length===0?'<p class="forme-hint">Aucune compétence n\'a encore débloqué de maîtrise.</p>':autoList.map(({skillId,slot,key})=>{const val=masteryNames[key]||'';const comp=compNames[skillId]||skillId;const catLabel=MASTERY_CATS.find(c=>c.id===slot.type)?.label||slot.type;let field;if(skillId==='bagarre'&&slot.type==='arme'){const isSaber=SABER_TYPES.includes(val);const opts=`<option value="">— Autre arme de mêlée —</option>`+SABER_TYPES.map(t=>`<option value="${t}" ${t===val?'selected':''}>🗡 ${t}</option>`).join('');field=`<select class="mastery-name-select" onchange="setAutoSlot('${key}',this.value)">${opts}</select>`+(isSaber?'':`<input class="mastery-name-input" type="text" placeholder="${slot.hint}…" value="${val.replace(/"/g,'&quot;')}" oninput="updateAutoName('${key}',this.value)">`);}else{field=`<input class="mastery-name-input" type="text" placeholder="${slot.hint}…" value="${val.replace(/"/g,'&quot;')}" oninput="updateAutoName('${key}',this.value)">`;}return `<div class="mastery-row"><div class="mastery-source-tag">${comp} niv.${slot.level}</div><div class="mastery-type-tag">${catLabel}</div>${field}<span class="mastery-cost free">Offerte</span></div>`;}).join('');
     const armorEl=document.getElementById('armorTogglesDiv');const armorDefs=[{key:'medium',label:'🛡 Armure Médium',cost:2,req:null},{key:'lourde',label:'🛡 Armure Lourde',cost:3,req:'medium'},{key:'bouclier',label:'🛡 Déflecteur',cost:2,req:null}];
     armorEl.innerHTML=armorDefs.map(a=>{const active=armorToggles[a.key];const disabled=a.req&&!armorToggles[a.req];return `<button class="armor-toggle ${active?'active':''}" onclick="toggleArmor('${a.key}')" ${disabled?'disabled title="Requiert Médium"':''}>${a.label} <span class="cost-pill">${a.cost}</span>${active?' ✓':''}</button>`;}).join('');
     const saber=hasSaberType();const fb=document.getElementById('formeBtn');if(fb)fb.disabled=!saber;const fh=document.getElementById('formeHint');if(fh)fh.style.display=saber?'none':'block';
+    const ffEl=document.getElementById('freeFormsDiv');if(ffEl){const n=nSaberTypes();ffEl.innerHTML=n===0?'':'<div class="mastery-subtitle">Formes offertes <span style="font-weight:400;opacity:.7">(1 par type de sabre)</span></div>'+freeFormNames.map((nm,i)=>{const opts='<option value="">— Choisir une forme —</option>'+SABER_FORMS.map(o=>`<option ${o===nm?'selected':''}>${o}</option>`).join('');return `<div class="mastery-row"><div class="mastery-cat-badge">🌀 Forme</div><select class="mastery-name-select" onchange="setFreeForm(${i},this.value)">${opts}</select><span class="mastery-cost free">Offerte</span></div>`;}).join('');}
     const purchEl=document.getElementById('purchasedMasteriesDiv');
     purchEl.innerHTML=purchasedMasteries.length===0?'<p class="forme-hint">Aucune maîtrise achetée.</p>':purchasedMasteries.map(m=>{const cat=MASTERY_CATS.find(c=>c.id===m.category);let field;if(cat&&cat.preset){field=`<select class="mastery-name-select" onchange="updatePurchasedName('${m.id}',this.value)">${cat.preset.map(o=>`<option ${o===m.name?'selected':''}>${o}</option>`).join('')}</select>`;}else{field=`<input class="mastery-name-input" type="text" placeholder="${cat?.hint||'Nom'}…" value="${(m.name||'').replace(/"/g,'&quot;')}" oninput="updatePurchasedName('${m.id}',this.value)">`;}return `<div class="mastery-row"><div class="mastery-cat-badge">${cat?.label||m.category}</div>${field}<span class="mastery-cost">${m.cost} pts</span><button class="mastery-del" onclick="removePurchasedMastery('${m.id}')">✕</button></div>`;}).join('');
   }
@@ -490,9 +498,10 @@
     const fOld=data.forceBaseZero!==true;
     if(Array.isArray(data.forceVerbs))data.forceVerbs.forEach(v=>{if(v&&verbValues[v.id]!=null){let lv=parseInt(v.level)||0;if(fOld&&lv===1)lv=0;verbValues[v.id]=cl0(lv,fMax);}});
     if(Array.isArray(data.forceTargets))data.forceTargets.forEach(t=>{if(t&&targetValues[t.id]!=null){let lv=parseInt(t.level)||0;if(fOld&&lv===1)lv=0;targetValues[t.id]=cl0(lv,fMax);}});
-    masteryNames={};purchasedMasteries=[];armorToggles={medium:false,lourde:false,bouclier:false};
+    masteryNames={};purchasedMasteries=[];armorToggles={medium:false,lourde:false,bouclier:false};freeFormNames=[];
     (data.masteries||[]).forEach(m=>{
       if(m.source==='auto'){const ul=MASTERY_UNLOCKS[m.autoSkill];if(ul){const idx=ul.findIndex(u=>u.level===m.autoLevel);if(idx!==-1&&m.name)masteryNames[`${m.autoSkill}_${idx}`]=m.name;}}
+      else if(m.source==='offerte'&&m.category==='forme'){if(m.name)freeFormNames.push(m.name);}
       else if(m.category==='armure_medium')armorToggles.medium=true;
       else if(m.category==='armure_lourde')armorToggles.lourde=true;
       else if(m.category==='bouclier')armorToggles.bouclier=true;
@@ -501,7 +510,7 @@
     if(armorToggles.lourde)armorToggles.medium=true;
     if((!data.masteries||!data.masteries.length)&&data.saber){
       if(data.saber.type&&data.saber.type!=='standard'&&SABER_TYPES.includes(data.saber.type))purchasedMasteries.push({id:'pm_imp_t',category:'sabre_type',name:data.saber.type,cost:3});
-      if(data.saber.form&&SABER_FORMS.includes(data.saber.form))purchasedMasteries.push({id:'pm_imp_f',category:'forme',name:data.saber.form,cost:2});
+      if(data.saber.form&&SABER_FORMS.includes(data.saber.form))freeFormNames=[data.saber.form];
     }
     render();
     const spent=totalSpent();
