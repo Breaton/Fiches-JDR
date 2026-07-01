@@ -2707,6 +2707,7 @@
                         </div>
                         <button class="roll-btn skill" id="simple-roll-btn" onclick="rollSimple()" disabled>🎲 LANCER LE
                             JET</button>
+                    <label class="private-roll-toggle"><input type="checkbox" id="simple-no-mastery"> 🚫 Sans maîtrise (−2)</label>
                         <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
                                 onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
                     </div>
@@ -2771,6 +2772,7 @@
                     </div>
                     <button class="roll-btn skill" id="skill-page-roll-btn" onclick="rollSkillPage()" disabled>🎲 LANCER
                         LE JET</button>
+                    <label class="private-roll-toggle"><input type="checkbox" id="skill-page-no-mastery"> 🚫 Sans maîtrise (−2)</label>
                     <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
                             onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
                     <div class="roll-info">
@@ -3025,6 +3027,7 @@
                         style="margin-top: 20px;">
                         ⚡⚔ Lancer le jet Force + Compétence
                     </button>
+                    <label class="private-roll-toggle"><input type="checkbox" id="conjoint-no-mastery"> 🚫 Sans maîtrise (−2)</label>
                     <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
                             onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
                     <div class="roll-info" style="margin-top: 16px;">
@@ -4094,7 +4097,8 @@
             const attrLevel = getAttributeLevel(attr);
             const skill = appState.skills.find(s => s.name === skillName);
             if (!skill) return;
-            const skillLevel = getSkillLevel(skill.level);
+            const noMastSimple = (document.getElementById('simple-no-mastery')||{}).checked;
+            const skillLevel = getSkillLevel(noMastSimple ? Math.max(1, skill.level - 2) : skill.level);
             const threshold = 13 - attrLevel.faces;
             const baseExplosion = skillLevel.explosion;
             const explosion = Math.max(3, Math.min(12, baseExplosion - explosionMod));
@@ -4103,7 +4107,7 @@
             const skillBonus = skillLevel.bonus;
             const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
             const total = result.successes + attrBonus + skillBonus + bonus;
-            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
+            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}${noMastSimple ? ' | 🚫 Sans maîtrise (−2)' : ''}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
             sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), { successes: result.successes, attrBonus, skillBonus, bonus });
         }
         function rollSkillPage() {
@@ -4115,7 +4119,8 @@
             const attrLevel = getAttributeLevel(attr);
             const skill = appState.skills.find(s => s.name === skillName);
             if (!skill) return;
-            const skillLevel = getSkillLevel(skill.level);
+            const noMastPage = (document.getElementById('skill-page-no-mastery')||{}).checked;
+            const skillLevel = getSkillLevel(noMastPage ? Math.max(1, skill.level - 2) : skill.level);
             const threshold = 13 - attrLevel.faces;
             const baseExplosion = skillLevel.explosion;
             const explosion = Math.max(3, Math.min(12, baseExplosion - explosionMod));
@@ -4124,7 +4129,7 @@
             const skillBonus = skillLevel.bonus;
             const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
             const total = result.successes + attrBonus + skillBonus + bonus;
-            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
+            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}${noMastPage ? ' | 🚫 Sans maîtrise (−2)' : ''}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
             sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), { successes: result.successes, attrBonus, skillBonus, bonus });
         }
         function rollConjoint() {
@@ -4150,7 +4155,8 @@
             const skillAttr = appState.attributes[skillAttrName];
             const skillAttrLevel = getAttributeLevel(skillAttr);
             const skillThreshold = 13 - skillAttrLevel.faces;
-            const skillLevel = getSkillLevel(skill.level);
+            const noMastConj = (document.getElementById('conjoint-no-mastery')||{}).checked;
+            const skillLevel = getSkillLevel(noMastConj ? Math.max(1, skill.level - 2) : skill.level);
             const skillExplosion = Math.max(3, Math.min(12, skillLevel.explosion - explosionMod));
             const skillResult = rollDice(skillLevel.dice, skillThreshold, skillExplosion);
             const skillAttrBonus = skillAttrLevel.bonus;
@@ -4162,7 +4168,7 @@
 
             displayConjointResult({
                 title: `${ctxF.verb.name}${target ? ' + ' + target.name : ''} → ${skill.name}`,
-                subtitle: `Force: ${capitalize(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${REGISTRES[appState.registre].name} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence: ${capitalize(skillAttrName)}`,
+                subtitle: `Force: ${capitalize(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${REGISTRES[appState.registre].name} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence: ${capitalize(skillAttrName)}${noMastConj ? ' | 🚫 Sans maîtrise (−2)' : ''}`,
                 forceRoll: rollF,
                 forceEtat: ctxF.etat,
                 spellPuissance,
