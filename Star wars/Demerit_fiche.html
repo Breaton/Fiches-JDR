@@ -923,22 +923,120 @@
             overflow-y: auto;
         }
 
-        .masteries-list { display:flex; flex-direction:column; gap:6px; }
-        .mastery-item { display:flex; align-items:center; gap:10px; padding:8px 12px; background:rgba(255,255,255,0.02); border-radius:2px; border:1px solid transparent; }
-        .mastery-item:hover { background:rgba(0,168,255,0.05); border-color:rgba(0,168,255,0.2); }
-        .mastery-cat { font-size:0.75em; font-weight:600; color:var(--light-steel); opacity:0.6; white-space:nowrap; }
-        .mastery-nm { flex:1; font-weight:500; color:var(--light-steel); font-size:0.9em; }
-        .mastery-tag { font-size:0.68em; padding:2px 8px; border-radius:10px; white-space:nowrap; }
-        .mastery-tag.offerte { background:rgba(0,168,255,0.12); color:#7fd4ff; }
-        .mastery-tag.achetee { background:rgba(255,200,90,0.12); color:#ffd486; }
-        .masteries-empty { padding:10px 12px; color:var(--light-steel); opacity:0.55; font-size:0.85em; }
-        .mastery-add-row { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
-        .m-add-btn { background:rgba(0,168,255,0.08); border:1px solid rgba(0,168,255,0.25); color:var(--light-steel); font-size:0.74em; padding:5px 9px; border-radius:3px; cursor:pointer; white-space:nowrap; }
-        .m-add-btn:hover { background:rgba(0,168,255,0.16); }
-        .mastery-edit-input, .mastery-edit-select { flex:1; min-width:0; background:rgba(0,0,0,0.25); border:1px solid rgba(255,255,255,0.12); color:var(--light-steel); font-size:0.85em; padding:4px 8px; border-radius:3px; }
-        .mastery-tag.ajoutee { background:rgba(120,200,120,0.14); color:#9fdca0; }
-        .mastery-del-btn { background:transparent; border:none; color:var(--light-steel); opacity:0.5; cursor:pointer; font-size:0.95em; padding:2px 4px; line-height:1; }
-        .mastery-del-btn:hover { opacity:1; color:#ff7a7a; }
+        .masteries-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .mastery-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 2px;
+            border: 1px solid transparent;
+        }
+
+        .mastery-item:hover {
+            background: rgba(0, 168, 255, 0.05);
+            border-color: rgba(0, 168, 255, 0.2);
+        }
+
+        .mastery-cat {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--light-steel);
+            opacity: 0.6;
+            white-space: nowrap;
+        }
+
+        .mastery-nm {
+            flex: 1;
+            font-weight: 500;
+            color: var(--light-steel);
+            font-size: 0.9em;
+        }
+
+        .mastery-tag {
+            font-size: 0.68em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+
+        .mastery-tag.offerte {
+            background: rgba(0, 168, 255, 0.12);
+            color: #7fd4ff;
+        }
+
+        .mastery-tag.achetee {
+            background: rgba(255, 200, 90, 0.12);
+            color: #ffd486;
+        }
+
+        .masteries-empty {
+            padding: 10px 12px;
+            color: var(--light-steel);
+            opacity: 0.55;
+            font-size: 0.85em;
+        }
+
+        .mastery-add-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+
+        .m-add-btn {
+            background: rgba(0, 168, 255, 0.08);
+            border: 1px solid rgba(0, 168, 255, 0.25);
+            color: var(--light-steel);
+            font-size: 0.74em;
+            padding: 5px 9px;
+            border-radius: 3px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .m-add-btn:hover {
+            background: rgba(0, 168, 255, 0.16);
+        }
+
+        .mastery-edit-input,
+        .mastery-edit-select {
+            flex: 1;
+            min-width: 0;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--light-steel);
+            font-size: 0.85em;
+            padding: 4px 8px;
+            border-radius: 3px;
+        }
+
+        .mastery-tag.ajoutee {
+            background: rgba(120, 200, 120, 0.14);
+            color: #9fdca0;
+        }
+
+        .mastery-del-btn {
+            background: transparent;
+            border: none;
+            color: var(--light-steel);
+            opacity: 0.5;
+            cursor: pointer;
+            font-size: 0.95em;
+            padding: 2px 4px;
+            line-height: 1;
+        }
+
+        .mastery-del-btn:hover {
+            opacity: 1;
+            color: #ff7a7a;
+        }
 
         .skill-item {
             display: flex;
@@ -2593,7 +2691,8 @@
                     <div class="counters-grid">
                         <div class="counter-item">
                             <div class="counter-label"><span class="emoji">⚡</span> Points de Force <span
-                                    style="font-size:0.72em;color:var(--silver-chrome);font-weight:400;">· auto : Intuition
+                                    style="font-size:0.72em;color:var(--silver-chrome);font-weight:400;">· auto :
+                                    Intuition
                                     + Présence</span></div>
                             <div class="counter-controls">
                                 <button class="counter-btn minus" onclick="modifyCounter('force', -1)">−</button>
@@ -2707,7 +2806,8 @@
                         </div>
                         <button class="roll-btn skill" id="simple-roll-btn" onclick="rollSimple()" disabled>🎲 LANCER LE
                             JET</button>
-                    <label class="private-roll-toggle"><input type="checkbox" id="simple-no-mastery"> 🚫 Sans maîtrise (−2)</label>
+                        <label class="private-roll-toggle"><input type="checkbox" id="simple-no-mastery"> 🚫 Sans
+                            maîtrise (−2)</label>
                         <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
                                 onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
                     </div>
@@ -2772,7 +2872,8 @@
                     </div>
                     <button class="roll-btn skill" id="skill-page-roll-btn" onclick="rollSkillPage()" disabled>🎲 LANCER
                         LE JET</button>
-                    <label class="private-roll-toggle"><input type="checkbox" id="skill-page-no-mastery"> 🚫 Sans maîtrise (−2)</label>
+                    <label class="private-roll-toggle"><input type="checkbox" id="skill-page-no-mastery"> 🚫 Sans
+                        maîtrise (−2)</label>
                     <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
                             onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
                     <div class="roll-info">
@@ -3027,7 +3128,8 @@
                         style="margin-top: 20px;">
                         ⚡⚔ Lancer le jet Force + Compétence
                     </button>
-                    <label class="private-roll-toggle"><input type="checkbox" id="conjoint-no-mastery"> 🚫 Sans maîtrise (−2)</label>
+                    <label class="private-roll-toggle"><input type="checkbox" id="conjoint-no-mastery"> 🚫 Sans maîtrise
+                        (−2)</label>
                     <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
                             onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
                     <div class="roll-info" style="margin-top: 16px;">
@@ -3156,9 +3258,9 @@
     <script>
         const SABER_COLORS = {
             argent: { name: "Argent", effect: "Le coût en Points de Force de vos pouvoirs est réduit de 1 (minimum 1)." },
-            blanc: { name: "Blanc", effect: "Les bonus et malus conférés par les registres émotionnels sont augmentés de 1." },
+            blanc: { name: "Blanc", effect: " Un pouvoir sublimé par son registre gagne +1 en Puissance ; un pouvoir corrompu par lui subit −1 en Puissance." },
             bleu: { name: "Bleu", effect: "Pouvoir utiliser pour protéger quelqu'un d'autre +1 en Puissance." },
-            "bleu-clair": { name: "Bleu clair", effect: "Les pouvoirs obscurs -2 de puissance contre vous. Peut relancer un jet de Force raté (Puissance-2 si réussi)." },
+            "bleu-clair": { name: "Bleu clair", effect: "Les pouvoirs obscurs subissent −2 Puissance contre toi. Et  si un jet de Force ne produit aucune Puissance, le personnage peut relancer le jet." },
             cyan: { name: "Cyan", effect: "+2 aux jets de synchronisation. +1 de Puissance lors de la participation à un pouvoir conjoint." },
             indigo: { name: "Indigo", effect: "Régénération de Points de Force : 4/heure au lieu de 2." },
             jaune: { name: "Jaune", effect: "Augmente la puissance des pouvoirs de 1 lorsque le sorcier utilise un bonus tactique ou que l'adversaire subit un malus tactique." },
@@ -3166,7 +3268,7 @@
             magenta: { name: "Magenta", effect: "Augmente de 3 la consommation en points de force d'un pouvoir pour utiliser un attribut différent pour lancer le pouvoir. " },
             or: { name: "Or", effect: "Le personnage possède deux points de focalisations par round." },
             orange: { name: "Orange", effect: "Pouvoirs offensifs directs : −1 de Puissance. Pouvoirs non-offensifs : +1 de Puissance" },
-            rose: { name: "Rose", effect: "+1 de puissance sur les pouvoirs bénéfiques ciblant des alliés." },
+            rose: { name: "Rose", effect: "Pouvoirs améliorant ou soignes les alliés ont +1 Puissance." },
             rouge: { name: "Rouge", effect: "Peut augmenter la puissance d'un pouvoir de 2, en échange d'une blessure de gravité 2 auto-infligée." },
             vert: { name: "Vert", effect: "Après avoir utilisé un Verbe de Force, le prochain pouvoir utilisant un Verbe différent gagne +1 en Puissance." },
             violet: { name: "Violet", effect: "+1 de Puissance sur les pouvoirs par blessure subie (maximum +3)." },
@@ -3637,15 +3739,15 @@
                 list.appendChild(item);
             });
         }
-        const M_SABER_TYPES = ['Standard','Claymore','Dual wield','Pique laser','Sabre double'];
-        const M_SABER_FORMS = ['Forme I — Shii-Cho','Forme II — Makashi','Forme III — Soresu','Forme IV — Ataru','Forme V — Shien','Forme V — Djem So','Forme VI — Niman','Forme VII — Juyo','Forme VII — Vaapad',"Jar'Kai",'Ysannanite','Praetoria Ishu','Praetoria Vonil'];
-        const M_CAT = { arme:'⚔ Arme', sabre_type:'🗡 Type de sabre', forme:'🌀 Forme de sabre', armure_medium:'🛡 Armure Médium', armure_lourde:'🛡 Armure Lourde', bouclier:'🛡 Déflecteur', vehicule:'🚀 Véhicule', monture:'🦎 Monture', specialite:'🧠 Spécialité', savoir_faire:'🔧 Savoir-faire' };
+        const M_SABER_TYPES = ['Standard', 'Claymore', 'Dual wield', 'Pique laser', 'Sabre double'];
+        const M_SABER_FORMS = ['Forme I — Shii-Cho', 'Forme II — Makashi', 'Forme III — Soresu', 'Forme IV — Ataru', 'Forme V — Shien', 'Forme V — Djem So', 'Forme VI — Niman', 'Forme VII — Juyo', 'Forme VII — Vaapad', "Jar'Kai", 'Ysannanite', 'Praetoria Ishu', 'Praetoria Vonil'];
+        const M_CAT = { arme: '⚔ Arme', sabre_type: '🗡 Type de sabre', forme: '🌀 Forme de sabre', armure_medium: '🛡 Armure Médium', armure_lourde: '🛡 Armure Lourde', bouclier: '🛡 Déflecteur', vehicule: '🚀 Véhicule', monture: '🦎 Monture', specialite: '🧠 Spécialité', savoir_faire: '🔧 Savoir-faire' };
         function renderMasteries() {
             const list = document.getElementById('masteries-list');
             if (!list) return;
-            const esc = v => String(v).replace(/[<>&"]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+            const esc = v => String(v).replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
             const ms = Array.isArray(appState.masteries) ? appState.masteries : [];
-            ms.forEach(m => { if (!m.id) m.id = `m_${Date.now()}_${Math.random().toString(36).substr(2,5)}`; });
+            ms.forEach(m => { if (!m.id) m.id = `m_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`; });
             if (!ms.length) { list.innerHTML = '<div class="masteries-empty">Aucune maîtrise. Ajoute-en avec les boutons ci-dessus, ou importe un personnage depuis le créateur.</div>'; return; }
             list.innerHTML = ms.map(m => {
                 const cat = M_CAT[m.category] || m.category;
@@ -3654,19 +3756,19 @@
                 else if (m.source === 'purchased') tag = '<span class="mastery-tag achetee">Achetée</span>';
                 else tag = '<span class="mastery-tag ajoutee">Ajoutée</span>';
                 let field;
-                if (m.category === 'sabre_type') field = `<select class="mastery-edit-select" onchange="updateMasteryName('${m.id}',this.value)"><option value="">— Type —</option>${M_SABER_TYPES.map(o=>`<option ${o===m.name?'selected':''}>${o}</option>`).join('')}</select>`;
-                else if (m.category === 'forme') field = `<select class="mastery-edit-select" onchange="updateMasteryName('${m.id}',this.value)"><option value="">— Forme —</option>${M_SABER_FORMS.map(o=>`<option ${o===m.name?'selected':''}>${o}</option>`).join('')}</select>`;
-                else field = `<input class="mastery-edit-input" type="text" placeholder="Nom…" value="${esc(m.name||'')}" oninput="updateMasteryName('${m.id}',this.value)">`;
+                if (m.category === 'sabre_type') field = `<select class="mastery-edit-select" onchange="updateMasteryName('${m.id}',this.value)"><option value="">— Type —</option>${M_SABER_TYPES.map(o => `<option ${o === m.name ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
+                else if (m.category === 'forme') field = `<select class="mastery-edit-select" onchange="updateMasteryName('${m.id}',this.value)"><option value="">— Forme —</option>${M_SABER_FORMS.map(o => `<option ${o === m.name ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
+                else field = `<input class="mastery-edit-input" type="text" placeholder="Nom…" value="${esc(m.name || '')}" oninput="updateMasteryName('${m.id}',this.value)">`;
                 return `<div class="mastery-item"><span class="mastery-cat">${cat}</span>${field}${tag}<button class="mastery-del-btn" onclick="removeMastery('${m.id}')" title="Retirer">✕</button></div>`;
             }).join('');
         }
         function addMastery(category) {
             if (!Array.isArray(appState.masteries)) appState.masteries = [];
-            appState.masteries.push({ id: `m_${Date.now()}_${Math.random().toString(36).substr(2,5)}`, category, name: '', source: 'manuelle', cost: 0 });
+            appState.masteries.push({ id: `m_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`, category, name: '', source: 'manuelle', cost: 0 });
             renderMasteries();
         }
-        function updateMasteryName(id, name) { const m = (appState.masteries||[]).find(x => x.id === id); if (m) m.name = name; }
-        function removeMastery(id) { appState.masteries = (appState.masteries||[]).filter(x => x.id !== id); renderMasteries(); }
+        function updateMasteryName(id, name) { const m = (appState.masteries || []).find(x => x.id === id); if (m) m.name = name; }
+        function removeMastery(id) { appState.masteries = (appState.masteries || []).filter(x => x.id !== id); renderMasteries(); }
         function modifySkillById(id, delta) {
             const skill = appState.skills.find(s => s.id === id);
             if (skill) { skill.level = Math.max(1, Math.min(8, skill.level + delta)); renderSkills(); updateRollSelects(); }
@@ -3938,7 +4040,8 @@
             showNotification('⚡ Points de Force rétablis au maximum');
         }
         // Lance ctx.nDice dés et résout la Puissance, la cascade, le coût et l'effet incontrôlé
-        function nvRoll(ctx) {            let rolled = [], puissance = 0, bad1 = 0, bad2 = 0, cascade = 0, nRes = 0, nTr = 0;
+        function nvRoll(ctx) {
+            let rolled = [], puissance = 0, bad1 = 0, bad2 = 0, cascade = 0, nRes = 0, nTr = 0;
             for (let i = 0; i < ctx.nDice; i++) {
                 const f = nvRollDie(ctx.faces); rolled.push(f);
                 if (f === 'Succès') puissance++;
@@ -4097,7 +4200,7 @@
             const attrLevel = getAttributeLevel(attr);
             const skill = appState.skills.find(s => s.name === skillName);
             if (!skill) return;
-            const noMastSimple = (document.getElementById('simple-no-mastery')||{}).checked;
+            const noMastSimple = (document.getElementById('simple-no-mastery') || {}).checked;
             const skillLevel = getSkillLevel(noMastSimple ? Math.max(1, skill.level - 2) : skill.level);
             const threshold = 13 - attrLevel.faces;
             const baseExplosion = skillLevel.explosion;
@@ -4119,7 +4222,7 @@
             const attrLevel = getAttributeLevel(attr);
             const skill = appState.skills.find(s => s.name === skillName);
             if (!skill) return;
-            const noMastPage = (document.getElementById('skill-page-no-mastery')||{}).checked;
+            const noMastPage = (document.getElementById('skill-page-no-mastery') || {}).checked;
             const skillLevel = getSkillLevel(noMastPage ? Math.max(1, skill.level - 2) : skill.level);
             const threshold = 13 - attrLevel.faces;
             const baseExplosion = skillLevel.explosion;
@@ -4155,7 +4258,7 @@
             const skillAttr = appState.attributes[skillAttrName];
             const skillAttrLevel = getAttributeLevel(skillAttr);
             const skillThreshold = 13 - skillAttrLevel.faces;
-            const noMastConj = (document.getElementById('conjoint-no-mastery')||{}).checked;
+            const noMastConj = (document.getElementById('conjoint-no-mastery') || {}).checked;
             const skillLevel = getSkillLevel(noMastConj ? Math.max(1, skill.level - 2) : skill.level);
             const skillExplosion = Math.max(3, Math.min(12, skillLevel.explosion - explosionMod));
             const skillResult = rollDice(skillLevel.dice, skillThreshold, skillExplosion);
