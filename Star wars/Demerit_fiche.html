@@ -2945,15 +2945,16 @@
                     <label class="registre-active-label" for="registre-select">Registre actif</label>
                     <select id="registre-select" class="form-select" onchange="setRegistre(this.value)">
                         <option value="neutre">⚖️ Neutre — Aucune émotion dominante</option>
-                        <option value="ardeur">🔥 Ardeur — Colère, rage, passion</option>
-                        <option value="terreur">😱 Terreur — Peur, angoisse</option>
-                        <option value="mepris">😤 Mépris — Dégoût, dédain</option>
-                        <option value="ombre">🌑 Ombre — Deuil, tristesse</option>
-                        <option value="acier">🛡️ Acier — Calme, contrôle, sang-froid</option>
-                        <option value="determination">🎯 Détermination — Confiance, élan</option>
-                        <option value="lumiere">✨ Lumière — Joie, espoir</option>
-                        <option value="lien">💗 Lien — Amour, loyauté</option>
+                        <option value="acier">🛡️ Acier — Calme, Concentration, Sérénité · Lumineux</option>
+                        <option value="ardeur">🔥 Ardeur — Rage, Passion, Fureur · Obscur</option>
+                        <option value="determination">🎯 Détermination — Confiance, Résolution, Volonté · Neutre</option>
+                        <option value="lien">💗 Lien — Amour, Loyauté, Compassion · Lumineux</option>
+                        <option value="lumiere">✨ Lumière — Joie, Espoir, Émerveillement · Lumineux</option>
+                        <option value="mepris">😤 Mépris — Dédain, Arrogance, Dégoût · Obscur</option>
+                        <option value="ombre">🌑 Ombre — Tristesse, Deuil, Mélancolie · Neutre</option>
+                        <option value="terreur">😱 Terreur — Peur, Angoisse, Panique · Obscur</option>
                     </select>
+                    <div id="registre-active-side" style="font-size:0.82em;font-weight:600;margin-bottom:5px;letter-spacing:0.03em;"></div>
                     <div class="registre-active-effects"><span id="registre-active-bonus"
                             class="registre-bonus"></span><span id="registre-active-malus"
                             class="registre-malus"></span></div>
@@ -3440,14 +3441,14 @@
             'Volonté': 'var(--saber-yellow)'
         };
         const FORCE_VERBS = [
+            { id: 'absorber', name: 'Absorber', attr: 'Présence', desc: "Voler, drainer, dévorer l'essence d'autrui — vie, énergie, Force.", level: 1 },
             { id: 'amplifier', name: 'Amplifier', attr: 'Présence', desc: "Renforcer, exalter, transcender — pousse les capacités au-delà de leurs limites.", level: 1 },
             { id: 'dissiper', name: 'Dissiper', attr: 'Intelligence', desc: "Défaire la cohésion — désintégrer, annuler, trancher un lien ou un pouvoir.", level: 1 },
             { id: 'harmoniser', name: 'Harmoniser', attr: 'Intuition', desc: "Guérir, purifier, équilibrer en s'accordant aux flux.", level: 1 },
-            { id: 'mouvoir', name: 'Mouvoir', attr: 'Volonté', desc: "Déplacer, propulser, contraindre par la seule volonté.", level: 1 },
             { id: 'lier', name: 'Lier', attr: 'Présence', desc: "Connecter, asservir, entraver — liens, domination, paralysie.", level: 1 },
             { id: 'manifester', name: 'Manifester', attr: 'Volonté', desc: "Créer et projeter une forme vers l'extérieur — éclairs, illusion, énergie.", level: 1 },
+            { id: 'mouvoir', name: 'Mouvoir', attr: 'Volonté', desc: "Déplacer, propulser, contraindre par la seule volonté.", level: 1 },
             { id: 'percevoir', name: 'Percevoir', attr: 'Intuition', desc: "Révéler, sentir, prévoir — Force Sense, visions.", level: 1 },
-            { id: 'absorber', name: 'Absorber', attr: 'Présence', desc: "Voler, drainer, dévorer l'essence d'autrui — vie, énergie, Force.", level: 1 },
             { id: 'proteger', name: 'Protéger', attr: 'Volonté', desc: "Bloquer, encaisser, endiguer ce qui arrive au seuil — bouclier, Tutaminis.", level: 1 },
             { id: 'transformer', name: 'Transformer', attr: 'Intelligence', desc: "Altérer, muter, corrompre la nature d'une chose — alchimie Sith.", level: 1 }
         ];
@@ -3497,6 +3498,13 @@
             const registre = REGISTRES[registreId];
             document.getElementById('registre-active-bonus').textContent = registre.bonusText;
             document.getElementById('registre-active-malus').textContent = registre.malusText;
+            const _al = registre.align || 0;
+            const _side = document.getElementById('registre-active-side');
+            if (_side) {
+                if (_al < 0) { _side.textContent = '⚫ Côté obscur (' + _al + ')'; _side.style.color = '#ff7a7a'; }
+                else if (_al > 0) { _side.textContent = '🔵 Côté lumineux (+' + _al + ')'; _side.style.color = '#7fb8ff'; }
+                else { _side.textContent = '⚪ Équilibre'; _side.style.color = '#b7c2cc'; }
+            }
             if (typeof updateForcePreview === 'function') updateForcePreview();
         }
         function getRegistreModifier(verbId) {
