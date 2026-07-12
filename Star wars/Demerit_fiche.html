@@ -2658,7 +2658,7 @@
                 <div class="elan-section">
                     <div class="card-title" style="color: var(--danger-red);"><span class="icon"
                             style="background: rgba(248, 81, 73, 0.15); border-color: rgba(248, 81, 73, 0.3); color: var(--danger-red);">♥</span>Élan
-                        & Blessures</div>
+                        & Afflictions</div>
                     <div class="elan-header">
                         <div class="elan-capacity"><span class="elan-capacity-label">CAPACITÉ :</span><input
                                 type="number" id="elan-max" value="10" min="1" readonly
@@ -3534,6 +3534,7 @@
             const counter = appState.counters[type];
             counter.current = Math.max(0, Math.min(counter.max, counter.current + delta));
             updateCounterDisplay(type);
+            if (type === 'force' && typeof syncForceFatigue === 'function') syncForceFatigue();
         }
         function updateCounters() {
             ['force'].forEach(type => {
@@ -3544,6 +3545,7 @@
                 updateCounterDisplay(type);
             });
             if (typeof updateForcePA === 'function') updateForcePA();
+            if (typeof syncForceFatigue === 'function') syncForceFatigue();
         }
         function updateCounterDisplay(type) {
             const counter = appState.counters[type];
@@ -3576,7 +3578,8 @@
             appState.wounds.forEach((wound, index) => {
                 const item = document.createElement('div');
                 item.className = 'wound-item';
-                item.innerHTML = `<div class="wound-info"><div class="wound-name">${wound.name}</div><div class="wound-type">${wound.type}</div></div><div class="wound-gravity">${wound.gravity}</div><button class="wound-remove" onclick="removeWound(${index})">✕</button>`;
+                const removeBtn = wound.auto ? `<span style="font-size:0.62em;color:var(--silver-chrome);opacity:0.7;padding:0 6px;white-space:nowrap;" title="Affliction automatique — liée aux Points de Force restants">AUTO</span>` : `<button class="wound-remove" onclick="removeWound(${index})">✕</button>`;
+                item.innerHTML = `<div class="wound-info"><div class="wound-name">${wound.name}</div><div class="wound-type">${wound.type}</div></div><div class="wound-gravity">${wound.gravity}</div>${removeBtn}`;
                 list.appendChild(item);
             });
         }
@@ -4011,12 +4014,38 @@
             const nDice = Math.max(1, parseInt(diceEl && diceEl.value) || verb.level);
             return { verb, attrName, defaultAttr, offAttribute, attrValue, attrLevel, etat, faces, nDice };
         }
+        // Fatigue de Force : affliction automatique selon les Points de Force restants
+        // >50% : rien | 25-50% : gravité 1 | 10-25% : gravité 2 | 1-10% : gravité 3 | 0 : gravité 5
+        function forceFatigueGravity() {
+            const c = appState.counters.force;
+            if (!c || c.max <= 0) return 0;
+            const pct = (c.current / c.max) * 100;
+            if (c.current <= 0) return 5;
+            if (pct <= 10) return 3;
+            if (pct <= 25) return 2;
+            if (pct <= 50) return 1;
+            return 0;
+        }
+        function syncForceFatigue() {
+            if (!Array.isArray(appState.wounds)) appState.wounds = [];
+            const g = forceFatigueGravity();
+            const idx = appState.wounds.findIndex(w => w.auto === 'forceFatigue');
+            const names = { 1: 'Fatigue légère', 2: 'Fatigue modérée', 3: 'Fatigue sévère', 5: 'Épuisement total' };
+            if (g === 0) {
+                if (idx !== -1) appState.wounds.splice(idx, 1);
+            } else {
+                const wound = { name: names[g] + ' (Force)', type: 'Fatigue', gravity: g, auto: 'forceFatigue' };
+                if (idx === -1) appState.wounds.push(wound); else appState.wounds[idx] = wound;
+            }
+            renderWounds(); recalcHealthFromWounds(); syncElanFromHealth();
+        }
         // Consomme des Points de Force (compteur dédié) et rafraîchit l'affichage
         function consumeForce(cost) {
             const c = appState.counters.force;
             c.current = Math.max(0, c.current - cost);
             updateCounterDisplay('force');
             updateForcePA();
+            syncForceFatigue();
         }
         // Affiche la réserve de Points de Force sur la page Force
         function updateForcePA() {
@@ -4040,6 +4069,7 @@
             c.current = wasFull ? newMax : Math.min(c.current, newMax);
             updateCounterDisplay('force');
             updateForcePA();
+            syncForceFatigue();
         }
         // Rétablit les Points de Force au maximum (repos / méditation) — met à jour le compteur ET le bandeau
         function refillForce() {
@@ -4047,6 +4077,7 @@
             c.current = c.max;
             updateCounterDisplay('force');
             updateForcePA();
+            syncForceFatigue();
             showNotification('⚡ Points de Force rétablis au maximum');
         }
         // Lance ctx.nDice dés et résout la Puissance, la cascade, le coût et l'effet incontrôlé
