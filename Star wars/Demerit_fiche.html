@@ -370,6 +370,12 @@
             gap: 24px;
         }
 
+        .rolls-page {
+            grid-template-columns: 3fr 2fr;
+            gap: 24px;
+            align-items: start;
+        }
+
         .objects-page {
             grid-template-columns: 1fr;
             gap: 24px;
@@ -864,6 +870,7 @@
             color: var(--void-black);
         }
 
+        .rolls-column { display:flex; flex-direction:column; gap:16px; min-width:0; }
         .skills-column {
             background: var(--card-bg);
             border-radius: 4px;
@@ -919,7 +926,7 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
-            max-height: 400px;
+            max-height: 680px;
             overflow-y: auto;
         }
 
@@ -2262,7 +2269,8 @@
             .attributes-page,
             .skills-page,
             .force-page,
-            .saber-page {
+            .saber-page,
+            .rolls-page {
                 grid-template-columns: 1fr;
             }
 
@@ -2585,6 +2593,21 @@
             color: var(--saber-purple);
         }
 
+        .roll-context-bar { background:var(--card-bg); border:1px solid var(--card-border); border-radius:4px; overflow:hidden; }
+        .ctx-bar-title { padding:9px 14px; font-size:0.82em; font-weight:600; letter-spacing:0.05em; color:var(--silver-chrome); cursor:pointer; user-select:none; background:rgba(0,168,255,0.06); }
+        .ctx-bar-title:hover { background:rgba(0,168,255,0.12); }
+        #ctx-bar-body { padding:10px 14px 12px; display:flex; flex-direction:column; gap:8px; }
+        #ctx-bar-body.collapsed { display:none; }
+        .ctx-row { display:grid; grid-template-columns:100px 1fr; gap:6px 10px; align-items:center; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.07); }
+        .ctx-row:last-child { border-bottom:none; padding-bottom:2px; }
+        .ctx-row:first-child { padding-top:2px; }
+        .ctx-row .ctx-effect { grid-column:1 / -1; }
+        .ctx-label { font-size:0.8em; font-weight:600; color:var(--silver-chrome); white-space:nowrap; }
+        .ctx-select { font-size:0.85em; padding:5px 8px; width:100%; }
+        .ctx-value { font-size:0.85em; font-weight:600; color:var(--light-steel); }
+        .ctx-effect { font-size:0.8em; line-height:1.45; color:var(--light-steel); opacity:0.85; }
+
+
         .force-roll-panel {
             display: none;
         }
@@ -2602,6 +2625,7 @@
             <div class="nav-tabs">
                 <button class="nav-tab active" onclick="switchPage('attributes', this)">Personnage</button>
                 <button class="nav-tab" onclick="switchPage('skills', this)">Compétences</button>
+                <button class="nav-tab" onclick="switchPage('rolls', this)">Jets</button>
                 <button class="nav-tab" onclick="switchPage('force', this)">Force</button>
                 <button class="nav-tab" onclick="switchPage('saber', this)">Sabre Laser</button>
                 <button class="nav-tab" onclick="switchPage('objects', this)">Objets</button>
@@ -2774,45 +2798,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="roll-section skill">
-                    <div class="roll-header">
-                        <div class="roll-icon skill">🎲</div>
-                        <div class="roll-title">Jet Simple</div>
-                    </div>
-                    <div class="roll-form">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                            <div class="form-group"><label class="form-label">Attribut</label><select
-                                    id="attribute-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
-                                    <option value="puissance">Puissance</option>
-                                    <option value="vivacite">Vivacité</option>
-                                    <option value="precision">Précision</option>
-                                    <option value="endurance">Endurance</option>
-                                    <option value="intelligence">Intelligence</option>
-                                    <option value="intuition">Intuition</option>
-                                    <option value="volonte">Volonté</option>
-                                    <option value="presence">Présence</option>
-                                </select></div>
-                            <div class="form-group"><label class="form-label">Compétence</label><select
-                                    id="skill-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
-                                </select></div>
-                        </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                            <div class="form-group"><label class="form-label">Bonus / Malus</label><input
-                                    id="roll-bonus" class="bonus-input" type="number" value="0"></div>
-                            <div class="form-group"><label class="form-label">Mod. Explosion</label><input
-                                    id="roll-explosion" class="bonus-input" type="number" value="0" min="-4" max="4">
-                            </div>
-                        </div>
-                        <button class="roll-btn skill" id="simple-roll-btn" onclick="rollSimple()" disabled>🎲 LANCER LE
-                            JET</button>
-                        <label class="private-roll-toggle"><input type="checkbox" id="simple-no-mastery"> 🚫 Sans
-                            maîtrise (−2)</label>
-                        <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
-                                onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
-                    </div>
-                </div>
+                
             </div>
         </div>
 
@@ -2824,7 +2810,10 @@
                     <div class="column-title">Compétences</div>
                 </div>
                 <div class="skills-list" id="skills-list"></div>
-                <div class="column-header" style="margin-top:22px;">
+                
+            </div>
+            <div class="skills-column">
+<div class="column-header">
                     <div class="column-icon skills">🎓</div>
                     <div class="column-title">Maîtrises</div>
                 </div>
@@ -2842,12 +2831,117 @@
                 </div>
                 <div class="masteries-list" id="masteries-list"></div>
             </div>
-            <div class="roll-section skill">
-                <div class="roll-header">
-                    <div class="roll-icon skill">🎲</div>
-                    <div class="roll-title">Jet de Compétence</div>
+            
+            
+                
+
+
+        </div>
+
+        <!-- PAGE JETS -->
+        <div class="page rolls-page" id="page-rolls">
+            <div class="rolls-column">
+<div class="roll-section skill" id="unified-roll-module">
+                    <div class="roll-header">
+                        <div class="roll-icon skill">🎲</div>
+                        <div class="roll-title">Jets</div>
+                    </div>
+                    <div id="force-pa-readout"
+                    style="margin: 0 0 8px; padding: 10px 14px; background: rgba(255,204,0,0.06); border: 1px solid rgba(255,204,0,0.2); border-radius: 4px; font-size: 0.85em; color: var(--light-steel);">
                 </div>
-                <div class="roll-form">
+                <button class="force-refill-btn" onclick="refillForce()"
+                    title="Rétablit les Points de Force au maximum (repos / méditation). Synchronise le compteur de la page Personnage.">↻
+                    Régénérer les Points de Force</button>
+                    <div class="force-roll-tabs" style="margin-top:10px;">
+                        <button class="force-roll-tab" id="urm-tab-comp" onclick="switchUnifiedRoll('comp', this)">🎲 Compétence</button>
+                        <button class="force-roll-tab" id="urm-tab-simple" onclick="switchUnifiedRoll('simple', this)">⚡ Force pure</button>
+                        <button class="force-roll-tab active" id="urm-tab-couple" onclick="switchUnifiedRoll('couple', this)">⚡⚔ Force + Compétence</button>
+                    </div>
+                    
+                    
+                    
+                    <div id="force-roll-couple" class="force-roll-panel active">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div class="roll-form">
+                            <div
+                                style="font-weight: 600; color: var(--saber-purple); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(179, 102, 255, 0.2); font-family: var(--font-display);">
+                                ⚡ JET DE FORCE</div>
+                            <div class="form-group"><label class="form-label">Verbe de Force</label>
+                                <select id="force-verb-select" class="form-select"
+                                    onchange="onForceConjointVerbChange()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Attribut (Force) <span
+                                        style="color: var(--silver-chrome); font-weight: 400;">(modifiable)</span></label>
+                                <select id="force-attr-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                    <option value="puissance">Puissance</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="precision">Précision</option>
+                                    <option value="endurance">Endurance</option>
+                                    <option value="intelligence">Intelligence</option>
+                                    <option value="intuition">Intuition</option>
+                                    <option value="volonte">Volonté</option>
+                                    <option value="presence">Présence</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Cible de Force</label>
+                                <select id="force-target-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Nombre de dés</label>
+                                <input id="force-dice" class="bonus-input" type="number" value="1" min="1" max="20">
+                            </div>
+                            <div class="form-group"><label class="form-label">Mod. Puissance</label>
+                                <input id="power-puissance-mod" class="bonus-input" type="number" value="0">
+                            </div>
+                        </div>
+                        <div class="roll-form">
+                            <div
+                                style="font-weight: 600; color: var(--success-green); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(63, 185, 80, 0.2); font-family: var(--font-display);">
+                                ⚔ JET DE COMPÉTENCE</div>
+                            <div class="form-group"><label class="form-label">Attribut (Compétence)</label>
+                                <select id="conjoint-attr-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                    <option value="puissance">Puissance</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="precision">Précision</option>
+                                    <option value="endurance">Endurance</option>
+                                    <option value="intelligence">Intelligence</option>
+                                    <option value="intuition">Intuition</option>
+                                    <option value="volonte">Volonté</option>
+                                    <option value="presence">Présence</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Compétence</label>
+                                <select id="conjoint-skill-select" class="form-select" onchange="updateRollButtons()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Bonus / Malus Global</label>
+                                <input id="force-bonus" class="bonus-input" type="number" value="0">
+                            </div>
+                            <div class="form-group"><label class="form-label">Mod. Explosion</label>
+                                <input id="force-explosion" class="bonus-input" type="number" value="0" min="-4"
+                                    max="4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="force-roll-preview" id="unified-preview" style="margin:10px 0 4px; font-size:0.85em; line-height:1.5;"></div>
+                    <button class="roll-btn force" id="conjoint-roll-btn" onclick="rollConjoint()" disabled
+                        style="margin-top: 20px;">
+                        ⚡⚔ Lancer le jet Force + Compétence
+                    </button>
+                    <label class="private-roll-toggle"><input type="checkbox" id="conjoint-no-mastery"> 🚫 Sans maîtrise
+                        (−2)</label>
+                    <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
+                            onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
+                    
+                </div>
+                <div id="urm-panel-comp" class="force-roll-panel">
+                        <div class="roll-form">
                     <div class="form-group"><label class="form-label">Attribut</label><select
                             id="skill-page-attr-select" class="form-select" onchange="updateRollButtons()">
                             <option value="">— Sélectionner —</option>
@@ -2877,15 +2971,92 @@
                         maîtrise (−2)</label>
                     <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
                             onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
-                    <div class="roll-info">
-                        <div class="roll-info-title">MÉCANIQUE</div>
-                        <div class="roll-info-content">L'attribut détermine le seuil de réussite sur les d10.<br>La
-                            compétence détermine le nombre de dés lancés.<br>Bonus d'attribut = moitié de l'attribut.
+                    
+                </div>
+            
+                    </div><div id="force-roll-simple" class="force-roll-panel">
+                    <div class="roll-form">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div class="form-group"><label class="form-label">Verbe de Force</label>
+                                <select id="force-simple-verb-select" class="form-select"
+                                    onchange="onForceSimpleVerbChange()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Attribut <span
+                                        style="color: var(--silver-chrome); font-weight: 400;">(modifiable)</span></label>
+                                <select id="force-simple-attr-select" class="form-select"
+                                    onchange="updateForcePreview()">
+                                    <option value="">— Sélectionner —</option>
+                                    <option value="puissance">Puissance</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="precision">Précision</option>
+                                    <option value="endurance">Endurance</option>
+                                    <option value="intelligence">Intelligence</option>
+                                    <option value="intuition">Intuition</option>
+                                    <option value="volonte">Volonté</option>
+                                    <option value="presence">Présence</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Cible de Force</label>
+                                <select id="force-simple-target-select" class="form-select"
+                                    onchange="updateForcePreview()">
+                                    <option value="">— Sélectionner —</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Nombre de dés</label>
+                                <input id="force-simple-dice" class="bonus-input" type="number" value="1" min="1"
+                                    max="20" onchange="updateForcePreview()">
+                            </div>
+                            <div class="form-group"><label class="form-label">Bonus Puissance</label>
+                                <input id="force-simple-bonus" class="bonus-input" type="number" value="0">
+                            </div>
+                        </div>
+                        <div id="force-simple-preview" class="nv-preview"></div>
+                        <button class="roll-btn force" id="force-simple-roll-btn" onclick="rollForceSimple()" disabled
+                            style="margin-top: 16px;">
+                            ⚡ Lancer le jet de Force
+                        </button>
+                        <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
+                                onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
+                    </div>
+                    
+                </div></div>
+            </div>
+            <div class="rolls-column">
+<div class="roll-context-bar" id="roll-context-bar">
+                    <div class="ctx-bar-title" onclick="toggleCtxBar()">⚙ Contexte de jeu <span id="ctx-bar-caret">▾</span></div>
+                    <div id="ctx-bar-body">
+                        <div class="ctx-row">
+                            <span class="ctx-label">🎭 Registre</span>
+                            <select id="ctx-registre" class="form-select ctx-select" onchange="setRegistre(this.value); syncContextBar();"></select>
+                            <span class="ctx-effect" id="ctx-registre-effect"></span>
+                        </div>
+                        <div class="ctx-row">
+                            <span class="ctx-label">🗡 Forme</span>
+                            <select id="ctx-forme" class="form-select ctx-select" onchange="setCtxForm(this.value)"></select>
+                            <span class="ctx-effect" id="ctx-forme-effect"></span>
+                        </div>
+                        <div class="ctx-row">
+                            <span class="ctx-label">💎 Cristal</span>
+                            <span class="ctx-value" id="ctx-crystal-name">Aucun</span>
+                            <span class="ctx-effect" id="ctx-crystal-effect"></span>
+                        </div>
+                        <div class="ctx-row">
+                            <span class="ctx-label">🌈 Couleur 1</span>
+                            <span class="ctx-value" id="ctx-color-name">Aucune</span>
+                            <span class="ctx-effect" id="ctx-color-effect"></span>
+                        </div>
+                        <div class="ctx-row">
+                            <span class="ctx-label">🌈 Couleur 2</span>
+                            <span class="ctx-value" id="ctx-color2-name">Aucune</span>
+                            <span class="ctx-effect" id="ctx-color2-effect"></span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <!-- PAGE FORCE -->
         <div class="page force-page" id="page-force">
@@ -2975,178 +3146,7 @@
                 </div>
                 <div class="skills-list" id="force-targets-list"></div>
             </div>
-            <div class="roll-section force" style="grid-column: span 2;">
-                <div class="roll-header">
-                    <div class="roll-icon force">⚡</div>
-                    <div class="roll-title">Jets de Force</div>
-                </div>
-
-                <div id="force-pa-readout"
-                    style="margin: 0 0 8px; padding: 10px 14px; background: rgba(255,204,0,0.06); border: 1px solid rgba(255,204,0,0.2); border-radius: 4px; font-size: 0.85em; color: var(--light-steel);">
-                </div>
-                <button class="force-refill-btn" onclick="refillForce()"
-                    title="Rétablit les Points de Force au maximum (repos / méditation). Synchronise le compteur de la page Personnage.">↻
-                    Régénérer les Points de Force</button>
-
-                <div class="force-roll-tabs">
-                    <button class="force-roll-tab active" onclick="switchForceRollMode('simple', this)">⚡ Force
-                        pure</button>
-                    <button class="force-roll-tab" onclick="switchForceRollMode('couple', this)">⚡⚔ Force +
-                        Compétence</button>
-                </div>
-
-                <!-- JET SIMPLE (Force seule) -->
-                <div id="force-roll-simple" class="force-roll-panel active">
-                    <div class="roll-form">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div class="form-group"><label class="form-label">Verbe de Force</label>
-                                <select id="force-simple-verb-select" class="form-select"
-                                    onchange="onForceSimpleVerbChange()">
-                                    <option value="">— Sélectionner —</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label class="form-label">Attribut <span
-                                        style="color: var(--silver-chrome); font-weight: 400;">(modifiable)</span></label>
-                                <select id="force-simple-attr-select" class="form-select"
-                                    onchange="updateForcePreview()">
-                                    <option value="">— Sélectionner —</option>
-                                    <option value="puissance">Puissance</option>
-                                    <option value="vivacite">Vivacité</option>
-                                    <option value="precision">Précision</option>
-                                    <option value="endurance">Endurance</option>
-                                    <option value="intelligence">Intelligence</option>
-                                    <option value="intuition">Intuition</option>
-                                    <option value="volonte">Volonté</option>
-                                    <option value="presence">Présence</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label class="form-label">Cible de Force</label>
-                                <select id="force-simple-target-select" class="form-select"
-                                    onchange="updateForcePreview()">
-                                    <option value="">— Sélectionner —</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label class="form-label">Nombre de dés</label>
-                                <input id="force-simple-dice" class="bonus-input" type="number" value="1" min="1"
-                                    max="20" onchange="updateForcePreview()">
-                            </div>
-                            <div class="form-group"><label class="form-label">Bonus Puissance</label>
-                                <input id="force-simple-bonus" class="bonus-input" type="number" value="0">
-                            </div>
-                        </div>
-                        <div id="force-simple-preview" class="nv-preview"></div>
-                        <button class="roll-btn force" id="force-simple-roll-btn" onclick="rollForceSimple()" disabled
-                            style="margin-top: 16px;">
-                            ⚡ Lancer le jet de Force
-                        </button>
-                        <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
-                                onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
-                    </div>
-                    <div class="roll-info" style="margin-top: 16px;">
-                        <div class="roll-info-title">MÉCANIQUE</div>
-                        <div class="roll-info-content">Nombre de dés <strong>au choix</strong> (défaut = niveau du
-                            verbe). Qualité du dé = <strong>attribut</strong> (celui du verbe par défaut, modifiable —
-                            <strong>+3 PA</strong> si différent du verbe). Le <strong>registre actif</strong> sublime /
-                            laisse composé / corrompt le dé selon le verbe. Le jet produit une
-                            <strong>Puissance</strong>
-                            (+ cascade) et d'éventuels <strong>effets néfastes</strong>. Coût PA = nombre de dés +
-                            Dissonance
-                            − (Résonance + Transcendance)
-                            + 3 si attribut incohérent.
-                        </div>
-                    </div>
-                </div>
-
-                <!-- JET COUPLÉ (Force + Compétence) -->
-                <div id="force-roll-couple" class="force-roll-panel">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
-                        <div class="roll-form">
-                            <div
-                                style="font-weight: 600; color: var(--saber-purple); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(179, 102, 255, 0.2); font-family: var(--font-display);">
-                                ⚡ JET DE FORCE</div>
-                            <div class="form-group"><label class="form-label">Verbe de Force</label>
-                                <select id="force-verb-select" class="form-select"
-                                    onchange="onForceConjointVerbChange()">
-                                    <option value="">— Sélectionner —</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label class="form-label">Attribut (Force) <span
-                                        style="color: var(--silver-chrome); font-weight: 400;">(modifiable)</span></label>
-                                <select id="force-attr-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
-                                    <option value="puissance">Puissance</option>
-                                    <option value="vivacite">Vivacité</option>
-                                    <option value="precision">Précision</option>
-                                    <option value="endurance">Endurance</option>
-                                    <option value="intelligence">Intelligence</option>
-                                    <option value="intuition">Intuition</option>
-                                    <option value="volonte">Volonté</option>
-                                    <option value="presence">Présence</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label class="form-label">Cible de Force</label>
-                                <select id="force-target-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label class="form-label">Nombre de dés</label>
-                                <input id="force-dice" class="bonus-input" type="number" value="1" min="1" max="20">
-                            </div>
-                            <div class="form-group"><label class="form-label">Mod. Puissance</label>
-                                <input id="power-puissance-mod" class="bonus-input" type="number" value="0">
-                            </div>
-                        </div>
-                        <div class="roll-form">
-                            <div
-                                style="font-weight: 600; color: var(--success-green); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(63, 185, 80, 0.2); font-family: var(--font-display);">
-                                ⚔ JET DE COMPÉTENCE</div>
-                            <div class="form-group"><label class="form-label">Attribut (Compétence)</label>
-                                <select id="conjoint-attr-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
-                                    <option value="puissance">Puissance</option>
-                                    <option value="vivacite">Vivacité</option>
-                                    <option value="precision">Précision</option>
-                                    <option value="endurance">Endurance</option>
-                                    <option value="intelligence">Intelligence</option>
-                                    <option value="intuition">Intuition</option>
-                                    <option value="volonte">Volonté</option>
-                                    <option value="presence">Présence</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label class="form-label">Compétence</label>
-                                <select id="conjoint-skill-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
-                                </select>
-                            </div>
-                            <div class="form-group"><label class="form-label">Bonus / Malus Global</label>
-                                <input id="force-bonus" class="bonus-input" type="number" value="0">
-                            </div>
-                            <div class="form-group"><label class="form-label">Mod. Explosion</label>
-                                <input id="force-explosion" class="bonus-input" type="number" value="0" min="-4"
-                                    max="4">
-                            </div>
-                        </div>
-                    </div>
-                    <button class="roll-btn force" id="conjoint-roll-btn" onclick="rollConjoint()" disabled
-                        style="margin-top: 20px;">
-                        ⚡⚔ Lancer le jet Force + Compétence
-                    </button>
-                    <label class="private-roll-toggle"><input type="checkbox" id="conjoint-no-mastery"> 🚫 Sans maîtrise
-                        (−2)</label>
-                    <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
-                            onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
-                    <div class="roll-info" style="margin-top: 16px;">
-                        <div class="roll-info-title">MÉCANIQUE</div>
-                        <div class="roll-info-content">La <strong>Force</strong> roule le nombre de dés choisi (défaut
-                            = niveau du verbe), qualité = attribut (modifiable, +3 PA si différent du verbe). Elle
-                            produit
-                            une <strong>Puissance</strong> (+ Mod. Puissance) qui s'<strong>ajoute au jet de
-                                compétence</strong>. Coût PA = nombre de dés + Dissonance − (Résonance + Transcendance)
-                            (+3
-                            hors-attribut) ; Rupture = effet incontrôlé.</div>
-                    </div>
-                </div>
-            </div>
+            
         </div>
 
         <!-- PAGE SABRE LASER -->
@@ -3260,7 +3260,7 @@
 
     <script>
         const SABER_COLORS = {
-            argent: { name: "Argent", effect: "Le coût en Points de Force de vos pouvoirs est réduit de 1 (minimum de 1)." },
+            argent: { name: "Argent", effect: "Coût de vos pouvoirs  et maintient des pouvoirs de durée est réduit de 1 PF (minimum 1)." },
             blanc: { name: "Blanc", effect: " Un pouvoir sublimé par son registre gagne +1 en Puissance ; un pouvoir corrompu par lui subit −1 en Puissance." },
             bleu: { name: "Bleu", effect: "Les pouvoirs utilisés pour protéger quelqu'un d'autre +1 en Puissance." },
             "bleu-clair": { name: "Bleu clair", effect: "Les pouvoirs obscurs subissent −2 Puissance contre toi. Et  si un jet de Force ne produit aucune Puissance, le personnage peut relancer le jet." },
@@ -3339,17 +3339,17 @@
             niman: {
                 name: "Forme VI - Niman",
                 attribute: "Même attribut que pour l'action tactique",
-                effect: "Après avoir déclaré une attaque au sabre laser, le personnage peut utiliser une action tactique sans consommer de point de focalisation avec sa compétence de Combat de Force et lancer un pouvoir de Force affectant son adversaire. L'action tactique offre un bonus tactique sur l'attaque au sabre préalablement déclarée."
+                effect: "Après avoir déclaré une attaque au sabre laser, le personnage peut effectuer une action tactique gratuite avec sa compétence Combat de Force. Il déclare le verbe qui porte la manœuvre : l'action se résout sur l'attribut de ce verbe, et le registre s'applique normalement (verbe sublimé ou corrompu). En cas de réussite, l'attaque déclarée bénéficie du bonus tactique habituel."
             },
             juyo: {
                 name: "Forme VII - Juyo",
                 attribute: "Puissance",
-                effect: "Nécessite d'être dans le registre Ardeur pour être utilisée. Toutes les confrontations défensives sont résolues par des contre-offensives. Toute utilisation de pouvoir de Force dans cette posture est considérée comme un pouvoir obscur."
+                effect: "Nécessite d'être dans le registre Ardeur pour être utilisée. Après avoir une confrontation offensive au sabre, l'utilisateur peut immédiatement enchaîner une seconde attaque (une seule par tour), sur le même adversaire ou un autre à portée. S'il le fait, il subit −2 à toutes ses confrontations défensives jusqu'à son prochain tour. Tout pouvoir de Force lancé dans cette posture est considéré comme obscur."
             },
             vaapad: {
                 name: "Forme VII - Vaapad",
                 attribute: "Volonté",
-                effect: "L'utilisateur ne peut effectuer d'action offensive par lui-même, mais toutes les confrontations défensives sont résolues comme des contre-offensives. Chaque contre-offensive donne +1 efficacité à la suivante."
+                effect: "Chaque confrontation offensive déclarée contre l'utilisateur génère 1 point de Conduit (max : niveau de sabre laser) ; 1 point : Riposte sans focalisation, 2 points : attaque supplémentaire immédiate après résolution de son attaque (une par tour). Un round sans être attaqué vide les points de Conduit."
             },
             jarkai: {
                 name: "Jar'Kai",
@@ -3485,12 +3485,83 @@
             privateRoll: false,
             currentModal: null
         };
+        function toggleCtxBar() {
+            const body = document.getElementById('ctx-bar-body');
+            const caret = document.getElementById('ctx-bar-caret');
+            if (body) { body.classList.toggle('collapsed'); if (caret) caret.textContent = body.classList.contains('collapsed') ? '▸' : '▾'; }
+        }
+        function syncContextBar() {
+            // Registre
+            const regSel = document.getElementById('ctx-registre');
+            if (regSel) {
+                if (!regSel.options.length) {
+                    const src = document.getElementById('registre-select');
+                    if (src) regSel.innerHTML = src.innerHTML;
+                }
+                regSel.value = appState.registre || 'neutre';
+                const reg = REGISTRES[appState.registre] || REGISTRES.neutre;
+                const eff = document.getElementById('ctx-registre-effect');
+                if (eff) { const t = (reg.bonusText ? reg.bonusText + ' · ' : '') + (reg.malusText || (appState.registre==='neutre' ? 'Aucune sublimation ni corruption' : '')); eff.textContent = t; eff.title = t; }
+            }
+            // Forme
+            const formSel = document.getElementById('ctx-forme');
+            if (formSel) {
+                if (!formSel.options.length) {
+                    formSel.innerHTML = '<option value="">Aucune forme</option>' + Object.entries(COMBAT_FORMS).map(([id,f])=>`<option value="${id}">${f.name}</option>`).join('');
+                }
+                formSel.value = appState.saber.form || '';
+                const f = COMBAT_FORMS[appState.saber.form];
+                const eff = document.getElementById('ctx-forme-effect');
+                if (eff) { eff.textContent = f ? f.effect : ''; eff.title = f ? f.effect : ''; }
+            }
+            // Cristal (lecture seule, alimenté par la page Sabre)
+            const cryName = document.getElementById('ctx-crystal-name');
+            if (cryName) {
+                const c = CRYSTALS[appState.saber.crystal];
+                cryName.textContent = c ? c.name : 'Aucun';
+                const eff = document.getElementById('ctx-crystal-effect');
+                if (eff) { eff.textContent = c ? c.effect : ''; eff.title = c ? c.effect : ''; }
+            }
+            // Couleur (première couleur active)
+            // Couleurs (lecture seule, alimentées par la page Sabre)
+            [['ctx-color-name', 0, 'ctx-color-effect'], ['ctx-color2-name', 1, 'ctx-color2-effect']].forEach(([nameId, idx, effId]) => {
+                const nameEl = document.getElementById(nameId);
+                if (!nameEl) return;
+                const c = SABER_COLORS[appState.saber.colors[idx]];
+                nameEl.textContent = c ? c.name : 'Aucune';
+                const eff = document.getElementById(effId);
+                if (eff) { eff.textContent = c ? c.effect : ''; eff.title = c ? c.effect : ''; }
+            });
+        }
+        function setCtxForm(id) {
+            appState.saber.form = id;
+            if (typeof renderFormSelect === 'function') renderFormSelect();
+            const sel = document.getElementById('form-select');
+            if (sel && typeof updateForm === 'function') { sel.value = id; updateForm(); }
+            syncContextBar();
+        }
+        function setCtxCrystal(id) { appState.saber.crystal = id; if (typeof renderCrystalSelect === 'function') renderCrystalSelect(); syncContextBar(); }
+        function setCtxColor(id) {
+            const second = appState.saber.colors[1];
+            appState.saber.colors = [id, second].filter(Boolean).filter((c, i, a) => a.indexOf(c) === i).slice(0, 2);
+            if (typeof renderSaberColors === 'function') renderSaberColors();
+            if (typeof updateBladeDisplay === 'function') updateBladeDisplay();
+            syncContextBar();
+        }
+        function setCtxColor2(id) {
+            const first = appState.saber.colors[0];
+            appState.saber.colors = [first, id].filter(Boolean).filter((c, i, a) => a.indexOf(c) === i).slice(0, 2);
+            if (typeof renderSaberColors === 'function') renderSaberColors();
+            if (typeof updateBladeDisplay === 'function') updateBladeDisplay();
+            syncContextBar();
+        }
         function switchPage(pageName, tabEl) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById(`page-${pageName}`).classList.add('active');
             if (tabEl) tabEl.classList.add('active');
             updateRollSelects();
+            if ((pageName === 'rolls' || pageName === 'skills') && typeof syncContextBar === 'function') syncContextBar();
         }
         function setRegistre(registreId) {
             appState.registre = registreId;
@@ -3507,6 +3578,11 @@
                 else { _side.textContent = '⚪ Équilibre'; _side.style.color = '#b7c2cc'; }
             }
             if (typeof updateForcePreview === 'function') updateForcePreview();
+            if (typeof updateUnifiedPreview === 'function') updateUnifiedPreview();
+            const ctxReg = document.getElementById('ctx-registre');
+            if (ctxReg && ctxReg.value !== registreId) { ctxReg.value = registreId; }
+            const ctxEff = document.getElementById('ctx-registre-effect');
+            if (ctxEff && registre) ctxEff.textContent = (registre.bonusText ? registre.bonusText + ' · ' : '') + (registre.malusText || (registreId==='neutre' ? 'Aucune sublimation ni corruption' : ''));
         }
         function getRegistreModifier(verbId) {
             const registre = REGISTRES[appState.registre];
@@ -3831,6 +3907,7 @@
             if (index > -1) appState.saber.colors.splice(index, 1);
             else if (appState.saber.colors.length < 2) appState.saber.colors.push(colorId);
             renderSaberColors();
+            if (typeof syncContextBar === 'function') syncContextBar();
         }
         function updateSaberSelectionDisplay() {
             const display = document.getElementById('saber-selection-display');
@@ -3886,6 +3963,7 @@
                 document.getElementById('crystal-effect').textContent = CRYSTALS[crystalId].effect;
                 display.style.display = 'block';
             } else display.style.display = 'none';
+            if (typeof syncContextBar === 'function') syncContextBar();
         }
         function renderFormSelect() {
             const select = document.getElementById('form-select');
@@ -3909,6 +3987,7 @@
                 document.getElementById('form-positive').innerHTML = form.effect;
                 display.style.display = 'block';
             } else display.style.display = 'none';
+            if (typeof syncContextBar === 'function') syncContextBar();
         }
         function updateRollSelects() {
             ['skill-select', 'skill-page-skill-select', 'conjoint-skill-select'].forEach(selectId => {
@@ -3957,11 +4036,14 @@
             });
             updateRollButtons();
         }
-        function switchForceRollMode(mode, tabEl) {
-            document.querySelectorAll('.force-roll-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.force-roll-panel').forEach(p => p.classList.remove('active'));
-            tabEl.classList.add('active');
-            document.getElementById(`force-roll-${mode}`).classList.add('active');
+        function switchUnifiedRoll(mode, tabEl) {
+            document.querySelectorAll('#unified-roll-module .force-roll-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('#unified-roll-module .force-roll-tab').forEach(t => t.classList.remove('active'));
+            const panel = document.getElementById(mode === 'comp' ? 'urm-panel-comp' : 'force-roll-' + mode);
+            if (panel) panel.classList.add('active');
+            if (tabEl) tabEl.classList.add('active');
+            updateRollButtons();
+            if (typeof updateForcePreview === 'function') updateForcePreview();
         }
 
         // ===================== NOUVEAU SYSTÈME DE FORCE =====================
@@ -4091,14 +4173,14 @@
                 else if (f === 'Bad1') bad1++;
                 else if (f === 'Bad2') bad2++;
             }
-            // Capstones d'alignement : à ±90, sublimer un registre de SON camp débloque la RECASCADE (un dé ≥ 9 relance un dé).
+            // Capstones d'alignement : à ±90, sublimer un registre de SON camp débloque la RECASCADE (Communion : dé ≥ 9 ; Déferlante : dé ≥ 7).
             const reg = REGISTRES[appState.registre] || { align: 0 };
             const subl = ctx.etat === 'sublime';
             const communion = subl && reg.align > 0 && resonanceValue >= 90;    // Harmonie : la cascade allège le coût (plancher 0)
             const deferlante = subl && reg.align < 0 && resonanceValue <= -90;  // Corruption : la cascade ajoute de la Puissance
             const recascade = communion || deferlante;
 
-            // Dés de cascade : succès à ≥ 5. Sans capstone, pas de recascade ; avec capstone, un ≥ 9 relance un dé.
+            // Dés de cascade : succès à ≥ 5. Sans capstone, pas de recascade ; Communion relance à ≥ 9, Déferlante à ≥ 7.
             let casc = [], cascReduc = 0, pool = cascade, guard = 0;
             while (pool > 0 && guard < 500) {
                 pool--; guard++;
@@ -4106,7 +4188,7 @@
                 const success = d >= 5;
                 casc.push(success);
                 if (success) { puissance++; if (communion) cascReduc++; }   // cascade : toujours +Puissance ; Communion ajoute −coût par-dessus
-                if (recascade && d >= 9) pool++;                              // recascade des deux côtés (Communion ET Déferlante)
+                if (recascade && d >= (deferlante ? 7 : 9)) pool++;          // recascade : Communion à ≥9, Déferlante à ≥7 (l'avalanche obscure s'emballe plus facilement)
             }
             // Coût : nombre de dés − (Résonance + Transcendance) − allègement Communion. Bad1 ajoute ; +3 hors-attribut en amont.
             return { rolled, casc, puissance, bad1, bad2, nRes, nTr, communion, deferlante, cascReduc, coutDelta: bad1 - (nRes + nTr) - cascReduc, effet: bad2 > 0 ? 2 * bad2 : 0, etat: ctx.etat };
@@ -4128,6 +4210,18 @@
             if (verb && attrSel) attrSel.value = NV_ATTR_KEY[verb.attr] || attrSel.value;
             if (verb && diceEl) diceEl.value = verb.level;
             updateRollButtons();
+        }
+        function updateUnifiedPreview() {
+            const prev = document.getElementById('unified-preview');
+            if (!prev) return;
+            const verbSel = document.getElementById('force-verb-select');
+            if (!verbSel || !verbSel.value) { prev.innerHTML = ''; return; }
+            const ctx = nvGetContext('force-verb-select', 'force-attr-select', 'force-dice');
+            if (!ctx) { prev.innerHTML = ''; return; }
+            const [lbl, col] = NV_ETAT_LABEL[ctx.etat];
+            const reg = REGISTRES[appState.registre] ? REGISTRES[appState.registre].name : 'Neutre';
+            const facesTxt = NV_FACE_ORDER.map((f, i) => ctx.faces[i] ? `<span style="color:${NV_FACE_STYLE[f]}">${ctx.faces[i]} ${NV_FACE_LABEL[f]}</span>` : null).filter(Boolean).join(' · ');
+            prev.innerHTML = `${ctx.verb.name} → <strong>${capitalize(ctx.attrName)} ${ctx.attrValue}</strong> · <strong>${ctx.nDice}</strong> dé${ctx.nDice > 1 ? 's' : ''}${ctx.offAttribute ? ' <span style="color:#ff9944">(attribut différent +3 PA)</span>' : ''} · Registre <strong>${reg}</strong> → <span class="etat-badge" style="background:${col}22;color:${col}">${lbl}</span><br><span style="font-size:0.9em">${facesTxt}</span>`;
         }
         function updateForcePreview() {
             const btn = document.getElementById('force-simple-roll-btn');
@@ -4209,14 +4303,13 @@
         }
 
         function updateRollButtons() {
-            const simpleBtn = document.getElementById('simple-roll-btn');
-            if (simpleBtn) simpleBtn.disabled = !document.getElementById('attribute-select').value || !document.getElementById('skill-select').value;
             const skillBtn = document.getElementById('skill-page-roll-btn');
             if (skillBtn) skillBtn.disabled = !document.getElementById('skill-page-attr-select').value || !document.getElementById('skill-page-skill-select').value;
             const forceSimpleBtn = document.getElementById('force-simple-roll-btn');
             if (forceSimpleBtn && typeof updateForcePreview === 'function') updateForcePreview();
             const conjointBtn = document.getElementById('conjoint-roll-btn');
-            if (conjointBtn) conjointBtn.disabled = !document.getElementById('force-verb-select').value || !document.getElementById('conjoint-attr-select').value || !document.getElementById('conjoint-skill-select').value;
+            if (conjointBtn) conjointBtn.disabled = !((document.getElementById('force-verb-select') || {}).value && (document.getElementById('conjoint-attr-select') || {}).value && (document.getElementById('conjoint-skill-select') || {}).value);
+            if (typeof updateUnifiedPreview === 'function') updateUnifiedPreview();
         }
         function rollDice(numDice, threshold, explosionThreshold = 12) {
             const dice = [];
@@ -4231,28 +4324,6 @@
                 }
             }
             return { dice, successes: dice.filter(d => d.value >= threshold && d.value <= 12).length, failures: dice.filter(d => d.value <= 2).length, explosions: dice.filter(d => d.isExplosion).length };
-        }
-        function rollSimple() {
-            const attrName = document.getElementById('attribute-select').value;
-            const skillName = document.getElementById('skill-select').value;
-            const bonus = parseInt(document.getElementById('roll-bonus').value) || 0;
-            const explosionMod = parseInt(document.getElementById('roll-explosion').value) || 0;
-            const attr = appState.attributes[attrName];
-            const attrLevel = getAttributeLevel(attr);
-            const skill = appState.skills.find(s => s.name === skillName);
-            if (!skill) return;
-            const noMastSimple = (document.getElementById('simple-no-mastery') || {}).checked;
-            const skillLevel = getSkillLevel(noMastSimple ? Math.max(1, skill.level - 2) : skill.level);
-            const threshold = 13 - attrLevel.faces;
-            const baseExplosion = skillLevel.explosion;
-            const explosion = Math.max(3, Math.min(12, baseExplosion - explosionMod));
-            const result = rollDice(skillLevel.dice, threshold, explosion);
-            const attrBonus = attrLevel.bonus;
-            const skillBonus = skillLevel.bonus;
-            const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
-            const total = result.successes + attrBonus + skillBonus + bonus;
-            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}${noMastSimple ? ' | 🚫 Sans maîtrise (−2)' : ''}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
-            sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), { successes: result.successes, attrBonus, skillBonus, bonus });
         }
         function rollSkillPage() {
             const attrName = document.getElementById('skill-page-attr-select').value;
@@ -4474,6 +4545,7 @@
             if (typeof updateForcePA === 'function') updateForcePA();
             renderSkills();
             renderMasteries();
+            if (typeof syncContextBar === 'function') syncContextBar();
             renderForceSkills();
             renderWounds();
             renderObjects();
@@ -4787,7 +4859,7 @@
             { threshold: -70, group: 'predation', side: 'dark', icon: '💀', text: 'Prédation : chaque mise à mort par un pouvoir obscur te rend des Points de Force' },
             { threshold: -70, group: 'soins', side: 'dark', icon: '🚫', text: 'Les soins sont désormais impossibles sur toi', updates: true },
             { threshold: -80, group: 'endurci', side: 'dark', icon: '🪨', text: 'Endurci : tu es immunisé au seuil de dégâts garanti des pouvoirs obscurs adverses' },
-            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: 'Déferlante : en sublimant un registre obscur, Résonance et Transcendance se relancent (dé ≥ 9) et chaque relance ajoute sa Puissance · corruption physique visible, isolement total' },
+            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: 'Déferlante : en sublimant un registre obscur, Résonance et Transcendance se relancent (dé ≥ 7 — l\'avalanche s\'emballe) et chaque relance ajoute sa Puissance · corruption physique visible, isolement total' },
             // ─── Côté lumineux (Harmonie, valeurs positives) : le conduit, sûr et durable ───
             { threshold: 20, group: 'eloquence', side: 'light', icon: '🕊', text: '+1 aux jets d\'Éloquence (calmer, aider, persuader)' },
             { threshold: 30, group: 'initiative', side: 'light', icon: '🔮', text: 'Bonus aux jets d\'initiative (sentir dans la Force)' },
@@ -4938,6 +5010,7 @@
             defaultSkills.forEach((name, i) => appState.skills.push({ id: `skill_${i}`, name, level: 1, baseName: name }));
             renderSkills();
             renderMasteries();
+            if (typeof syncContextBar === 'function') syncContextBar();
             renderForceSkills();
             renderWounds();
             renderObjects();
