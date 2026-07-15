@@ -1141,16 +1141,16 @@
       { id: 'art', name: 'Art', alt: 'Création · Artisanat · Danse' }, { id: 'athletisme', name: 'Athlétisme', alt: 'Acrobaties · Agilité · Endurance' }, { id: 'autorite', name: 'Autorité', alt: 'Commandement · Intimidation · Leadership' }, { id: 'bagarre', name: 'Bagarre', alt: 'Sabre laser · Pugilat · Vibrolame' }, { id: 'combat_force', name: 'Combat de Force', alt: 'Duel de Force · Frappe de Force · Pouvoir en combat' }, { id: 'discretion', name: 'Discrétion', alt: 'Furtivité · Infiltration · Inaperçu' }, { id: 'dressage', name: 'Dressage', alt: 'Apprivoisement · Créatures exotiques · Monture' }, { id: 'eloquence', name: 'Éloquence', alt: 'Diplomatie · Négociation · Séduction' }, { id: 'erudition', name: 'Érudition', alt: 'Lore Jedi · Histoire · Cultures galactiques' }, { id: 'escamotage', name: 'Escamotage', alt: 'Larcin · Crochetage · Prestidigitation' }, { id: 'informatique', name: 'Informatique', alt: 'Slicing · Piratage · Systèmes' }, { id: 'ingenierie', name: 'Ingénierie', alt: 'Réparation · Modifications · Mécanique' }, { id: 'medecine', name: 'Médecine', alt: 'Chirurgie · Soins · Premiers secours' }, { id: 'pilotage', name: 'Pilotage', alt: 'Vaisseau · Speeder · Navette' }, { id: 'recherche', name: 'Recherche', alt: 'Enquête · Investigation · Pistage' }, { id: 'resilience', name: 'Résilience', alt: 'Sang-froid · Bravoure · Calme' }, { id: 'sagacite', name: 'Sagacité', alt: 'Empathie · Intuition · Perspicacité' }, { id: 'strategie', name: 'Stratégie', alt: 'Tactique · Ruse · Planification' }, { id: 'tir', name: 'Tir', alt: 'Blaster · Canonnier · Sniper' }, { id: 'tromperie', name: 'Tromperie', alt: 'Manipulation · Comédie · Bluff' }, { id: 'vigilance', name: 'Vigilance', alt: 'Perception · Instinct · Observation' },
     ];
     const FORCE_VERBS = [
-      { id: 'amplifier', name: 'Amplifier', alt: 'Renforcer, exalter, transcender' },
-      { id: 'dissiper', name: 'Dissiper', alt: 'Désintégrer, annuler, trancher' },
-      { id: 'harmoniser', name: 'Harmoniser', alt: 'Guérir, purifier, équilibrer' },
-      { id: 'mouvoir', name: 'Mouvoir', alt: 'Déplacer, propulser, contraindre' },
-      { id: 'lier', name: 'Lier', alt: 'Connecter, asservir, entraver' },
-      { id: 'manifester', name: 'Manifester', alt: 'Créer, projeter — éclairs, illusion' },
-      { id: 'percevoir', name: 'Percevoir', alt: 'Révéler, sentir, prévoir' },
-      { id: 'absorber', name: 'Absorber', alt: "Voler, drainer, dévorer l'essence" },
-      { id: 'proteger', name: 'Protéger', alt: 'Bloquer, encaisser, endiguer' },
-      { id: 'transformer', name: 'Transformer', alt: 'Altérer, muter, corrompre' },
+      { id: 'absorber', name: 'Absorber', alt: "Voler, Drainer, Amortir" },
+      { id: 'amplifier', name: 'Amplifier', alt: 'Renforcer, Exalter, Transcender' },
+      { id: 'dissimuler', name: 'Dissimuler', alt: 'Cacher, Recouvrir, Voiler' },
+      { id: 'dissiper', name: 'Dissiper', alt: 'Désintégrer, Annuler, trancher' },
+      { id: 'harmoniser', name: 'Harmoniser', alt: 'Guérir, Purifier, équilibrer' },
+      { id: 'mouvoir', name: 'Mouvoir', alt: 'Déplacer, Propulser, contraindre' },
+      { id: 'lier', name: 'Lier', alt: 'Connecter, Asservir, entraver' },
+      { id: 'manifester', name: 'Manifester', alt: 'Barrières, Éclairs, Illusions' },
+      { id: 'percevoir', name: 'Percevoir', alt: 'Révéler, Sentir, Prévoir' },
+      { id: 'transformer', name: 'Transformer', alt: 'Altérer, Muter, Corrompre' },
     ];
     const FORCE_TARGETS = [
       { id: 'bete', name: 'Bête', alt: 'Faune, instinct, créatures' },
@@ -1175,10 +1175,10 @@
       maxMagic: { 5: 1, 4: 2 },
     };
     const PROFILES = {
-      enfance:     { label: 'Enfance (~8 ans)',      budget: 60,  attrMax: 5, compMax: 3, magicMax: 2, maxAttr: { 5: 2 },               maxComp: { 3: 3 },               maxMagic: { 2: 2 } },
-      adolescence: { label: 'Adolescence (~15 ans)', budget: 100, attrMax: 6, compMax: 5, magicMax: 3, maxAttr: { 6: 2 },               maxComp: { 5: 1, 4: 3 },         maxMagic: { 3: 2 } },
-      classique:   { label: 'Personnage',           budget: 130, attrMax: 7, compMax: 6, magicMax: 5, maxAttr: { 7: 2, 6: 3 },         maxComp: { 6: 1, 5: 3 },         maxMagic: { 5: 1, 4: 2 } },
-      elysaria:    { label: 'Élysaria (vétéran)',    budget: 200, attrMax: 8, compMax: 7, magicMax: 5, maxAttr: { 8: 1, 7: 3, 6: 4 },   maxComp: { 7: 1, 6: 2, 5: 4 },   maxMagic: { 5: 2, 4: 3 } },
+      enfance: { label: 'Enfance (~8 ans)', budget: 60, attrMax: 5, compMax: 3, magicMax: 2, maxAttr: { 5: 2 }, maxComp: { 3: 3 }, maxMagic: { 2: 2 } },
+      adolescence: { label: 'Adolescence (~15 ans)', budget: 100, attrMax: 6, compMax: 5, magicMax: 3, maxAttr: { 6: 2 }, maxComp: { 5: 1, 4: 3 }, maxMagic: { 3: 2 } },
+      classique: { label: 'Personnage', budget: 130, attrMax: 7, compMax: 6, magicMax: 5, maxAttr: { 7: 2, 6: 3 }, maxComp: { 6: 1, 5: 3 }, maxMagic: { 5: 1, 4: 2 } },
+      elysaria: { label: 'Élysaria (vétéran)', budget: 200, attrMax: 8, compMax: 7, magicMax: 5, maxAttr: { 8: 1, 7: 3, 6: 4 }, maxComp: { 7: 1, 6: 2, 5: 4 }, maxMagic: { 5: 2, 4: 3 } },
     };
     let currentProfile = 'classique';
     function applyProfile(pid) {
