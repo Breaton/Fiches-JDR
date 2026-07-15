@@ -3652,30 +3652,29 @@
             'Volonté': 'var(--saber-yellow)'
         };
         const FORCE_VERBS = [
-            { id: 'absorber', name: 'Absorber', attr: 'Présence', desc: "Voler, Drainer, Amortir", level: 1 },
-            { id: 'amplifier', name: 'Amplifier', attr: 'Présence', desc: "Renforcer, Exalter, Transcender", level: 1 },
-            { id: 'dissimuler', name: 'Dissimuler', attr: 'Volonté', desc: "Cacher, Recouvrir, Voiler", level: 1 },
-            { id: 'dissiper', name: 'Dissiper', attr: 'Intelligence', desc: "Désintégrer, Annuler, trancher", level: 1 },
-            { id: 'harmoniser', name: 'Harmoniser', attr: 'Intuition', desc: "Guérir, Purifier, équilibrer", level: 1 },
-            { id: 'lier', name: 'Lier', attr: 'Présence', desc: "Déplacer, Propulser, contraindre", level: 1 },
-            { id: 'manifester', name: 'Manifester', attr: 'Volonté', desc: "Connecter, Asservir, entraver", level: 1 },
-            { id: 'mouvoir', name: 'Mouvoir', attr: 'Volonté', desc: "Barrières, Éclairs, Illusions", level: 1 },
-            { id: 'percevoir', name: 'Percevoir', attr: 'Intuition', desc: "Révéler, Sentir, Prévoir", level: 1 },
-            { id: 'transformer', name: 'Transformer', attr: 'Intelligence', desc: "Altérer, Muter, Corrompre", level: 1 }
+            { id: 'absorber', name: 'Absorber', attr: 'Présence', desc: "Drainer, boire, engloutir. Force Drain, Tutaminis : faire sienne l'énergie ou la vitalité d'autrui.", level: 1 },
+            { id: 'amplifier', name: 'Amplifier', attr: 'Présence', desc: "Renforcer, exalter, transcender. Force Speed, Valor : pousser un corps ou un esprit au-delà de ses limites.", level: 1 },
+            { id: 'dissimuler', name: 'Dissimuler', attr: 'Volonté', desc: "Voiler, effacer, masquer. Force Cloak, présence étouffée : soustraire un être ou un objet à toute perception.", level: 1 },
+            { id: 'dissiper', name: 'Dissiper', attr: 'Intelligence', desc: "Détruire, annuler, désintégrer. Force Destruction : briser la cohésion des choses et défaire les pouvoirs.", level: 1 },
+            { id: 'harmoniser', name: 'Harmoniser', attr: 'Intuition', desc: "Guérir, purifier, équilibrer. Force Healing, purge des toxines, apaisement : rendre à chaque chose son état juste.", level: 1 },
+            { id: 'lier', name: 'Lier', attr: 'Présence', desc: "Entraver, asservir, connecter. Paralysie, domination, liens mentaux : tisser des chaînes entre les êtres.", level: 1 },
+            { id: 'manifester', name: 'Manifester', attr: 'Volonté', desc: "Créer, matérialiser, projeter. Éclairs, illusions, barrières d'énergie : donner forme à la Force elle-même.", level: 1 },
+            { id: 'mouvoir', name: 'Mouvoir', attr: 'Volonté', desc: "Déplacer, propulser, contraindre. Télékinésie, Push, Pull, déviation de projectiles : imposer le mouvement par la seule volonté.", level: 1 },
+            { id: 'percevoir', name: 'Percevoir', attr: 'Intuition', desc: "Révéler, sentir, prévoir. Force Sense, visions, esquive prescient : lire ce qui est caché et ce qui vient.", level: 1 },
+            { id: 'transformer', name: 'Transformer', attr: 'Intelligence', desc: "Altérer, muter, corrompre. Alchimie Sith, Mind Trick : changer la nature profonde d'une chose ou d'une pensée.", level: 1 }
         ];
         const FORCE_TARGETS = [
 
-            { id: 'bete', name: 'Bête', desc: "Le vivant non-sapient — faune, instinct, créatures. Apprivoiser, monstre Sith.", level: 1 },
-
-            { id: 'corps', name: 'Corps', desc: "La chair : anatomie, blessures, membres, sens physiques.", level: 1 },
-            { id: 'corruption', name: 'Corruption', desc: "La corruption du côté obscur de la force.", level: 1 },
-            { id: 'energie', name: 'Énergie', desc: "Le flux brut : thermique, électrique, lumineux. Feu, foudre, tir.", level: 1 },
-            { id: 'vie', name: 'Énergie Vitale', desc: "Le souffle vital : vitalité, énergie organique, détection du vivant.", level: 1 },
-            { id: 'esprit', name: 'Esprit', desc: "Le mental : pensée, émotion, volonté, mémoire. Mind Trick, terreur.", level: 1 },
-            { id: 'flore', name: 'Flore', desc: "Le végétal : racines, croissance. Lianes, ronces, forêt.", level: 1 },
-            { id: 'force', name: 'Force', desc: "Le flux métaphysique : pouvoirs, connexion, présence. Dissiper, précognition.", level: 1 },
-            { id: 'matiere', name: 'Matière', desc: "L'inerte brut : roche, métal, structure, murs.", level: 1 },
-            { id: 'mecanismes', name: 'Mécanismes', desc: "L'artifice : droïdes, ordinateurs, vaisseaux, systèmes.", level: 1 }
+            { id: 'bete', name: 'Bête', desc: "L'instinct animal. Créatures, montures, prédateurs : les esprits simples que la Force apprivoise ou affole.", level: 1 },
+            { id: 'corps', name: 'Corps', desc: "La chair et le sang. Muscles, organes, réflexes : tout ce qui fait la machine vivante d'un être.", level: 1 },
+            { id: 'corruption', name: 'Corruption', desc: "Le côté obscur lui-même. Éclairs Sith, drain, terreur imposée : puiser dans la face sombre de la Force et lui donner corps.", level: 1 },
+            { id: 'energie', name: 'Énergie', desc: "Les flux et les décharges. Chaleur, lumière, électricité, tirs de blaster.", level: 1 },
+            { id: 'vie', name: 'Énergie Vitale', desc: "Le souffle qui anime. Vitalité, régénération, agonie : l'énergie qui anime le vivant.", level: 1 },
+            { id: 'esprit', name: 'Esprit', desc: "La pensée et la conscience. Souvenirs, émotions, volonté : le monde intérieur d'un être.", level: 1 },
+            { id: 'flore', name: 'Flore', desc: "Le règne végétal. Racines, spores, forêts entières : la vie lente qui écoute la Force.", level: 1 },
+            { id: 'force', name: 'Force', desc: "La Force elle-même. Pouvoirs en cours, signatures, perturbations : agir directement sur la force.", level: 1 },
+            { id: 'matiere', name: 'Matière', desc: "La substance inerte. Pierre, métal, eau, air : le monde physique et ses objets.", level: 1 },
+            { id: 'mecanismes', name: 'Mécanismes', desc: "La machine et le circuit. Droïdes, vaisseaux, systèmes : ce qui fonctionne sans vivre.", level: 1 }
         ];
         const defaultSkills = ['Art', 'Athlétisme', 'Autorité', 'Bagarre', 'Combat de Force', 'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Informatique', 'Ingénierie', 'Médecine', 'Pilotage', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Tir', 'Tromperie', 'Vigilance'];
         const appState = {
