@@ -3488,25 +3488,25 @@
             viridien: { name: "Viridien", effect: "Pouvoirs visant à défaire des pouvoirs en place +2 de puissance." }
         };
         const CRYSTALS = {
-            adegan: { name: "Adegan", effect: "+1 de Puissance sur les pouvoirs de Force combinés avec une action d'escrime." },
-            bondar: { name: "Bondar", effect: "Peut infliger des blessures non-létales sans subir de malus." },
-            brise: { name: "Brisé", effect: "Avant chaque jet d'escrime, lancer 1d6 : sur 1-2, −2 efficacité ; sur 3-4, aucun modificateur ; sur 5-6, +2 efficacité." },
+            adegan: { name: "Adegan", effect: "Lors d'un jet conjoint Force et sabre laser, la Puissance du pouvoir est augmentée de 1." },
+            bondar: { name: "Bondar", effect: "Les coups du sabre peuvent infliger des afflictions au lieu de blessures." },
+            brise: { name: "Brisé", effect: "Avant chaque jet de sabre laser, lancez 1d6 : sur 1 ou 2, le jet subit un malus de 2 ; sur 5 ou 6, il gagne un bonus de 2." },
             compresse: { name: "Compressé", effect: "Les dés explosent sur une valeur réduite de 1." },
-            damind: { name: "Damind", effect: "+1 efficacité sur les jets de sabre laser pour dévier les tirs de blaster." },
-            firkrann: { name: "Firkrann", effect: "+1 efficacité sur les jets de sabre laser contre les droïdes et les éléments technologiques." },
-            ilum: { name: "Ilum", effect: "La gravité minimale des blessures infligées au sabre est égale à la moitié du niveau d'Escrime du porteur (arrondi à l'inférieur)." },
-            instable: { name: "Instable", effect: "+2 efficacité sur les jets. Cependant, chaque dé affichant un 1 inflige une blessure de gravité 1 au porteur." },
-            jenruax: { name: "Jenruax", effect: "+1 efficacité sur les jets d'esquive." },
-            kaiburr: { name: "Kaiburr", effect: "+2 de Puissance de sort  lorsque le porteur se trouve dans un lieu de pouvoir de la Force." },
-            lambent: { name: "Lambent", effect: "Permet de remplacer l'attribut physique utilisé pour l'escrime par son attribut mental opposé (Puissance ↔ Présence, Réflexes ↔ Intelligence, Endurance ↔ Volonté, Contrôle ↔ Intuition)." },
-            luxum: { name: "Luxum", effect: "+1 efficacité sur les jets de sabre laser lors de défense contre les attaques provenant de droïdes ou d'éléments technologiques." },
-            nexor: { name: "Nexor", effect: "Après une défense réussie, la prochaine attaque effectuée durant le même round gagne +1 efficacité." },
-            perle: { name: "Perle", effect: "+1 gravité sur les blessures infligées au sabre." },
-            sapith: { name: "Sapith", effect: "Après une défense réussie, peut dépenser 1 Point de Focalisation pour effectuer immédiatement une contre-attaque." },
-            sigil: { name: "Sigil", effect: "−1 gravité sur les blessures reçues (minimum 1)." },
-            solaris: { name: "Solaris", effect: "Confère un bonus d'efficacité égal à la moitié du niveau de Côté Lumineux du porteur (arrondi à l'inférieur). Sans effet pour un utilisateur neutre ou obscur." },
-            synthetique: { name: "Synthétique", effect: "Réplique les effets d'un autre type de cristal, déterminé à la création du sabre." },
-            upari: { name: "Upari", effect: "+1 efficacité les jets de sabre laser lorsque le porteur maintient sa concentration." }
+            damind: { name: "Damind", effect: "Bonus de 1 d'efficacité sur les jets pour dévier les tirs de blaster." },
+            elementaire: { name: "Élémentaire", effect: "Sur une confrontation offensive remportée avec un écart de 5 ou plus, la victime subit en plus une affliction de gravité 1 liée à l'élément." },
+            firkrann: { name: "Firkrann", effect: "Bonus de 1 d'efficacité sur les confrontations offensives contre les droïdes et les cibles technologiques." },
+            ilum: { name: "Ilum", effect: "Les attaques au sabre retirent toujours un minimum de résistance égal à la moitié du niveau de Sabre laser du porteur (arrondi à l'inférieur)." },
+            instable: { name: "Instable", effect: "Bonus de 2 d'efficacité sur les confrontations offensives, mais chaque 1 sur les dés inflige au porteur une blessure de gravité 1." },
+            jenruax: { name: "Jenruax", effect: "Bonus de 1 d'efficacité sur les esquives." },
+            kaiburr: { name: "Kaiburr", effect: "Bonus de 2 de Puissance sur les pouvoirs de Force lorsque le porteur se trouve dans un lieu de pouvoir." },
+            lambent: { name: "Lambent", effect: "Lors des confrontations au sabre laser, le porteur peut remplacer l'attribut utilisé par son attribut miroir (Puissance et Présence, Intelligence et Vivacité, Volonté et Endurance, Intuition et Contrôle)." },
+            luxum: { name: "Luxum", effect: "Bonus de 1 d'efficacité sur les confrontations défensives contre les droïdes et les cibles technologiques." },
+            nexor: { name: "Nexor", effect: "Après une confrontation défensive remportée, la prochaine confrontation offensive au sabre laser du round gagne 1 d'efficacité." },
+            perle: { name: "Perle", effect: "Les attaques au sabre retirent 1 de résistance supplémentaire ou augmentent de 1 la gravité de la blessure infligée." },
+            sapith: { name: "Sapith", effect: "La première Riposte de chaque round ne coûte pas de point de focalisation." },
+            sigil: { name: "Sigil", effect: "Les blessures reçues par le porteur voient leur gravité réduite de 1 (minimum 1)." },
+            solaris: { name: "Solaris", effect: "Bonus d'efficacité égal à la moitié du niveau de Côté Lumineux du porteur (arrondi à l'inférieur). Sans effet pour un utilisateur neutre ou obscur." },
+            upari: { name: "Upari", effect: "Bonus de 1 d'efficacité lorsque le porteur se concentre sur un pouvoir de duré." }
         };
         const SABER_TYPES = {
             standard: { name: "Standard", effect: "+1 de Puissance sur les pouvoirs de Force (main libre disponible)." },
