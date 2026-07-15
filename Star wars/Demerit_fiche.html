@@ -3805,6 +3805,10 @@
                 if (eff) { eff.textContent = c ? c.effect : ''; eff.title = c ? c.effect : ''; }
             });
         }
+        function getSaberSkillLevel() {
+            const sk = (appState.skills || []).find(s => (s.baseName || s.name) === 'Bagarre');
+            return sk ? Math.max(1, parseInt(sk.level) || 1) : 1;
+        }
         const FORM_COUNTER_META = {
             ataru: { label: '💨 Vélocité', hint: 'Max : niveau de sabre laser. Un round sans attaquer vide la vélocité.' },
             vaapad: { label: '🔄 Conduit', hint: 'Max : niveau de sabre laser. Un round sans être attaqué vide le Conduit.' }
@@ -3819,13 +3823,16 @@
             box.style.display = 'flex';
             document.getElementById('ctx-form-counter-label').textContent = meta.label;
             document.getElementById('ctx-form-counter-label').title = meta.hint;
-            document.getElementById('ctx-form-counter-value').textContent = appState.formCounters[form] || 0;
+            const cap = getSaberSkillLevel();
+            if ((appState.formCounters[form] || 0) > cap) appState.formCounters[form] = cap;
+            document.getElementById('ctx-form-counter-value').textContent = (appState.formCounters[form] || 0) + ' / ' + cap;
         }
         function modFormCounter(delta) {
             const form = appState.saber.form;
             if (!FORM_COUNTER_META[form]) return;
             if (!appState.formCounters) appState.formCounters = { ataru: 0, vaapad: 0 };
-            appState.formCounters[form] = Math.max(0, Math.min(10, (appState.formCounters[form] || 0) + delta));
+            const cap = getSaberSkillLevel();
+            appState.formCounters[form] = Math.max(0, Math.min(cap, (appState.formCounters[form] || 0) + delta));
             syncFormCounter();
         }
         function resetFormCounter() {
