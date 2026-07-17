@@ -2667,9 +2667,28 @@
             width: 100%;
         }
 
-        .ctx-form-counter { grid-column:1 / -1; display:flex; align-items:center; gap:10px; margin-top:4px; }
-        .ctx-counter-controls { display:flex; align-items:center; gap:6px; }
-        .ctx-counter-value { font-size:0.95em; font-weight:700; color:#7fd4ff; min-width:28px; text-align:center; }
+        .ctx-form-counter {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        .ctx-counter-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ctx-counter-value {
+            font-size: 0.95em;
+            font-weight: 700;
+            color: #7fd4ff;
+            min-width: 28px;
+            text-align: center;
+        }
+
         .active-powers-panel {
             margin-top: 14px;
             background: var(--card-bg);
@@ -2982,20 +3001,36 @@
                 <div class="card">
                     <div class="card-title"><span class="icon">⚖</span>Alignement</div>
                     <div style="display:flex; align-items:center; gap:14px; margin-bottom:10px;">
-                        <div id="char-align-value" style="font-size:1.6em; font-weight:800; min-width:64px; text-align:center;">0</div>
-                        <div id="char-align-badge" style="font-size:0.78em; font-weight:600; padding:3px 10px; border:1px solid; border-radius:12px;">Équilibre</div>
+                        <div id="char-align-value"
+                            style="font-size:1.6em; font-weight:800; min-width:64px; text-align:center;">0</div>
+                        <div id="char-align-badge"
+                            style="font-size:0.78em; font-weight:600; padding:3px 10px; border:1px solid; border-radius:12px;">
+                            Équilibre</div>
                         <div style="display:flex; align-items:center; gap:6px; margin-left:auto;">
-                            <button class="ap-btn" style="color:#e07070; border-color:rgba(224,112,112,0.4);" onclick="applyResonanceDelta(-Math.abs(parseInt(document.getElementById('char-align-delta').value)||1))">−</button>
-                            <input type="number" id="char-align-delta" value="1" min="1" max="190" title="Ampleur du changement" style="width:44px; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:3px; color:var(--light-steel); font-size:0.85em; text-align:center; padding:3px 2px;">
-                            <button class="ap-btn" style="color:#6ab0ff; border-color:rgba(106,176,255,0.4);" onclick="applyResonanceDelta(+Math.abs(parseInt(document.getElementById('char-align-delta').value)||1))">+</button>
+                            <button class="ap-btn" style="color:#e07070; border-color:rgba(224,112,112,0.4);"
+                                onclick="applyResonanceDelta(-Math.abs(parseInt(document.getElementById('char-align-delta').value)||1))">−</button>
+                            <input type="number" id="char-align-delta" value="1" min="1" max="190"
+                                title="Ampleur du changement"
+                                style="width:44px; background:transparent; border:1px solid rgba(255,255,255,0.2); border-radius:3px; color:var(--light-steel); font-size:0.85em; text-align:center; padding:3px 2px;">
+                            <button class="ap-btn" style="color:#6ab0ff; border-color:rgba(106,176,255,0.4);"
+                                onclick="applyResonanceDelta(+Math.abs(parseInt(document.getElementById('char-align-delta').value)||1))">+</button>
                         </div>
                     </div>
-                    <div style="position:relative; height:12px; background:rgba(255,255,255,0.05); border-radius:6px; overflow:hidden; margin-bottom:12px;">
-                        <div style="position:absolute; left:50%; top:0; bottom:0; width:1px; background:rgba(255,255,255,0.3); z-index:2;"></div>
-                        <div id="char-align-dark" style="position:absolute; right:50%; top:0; bottom:0; width:0%; background:linear-gradient(270deg, rgba(200,80,80,0.4), #e05050); border-radius:6px 0 0 6px;"></div>
-                        <div id="char-align-light" style="position:absolute; left:50%; top:0; bottom:0; width:0%; background:linear-gradient(90deg, rgba(106,176,255,0.4), #5aa0ff); border-radius:0 6px 6px 0;"></div>
+                    <div
+                        style="position:relative; height:12px; background:rgba(255,255,255,0.05); border-radius:6px; overflow:hidden; margin-bottom:12px;">
+                        <div
+                            style="position:absolute; left:50%; top:0; bottom:0; width:1px; background:rgba(255,255,255,0.3); z-index:2;">
+                        </div>
+                        <div id="char-align-dark"
+                            style="position:absolute; right:50%; top:0; bottom:0; width:0%; background:linear-gradient(270deg, rgba(200,80,80,0.4), #e05050); border-radius:6px 0 0 6px;">
+                        </div>
+                        <div id="char-align-light"
+                            style="position:absolute; left:50%; top:0; bottom:0; width:0%; background:linear-gradient(90deg, rgba(106,176,255,0.4), #5aa0ff); border-radius:0 6px 6px 0;">
+                        </div>
                     </div>
-                    <div id="char-align-effects" style="display:flex; flex-direction:column; gap:6px; font-size:0.78em; line-height:1.4; color:var(--light-steel);"></div>
+                    <div id="char-align-effects"
+                        style="display:flex; flex-direction:column; gap:6px; font-size:0.78em; line-height:1.4; color:var(--light-steel);">
+                    </div>
                 </div>
 
             </div>
@@ -3256,7 +3291,8 @@
                                     <button class="ap-btn" onclick="modFormCounter(-1)">−</button>
                                     <span class="ctx-counter-value" id="ctx-form-counter-value">0</span>
                                     <button class="ap-btn" onclick="modFormCounter(1)">+</button>
-                                    <button class="ap-btn end" onclick="resetFormCounter()" title="Remettre à zéro (round sans condition)">↺</button>
+                                    <button class="ap-btn end" onclick="resetFormCounter()"
+                                        title="Remettre à zéro (round sans condition)">↺</button>
                                 </div>
                             </div>
                         </div>
@@ -3264,16 +3300,31 @@
                             <span class="ctx-label">🎯 Focalisation</span>
                             <div class="ctx-counter-controls">
                                 <button class="ap-btn" onclick="modFocalisation(-1)">−</button>
-                                <span class="ctx-counter-value"><span id="focalisation-current">1</span> / <input type="number" id="focalisation-max" min="1" max="9" value="1" onchange="setFocalisationMax(this.value)" style="width:38px; background:transparent; border:1px solid rgba(0,168,255,0.25); border-radius:3px; color:var(--light-steel); font-size:0.95em; text-align:center;"></span>
+                                <span class="ctx-counter-value"><span id="focalisation-current">1</span> / <input
+                                        type="number" id="focalisation-max" min="1" max="9" value="1"
+                                        onchange="setFocalisationMax(this.value)"
+                                        style="width:38px; background:transparent; border:1px solid rgba(0,168,255,0.25); border-radius:3px; color:var(--light-steel); font-size:0.95em; text-align:center;"></span>
                                 <button class="ap-btn" onclick="modFocalisation(1)">+</button>
-                                <button class="ap-btn" onclick="refillFocalisation()" title="Récupérer toute la focalisation (nouveau round)">↻</button>
+                                <button class="ap-btn" onclick="refillFocalisation()"
+                                    title="Récupérer toute la focalisation (nouveau round)">↻</button>
                             </div>
-                            <span class="ctx-effect"><span onclick="toggleFocUsages()" style="cursor:pointer; color:#7fd4ff; user-select:none;" id="foc-usages-toggle">▸ Voir les usages du point de focalisation</span></span>
-                            <div id="foc-usages" style="display:none; grid-column:1 / -1; margin-top:6px; padding:8px 10px; background:rgba(0,168,255,0.04); border:1px solid rgba(0,168,255,0.15); border-radius:3px; font-size:0.76em; line-height:1.5; color:var(--light-steel);">
-                                <div style="margin-bottom:6px;"><strong>🎲 Action tactique</strong> : jet de compétence adapté contre la DC tactique de la confrontation. Au choix : réduire la résistance de la confrontation de l'écart, ou donner un bonus tactique égal à l'écart sur un prochain jet du round (soi ou un allié).</div>
-                                <div style="margin-bottom:6px;"><strong>🛡 Protéger un allié</strong> : un allié à 5 ft prend sa place dans une confrontation défensive, ou tente d'intercepter un sort à distance sans prendre la place dans la confrontation.</div>
-                                <div style="margin-bottom:6px;"><strong>⏳ Lancer un sort de durée</strong> : le point reste immobilisé tant que le sort est actif.</div>
-                                <div><strong>⚔ Riposte</strong> : lors d'une confrontation défensive, attaquer au lieu de se défendre. Victoire : résolution comme une confrontation offensive. Échec : le personnage subit l'attaque comme une défense perdue ordinaire.</div>
+                            <span class="ctx-effect"><span onclick="toggleFocUsages()"
+                                    style="cursor:pointer; color:#7fd4ff; user-select:none;" id="foc-usages-toggle">▸
+                                    Voir les usages du point de focalisation</span></span>
+                            <div id="foc-usages"
+                                style="display:none; grid-column:1 / -1; margin-top:6px; padding:8px 10px; background:rgba(0,168,255,0.04); border:1px solid rgba(0,168,255,0.15); border-radius:3px; font-size:0.76em; line-height:1.5; color:var(--light-steel);">
+                                <div style="margin-bottom:6px;"><strong>🎲 Action tactique</strong> : jet de compétence
+                                    adapté contre la DC tactique de la confrontation. Au choix : réduire la résistance
+                                    de la confrontation de l'écart, ou donner un bonus tactique égal à l'écart sur un
+                                    prochain jet du round (soi ou un allié).</div>
+                                <div style="margin-bottom:6px;"><strong>🛡 Protéger un allié</strong> : un allié à 5 ft
+                                    prend sa place dans une confrontation défensive, ou tente d'intercepter un sort à
+                                    distance sans prendre la place dans la confrontation.</div>
+                                <div style="margin-bottom:6px;"><strong>⏳ Lancer un sort de durée</strong> : le point
+                                    reste immobilisé tant que le sort est actif.</div>
+                                <div><strong>⚔ Riposte</strong> : lors d'une confrontation défensive, attaquer au lieu
+                                    de se défendre. Victoire : résolution comme une confrontation offensive. Échec : le
+                                    personnage subit l'attaque comme une défense perdue ordinaire.</div>
                             </div>
                         </div>
                         <div class="ctx-row">
@@ -3297,9 +3348,13 @@
                     <div class="ctx-bar-title">⏳ Pouvoirs en cours <span id="ap-count"></span></div>
                     <div id="active-powers-list"></div>
                     <div style="padding:0 12px 10px; display:flex; gap:6px; flex-wrap:wrap;">
-                        <input type="text" id="mp-name" class="form-select" placeholder="Nom (ex. Amplifier + Corps)" style="flex:1; min-width:130px; font-size:0.8em; padding:5px 8px;">
-                        <input type="number" id="mp-puissance" class="form-select" placeholder="P" min="1" style="width:56px; font-size:0.8em; padding:5px 8px;" title="Puissance du pouvoir">
-                        <input type="number" id="mp-dice" class="form-select" placeholder="Dés" min="1" max="10" style="width:60px; font-size:0.8em; padding:5px 8px;" title="Dés lancés (entretien = la moitié, arrondi sup.)">
+                        <input type="text" id="mp-name" class="form-select" placeholder="Nom (ex. Amplifier + Corps)"
+                            style="flex:1; min-width:130px; font-size:0.8em; padding:5px 8px;">
+                        <input type="number" id="mp-puissance" class="form-select" placeholder="P" min="1"
+                            style="width:56px; font-size:0.8em; padding:5px 8px;" title="Puissance du pouvoir">
+                        <input type="number" id="mp-dice" class="form-select" placeholder="Dés" min="1" max="30"
+                            style="width:60px; font-size:0.8em; padding:5px 8px;"
+                            title="Dés lancés (entretien = la moitié, arrondi sup.)">
                         <select id="mp-type" class="form-select" style="width:130px; font-size:0.8em; padding:5px 8px;">
                             <option value="soutien">✨ Soutien</option>
                             <option value="manifestation">🧱 Manifestation</option>
@@ -4634,7 +4689,7 @@
             if (!name || puissance < 1) return;
             if (!Array.isArray(appState.activePowers)) appState.activePowers = [];
             appState.activePowers.push({
-                id: `ap_${Date.now()}_${Math.random().toString(36).substr(2,4)}`,
+                id: `ap_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
                 name, type: tEl.value || 'soutien',
                 puissance, solidite: puissance, nDice,
                 upkeep: Math.ceil(nDice / 2), applied: false
