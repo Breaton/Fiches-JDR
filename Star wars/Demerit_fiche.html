@@ -363,11 +363,14 @@
         }
 
         .attributes-page,
-        .skills-page,
         .force-page,
         .saber-page {
             grid-template-columns: 1fr 1fr;
             gap: 24px;
+        }
+
+        .skills-page {
+            grid-template-columns: 1fr;
         }
 
         .rolls-page {
@@ -936,120 +939,52 @@
             overflow-y: auto;
         }
 
-        .masteries-list {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .mastery-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 2px;
-            border: 1px solid transparent;
-        }
-
-        .mastery-item:hover {
-            background: rgba(0, 168, 255, 0.05);
-            border-color: rgba(0, 168, 255, 0.2);
-        }
-
-        .mastery-cat {
-            font-size: 0.75em;
-            font-weight: 600;
-            color: var(--light-steel);
-            opacity: 0.6;
-            white-space: nowrap;
-        }
-
-        .mastery-nm {
-            flex: 1;
-            font-weight: 500;
-            color: var(--light-steel);
-            font-size: 0.9em;
-        }
-
-        .mastery-tag {
-            font-size: 0.68em;
-            padding: 2px 8px;
-            border-radius: 10px;
-            white-space: nowrap;
-        }
-
-        .mastery-tag.offerte {
-            background: rgba(0, 168, 255, 0.12);
-            color: #7fd4ff;
-        }
-
-        .mastery-tag.achetee {
-            background: rgba(255, 200, 90, 0.12);
-            color: #ffd486;
-        }
-
-        .masteries-empty {
-            padding: 10px 12px;
-            color: var(--light-steel);
-            opacity: 0.55;
-            font-size: 0.85em;
-        }
-
-        .mastery-add-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 10px;
-        }
-
-        .m-add-btn {
-            background: rgba(0, 168, 255, 0.08);
-            border: 1px solid rgba(0, 168, 255, 0.25);
-            color: var(--light-steel);
-            font-size: 0.74em;
-            padding: 5px 9px;
-            border-radius: 3px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .m-add-btn:hover {
-            background: rgba(0, 168, 255, 0.16);
-        }
-
-        .mastery-edit-input,
-        .mastery-edit-select {
-            flex: 1;
-            min-width: 0;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            color: var(--light-steel);
-            font-size: 0.85em;
-            padding: 4px 8px;
-            border-radius: 3px;
-        }
-
-        .mastery-tag.ajoutee {
-            background: rgba(120, 200, 120, 0.14);
-            color: #9fdca0;
-        }
-
-        .mastery-del-btn {
-            background: transparent;
-            border: none;
-            color: var(--light-steel);
-            opacity: 0.5;
-            cursor: pointer;
-            font-size: 0.95em;
+        .skill-passive-attr {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: var(--silver-chrome);
+            font-family: inherit;
+            font-size: 0.72em;
             padding: 2px 4px;
-            line-height: 1;
+            cursor: pointer;
+            max-width: 92px;
         }
 
-        .mastery-del-btn:hover {
-            opacity: 1;
-            color: #ff7a7a;
+        .skill-passive-attr:hover,
+        .skill-passive-attr:focus {
+            border-color: rgba(179, 102, 255, 0.4);
+            color: var(--text-primary);
+            outline: none;
         }
+
+        .skill-passive-attr option {
+            background: #14161c;
+            color: #d8dee4;
+        }
+
+        .skill-passive-value {
+            font-weight: 700;
+            font-size: 0.88em;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Liste pleine largeur : deux colonnes de compétences, sans ascenseur */
+        .skills-list-wide {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+            max-height: none;
+            overflow: visible;
+        }
+
+        @media (max-width: 900px) {
+            .skills-list-wide {
+                grid-template-columns: 1fr;
+            }
+        }
+
 
         .skill-item {
             display: flex;
@@ -1787,6 +1722,93 @@
             margin-top: 4px;
         }
 
+        .form-mastery-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .form-mastery-label {
+            font-size: 0.74em;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--silver-chrome);
+        }
+
+        .form-mastery-count {
+            font-size: 0.82em;
+            font-weight: 700;
+        }
+
+        .form-mastery-hint {
+            font-size: 0.72em;
+            color: var(--silver-chrome);
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+
+        .form-mastery-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 7px;
+        }
+
+        @media (max-width: 1200px) {
+            .form-mastery-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .form-mastery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .form-mastery-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 7px 9px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .form-mastery-item:hover {
+            border-color: rgba(179, 102, 255, 0.4);
+        }
+
+        .form-mastery-item.known {
+            border-color: rgba(179, 102, 255, 0.55);
+            background: rgba(179, 102, 255, 0.10);
+        }
+
+        .form-mastery-item.locked {
+            opacity: 0.35;
+            cursor: not-allowed;
+        }
+
+        .form-mastery-item .fm-name {
+            font-size: 0.78em;
+            font-weight: 600;
+            color: var(--light-steel);
+            line-height: 1.25;
+        }
+
+        .form-mastery-item.known .fm-name {
+            color: var(--saber-purple);
+        }
+
+        .form-mastery-item .fm-attr {
+            font-size: 0.68em;
+            color: var(--silver-chrome);
+        }
+
         .saber-types-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -1846,46 +1868,38 @@
             color: var(--light-steel);
         }
 
-        .crystal-select,
         .form-select-large {
             width: 100%;
-            padding: 12px;
-            border: 1px solid var(--card-border);
-            border-radius: 2px;
-            background: var(--metal-gray);
-            color: var(--pure-white);
+            padding: 10px 12px;
+            border: 1px solid rgba(179, 102, 255, 0.3);
+            border-radius: 4px;
+            background: rgba(179, 102, 255, 0.06);
+            color: var(--light-steel);
             font-family: var(--font-body);
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .crystal-effect-display,
+        .form-select-large:hover,
+        .form-select-large:focus {
+            border-color: rgba(179, 102, 255, 0.55);
+            background: rgba(179, 102, 255, 0.11);
+            color: var(--pure-white);
+            outline: none;
+        }
+
+        .form-select-large option {
+            background: #14161c;
+            color: #d8dee4;
+        }
+
         .form-effect-display {
             margin-top: 12px;
             padding: 12px;
             border-radius: 4px;
-        }
-
-        .crystal-effect-display {
-            background: rgba(0, 255, 255, 0.05);
-            border: 1px solid rgba(0, 255, 255, 0.2);
-        }
-
-        .form-effect-display {
             background: rgba(179, 102, 255, 0.05);
             border: 1px solid rgba(179, 102, 255, 0.2);
-        }
-
-        .crystal-effect-title {
-            font-family: var(--font-display);
-            font-size: 0.85em;
-            font-weight: 600;
-            color: var(--saber-cyan);
-            margin-bottom: 6px;
-        }
-
-        .crystal-effect-desc {
-            font-size: 0.85em;
-            color: var(--light-steel);
-            line-height: 1.5;
         }
 
         .form-effect-header {
@@ -2667,6 +2681,23 @@
             width: 100%;
         }
 
+        .ctx-intention {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--silver-chrome);
+            cursor: pointer;
+            margin-top: 4px;
+        }
+
+        .ctx-intention input {
+            accent-color: var(--saber-purple);
+            cursor: pointer;
+        }
+
         .ctx-form-counter {
             grid-column: 1 / -1;
             display: flex;
@@ -3043,33 +3074,8 @@
                     <div class="column-icon skills">⚔</div>
                     <div class="column-title">Compétences</div>
                 </div>
-                <div class="skills-list" id="skills-list"></div>
-
+                <div class="skills-list skills-list-wide" id="skills-list"></div>
             </div>
-            <div class="skills-column">
-                <div class="column-header">
-                    <div class="column-icon skills">🎓</div>
-                    <div class="column-title">Maîtrises</div>
-                </div>
-                <div class="mastery-add-row">
-                    <button class="m-add-btn" onclick="addMastery('arme')">⚔ Arme</button>
-                    <button class="m-add-btn" onclick="addMastery('sabre_type')">🗡 Sabre</button>
-                    <button class="m-add-btn" onclick="addMastery('forme')">🌀 Forme</button>
-                    <button class="m-add-btn" onclick="addMastery('armure_medium')">🛡 Médium</button>
-                    <button class="m-add-btn" onclick="addMastery('armure_lourde')">🛡 Lourde</button>
-                    <button class="m-add-btn" onclick="addMastery('bouclier')">🛡 Déflecteur</button>
-                    <button class="m-add-btn" onclick="addMastery('vehicule')">🚀 Véhicule</button>
-                    <button class="m-add-btn" onclick="addMastery('monture')">🦎 Monture</button>
-                    <button class="m-add-btn" onclick="addMastery('specialite')">🧠 Spécialité</button>
-                    <button class="m-add-btn" onclick="addMastery('savoir_faire')">🔧 Savoir-faire</button>
-                </div>
-                <div class="masteries-list" id="masteries-list"></div>
-            </div>
-
-
-
-
-
         </div>
 
         <!-- PAGE JETS -->
@@ -3128,8 +3134,9 @@
                                         <option value="">— Sélectionner —</option>
                                     </select>
                                 </div>
-                                <div class="form-group"><label class="form-label">Nombre de dés</label>
-                                    <input id="force-dice" class="bonus-input" type="number" value="1" min="1" max="20">
+                                <div class="form-group"><label class="form-label">Magnitude</label>
+                                    <input id="force-dice" class="bonus-input" type="number" value="1" min="1" max="20"
+                                        oninput="updateUnifiedPreview(); updateRollButtons();">
                                 </div>
                                 <div class="form-group"><label class="form-label">Mod. Puissance</label>
                                     <input id="power-puissance-mod" class="bonus-input" type="number" value="0">
@@ -3174,9 +3181,6 @@
                             style="margin-top: 20px;">
                             ⚡⚔ Lancer le jet Force + Compétence
                         </button>
-                        <label class="private-roll-toggle"><input type="checkbox" id="conjoint-no-mastery"> 🚫 Sans
-                            maîtrise
-                            (−2)</label>
                         <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
                                 onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
 
@@ -3210,9 +3214,6 @@
                             <button class="roll-btn skill" id="skill-page-roll-btn" onclick="rollSkillPage()"
                                 disabled>🎲 LANCER
                                 LE JET</button>
-                            <label class="private-roll-toggle"><input type="checkbox" id="skill-page-no-mastery"> 🚫
-                                Sans
-                                maîtrise (−2)</label>
                             <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
                                     onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
 
@@ -3249,9 +3250,9 @@
                                         <option value="">— Sélectionner —</option>
                                     </select>
                                 </div>
-                                <div class="form-group"><label class="form-label">Nombre de dés</label>
+                                <div class="form-group"><label class="form-label">Magnitude</label>
                                     <input id="force-simple-dice" class="bonus-input" type="number" value="1" min="1"
-                                        max="20" onchange="updateForcePreview()">
+                                        max="20" oninput="updateForcePreview()">
                                 </div>
                                 <div class="form-group"><label class="form-label">Bonus Puissance</label>
                                     <input id="force-simple-bonus" class="bonus-input" type="number" value="0">
@@ -3275,10 +3276,17 @@
                             id="ctx-bar-caret">▾</span></div>
                     <div id="ctx-bar-body">
                         <div class="ctx-row">
-                            <span class="ctx-label">🎭 Registre</span>
-                            <select id="ctx-registre" class="form-select ctx-select"
-                                onchange="setRegistre(this.value); syncContextBar();"></select>
-                            <span class="ctx-effect" id="ctx-registre-effect"></span>
+                            <span class="ctx-label">🎭 Teinte</span>
+                            <select id="ctx-teinte" class="form-select ctx-select"
+                                onchange="setTeinte(this.value)">
+                                <option value="neutre">⚖️ Neutre (racine)</option>
+                                <option value="lumineux">✨ Lumineux</option>
+                                <option value="obscur">🌑 Obscur</option>
+                            </select>
+                            <label class="ctx-intention" title="Le geste est porté par une émotion réelle, et le MJ l'accorde."><input
+                                    type="checkbox" id="ctx-intention"
+                                    onchange="setIntention(this.checked)"> ⚡ Charge émotionnelle</label>
+                            <span class="ctx-effect" id="ctx-teinte-effect"></span>
                         </div>
                         <div class="ctx-row">
                             <span class="ctx-label">🗡 Forme</span>
@@ -3314,9 +3322,9 @@
                             <div id="foc-usages"
                                 style="display:none; grid-column:1 / -1; margin-top:6px; padding:8px 10px; background:rgba(0,168,255,0.04); border:1px solid rgba(0,168,255,0.15); border-radius:3px; font-size:0.76em; line-height:1.5; color:var(--light-steel);">
                                 <div style="margin-bottom:6px;"><strong>🎲 Action tactique</strong> : jet de compétence
-                                    adapté contre la DC tactique de la confrontation. Au choix : réduire la résistance
-                                    de la confrontation de l'écart, ou donner un bonus tactique égal à l'écart sur un
-                                    prochain jet du round (soi ou un allié).</div>
+                                    adapté contre la DC tactique de la confrontation. ajoute un Bonus tactique à un
+                                    prochain jet de son choix pendant le round ou celui de son allié égal à l'écart avec
+                                    la DC.</div>
                                 <div style="margin-bottom:6px;"><strong>🛡 Protéger un allié</strong> : un allié à 5 ft
                                     prend sa place dans une confrontation défensive, ou tente d'intercepter un sort à
                                     distance sans prendre la place dans la confrontation.</div>
@@ -3326,11 +3334,6 @@
                                     de se défendre. Victoire : résolution comme une confrontation offensive. Échec : le
                                     personnage subit l'attaque comme une défense perdue ordinaire.</div>
                             </div>
-                        </div>
-                        <div class="ctx-row">
-                            <span class="ctx-label">💎 Cristal</span>
-                            <span class="ctx-value" id="ctx-crystal-name">Aucun</span>
-                            <span class="ctx-effect" id="ctx-crystal-effect"></span>
                         </div>
                         <div class="ctx-row">
                             <span class="ctx-label">🌈 Couleur 1</span>
@@ -3381,78 +3384,6 @@
 
         <!-- PAGE FORCE -->
         <div class="page force-page" id="page-force">
-            <!-- Résonance / Corruption -->
-            <div class="card" style="grid-column: span 2;">
-                <div class="card-title">
-                    <span class="icon"
-                        style="background: linear-gradient(135deg, rgba(100,160,255,0.15), rgba(200,80,80,0.15)); color: #b0a0d0;">☯</span>
-                    Harmonie &amp; Corruption
-                </div>
-
-                <div class="resonance-gauge-wrap">
-                    <div class="resonance-track-outer">
-                        <div class="resonance-fill-dark" id="res-fill-dark"></div>
-                        <div class="resonance-fill-light" id="res-fill-light"></div>
-                        <div class="resonance-track-center"></div>
-                    </div>
-                    <div class="resonance-labels-row">
-                        <span style="color:#c06060">−90</span>
-                        <span>−60</span><span>−30</span>
-                        <span style="color:#b0a0d0">0</span>
-                        <span>30</span><span>60</span>
-                        <span style="color:#6ab0ff">100</span>
-                    </div>
-                </div>
-
-                <div style="text-align:center; margin-bottom:14px;">
-                    <div class="resonance-value-display" id="res-value">0</div>
-                    <span class="resonance-stage-badge" id="res-stage-badge">Équilibre</span>
-                </div>
-
-                <div class="resonance-controls-row">
-                    <button class="resonance-btn dark" onclick="applyResonanceDelta(-1)" title="−1">−</button>
-                    <div class="resonance-delta-wrap">
-                        <input type="number" class="resonance-delta-input" id="res-delta" value="1" min="1" max="190"
-                            placeholder="Δ">
-                        <button class="resonance-apply-btn dark"
-                            onclick="applyResonanceDelta(-Math.abs(parseInt(document.getElementById('res-delta').value)||1))">−
-                            Corrompre</button>
-                        <button class="resonance-apply-btn light"
-                            onclick="applyResonanceDelta(+Math.abs(parseInt(document.getElementById('res-delta').value)||1))">+
-                            Harmonie</button>
-                    </div>
-                    <button class="resonance-btn light" onclick="applyResonanceDelta(+1)" title="+1">+</button>
-                </div>
-
-                <div style="height:16px"></div>
-                <div class="resonance-effects-list" id="res-effects-list"></div>
-                <div class="resonance-no-effects" id="res-no-effects">Aucun effet actif.</div>
-            </div>
-
-            <div class="registres-section">
-                <div class="card-title"><span class="icon"
-                        style="background: rgba(179, 102, 255, 0.15); border-color: rgba(179, 102, 255, 0.3); color: var(--saber-purple);">◈</span>Registres
-                    Émotionnels</div>
-                <div class="registre-selector">
-                    <label class="registre-active-label" for="registre-select">Registre actif</label>
-                    <select id="registre-select" class="form-select" onchange="setRegistre(this.value)">
-                        <option value="neutre">⚖️ Neutre : Aucune émotion dominante</option>
-                        <option value="acier">🛡️ Acier : Calme, Concentration, Sérénité</option>
-                        <option value="ardeur">🔥 Ardeur : Rage, Passion, Fureur</option>
-                        <option value="determination">🎯 Détermination : Confiance, Résolution, Volonté</option>
-                        <option value="lien">💗 Lien : Amour, Loyauté, Compassion</option>
-                        <option value="lumiere">✨ Lumière : Joie, Espoir, Émerveillement</option>
-                        <option value="mepris">😤 Mépris : Dédain, Arrogance, Dégoût</option>
-                        <option value="ombre">🌑 Ombre : Tristesse, Deuil, Mélancolie</option>
-                        <option value="terreur">😱 Terreur : Peur, Angoisse, Panique</option>
-                    </select>
-                    <div id="registre-active-side"
-                        style="font-size:0.82em;font-weight:600;margin-bottom:5px;letter-spacing:0.03em;"></div>
-                    <div class="registre-active-effects"><span id="registre-active-bonus"
-                            class="registre-bonus"></span><span id="registre-active-malus"
-                            class="registre-malus"></span></div>
-                </div>
-            </div>
             <div class="skills-column">
                 <div class="column-header">
                     <div class="column-icon verbs">✦</div>
@@ -3489,24 +3420,21 @@
                     <div class="saber-type-desc" id="saber-type-effect"></div>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-title" style="color: var(--saber-cyan);"><span class="icon"
-                        style="background: rgba(0, 255, 255, 0.15); border-color: rgba(0, 255, 255, 0.3); color: var(--saber-cyan);">✧</span>Cristal
-                    Kyber</div>
-                <select id="crystal-select" class="crystal-select" onchange="updateCrystal()">
-                    <option value="">— Sélectionner un cristal —</option>
-                </select>
-                <div class="crystal-effect-display" id="crystal-effect-display" style="display: none;">
-                    <div class="crystal-effect-title" id="crystal-name"></div>
-                    <div class="crystal-effect-desc" id="crystal-effect"></div>
-                </div>
-            </div>
-            <div class="card">
+            <div class="card" style="grid-column: 1 / -1;">
                 <div class="card-title" style="color: var(--saber-purple);"><span class="icon"
                         style="background: rgba(179, 102, 255, 0.15); border-color: rgba(179, 102, 255, 0.3); color: var(--saber-purple);">⚔</span>Forme
                     de Combat</div>
+                <div class="form-mastery-header">
+                    <span class="form-mastery-label">Répertoire maîtrisé</span>
+                    <span class="form-mastery-count" id="form-mastery-count">0 / 0</span>
+                </div>
+                <div class="form-mastery-hint" id="form-mastery-hint"></div>
+                <div class="form-mastery-grid" id="form-mastery-grid"></div>
+                <div class="form-mastery-header" style="margin-top:14px;">
+                    <span class="form-mastery-label">Forme adoptée</span>
+                </div>
                 <select id="form-select" class="form-select-large" onchange="updateForm()">
-                    <option value="">— Sélectionner une forme —</option>
+                    <option value="">— Aucune forme maîtrisée —</option>
                 </select>
                 <div class="form-effect-display" id="form-effect-display" style="display: none;">
                     <div class="form-effect-header">
@@ -3583,10 +3511,10 @@
     <script>
         const SABER_COLORS = {
             argent: { name: "Argent", effect: "Coût de vos pouvoirs  et maintient des pouvoirs de durée est réduit de 1 PF (minimum 1)." },
-            blanc: { name: "Blanc", effect: " Un pouvoir sublimé par son registre gagne +1 en Puissance ; un pouvoir corrompu par lui subit −1 en Puissance." },
+            blanc: { name: "Blanc", effect: "Un pouvoir sublimé gagne +1 en Puissance ; un pouvoir corrompu subit −1 en Puissance." },
             bleu: { name: "Bleu", effect: "Les pouvoirs utilisés pour protéger quelqu'un d'autre +1 en Puissance." },
-            "bleu-clair": { name: "Bleu clair", effect: "Les pouvoirs obscurs subissent −2 Puissance contre toi. Et  si un jet de Force ne produit aucune Puissance, le personnage peut relancer le jet." },
-            cyan: { name: "Cyan", effect: "+2 aux jets de synchronisation. +1 de Puissance lors de la participation à un pouvoir conjoint." },
+            "bleu-clair": { name: "Bleu clair", effect: "Le personnage ne subit plus le minimum de dégâts des pouvoirs obscurs." },
+            cyan: { name: "Cyan", effect: "Le porteur peut maintenir un pouvoir de durée de type Soutien dont le bonus s'applique à tous les alliés à 10 ft plutôt qu'à lui seul. De plus, lorsqu'il initie un pouvoir conjoint, la DC de synchronisation est réduite de 2 pour tous les participants." },
             indigo: { name: "Indigo", effect: "Le personnage ne peut jamais être surpris et agit toujours normalement au premier tour d'une confrontation. Lors d'un jet d'initiative, il peut utiliser la Force pour effectuer un double jet." },
             jaune: { name: "Jaune", effect: "Augmente la puissance des pouvoirs de 1 lorsque le sorcier utilise un bonus tactique ou que l'adversaire subit un malus tactique." },
             "jaune-vert": { name: "Jaune-Vert", effect: "Lors d'une action tactique, l'utilisateur peut utiliser un pouvoir pour faire un double jet de compétence." },
@@ -3598,27 +3526,6 @@
             vert: { name: "Vert", effect: "Après avoir utilisé un Verbe de Force, le prochain pouvoir utilisant un Verbe différent gagne +1 en Puissance." },
             violet: { name: "Violet", effect: "+1 de Puissance sur les pouvoirs par afflictions différentes subie (maximum +3)." },
             viridien: { name: "Viridien", effect: "Pouvoirs visant à défaire des pouvoirs en place +2 de puissance." }
-        };
-        const CRYSTALS = {
-            adegan: { name: "Adegan", effect: "Lors d'un jet conjoint Force et sabre laser, la Puissance du pouvoir est augmentée de 1." },
-            bondar: { name: "Bondar", effect: "Les coups du sabre peuvent infliger des afflictions au lieu de blessures." },
-            brise: { name: "Brisé", effect: "Avant chaque jet de sabre laser, lancez 1d6 : sur 1 ou 2, le jet subit un malus de 2 ; sur 5 ou 6, il gagne un bonus de 2." },
-            compresse: { name: "Compressé", effect: "Les dés explosent sur une valeur réduite de 1." },
-            damind: { name: "Damind", effect: "Bonus de 1 d'efficacité sur les jets pour dévier les tirs de blaster." },
-            elementaire: { name: "Élémentaire", effect: "Sur une confrontation offensive remportée avec un écart de 5 ou plus, la victime subit en plus une affliction de gravité 1 liée à l'élément." },
-            firkrann: { name: "Firkrann", effect: "Bonus de 1 d'efficacité sur les confrontations offensives contre les droïdes et les cibles technologiques." },
-            ilum: { name: "Ilum", effect: "Les attaques au sabre retirent toujours un minimum de résistance égal à la moitié du niveau de Sabre laser du porteur (arrondi à l'inférieur)." },
-            instable: { name: "Instable", effect: "Bonus de 2 d'efficacité sur les confrontations offensives, mais chaque 1 sur les dés inflige au porteur une blessure de gravité 1." },
-            jenruax: { name: "Jenruax", effect: "Bonus de 1 d'efficacité sur les esquives." },
-            kaiburr: { name: "Kaiburr", effect: "Bonus de 2 de Puissance sur les pouvoirs de Force lorsque le porteur se trouve dans un lieu de pouvoir." },
-            lambent: { name: "Lambent", effect: "Lors des confrontations au sabre laser, le porteur peut remplacer l'attribut utilisé par son attribut miroir (Puissance et Présence, Intelligence et Vivacité, Volonté et Endurance, Intuition et Contrôle)." },
-            luxum: { name: "Luxum", effect: "Bonus de 1 d'efficacité sur les confrontations défensives contre les droïdes et les cibles technologiques." },
-            nexor: { name: "Nexor", effect: "Après une confrontation défensive remportée, la prochaine confrontation offensive au sabre laser du round gagne 1 d'efficacité." },
-            perle: { name: "Perle", effect: "Les attaques au sabre retirent 1 de résistance supplémentaire ou augmentent de 1 la gravité de la blessure infligée." },
-            sapith: { name: "Sapith", effect: "La première Riposte de chaque round ne coûte pas de point de focalisation." },
-            sigil: { name: "Sigil", effect: "Les blessures reçues par le porteur voient leur gravité réduite de 1 (minimum 1)." },
-            solaris: { name: "Solaris", effect: "Bonus d'efficacité égal à la moitié du niveau de Côté Lumineux du porteur (arrondi à l'inférieur). Sans effet pour un utilisateur neutre ou obscur." },
-            upari: { name: "Upari", effect: "Bonus de 1 d'efficacité lorsque le porteur se concentre sur un pouvoir de duré." }
         };
         const SABER_TYPES = {
             standard: { name: "Standard", effect: "+1 de Puissance sur les pouvoirs de Force (main libre disponible)." },
@@ -3661,12 +3568,12 @@
             niman: {
                 name: "Forme VI - Niman",
                 attribute: "Même attribut que pour l'action tactique",
-                effect: "Après avoir déclaré une attaque au sabre laser, le personnage peut effectuer une action tactique gratuite avec sa compétence Combat de Force. Il déclare le verbe qui porte la manœuvre : l'action se résout sur l'attribut de ce verbe, et le registre s'applique normalement (verbe sublimé ou corrompu). En cas de réussite, l'attaque déclarée bénéficie du bonus tactique habituel."
+                effect: "Après avoir déclaré une attaque au sabre laser, le personnage peut effectuer une action tactique gratuite portée par un pouvoir de Force. Il déclare le verbe et la compétence qui portent la manœuvre : l'action se résout sur l'attribut du verbe, teinte et charge s'appliquant normalement. En cas de réussite, l'attaque déclarée bénéficie du bonus tactique habituel."
             },
             juyo: {
                 name: "Forme VII - Juyo",
                 attribute: "Puissance",
-                effect: "Nécessite d'être dans le registre Ardeur pour être utilisée. Après avoir une confrontation offensive au sabre, l'utilisateur peut immédiatement enchaîner une seconde attaque (une seule par tour), sur le même adversaire ou un autre à portée. S'il le fait, il subit −2 à toutes ses confrontations défensives jusqu'à son prochain tour. Tout pouvoir de Force lancé dans cette posture est considéré comme obscur."
+                effect: "Nécessite d'être emporté par la fureur pour être utilisée. Après avoir une confrontation offensive au sabre, l'utilisateur peut immédiatement enchaîner une seconde attaque (une seule par tour), sur le même adversaire ou un autre à portée. S'il le fait, il subit −2 à toutes ses confrontations défensives jusqu'à son prochain tour. Tout pouvoir de Force lancé dans cette posture est considéré comme obscur."
             },
             vaapad: {
                 name: "Forme VII - Vaapad",
@@ -3720,6 +3627,38 @@
             8: { name: 'Absolue', dice: 10, explosion: 8, bonus: 4, color: '#ffcc00' }
         };
 
+        // ── PASSIFS DE COMPÉTENCE ───────────────────────────────────────────
+        // Chaque compétence possède une valeur passive, employée quand aucun jet
+        // n'est demandé : bonus de l'attribut + moitié des dés de compétence.
+        // L'attribut de calcul est réglable par compétence et voyage avec la fiche,
+        // ce qui permet au dashboard MJ d'afficher les mêmes valeurs sans réglage.
+        const PASSIVE_ATTRS = ['puissance', 'vivacite', 'precision', 'endurance', 'intelligence', 'intuition', 'volonte', 'presence'];
+        const DEFAULT_PASSIVE_ATTR = {
+            'Art': 'intuition', 'Athlétisme': 'endurance', 'Autorité': 'presence',
+            'Bagarre': 'puissance', 'Discrétion': 'precision', 'Dressage': 'presence',
+            'Éloquence': 'presence', 'Érudition': 'intelligence', 'Escamotage': 'precision',
+            'Informatique': 'intelligence', 'Ingénierie': 'intelligence', 'Médecine': 'intelligence',
+            'Pilotage': 'vivacite', 'Recherche': 'intelligence', 'Résilience': 'volonte',
+            'Sagacité': 'intuition', 'Stratégie': 'intelligence', 'Tir': 'precision',
+            'Tromperie': 'presence', 'Vigilance': 'intuition'
+        };
+        function getSkillPassiveAttr(skill) {
+            if (skill.passiveAttr && PASSIVE_ATTRS.includes(skill.passiveAttr)) return skill.passiveAttr;
+            return DEFAULT_PASSIVE_ATTR[skill.baseName || skill.name] || 'intuition';
+        }
+        function getSkillPassiveValue(skill) {
+            const attrId = getSkillPassiveAttr(skill);
+            const attrLevel = getAttributeLevel(appState.attributes[attrId] || 4);
+            const skillLevel = getSkillLevel(skill.level);
+            return attrLevel.bonus + Math.floor(skillLevel.dice / 2);
+        }
+        function setSkillPassiveAttr(skillId, attrId) {
+            const skill = appState.skills.find(x => x.id === skillId);
+            if (!skill) return;
+            skill.passiveAttr = attrId;
+            renderSkills();
+        }
+
         // Fonction pour calculer l'explosion d'un niveau de Force combiné
         function getForceExplosion(combinedLevel) {
             if (combinedLevel >= 9) return 8;
@@ -3746,17 +3685,15 @@
             return SKILL_LEVELS[Math.min(8, Math.max(1, value))] || SKILL_LEVELS[1];
         }
 
-        const REGISTRES = {
-            neutre: { name: "Neutre", align: 0, bonus: [], malus: [], bonusText: "", malusText: "" },
-            ardeur: { name: "Ardeur", align: -3, bonus: ["amplifier", "dissiper"], malus: ["lier", "dissimuler"], bonusText: "Sublime : Amplifier, Dissiper", malusText: "Corrompt : Lier, Dissimuler" },
-            terreur: { name: "Terreur", align: -2, bonus: ["percevoir", "dissimuler"], malus: ["manifester", "harmoniser"], bonusText: "Sublime : Percevoir, Dissimuler", malusText: "Corrompt : Manifester, Amplifier" },
-            mepris: { name: "Mépris", align: -2, bonus: ["dissiper", "transformer"], malus: ["harmoniser", "lier"], bonusText: "Sublime : Dissiper, Transformer", malusText: "Corrompt : Harmoniser, Lier" },
-            ombre: { name: "Ombre", align: 0, bonus: ["absorber", "dissimuler"], malus: ["manifester", "harmoniser"], bonusText: "Sublime : Absorber, Dissimuler", malusText: "Corrompt : Manifester, Harmoniser" },
-            acier: { name: "Acier", align: 1, bonus: ["percevoir", "mouvoir"], malus: ["transformer", "absorber"], bonusText: "Sublime : Percevoir, Mouvoir", malusText: "Corrompt : Transformer, Absorber" },
-            determination: { name: "Détermination", align: 0, bonus: ["manifester", "amplifier"], malus: ["transformer", "harmoniser"], bonusText: "Sublime : Manifester, Amplifier", malusText: "Corrompt : Transformer, Harmoniser" },
-            lumiere: { name: "Lumière", align: 3, bonus: ["harmoniser", "manifester"], malus: ["dissiper", "transformer"], bonusText: "Sublime : Harmoniser, Manifester", malusText: "Corrompt : Dissiper, Transformer" },
-            lien: { name: "Lien", align: 2, bonus: ["lier", "harmoniser"], malus: ["dissiper", "absorber"], bonusText: "Sublime : Lier, Harmoniser", malusText: "Corrompt : Dissiper, Absorber" }
+        // ── TEINTES ────────────────────────────────────────────────────────
+        // Un verbe est un geste neutre. C'est l'intention qui lui donne une face
+        // lumineuse ou obscure ; le verbe lui-meme ne porte aucune morale.
+        const TEINTES = {
+            lumineux: { name: "Lumineux", sign: 1, icon: "\u2728", color: "#ffcc00" },
+            neutre: { name: "Neutre", sign: 0, icon: "\u2696\uFE0F", color: "#8b949e" },
+            obscur: { name: "Obscur", sign: -1, icon: "\uD83C\uDF11", color: "#ff4444" }
         };
+
         const ATTR_COLORS = {
             'Présence': 'var(--saber-purple)',
             'Intelligence': 'var(--saber-blue)',
@@ -3764,31 +3701,81 @@
             'Volonté': 'var(--saber-yellow)'
         };
         const FORCE_VERBS = [
-            { id: 'absorber', name: 'Absorber', attr: 'Présence', desc: "Drainer, boire, engloutir. Force Drain, Tutaminis : faire sienne l'énergie ou la vitalité d'autrui.", level: 1 },
-            { id: 'amplifier', name: 'Amplifier', attr: 'Présence', desc: "Renforcer, exalter, transcender. Force Speed, Valor : pousser un corps ou un esprit au-delà de ses limites.", level: 1 },
-            { id: 'dissimuler', name: 'Dissimuler', attr: 'Volonté', desc: "Voiler, effacer, masquer. Force Cloak, présence étouffée : soustraire un être ou un objet à toute perception.", level: 1 },
-            { id: 'dissiper', name: 'Dissiper', attr: 'Intelligence', desc: "Détruire, annuler, désintégrer. Force Destruction : briser la cohésion des choses et défaire les pouvoirs.", level: 1 },
-            { id: 'harmoniser', name: 'Harmoniser', attr: 'Intuition', desc: "Guérir, purifier, équilibrer. Force Healing, purge des toxines, apaisement : rendre à chaque chose son état juste.", level: 1 },
-            { id: 'lier', name: 'Lier', attr: 'Présence', desc: "Entraver, asservir, connecter. Paralysie, domination, liens mentaux : tisser des chaînes entre les êtres.", level: 1 },
-            { id: 'manifester', name: 'Manifester', attr: 'Volonté', desc: "Créer, matérialiser, projeter. Éclairs, illusions, barrières d'énergie : donner forme à la Force elle-même.", level: 1 },
-            { id: 'mouvoir', name: 'Mouvoir', attr: 'Volonté', desc: "Déplacer, propulser, contraindre. Télékinésie, Push, Pull, déviation de projectiles : imposer le mouvement par la seule volonté.", level: 1 },
-            { id: 'percevoir', name: 'Percevoir', attr: 'Intuition', desc: "Révéler, sentir, prévoir. Force Sense, visions, esquive prescient : lire ce qui est caché et ce qui vient.", level: 1 },
-            { id: 'transformer', name: 'Transformer', attr: 'Intelligence', desc: "Altérer, muter, corrompre. Alchimie Sith, Mind Trick : changer la nature profonde d'une chose ou d'une pensée.", level: 1 }
+            {
+                id: 'absorber', name: 'Absorber', attr: 'Présence', level: 1,
+                desc: "Prendre en soi une énergie ou une essence. Tutaminis, boire la chaleur d'un brasier, capter l'énergie d'un lieu de pouvoir.",
+                light: 'Recueillir', lightDesc: "Aspirer un poison, prendre sur soi la douleur d'un blessé, encaisser une décharge destinée à un autre.",
+                dark: 'Drainer', darkDesc: "Siphonner la vitalité d'un être, voler la Force d'un adversaire."
+            },
+            {
+                id: 'amplifier', name: 'Amplifier', attr: 'Présence', level: 1,
+                desc: "Pousser une chose au-delà de ses limites. Force Speed, accélérer sa course, renforcer sa prise, aiguiser ses sens.",
+                light: 'Exalter', lightDesc: "Force Valor, insuffler le courage à une troupe, décupler l'élan d'un allié.",
+                dark: 'Déchaîner', darkDesc: "Décupler sa force par la fureur, rendre une bête enragée, une puissance qui consume."
+            },
+            {
+                id: 'dissimuler', name: 'Dissimuler', attr: 'Volonté', level: 1,
+                desc: "Soustraire à la perception. Force Cloak, masquer sa présence dans la Force, rendre un objet inaperçu.",
+                light: 'Couvrir', lightDesc: "Masquer une retraite, voiler la présence d'un allié, effacer des traces pour épargner.",
+                dark: 'Occulter', darkDesc: "Cacher un piège, faire disparaître une preuve, masquer sa nature avant de frapper."
+            },
+            {
+                id: 'dissiper', name: 'Dissiper', attr: 'Intelligence', level: 1,
+                desc: "Rompre la cohésion d'une chose. Effacer une empreinte de Force, dissoudre un sort inerte, désagréger un obstacle.",
+                light: 'Délivrer', lightDesc: "Briser une entrave, défaire une malédiction, annuler un pouvoir néfaste.",
+                dark: 'Anéantir', darkDesc: "Force Destruction, désintégrer une structure ou un corps."
+            },
+            {
+                id: 'faconner', name: 'Façonner', attr: 'Intelligence', level: 1,
+                desc: "Donner une forme à une chose. Sculpter la pierre, modeler le métal, lever un vent, orienter une flamme.",
+                light: 'Harmoniser', lightDesc: "Accorder un esprit troublé, guider une croissance, équilibrer un lieu.",
+                dark: 'Déformer', darkDesc: "Alchimie Sith, tordre une chair, fausser un souvenir."
+            },
+            {
+                id: 'guerir', name: 'Guérir', attr: 'Intuition', level: 1,
+                desc: "Restaurer l'intégrité d'une chose. Refermer une plaie, réparer un mécanisme, ressouder une structure, rendre ses forces.",
+                light: 'Purifier', lightDesc: "Purger un poison, laver une corruption, délivrer d'une souillure.",
+                dark: 'Ranimer', darkDesc: "Forcer un mourant à tenir, rappeler ce qui s'éteint, Dark Transfer."
+            },
+            {
+                id: 'lier', name: 'Lier', attr: 'Présence', level: 1,
+                desc: "Établir une prise entre des êtres ou sur une volonté. Communication télépathique, lien avec une monture, contact mental à distance.",
+                light: 'Unir', lightDesc: "Lien maître-padawan, méditation de bataille, partager sa force.",
+                dark: 'Asservir', darkDesc: "Domination mentale, marque de servitude, plier une volonté."
+            },
+            {
+                id: 'manifester', name: 'Manifester', attr: 'Volonté', level: 1,
+                desc: "Faire apparaître une forme de Force. Allumer une lueur, créer une illusion simple, dresser un écran d'énergie.",
+                light: 'Invoquer', lightDesc: "Appeler une forme en s'accordant à la Force : barrière protectrice, lumière qui repousse l'ombre, éclair de justice.",
+                dark: 'Déverser', darkDesc: "Torrent d'éclairs, spectres de Force, forme qui submerge et terrifie."
+            },
+            {
+                id: 'mouvoir', name: 'Mouvoir', attr: 'Volonté', level: 1,
+                desc: "Déplacer par force cinétique. Télékinésie, Push, Pull, léviter, dégager un passage, actionner un mécanisme à distance.",
+                light: 'Soutenir', lightDesc: "Rattraper une chute, soulever un débris qui écrase, porter un blessé.",
+                dark: 'Écraser', darkDesc: "Projeter contre un mur, broyer une gorge, précipiter dans le vide."
+            },
+            {
+                id: 'percevoir', name: 'Percevoir', attr: 'Intuition', level: 1,
+                desc: "Connaître ce qui est caché, lointain ou à venir. Force Sense, détecter une présence, pressentir un danger, lire une trace.",
+                light: 'Communier', lightDesc: "Ressentir un lieu vivant, empathie profonde, s'accorder à la Force.",
+                dark: 'Sonder', darkDesc: "Fouiller un esprit sans consentement, arracher un secret, lire pour trahir."
+            }
         ];
         const FORCE_TARGETS = [
-
-            { id: 'bete', name: 'Bête', desc: "L'instinct animal. Créatures, montures, prédateurs : les esprits simples que la Force apprivoise ou affole.", level: 1 },
-            { id: 'corps', name: 'Corps', desc: "La chair et le sang. Muscles, organes, réflexes : tout ce qui fait la machine vivante d'un être.", level: 1 },
-            { id: 'corruption', name: 'Corruption', desc: "Le côté obscur lui-même. Éclairs Sith, drain, terreur imposée : puiser dans la face sombre de la Force et lui donner corps.", level: 1 },
+            { id: 'corps', name: 'Corps', desc: "La chair et l'organisme. Muscles, organes, membres, sens physiques : ce qui se coupe et se recoud.", level: 1 },
             { id: 'energie', name: 'Énergie', desc: "Les flux et les décharges. Chaleur, lumière, électricité, tirs de blaster.", level: 1 },
-            { id: 'vie', name: 'Énergie Vitale', desc: "Le souffle qui anime. Vitalité, régénération, agonie : l'énergie qui anime le vivant.", level: 1 },
-            { id: 'esprit', name: 'Esprit', desc: "La pensée et la conscience. Souvenirs, émotions, volonté : le monde intérieur d'un être.", level: 1 },
-            { id: 'flore', name: 'Flore', desc: "Le règne végétal. Racines, spores, forêts entières : la vie lente qui écoute la Force.", level: 1 },
-            { id: 'force', name: 'Force', desc: "La Force elle-même. Pouvoirs en cours, signatures, perturbations : agir directement sur la force.", level: 1 },
-            { id: 'matiere', name: 'Matière', desc: "La substance inerte. Pierre, métal, eau, air : le monde physique et ses objets.", level: 1 },
-            { id: 'mecanismes', name: 'Mécanismes', desc: "La machine et le circuit. Droïdes, vaisseaux, systèmes : ce qui fonctionne sans vivre.", level: 1 }
+            { id: 'vie', name: 'Énergie Vitale', desc: "Le souffle qui anime. Vitalité, essence, présence des vivants : ce qui s'éteint et se rallume.", level: 1 },
+            { id: 'esprit', name: 'Esprit', desc: "La pensée et la conscience. Souvenirs, émotions, volonté, y compris l'esprit animal.", level: 1 },
+            { id: 'force', name: 'Force', desc: "La Force elle-même. Pouvoirs en cours, signatures, courants, perturbations.", level: 1 },
+            { id: 'matiere', name: 'Matière', desc: "La substance inerte et ce qui fonctionne sans vivre. Pierre, métal, objets, droïdes, systèmes.", level: 1 },
+            { id: 'nature', name: 'Nature', desc: "Le monde vivant et ses éléments. Flore, terrain, météo, climat : l'environnement qui répond à la Force.", level: 1 },
+            { id: 'obscurite', name: 'Obscurité', desc: "Le côté obscur comme substance. Souillure logée dans un lieu, un artefact ou un être.", level: 1 }
         ];
-        const defaultSkills = ['Art', 'Athlétisme', 'Autorité', 'Bagarre', 'Combat de Force', 'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Informatique', 'Ingénierie', 'Médecine', 'Pilotage', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Tir', 'Tromperie', 'Vigilance'];
+        // Migration des sauvegardes antérieures (anciens verbes / anciennes cibles)
+        const LEGACY_VERB_MAP = { harmoniser: 'guerir', transformer: 'faconner', proteger: 'dissimuler', proteger_old: 'dissimuler' };
+        const LEGACY_TARGET_MAP = { bete: 'esprit', flore: 'nature', mecanismes: 'matiere', corruption: 'obscurite' };
+        const defaultSkills = ['Art', 'Athlétisme', 'Autorité', 'Bagarre', 'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Informatique', 'Ingénierie', 'Médecine', 'Pilotage', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Tir', 'Tromperie', 'Vigilance'];
         const appState = {
             profile: { name: '', image: null },
             attributes: { puissance: 4, vivacite: 4, precision: 4, endurance: 4, intelligence: 4, intuition: 4, volonte: 4, presence: 4 },
@@ -3798,14 +3785,14 @@
             forceTargets: JSON.parse(JSON.stringify(FORCE_TARGETS)),
             wounds: [],
             objects: [],
-            masteries: [],
             activePowers: [],
             receivedBuffs: [],
             focalisation: { current: 1, max: 1 },
             formCounters: { ataru: 0, vaapad: 0 },
             notes: "",
-            saber: { colors: [], crystal: '', form: '', type: 'standard' },
-            registre: "neutre",
+            saber: { colors: [], form: '', type: 'standard', knownForms: [] },
+            teinte: "neutre",
+            intentionOk: false,
             resonance: 0,
             privateRoll: false,
             currentModal: null
@@ -3816,24 +3803,21 @@
             if (body) { body.classList.toggle('collapsed'); if (caret) caret.textContent = body.classList.contains('collapsed') ? '▸' : '▾'; }
         }
         function syncContextBar() {
-            // Registre
-            const regSel = document.getElementById('ctx-registre');
-            if (regSel) {
-                if (!regSel.options.length) {
-                    const src = document.getElementById('registre-select');
-                    if (src) regSel.innerHTML = src.innerHTML;
-                }
-                regSel.value = appState.registre || 'neutre';
-                const reg = REGISTRES[appState.registre] || REGISTRES.neutre;
-                const eff = document.getElementById('ctx-registre-effect');
-                if (eff) { const t = (reg.bonusText ? reg.bonusText + ' · ' : '') + (reg.malusText || (appState.registre === 'neutre' ? 'Aucune sublimation ni corruption' : '')); eff.textContent = t; eff.title = t; }
-            }
-            // Forme
+            // Teinte + intention
+            const teinteSel = document.getElementById('ctx-teinte');
+            if (teinteSel) teinteSel.value = appState.teinte || 'neutre';
+            const intBox = document.getElementById('ctx-intention');
+            if (intBox) intBox.checked = !!appState.intentionOk;
+            const teinteEff = document.getElementById('ctx-teinte-effect');
+            if (teinteEff) { const t = teinteStatusText(); teinteEff.textContent = t; teinteEff.title = t; }
+            // Forme : le menu ne propose que le répertoire maîtrisé, reconstruit à
+            // chaque synchronisation puisque le niveau de Bagarre peut avoir changé.
             const formSel = document.getElementById('ctx-forme');
             if (formSel) {
-                if (!formSel.options.length) {
-                    formSel.innerHTML = '<option value="">Aucune forme</option>' + Object.entries(COMBAT_FORMS).map(([id, f]) => `<option value="${id}">${f.name}</option>`).join('');
-                }
+                if (typeof clampKnownForms === 'function') clampKnownForms();
+                const known = (typeof getKnownForms === 'function') ? getKnownForms() : [];
+                formSel.innerHTML = '<option value="">' + (known.length ? 'Aucune forme adoptée' : 'Aucune forme maîtrisée') + '</option>'
+                    + known.filter(id => COMBAT_FORMS[id]).map(id => `<option value="${id}">${COMBAT_FORMS[id].name}</option>`).join('');
                 formSel.value = appState.saber.form || '';
                 const f = COMBAT_FORMS[appState.saber.form];
                 const eff = document.getElementById('ctx-forme-effect');
@@ -3841,15 +3825,6 @@
                 syncFormCounter();
                 syncFocalisation();
             }
-            // Cristal (lecture seule, alimenté par la page Sabre)
-            const cryName = document.getElementById('ctx-crystal-name');
-            if (cryName) {
-                const c = CRYSTALS[appState.saber.crystal];
-                cryName.textContent = c ? c.name : 'Aucun';
-                const eff = document.getElementById('ctx-crystal-effect');
-                if (eff) { eff.textContent = c ? c.effect : ''; eff.title = c ? c.effect : ''; }
-            }
-            // Couleur (première couleur active)
             // Couleurs (lecture seule, alimentées par la page Sabre)
             [['ctx-color-name', 0, 'ctx-color-effect'], ['ctx-color2-name', 1, 'ctx-color2-effect']].forEach(([nameId, idx, effId]) => {
                 const nameEl = document.getElementById(nameId);
@@ -3858,6 +3833,75 @@
                 nameEl.textContent = c ? c.name : 'Aucune';
                 const eff = document.getElementById(effId);
                 if (eff) { eff.textContent = c ? c.effect : ''; eff.title = c ? c.effect : ''; }
+            });
+        }
+        // ── MAÎTRISE DES FORMES ─────────────────────────────────────────────
+        // Le nombre de formes qu'un personnage peut connaître découle de son niveau
+        // de Bagarre. Un combattant novice n'en maîtrise aucune ; il faut atteindre
+        // les niveaux supérieurs pour disposer d'un véritable répertoire.
+        const FORM_MASTERY_BY_BAGARRE = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 5, 6: 7, 7: 9, 8: 10 };
+        function getFormMasteryCap() {
+            return FORM_MASTERY_BY_BAGARRE[getSaberSkillLevel()] || 0;
+        }
+        function getKnownForms() {
+            if (!Array.isArray(appState.saber.knownForms)) appState.saber.knownForms = [];
+            return appState.saber.knownForms;
+        }
+        // Si Bagarre baisse, le répertoire est rogné par la fin et la forme active
+        // est libérée si elle n'est plus connue.
+        function clampKnownForms() {
+            const cap = getFormMasteryCap();
+            const known = getKnownForms().filter(id => COMBAT_FORMS[id]);
+            appState.saber.knownForms = known.slice(0, cap);
+            if (appState.saber.form && !appState.saber.knownForms.includes(appState.saber.form)) {
+                appState.saber.form = '';
+            }
+        }
+        function toggleKnownForm(id) {
+            if (!COMBAT_FORMS[id]) return;
+            const known = getKnownForms();
+            const i = known.indexOf(id);
+            if (i >= 0) {
+                known.splice(i, 1);
+                if (appState.saber.form === id) appState.saber.form = '';
+            } else {
+                if (known.length >= getFormMasteryCap()) {
+                    showNotification('Répertoire complet : ' + getFormMasteryCap() + ' forme(s) au niveau de Bagarre actuel');
+                    return;
+                }
+                known.push(id);
+            }
+            renderFormMastery();
+            renderFormMastery();
+            renderFormSelect();
+            updateForm();
+            if (typeof syncContextBar === 'function') syncContextBar();
+        }
+        function renderFormMastery() {
+            const grid = document.getElementById('form-mastery-grid');
+            if (!grid) return;
+            clampKnownForms();
+            const cap = getFormMasteryCap();
+            const known = getKnownForms();
+            const counter = document.getElementById('form-mastery-count');
+            if (counter) {
+                counter.textContent = known.length + ' / ' + cap;
+                counter.style.color = cap === 0 ? '#ff7744' : known.length >= cap ? '#ffcc00' : 'var(--silver-chrome)';
+            }
+            const hint = document.getElementById('form-mastery-hint');
+            if (hint) hint.textContent = cap === 0
+                ? 'Aucune forme accessible : le niveau de Bagarre est trop faible.'
+                : 'Répertoire déterminé par le niveau de Bagarre (' + getSaberSkillLevel() + ').';
+            grid.innerHTML = '';
+            Object.entries(COMBAT_FORMS).forEach(([id, form]) => {
+                const isKnown = known.includes(id);
+                const full = !isKnown && known.length >= cap;
+                const item = document.createElement('div');
+                item.className = 'form-mastery-item' + (isKnown ? ' known' : '') + (full ? ' locked' : '');
+                item.title = full ? 'Répertoire complet' : form.name + ' · ' + form.attribute;
+                item.onclick = () => toggleKnownForm(id);
+                item.innerHTML = `<span class="fm-name">${form.name}</span><span class="fm-attr">${form.attribute}</span>`;
+                grid.appendChild(item);
             });
         }
         function getSaberSkillLevel() {
@@ -3936,7 +3980,6 @@
             if (sel && typeof updateForm === 'function') { sel.value = id; updateForm(); }
             syncContextBar();
         }
-        function setCtxCrystal(id) { appState.saber.crystal = id; if (typeof renderCrystalSelect === 'function') renderCrystalSelect(); syncContextBar(); }
         function setCtxColor(id) {
             const second = appState.saber.colors[1];
             appState.saber.colors = [id, second].filter(Boolean).filter((c, i, a) => a.indexOf(c) === i).slice(0, 2);
@@ -3960,37 +4003,29 @@
             if ((pageName === 'rolls' || pageName === 'skills') && typeof syncContextBar === 'function') syncContextBar();
             if (pageName === 'rolls' && typeof renderActivePowers === 'function') { renderActivePowers(); renderReceivedBuffs(); }
         }
-        function setRegistre(registreId) {
-            appState.registre = registreId;
-            const sel = document.getElementById('registre-select');
-            if (sel) sel.value = registreId;
-            const registre = REGISTRES[registreId];
-            document.getElementById('registre-active-bonus').textContent = registre.bonusText;
-            document.getElementById('registre-active-malus').textContent = registre.malusText;
-            const _al = registre.align || 0;
-            const _side = document.getElementById('registre-active-side');
-            if (_side) {
-                if (_al < 0) { _side.textContent = '⚫ Côté obscur (' + _al + ')'; _side.style.color = '#ff7a7a'; }
-                else if (_al > 0) { _side.textContent = '🔵 Côté lumineux (+' + _al + ')'; _side.style.color = '#7fb8ff'; }
-                else { _side.textContent = '⚪ Équilibre'; _side.style.color = '#b7c2cc'; }
-            }
+        function setTeinte(teinteId) {
+            appState.teinte = TEINTES[teinteId] ? teinteId : 'neutre';
+            const sel = document.getElementById('ctx-teinte');
+            if (sel && sel.value !== appState.teinte) sel.value = appState.teinte;
+            refreshTeinteDisplays();
+        }
+        function setIntention(flag) {
+            appState.intentionOk = !!flag;
+            const box = document.getElementById('ctx-intention');
+            if (box && box.checked !== appState.intentionOk) box.checked = appState.intentionOk;
+            refreshTeinteDisplays();
+        }
+        function refreshTeinteDisplays() {
+            const eff = document.getElementById('ctx-teinte-effect');
+            if (eff) { const t = teinteStatusText(); eff.textContent = t; eff.title = t; }
+            if (typeof updateRollSelects === 'function') updateRollSelects();
             if (typeof updateForcePreview === 'function') updateForcePreview();
             if (typeof updateUnifiedPreview === 'function') updateUnifiedPreview();
-            const ctxReg = document.getElementById('ctx-registre');
-            if (ctxReg && ctxReg.value !== registreId) { ctxReg.value = registreId; }
-            const ctxEff = document.getElementById('ctx-registre-effect');
-            if (ctxEff && registre) ctxEff.textContent = (registre.bonusText ? registre.bonusText + ' · ' : '') + (registre.malusText || (registreId === 'neutre' ? 'Aucune sublimation ni corruption' : ''));
-        }
-        function getRegistreModifier(verbId) {
-            const registre = REGISTRES[appState.registre];
-            let modifier = 0;
-            if (registre.bonus.includes(verbId)) modifier += 1;
-            if (registre.malus.includes(verbId)) modifier -= 1;
-            return modifier;
         }
         function modifyAttribute(attr, delta) {
             appState.attributes[attr] = Math.max(1, Math.min(8, appState.attributes[attr] + delta));
             updateAllAttributes();
+            if (typeof renderSkills === 'function') renderSkills();
         }
         function updateAllAttributes() {
             Object.keys(appState.attributes).forEach(attr => {
@@ -4098,7 +4133,6 @@
             'Athlétisme': ['Athlétisme', 'Acrobaties', 'Agilité', 'Endurance'],
             'Autorité': ['Autorité', 'Commandement', 'Intimidation', 'Leadership'],
             'Bagarre': ['Bagarre', 'Sabre laser', 'Pugilat', 'Vibrolame'],
-            'Combat de Force': ['Combat de Force', 'Duel de Force', 'Frappe de Force', 'Pouvoir en combat'],
             'Discrétion': ['Discrétion', 'Furtivité', 'Infiltration', 'Inaperçu'],
             'Dressage': ['Dressage', 'Apprivoisement', 'Créatures exotiques', 'Monture'],
             'Éloquence': ['Éloquence', 'Diplomatie', 'Négociation', 'Séduction'],
@@ -4212,11 +4246,18 @@
                 item.className = 'skill-item';
                 const level = getSkillLevel(skill.level);
                 const hasAlts = !!(skill.baseName ? SKILL_ALTERNATIVES[skill.baseName] : getBaseSkillName(skill.name));
+                const pAttr = getSkillPassiveAttr(skill);
+                const pVal = getSkillPassiveValue(skill);
+                const pColor = pVal >= 7 ? '#ffcc00' : pVal >= 5 ? '#3fb950' : 'var(--silver-chrome)';
+                const attrOpts = PASSIVE_ATTRS.map(a => `<option value="${a}"${a === pAttr ? ' selected' : ''}>${capitalize(a)}</option>`).join('');
                 item.innerHTML = `
                     <div class="skill-name ${hasAlts ? 'skill-renameable' : ''}" id="skill-name-${skill.id}"
                          ${hasAlts ? `onclick="openRenameSkill('${skill.id}')" title="Cliquer pour choisir un nom alternatif"` : ''}>
                         ${skill.name}${hasAlts ? ' <span class="rename-hint">✎</span>' : ''}
                     </div>
+                    <select class="skill-passive-attr" title="Attribut du passif"
+                            onchange="setSkillPassiveAttr('${skill.id}', this.value)">${attrOpts}</select>
+                    <span class="skill-passive-value" style="color:${pColor}" title="Valeur passive : bonus d'attribut + moitié des dés">${pVal}</span>
                     <div class="skill-level">
                         <button class="skill-level-btn" onclick="modifySkillById('${skill.id}', -1)" ${skill.level <= 1 ? 'disabled' : ''}>−</button>
                         <span class="skill-level-value" title="Niveau ${skill.level} • ${level.dice} dés" style="color: ${level.color}">${level.name}<sub style="opacity:0.6;font-size:0.7em;margin-left:2px;">${skill.level}</sub></span>
@@ -4225,41 +4266,24 @@
                 list.appendChild(item);
             });
         }
-        const M_SABER_TYPES = ['Standard', 'Claymore', 'Dual wield', 'Pique laser', 'Sabre double'];
-        const M_SABER_FORMS = ['Forme I — Shii-Cho', 'Forme II — Makashi', 'Forme III — Soresu', 'Forme IV — Ataru', 'Forme V — Shien', 'Forme V — Djem So', 'Forme VI — Niman', 'Forme VII — Juyo', 'Forme VII — Vaapad', "Jar'Kai", 'Ysannanite', 'Praetoria Ishu', 'Praetoria Vonil'];
-        const M_CAT = { arme: '⚔ Arme', sabre_type: '🗡 Type de sabre', forme: '🌀 Forme de sabre', armure_medium: '🛡 Armure Médium', armure_lourde: '🛡 Armure Lourde', bouclier: '🛡 Déflecteur', vehicule: '🚀 Véhicule', monture: '🦎 Monture', specialite: '🧠 Spécialité', savoir_faire: '🔧 Savoir-faire' };
-        function renderMasteries() {
-            const list = document.getElementById('masteries-list');
-            if (!list) return;
-            const esc = v => String(v).replace(/[<>&"]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;' }[c]));
-            const ms = Array.isArray(appState.masteries) ? appState.masteries : [];
-            ms.forEach(m => { if (!m.id) m.id = `m_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`; });
-            if (!ms.length) { list.innerHTML = '<div class="masteries-empty">Aucune maîtrise. Ajoute-en avec les boutons ci-dessus, ou importe un personnage depuis le créateur.</div>'; return; }
-            list.innerHTML = ms.map(m => {
-                const cat = M_CAT[m.category] || m.category;
-                let tag;
-                if (m.source === 'auto' || m.source === 'offerte') tag = '<span class="mastery-tag offerte">Offerte</span>';
-                else if (m.source === 'purchased') tag = '<span class="mastery-tag achetee">Achetée</span>';
-                else tag = '<span class="mastery-tag ajoutee">Ajoutée</span>';
-                let field;
-                if (m.category === 'sabre_type') field = `<select class="mastery-edit-select" onchange="updateMasteryName('${m.id}',this.value)"><option value="">— Type —</option>${M_SABER_TYPES.map(o => `<option ${o === m.name ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
-                else if (m.category === 'forme') field = `<select class="mastery-edit-select" onchange="updateMasteryName('${m.id}',this.value)"><option value="">— Forme —</option>${M_SABER_FORMS.map(o => `<option ${o === m.name ? 'selected' : ''}>${o}</option>`).join('')}</select>`;
-                else field = `<input class="mastery-edit-input" type="text" placeholder="Nom…" value="${esc(m.name || '')}" oninput="updateMasteryName('${m.id}',this.value)">`;
-                return `<div class="mastery-item"><span class="mastery-cat">${cat}</span>${field}${tag}<button class="mastery-del-btn" onclick="removeMastery('${m.id}')" title="Retirer">✕</button></div>`;
-            }).join('');
-        }
-        function addMastery(category) {
-            if (!Array.isArray(appState.masteries)) appState.masteries = [];
-            appState.masteries.push({ id: `m_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`, category, name: '', source: 'manuelle', cost: 0 });
-            renderMasteries();
-        }
-        function updateMasteryName(id, name) { const m = (appState.masteries || []).find(x => x.id === id); if (m) m.name = name; }
-        function removeMastery(id) { appState.masteries = (appState.masteries || []).filter(x => x.id !== id); renderMasteries(); }
+        // Le niveau de Bagarre commande le repertoire de formes : toute variation
+        // de competence rafraichit la grille de maitrise.
         function modifySkillById(id, delta) {
             const skill = appState.skills.find(s => s.id === id);
-            if (skill) { skill.level = Math.max(1, Math.min(8, skill.level + delta)); renderSkills(); updateRollSelects(); }
+            if (!skill) return;
+            skill.level = Math.max(1, Math.min(8, skill.level + delta));
+            renderSkills();
+            updateRollSelects();
+            if (typeof renderFormMastery === 'function') { renderFormMastery(); renderFormSelect(); updateForm(); }
         }
-        function modifySkill(index, delta) { if (appState.skills[index]) { appState.skills[index].level = Math.max(1, Math.min(8, appState.skills[index].level + delta)); renderSkills(); updateRollSelects(); } }
+        function modifySkill(index, delta) {
+            const skill = appState.skills[index];
+            if (!skill) return;
+            skill.level = Math.max(1, Math.min(8, skill.level + delta));
+            renderSkills();
+            updateRollSelects();
+            if (typeof renderFormMastery === 'function') { renderFormMastery(); renderFormSelect(); updateForm(); }
+        }
         function renderForceSkills() {
             const verbsList = document.getElementById('force-verbs-list');
             verbsList.innerHTML = '';
@@ -4270,7 +4294,10 @@
                 const attrColor = ATTR_COLORS[verb.attr] || 'var(--saber-purple)';
                 const attrBadge = verb.attr ? `<span class="verb-attr" style="color:${attrColor};border-color:${attrColor}">${verb.attr}</span>` : '';
                 const desc = verb.desc ? `<div class="force-desc">${verb.desc}</div>` : '';
-                item.innerHTML = `<div class="force-name-block"><div class="force-name-row"><span class="skill-name">${verb.name}</span>${attrBadge}</div>${desc}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceVerb(${index}, -1)" ${verb.level <= 1 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${verb.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${verb.level}</sub></span><button class="skill-level-btn" onclick="modifyForceVerb(${index}, 1)" ${verb.level >= 5 ? 'disabled' : ''}>+</button></div>`;
+                const faces = (verb.light && verb.dark)
+                    ? `<div class="force-desc" style="margin-top:3px"><span style="color:${TEINTES.lumineux.color}">${verb.light}</span> <span style="opacity:0.4">·</span> <span style="color:${TEINTES.obscur.color}">${verb.dark}</span></div>`
+                    : '';
+                item.innerHTML = `<div class="force-name-block"><div class="force-name-row"><span class="skill-name">${verb.name}</span>${attrBadge}</div>${desc}${faces}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceVerb(${index}, -1)" ${verb.level <= 1 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${verb.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${verb.level}</sub></span><button class="skill-level-btn" onclick="modifyForceVerb(${index}, 1)" ${verb.level >= 5 ? 'disabled' : ''}>+</button></div>`;
                 verbsList.appendChild(item);
             });
             const targetsList = document.getElementById('force-targets-list');
@@ -4314,17 +4341,6 @@
                 return `<div class="saber-selected-item"><div class="saber-selected-label">COULEUR ${i + 1}</div><div class="saber-selected-name">${color.name}</div><div class="saber-selected-effect">${color.effect}</div></div>`;
             }).join('');
         }
-        function renderCrystalSelect() {
-            const select = document.getElementById('crystal-select');
-            select.innerHTML = '<option value="">— Sélectionner un cristal —</option>';
-            Object.entries(CRYSTALS).forEach(([id, crystal]) => {
-                const option = document.createElement('option');
-                option.value = id;
-                option.textContent = crystal.name;
-                if (appState.saber.crystal === id) option.selected = true;
-                select.appendChild(option);
-            });
-        }
         function renderSaberTypes() {
             const grid = document.getElementById('saber-types-grid');
             grid.innerHTML = '';
@@ -4351,21 +4367,17 @@
                 display.style.display = 'block';
             } else display.style.display = 'none';
         }
-        function updateCrystal() {
-            const crystalId = document.getElementById('crystal-select').value;
-            appState.saber.crystal = crystalId;
-            const display = document.getElementById('crystal-effect-display');
-            if (crystalId && CRYSTALS[crystalId]) {
-                document.getElementById('crystal-name').textContent = CRYSTALS[crystalId].name;
-                document.getElementById('crystal-effect').textContent = CRYSTALS[crystalId].effect;
-                display.style.display = 'block';
-            } else display.style.display = 'none';
-            if (typeof syncContextBar === 'function') syncContextBar();
-        }
         function renderFormSelect() {
             const select = document.getElementById('form-select');
-            select.innerHTML = '<option value="">— Sélectionner une forme —</option>';
-            Object.entries(COMBAT_FORMS).forEach(([id, form]) => {
+            if (!select) return;
+            clampKnownForms();
+            const known = getKnownForms();
+            select.innerHTML = known.length
+                ? '<option value="">— Aucune forme adoptée —</option>'
+                : '<option value="">— Aucune forme maîtrisée —</option>';
+            known.forEach(id => {
+                const form = COMBAT_FORMS[id];
+                if (!form) return;
                 const option = document.createElement('option');
                 option.value = id;
                 option.textContent = form.name;
@@ -4409,7 +4421,9 @@
                     appState.forceVerbs.forEach(verb => {
                         const opt = document.createElement('option');
                         opt.value = verb.id;
-                        opt.textContent = `${verb.name}${verb.attr ? ' · ' + verb.attr : ''} (${verb.level})`;
+                        const fName = (typeof verbFace === 'function') ? verbFace(verb, appState.teinte) : verb.name;
+                        const fLabel = fName !== verb.name ? `${fName} (${verb.name})` : verb.name;
+                        opt.textContent = `${fLabel}${verb.attr ? ' · ' + verb.attr : ''} (${verb.level})`;
                         verbSelect.appendChild(opt);
                     });
                     verbSelect.value = currentValue;
@@ -4458,14 +4472,68 @@
         // Libellés affichés (les IDs internes restent Bad1/Bad2 pour le moteur) :
         // Dissonance = miroir négatif de Résonance (la Force se désaccorde, +coût) ; Rupture = la Force se déchire (effet incontrôlé).
         const NV_FACE_LABEL = { 'Transcendance': 'Transcendance', 'Résonance': 'Résonance', 'Succès': 'Succès', 'Vide': 'Vide', 'Bad1': 'Dissonance', 'Bad2': 'Rupture' };
-        // L'état émotionnel dépend du VERBE : s'il est favorisé (bonus) par le registre actif → sublime ;
-        // s'il est pénalisé (malus) → corrompu ; sinon composé. (Réutilise les listes de REGISTRES.)
-        function nvResolveEtat(registreId, verbId) {
-            const r = REGISTRES[registreId];
-            if (!r) return 'compose';
-            if (r.bonus && r.bonus.includes(verbId)) return 'sublime';
-            if (r.malus && r.malus.includes(verbId)) return 'corrompu';
+        // ── RÉSOLUTION DE L'ÉTAT ────────────────────────────────────────────
+        // La lumière et l'ombre n'empruntent pas le même chemin.
+        //   · La CHARGE ÉMOTIONNELLE sublime dans tous les cas, quelle que soit la
+        //     teinte. C'est la voie de l'ombre, qui n'exige rien d'autre : les
+        //     émotions dont elle se nourrit sont disponibles à tout instant, donc
+        //     le feu vert est presque toujours accordé. C'est aussi la porte de la
+        //     rédemption pour qui n'a aucune trajectoire lumineuse.
+        //   · La LUMIÈRE dispose en plus d'une sublimation acquise, progressive :
+        //     elle répond à partir de +20, jusqu'à une magnitude que le palier
+        //     d'Harmonie détermine. Sous −40, elle corrompt au contraire.
+        //   · Sans charge, une teinte obscure reste composée, et la racine aussi.
+        const LIGHT_SUBLIM_TIERS = [
+            { align: 80, max: Infinity },
+            { align: 60, max: 7 },
+            { align: 40, max: 4 },
+            { align: 20, max: 2 }
+        ];
+        const LIGHT_CORRUPT_FLOOR = -40;   // au-delà, les pouvoirs lumineux se corrompent
+        function lightSublimCap() {
+            for (const t of LIGHT_SUBLIM_TIERS) if (resonanceValue >= t.align) return t.max;
+            return 0;
+        }
+        function lightSublimCapText() {
+            const cap = lightSublimCap();
+            if (cap === 0) return 'aucune sublimation avant +20';
+            if (cap === Infinity) return 'sans limite de magnitude';
+            return 'jusqu\'à magnitude ' + cap;
+        }
+        function nvResolveEtat(teinteId, intentionOk, magnitude) {
+            if (intentionOk) return 'sublime';
+            const sign = (TEINTES[teinteId] || TEINTES.neutre).sign;
+            if (sign > 0) {
+                if (resonanceValue <= LIGHT_CORRUPT_FLOOR) return 'corrompu';
+                return (magnitude || 0) <= lightSublimCap() ? 'sublime' : 'compose';
+            }
             return 'compose';
+        }
+        // Nom que prend le verbe selon la teinte déclarée (racine, face claire, face sombre)
+        function verbFace(verb, teinteId) {
+            if (!verb) return '';
+            const sign = (TEINTES[teinteId] || TEINTES.neutre).sign;
+            if (sign > 0) return verb.light || verb.name;
+            if (sign < 0) return verb.dark || verb.name;
+            return verb.name;
+        }
+        // Résumé lisible de la résolution, réutilisé par les aperçus et la barre de contexte.
+        // La magnitude est facultative : sans elle, on affiche seulement la règle en vigueur.
+        function teinteStatusText(magnitude) {
+            const t = TEINTES[appState.teinte] || TEINTES.neutre;
+            const head = t.icon + ' ' + t.name;
+            const arrow = etat => ' → ' + NV_ETAT_LABEL[etat][0];
+            if (appState.intentionOk) return head + ' · porté par la charge' + arrow('sublime');
+            if (t.sign < 0) return head + ' · le geste seul, rien ne le porte' + arrow('compose');
+            if (t.sign > 0) {
+                if (resonanceValue <= LIGHT_CORRUPT_FLOOR) return head + ' · corruption trop profonde' + arrow('corrompu');
+                const capTxt = lightSublimCapText();
+                if (typeof magnitude === 'number') {
+                    return head + ' · ' + capTxt + arrow(magnitude <= lightSublimCap() ? 'sublime' : 'compose');
+                }
+                return head + ' · ' + capTxt;
+            }
+            return head + ' (racine) · seule la charge sublime' + arrow('compose');
         }
         function nvBuildFaces(attrValue, etat) {
             let [b2, b1, vi, su, re, tr] = FORCE_DIE_TABLE[Math.max(1, Math.min(8, attrValue))].slice();
@@ -4487,10 +4555,10 @@
             const offAttribute = attrName !== defaultAttr;   // attribut ≠ défaut → +3 PA (option Magenta)
             const attrValue = appState.attributes[attrName] || 4;
             const attrLevel = getAttributeLevel(attrValue);
-            const etat = nvResolveEtat(appState.registre, verb.id);
-            const faces = nvBuildFaces(attrValue, etat);
             const diceEl = diceInputId ? document.getElementById(diceInputId) : null;
             const nDice = Math.max(1, parseInt(diceEl && diceEl.value) || verb.level);
+            const etat = nvResolveEtat(appState.teinte, appState.intentionOk, nDice);
+            const faces = nvBuildFaces(attrValue, etat);
             return { verb, attrName, defaultAttr, offAttribute, attrValue, attrLevel, etat, faces, nDice };
         }
         // Fatigue de Force : affliction automatique selon les Points de Force restants
@@ -4570,11 +4638,11 @@
                 else if (f === 'Bad1') bad1++;
                 else if (f === 'Bad2') bad2++;
             }
-            // Capstones d'alignement : à ±90, sublimer un registre de SON camp débloque la RECASCADE (Communion : dé ≥ 9 ; Déferlante : dé ≥ 7).
-            const reg = REGISTRES[appState.registre] || { align: 0 };
+            // Capstones d'alignement : à ±90, sublimer un pouvoir de SON camp débloque la RECASCADE (Communion : dé ≥ 9 ; Déferlante : dé ≥ 7).
+            const tSign = (TEINTES[appState.teinte] || TEINTES.neutre).sign;
             const subl = ctx.etat === 'sublime';
-            const communion = subl && reg.align > 0 && resonanceValue >= 90;    // Harmonie : la cascade allège le coût (plancher 0)
-            const deferlante = subl && reg.align < 0 && resonanceValue <= -90;  // Corruption : la cascade ajoute de la Puissance
+            const communion = subl && tSign > 0 && resonanceValue >= 90;    // Harmonie : la cascade allège le coût (plancher 0)
+            const deferlante = subl && tSign < 0 && resonanceValue <= -90;  // Corruption : la cascade ajoute de la Puissance
             const recascade = communion || deferlante;
 
             // Dés de cascade : succès à ≥ 5. Sans capstone, pas de recascade ; Communion relance à ≥ 9, Déferlante à ≥ 7.
@@ -4607,6 +4675,7 @@
             if (verb && attrSel) attrSel.value = NV_ATTR_KEY[verb.attr] || attrSel.value;
             if (verb && diceEl) diceEl.value = verb.level;
             updateRollButtons();
+            if (typeof updateUnifiedPreview === 'function') updateUnifiedPreview();
         }
         function updateUnifiedPreview() {
             const prev = document.getElementById('unified-preview');
@@ -4616,9 +4685,11 @@
             const ctx = nvGetContext('force-verb-select', 'force-attr-select', 'force-dice');
             if (!ctx) { prev.innerHTML = ''; return; }
             const [lbl, col] = NV_ETAT_LABEL[ctx.etat];
-            const reg = REGISTRES[appState.registre] ? REGISTRES[appState.registre].name : 'Neutre';
+            const tObj = TEINTES[appState.teinte] || TEINTES.neutre;
+            const faceName = verbFace(ctx.verb, appState.teinte);
+            const rootTxt = faceName !== ctx.verb.name ? ` <span style="opacity:0.6;font-size:0.9em">(${ctx.verb.name})</span>` : '';
             const facesTxt = NV_FACE_ORDER.map((f, i) => ctx.faces[i] ? `<span style="color:${NV_FACE_STYLE[f]}">${ctx.faces[i]} ${NV_FACE_LABEL[f]}</span>` : null).filter(Boolean).join(' · ');
-            prev.innerHTML = `${ctx.verb.name} → <strong>${capitalize(ctx.attrName)} ${ctx.attrValue}</strong> · <strong>${ctx.nDice}</strong> dé${ctx.nDice > 1 ? 's' : ''}${ctx.offAttribute ? ' <span style="color:#ff9944">(attribut différent +3 PA)</span>' : ''} · Registre <strong>${reg}</strong> → <span class="etat-badge" style="background:${col}22;color:${col}">${lbl}</span><br><span style="font-size:0.9em">${facesTxt}</span>`;
+            prev.innerHTML = `<strong style="color:${tObj.color}">${faceName}</strong>${rootTxt} → <strong>${capitalize(ctx.attrName)} ${ctx.attrValue}</strong> · magnitude <strong>${ctx.nDice}</strong>${ctx.offAttribute ? ' <span style="color:#ff9944">(attribut différent +3 PA)</span>' : ''} → <span class="etat-badge" style="background:${col}22;color:${col}">${lbl}</span><br><span style="font-size:0.85em;color:var(--silver-chrome)">${teinteStatusText(ctx.nDice)}</span><br><span style="font-size:0.9em">${facesTxt}</span>`;
         }
         function updateForcePreview() {
             const btn = document.getElementById('force-simple-roll-btn');
@@ -4628,11 +4699,13 @@
             if (!ctx) { btn.disabled = true; prev.innerHTML = '<span style="color:var(--silver-chrome)">Sélectionne un verbe pour voir le dé.</span>'; return; }
             btn.disabled = false;
             const [lbl, col] = NV_ETAT_LABEL[ctx.etat];
-            const reg = REGISTRES[appState.registre] ? REGISTRES[appState.registre].name : 'Neutre';
+            const tObj = TEINTES[appState.teinte] || TEINTES.neutre;
+            const faceName = verbFace(ctx.verb, appState.teinte);
+            const rootTxt = faceName !== ctx.verb.name ? ` <span style="opacity:0.6;font-size:0.9em">(${ctx.verb.name})</span>` : '';
             const attrLabel = capitalize(ctx.attrName);
             const facesTxt = NV_FACE_ORDER.map((f, i) => ctx.faces[i] ? `<span style="color:${NV_FACE_STYLE[f]}">${ctx.faces[i]} ${NV_FACE_LABEL[f]}</span>` : null).filter(Boolean).join(' · ');
-            prev.innerHTML = `${ctx.verb.name} → <strong>${attrLabel} ${ctx.attrValue}</strong> (${ctx.attrLevel.name}) · <strong>${ctx.nDice}</strong> dé${ctx.nDice > 1 ? 's' : ''}${ctx.offAttribute ? ' <span style="color:#ff9944">(attribut différent +3 PA)</span>' : ''}<br>` +
-                `Registre <strong>${reg}</strong> → verbe <span class="etat-badge" style="background:${col}22;color:${col}">${lbl}</span><br>` +
+            prev.innerHTML = `<strong style="color:${tObj.color}">${faceName}</strong>${rootTxt} → <strong>${attrLabel} ${ctx.attrValue}</strong> (${ctx.attrLevel.name}) · magnitude <strong>${ctx.nDice}</strong>${ctx.offAttribute ? ' <span style="color:#ff9944">(attribut différent +3 PA)</span>' : ''}<br>` +
+                `<span style="font-size:0.9em">${teinteStatusText(ctx.nDice)}</span> → <span class="etat-badge" style="background:${col}22;color:${col}">${lbl}</span><br>` +
                 `<span style="font-size:0.9em">Dé : ${facesTxt}</span>`;
         }
         // ----- Affichage via la modale de résultat existante -----
@@ -4847,7 +4920,7 @@
             const offCost = ctx.offAttribute ? 3 : 0;
             const coutTotal = Math.max(0, ctx.nDice + roll.coutDelta + offCost);   // base = nombre de dés ; + Bad1, −1 si Résonance, +3 si attribut incohérent
             consumeForce(coutTotal);
-            applySublimationDrift(ctx.etat);
+            applySublimationDrift(ctx.etat, ctx.nDice);
             const attrLabel = capitalize(ctx.attrName);
             const etatLbl = NV_ETAT_LABEL[ctx.etat][0];
             const titre = ctx.verb.name + (target ? ' + ' + target.name : '');
@@ -4858,7 +4931,7 @@
             const capTxt = roll.communion ? ' · ☀️ COMMUNION (cascade → coût allégé)' : roll.deferlante ? ' · 🌑 DÉFERLANTE (cascade → +Puissance)' : '';
             displayForceResult({
                 title: titre,
-                subtitle: `${attrLabel} ${ctx.attrValue} (${ctx.attrLevel.name}) · ${ctx.nDice} dés · ${REGISTRES[appState.registre].name} → ${etatLbl}${offTxt}${capTxt}`,
+                subtitle: `${attrLabel} ${ctx.attrValue} (${ctx.attrLevel.name}) · magnitude ${ctx.nDice} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name}${appState.intentionOk ? ' + charge' : ''} → ${etatLbl}${offTxt}${capTxt}`,
                 roll, puissance, coutTotal
             });
             sendDiscordRoll(titre, null, puissance, attrLabel, { successes: roll.puissance, attrBonus: 0, bonus });
@@ -4897,8 +4970,7 @@
             const attrLevel = getAttributeLevel(attr);
             const skill = appState.skills.find(s => s.name === skillName);
             if (!skill) return;
-            const noMastPage = (document.getElementById('skill-page-no-mastery') || {}).checked;
-            const skillLevel = getSkillLevel(noMastPage ? Math.max(1, skill.level - 2) : skill.level);
+            const skillLevel = getSkillLevel(skill.level);
             const threshold = 13 - attrLevel.faces;
             const baseExplosion = skillLevel.explosion;
             const explosion = Math.max(3, Math.min(12, baseExplosion - explosionMod));
@@ -4907,7 +4979,7 @@
             const skillBonus = skillLevel.bonus;
             const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
             const total = result.successes + attrBonus + skillBonus + bonus;
-            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}${noMastPage ? ' | 🚫 Sans maîtrise (−2)' : ''}${appliedS.label}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
+            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}${appliedS.label}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
             sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), { successes: result.successes, attrBonus, skillBonus, bonus });
         }
         function rollConjoint() {
@@ -4927,14 +4999,13 @@
             const offCost = ctxF.offAttribute ? 3 : 0;
             const forceCout = Math.max(0, ctxF.nDice + rollF.coutDelta + offCost);  // base = nombre de dés + modificateurs
             consumeForce(forceCout);
-            applySublimationDrift(ctxF.etat);
+            applySublimationDrift(ctxF.etat, ctxF.nDice);
 
             // --- Partie Compétence (inchangée) ---
             const skillAttr = appState.attributes[skillAttrName];
             const skillAttrLevel = getAttributeLevel(skillAttr);
             const skillThreshold = 13 - skillAttrLevel.faces;
-            const noMastConj = (document.getElementById('conjoint-no-mastery') || {}).checked;
-            const skillLevel = getSkillLevel(noMastConj ? Math.max(1, skill.level - 2) : skill.level);
+            const skillLevel = getSkillLevel(skill.level);
             const skillExplosion = Math.max(3, Math.min(12, skillLevel.explosion - explosionMod));
             const skillResult = rollDice(skillLevel.dice, skillThreshold, skillExplosion);
             const skillAttrBonus = skillAttrLevel.bonus;
@@ -4948,7 +5019,7 @@
 
             displayConjointResult({
                 title: `${ctxF.verb.name}${target ? ' + ' + target.name : ''} → ${skill.name}`,
-                subtitle: `Force: ${capitalize(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${REGISTRES[appState.registre].name} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence: ${capitalize(skillAttrName)}${noMastConj ? ' | 🚫 Sans maîtrise (−2)' : ''}${appliedC.label}`,
+                subtitle: `Force: ${capitalize(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name}${appState.intentionOk ? ' + charge' : ''} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence: ${capitalize(skillAttrName)}${appliedC.label}`,
                 forceRoll: rollF,
                 forceEtat: ctxF.etat,
                 spellPuissance,
@@ -5095,27 +5166,34 @@
             // on ne récupère que le niveau d'une ancienne sauvegarde (par id, sinon par nom),
             // et on jette les entrées obsolètes (ex. Temps). Attribut/description/nouveaux verbes
             // proviennent toujours des définitions à jour.
-            const carryLevel = (defs, loaded) => {
+            const carryLevel = (defs, loaded, legacy) => {
                 const prev = Array.isArray(loaded) ? loaded : [];
                 return defs.map(def => {
-                    const match = prev.find(p => p.id === def.id) || prev.find(p => p.name === def.name);
-                    return { ...def, level: match ? Math.max(1, Math.min(5, match.level || 1)) : def.level };
+                    // Correspondance directe (id, puis nom), sinon anciens ids redirigés vers la
+                    // nouvelle entrée : plusieurs anciens peuvent fusionner, on garde le meilleur.
+                    const cands = prev.filter(p => p.id === def.id || p.name === def.name ||
+                        (legacy && legacy[p.id] === def.id));
+                    const lvl = cands.reduce((m, c) => Math.max(m, c.level || 1), 0);
+                    return { ...def, level: lvl ? Math.max(1, Math.min(5, lvl)) : def.level };
                 });
             };
-            appState.forceVerbs = carryLevel(FORCE_VERBS, appState.forceVerbs);
-            appState.forceTargets = carryLevel(FORCE_TARGETS, appState.forceTargets);
+            appState.forceVerbs = carryLevel(FORCE_VERBS, appState.forceVerbs, LEGACY_VERB_MAP);
+            appState.forceTargets = carryLevel(FORCE_TARGETS, appState.forceTargets, LEGACY_TARGET_MAP);
         }
         function loadFromFile() { document.getElementById('file-input').click(); }
         function applyLoadedState(loaded) {
             Object.assign(appState, loaded);
             reconcileForceLists();
+            // Combat de Force a été retiré du système : tout pouvoir se porte
+            // désormais avec la compétence que la description justifie.
+            appState.skills = (appState.skills || []).filter(sk =>
+                (sk.baseName || sk.name) !== 'Combat de Force');
             document.getElementById('character-name').value = appState.profile.name || '';
             if (appState.profile.image) document.getElementById('profile-image-display').innerHTML = `<img src="${appState.profile.image}" alt="Portrait">`;
             updateAllAttributes();
             updateCounterDisplay('force');
             if (typeof updateForcePA === 'function') updateForcePA();
             renderSkills();
-            renderMasteries();
             if (typeof renderActivePowers === 'function') renderActivePowers();
             if (typeof renderReceivedBuffs === 'function') renderReceivedBuffs();
             if (typeof syncContextBar === 'function') syncContextBar();
@@ -5127,11 +5205,11 @@
             updateRollSelects();
             renderSaberColors();
             renderSaberTypes();
-            renderCrystalSelect();
+            renderFormMastery();
             renderFormSelect();
-            updateCrystal();
             updateForm();
-            if (appState.registre) setRegistre(appState.registre);
+            setTeinte(appState.teinte || 'neutre');
+            setIntention(!!appState.intentionOk);
             resonanceValue = (typeof appState.resonance === 'number') ? appState.resonance : 0;
             if (typeof syncCharAlignment === 'function') syncCharAlignment();
             renderResonance();
@@ -5421,30 +5499,30 @@
             { threshold: 100, label: 'Harmonie Absolue', color: '#90d0ff', bg: 'rgba(144,208,255,0.14)' },
         ];
 
-        // group = key pour dédupliquer les effets mis à jour
+        // group = clé de déduplication : au sein d'un même groupe, seul le palier
+        // le plus profond atteint reste affiché. kind = 'cost' pour les contreparties.
         const RESONANCE_EFFECTS = [
-            // ─── Côté obscur (Corruption, valeurs négatives) : volonté qui domine + malédiction ───
-            { threshold: -20, group: 'autorite', side: 'dark', icon: '👑', text: '+1 aux jets d\'Autorité (intimider, dominer, contraindre)' },
-            { threshold: -30, group: 'animaux', side: 'dark', icon: '🐾', text: 'Les animaux se méfient de toi' },
-            { threshold: -40, group: 'sublim_dark', side: 'dark', icon: '🔥', text: 'Sublimer un registre obscur → +1 Puissance' },
-            { threshold: -50, group: 'cout_dark', side: 'dark', icon: '⚡', text: 'Tes pouvoirs obscurs coûtent −1 Point de Force' },
-            { threshold: -50, group: 'soins', side: 'dark', icon: '💊', text: 'Les soins reçus sur toi : −2 de Puissance' },
-            { threshold: -60, group: 'ardeur_cmd', side: 'dark', icon: '🌋', text: 'Tu peux entrer dans le registre Ardeur sans coût ni restriction (la rage à volonté)' },
-            { threshold: -70, group: 'predation', side: 'dark', icon: '💀', text: 'Prédation : chaque mise à mort par un pouvoir obscur te rend des Points de Force' },
-            { threshold: -70, group: 'soins', side: 'dark', icon: '🚫', text: 'Les soins sont désormais impossibles sur toi', updates: true },
-            { threshold: -80, group: 'endurci', side: 'dark', icon: '🪨', text: 'Endurci : tu es immunisé au seuil de dégâts garanti des pouvoirs obscurs adverses' },
-            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: 'Déferlante : en sublimant un registre obscur, Résonance et Transcendance se relancent (dé ≥ 7 — l\'avalanche s\'emballe) et chaque relance ajoute sa Puissance · corruption physique visible, isolement total' },
-            // ─── Côté lumineux (Harmonie, valeurs positives) : le conduit, sûr et durable ───
-            { threshold: 20, group: 'eloquence', side: 'light', icon: '🕊', text: '+1 aux jets d\'Éloquence (calmer, aider, persuader)' },
-            { threshold: 30, group: 'initiative', side: 'light', icon: '🔮', text: 'Bonus aux jets d\'initiative (sentir dans la Force)' },
-            { threshold: 30, group: 'animaux', side: 'light', icon: '🐾', text: 'Les animaux sont à l\'aise en ta présence' },
-            { threshold: 40, group: 'sublim_light', side: 'light', icon: '✨', text: 'Sublimer un registre lumineux → +1 Puissance' },
-            { threshold: 50, group: 'dissonance', side: 'light', icon: '🎐', text: 'Les Dissonance ne te coûtent plus de Points de Force' },
-            { threshold: 50, group: 'percoit', side: 'light', icon: '👁', text: 'Tu perçois la corruption chez autrui (un Sith, un lieu souillé, une intention obscure)' },
-            { threshold: 60, group: 'acier_cmd', side: 'light', icon: '🛡', text: 'Tu peux entrer dans le registre Acier sans coût ni restriction (le calme à volonté)' },
-            { threshold: 70, group: 'reciprocite', side: 'light', icon: '💞', text: 'Réciprocité : tout pouvoir bénéfique que tu appliques à un allié t\'affecte aussi' },
-            { threshold: 80, group: 'rupture', side: 'light', icon: '🌟', text: 'Les Rupture ne se déclenchent plus (la Force ne mord pas le vaisseau consentant)' },
-            { threshold: 90, group: 'communion', side: 'light', icon: '☀️', text: 'Communion : en sublimant un registre lumineux, Résonance et Transcendance se relancent (dé ≥ 9) et chaque relance réduit le coût en Points de Force (plancher 0)' },
+            // ─── Corruption : dons immédiats, contreparties définitives ───
+            { threshold: -20, group: 'purge_dark', side: 'dark', icon: '🩸', text: "Un point de focalisation et un nombre de Points de Force égal au double de la gravité d'une affliction subie permettent de s'en défaire immédiatement. La corruption gagnée est égale aux Points de Force ainsi dépensés" },
+            { threshold: -30, group: 'ignore_wound', side: 'dark', icon: '🦴', text: "Une fois par round, le malus contextuel d'une blessure peut être ignoré" },
+            { threshold: -40, group: 'elan_pf', side: 'dark', icon: '⚡', text: "Chaque point d'Élan perdu par une blessure rend 2 Points de Force" },
+            { threshold: -40, group: 'light_corrupt', side: 'dark', kind: 'cost', icon: '🚫', text: "Les pouvoirs lumineux du personnage sont désormais corrompus" },
+            { threshold: -50, group: 'kill_tactic', side: 'dark', icon: '💀', text: "Tuer une créature par un pouvoir de Force ouvre une action tactique gratuite contre la confrontation en cours, avec un bonus égal à la moitié de la Puissance du pouvoir (arrondi à l'inférieur) ; l'écart obtenu réduit les résistances" },
+            { threshold: -60, group: 'stand', side: 'dark', icon: '🪨', text: "À 0 d'Élan, le personnage continue d'agir tant qu'il dépense 3 Points de Force au début de chacun de ses tours" },
+            { threshold: -60, group: 'no_heal', side: 'dark', kind: 'cost', icon: '💊', text: "Les soins issus de pouvoirs neutres ou lumineux ne fonctionnent plus sur le personnage" },
+            { threshold: -70, group: 'no_conc', side: 'dark', icon: '🔗', text: "Les pouvoirs obscurs de type durée n'exigent plus de jet de concentration lors d'une perte d'Élan" },
+            { threshold: -80, group: 'kill_pf', side: 'dark', icon: '🖤', text: "Chaque créature tuée par le personnage rend 5 Points de Force" },
+            { threshold: -80, group: 'anti_obscurite', side: 'dark', kind: 'cost', icon: '☠️', text: "Les pouvoirs ciblant l'Obscurité employés contre le personnage infligent un minimum de blessure ou de résistance égal à leur Puissance" },
+            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: "Déferlante : lorsqu'un pouvoir obscur est sublimé, les faces de Résonance et de Transcendance se relancent sur 7 ou plus, et chaque relance ajoute sa Puissance" },
+            // ─── Harmonie : récompense lente, sans contrepartie ───
+            { threshold: 20, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse jusqu'à une magnitude de 2" },
+            { threshold: 30, group: 'protect_half', side: 'light', icon: '🛡', text: "Lorsqu'un point de focalisation est dépensé pour protéger une créature, le coût en Points de Force du pouvoir lumineux employé est réduit de moitié (arrondi à l'inférieur)" },
+            { threshold: 40, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse jusqu'à une magnitude de 4", updates: true },
+            { threshold: 50, group: 'reciprocite', side: 'light', icon: '💞', text: "Les pouvoirs bénéfiques appliqués à autrui prennent également effet sur le lanceur" },
+            { threshold: 60, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse jusqu'à une magnitude de 7", updates: true },
+            { threshold: 70, group: 'no_focus', side: 'light', icon: '🎯', text: "Un pouvoir lumineux sublimé de type durée n'immobilise pas de point de focalisation. Un seul pouvoir peut être maintenu de cette façon à la fois" },
+            { threshold: 80, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse sans limite de magnitude", updates: true },
+            { threshold: 90, group: 'communion', side: 'light', icon: '☀️', text: "Communion : lorsqu'un pouvoir lumineux est sublimé, les faces de Résonance et de Transcendance se relancent sur 9 ou plus, et chaque relance réduit le coût du pouvoir en Points de Force (plancher 0)" },
         ];
 
         function getResonanceStage(val) {
@@ -5490,18 +5568,31 @@
                     if (active) activeByGroup[eff.group] = eff;
                 }
                 const actives = Object.values(activeByGroup);
+                // Les contreparties du côté obscur (kind: 'cost') se distinguent des dons.
+                const order = { light: 0, dark: 1 };
+                actives.sort((a, b) => (order[a.side] - order[b.side]) || (Math.abs(a.threshold) - Math.abs(b.threshold)));
                 list.innerHTML = actives.length
-                    ? actives.map(e => `<div style="padding:6px 8px; background:${e.side === 'dark' ? 'rgba(200,80,80,0.07)' : 'rgba(106,176,255,0.07)'}; border-left:2px solid ${e.side === 'dark' ? '#e05050' : '#5aa0ff'}; border-radius:2px;">${e.icon} ${e.text}</div>`).join('')
-                    : '<div style="opacity:0.55;">Aucun effet de seuil actif. Les effets apparaissent à partir de ±30.</div>';
+                    ? actives.map(e => {
+                        const col = e.kind === 'cost' ? '#a03848' : (e.side === 'dark' ? '#e05050' : '#5aa0ff');
+                        const bg = e.kind === 'cost' ? 'rgba(160,56,72,0.10)' : (e.side === 'dark' ? 'rgba(200,80,80,0.07)' : 'rgba(106,176,255,0.07)');
+                        const tag = e.kind === 'cost' ? '<span style="font-size:0.85em;opacity:0.7;">contrepartie · </span>' : '';
+                        return `<div style="padding:6px 8px; background:${bg}; border-left:2px solid ${col}; border-radius:2px;">${e.icon} ${tag}${e.text}</div>`;
+                    }).join('')
+                    : '<div style="opacity:0.55;">Aucun effet de seuil actif. Les effets apparaissent à partir de ±20.</div>';
             }
         }
         function renderResonance() {
             const val = resonanceValue;
             const stage = getResonanceStage(val);
 
-            // Gauge
+            // La carte détaillée n'existe plus que sur la page Personnage : si ses
+            // éléments sont absents, on se contente de rafraîchir cette dernière.
             const lightFill = document.getElementById('res-fill-light');
             const darkFill = document.getElementById('res-fill-dark');
+            if (!lightFill || !darkFill) {
+                if (typeof syncCharAlignment === 'function') syncCharAlignment();
+                return;
+            }
             if (val >= 0) {
                 const pct = Math.min((val / 100) * 50, 50);
                 lightFill.style.width = pct + '%';
@@ -5570,7 +5661,7 @@
                     ${effects.map(e => {
                     const inactive = e.isActive ? '' : 'inactive';
                     const updated = (e.isActive && e.updates) ? 'updated-tag' : '';
-                    const rowColor = e.side === 'dark' ? '#c06040' : '#60a8e0';
+                    const rowColor = e.kind === 'cost' ? '#a03848' : (e.side === 'dark' ? '#c06040' : '#60a8e0');
                     const rowBg = e.isActive ? `background: ${rowColor}12; border-color: ${rowColor}30;` : '';
                     return `<div class="resonance-effect-row ${inactive} ${updated}" style="${rowBg}">
                             <span class="resonance-effect-icon">${e.icon}</span>
@@ -5592,20 +5683,25 @@
             appState.resonance = resonanceValue;       // persiste avec la fiche
             if (typeof syncCharAlignment === 'function') syncCharAlignment();
             renderResonance();
+            if (typeof refreshTeinteDisplays === 'function') {
+                const eff = document.getElementById('ctx-teinte-effect');
+                if (eff) { const t = teinteStatusText(); eff.textContent = t; eff.title = t; }
+            }
         }
 
-        // Dérive automatique d'alignement quand un pouvoir est SUBLIMÉ par le registre actif.
-        // Se laisser porter par l'émotion déplace l'alignement selon l'orientation du registre
-        // (Ardeur −3 obscur … Lumière +3 lumineux ; registres neutres = aucun effet).
-        function applySublimationDrift(etat) {
-            if (etat !== 'sublime') return 0;
-            const reg = REGISTRES[appState.registre];
-            const delta = (reg && reg.align) || 0;
-            if (delta !== 0) {
-                applyResonanceDelta(delta);
-                const dir = delta < 0 ? '🔥 Corruption' : '✨ Résonance';
-                showNotification(`${dir} ${delta > 0 ? '+' + delta : delta} — sublimation « ${reg.name} »`);
-            }
+        // Dérive d'alignement, asymétrique elle aussi : la descente est rapide,
+        // la remontée est lente. Un pouvoir obscur coûte la moitié de sa magnitude
+        // (arrondi au supérieur) en corruption ; un pouvoir lumineux ne rend qu'un
+        // seul point d'Harmonie, quelle que soit sa magnitude. L'Harmonie se vit,
+        // elle ne se lance pas. La racine neutre ne déplace rien.
+        function applySublimationDrift(etat, magnitude) {
+            const t = TEINTES[appState.teinte] || TEINTES.neutre;
+            if (!t.sign) return 0;
+            const mag = Math.max(1, magnitude || 1);
+            const delta = t.sign < 0 ? -Math.ceil(mag / 2) : 1;
+            applyResonanceDelta(delta);
+            const dir = delta < 0 ? '🔥 Corruption' : '✨ Harmonie';
+            showNotification(`${dir} ${delta > 0 ? '+' + delta : delta} — pouvoir ${t.name.toLowerCase()}`);
             return delta;
         }
 
@@ -5613,7 +5709,6 @@
             renderResonance();
             defaultSkills.forEach((name, i) => appState.skills.push({ id: `skill_${i}`, name, level: 1, baseName: name }));
             renderSkills();
-            renderMasteries();
             if (typeof renderActivePowers === 'function') renderActivePowers();
             if (typeof renderReceivedBuffs === 'function') renderReceivedBuffs();
             if (typeof syncContextBar === 'function') syncContextBar();
@@ -5622,14 +5717,15 @@
             renderObjects();
             renderSaberColors();
             renderSaberTypes();
-            renderCrystalSelect();
+            renderFormMastery();
             renderFormSelect();
             updateRollSelects();
             updateAllAttributes();
             updateCounterDisplay('force');
             if (typeof updateForcePA === 'function') updateForcePA();
             syncElanFromHealth();
-            setRegistre('neutre');
+            setTeinte(appState.teinte || 'neutre');
+            setIntention(false);
             updateGhStatus();
             document.addEventListener('click', closeSaveMenu);
             document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeResult(); } if (e.key === 'Enter' && document.getElementById('modal').classList.contains('active')) confirmModal(); });

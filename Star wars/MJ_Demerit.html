@@ -984,12 +984,12 @@
         // Sert de point de départ « raisonnable » ; le MJ ajuste librement par compétence.
         const DEFAULT_PASSIVE_ATTR = {
             'art': 'intuition', 'athletisme': 'endurance', 'autorite': 'presence',
-            'apothicairerie': 'intelligence', 'bagarre': 'puissance', 'combat occulte': 'precision',
-            'discretion': 'precision', 'dressage': 'presence', 'eloquence': 'presence',
-            'erudition': 'intelligence', 'escamotage': 'precision', 'esoterisme': 'intuition',
-            'medecine': 'intelligence', 'recherche': 'intelligence', 'resilience': 'volonte',
-            'sagacite': 'intuition', 'strategie': 'intelligence', 'technologie': 'intelligence',
-            'tir': 'precision', 'tromperie': 'presence', 'vigilance': 'intuition'
+            'bagarre': 'puissance', 'discretion': 'precision', 'dressage': 'presence',
+            'eloquence': 'presence', 'erudition': 'intelligence', 'escamotage': 'precision',
+            'informatique': 'intelligence', 'ingenierie': 'intelligence', 'medecine': 'intelligence',
+            'pilotage': 'vivacite', 'recherche': 'intelligence', 'resilience': 'volonte',
+            'sagacite': 'intuition', 'strategie': 'intelligence', 'tir': 'precision',
+            'tromperie': 'presence', 'vigilance': 'intuition'
         };
         // Les 5 compétences historiquement « passives » sur la fiche joueur (mises en avant).
         const CLASSIC_PASSIVES = {
@@ -1002,10 +1002,19 @@
             try { return JSON.parse(localStorage.getItem(PASSIVE_ATTR_KEY)) || {}; }
             catch (e) { return {}; }
         }
-        function getPassiveAttr(skillName) {
+        // Ordre de priorité : réglage du MJ sur ce dashboard, puis attribut inscrit
+        // sur la fiche du personnage, puis valeur par défaut. Ainsi une fiche qui
+        // définit ses propres attributs de passif s'affiche sans réglage manuel,
+        // tout en laissant le MJ reprendre la main au besoin.
+        function getPassiveAttr(skillName, rec) {
             const k = norm(skillName);
             const ov = loadPassiveOverrides();
-            return ov[k] || DEFAULT_PASSIVE_ATTR[k] || 'intuition';
+            if (ov[k]) return ov[k];
+            if (rec && Array.isArray(rec.skills)) {
+                const sk = rec.skills.find(x => norm(x.name) === k);
+                if (sk && sk.passiveAttr) return sk.passiveAttr;
+            }
+            return DEFAULT_PASSIVE_ATTR[k] || 'intuition';
         }
         function setPassiveAttr(skillName, attrId) {
             const ov = loadPassiveOverrides();
@@ -1239,10 +1248,10 @@
             let skillHtml = '';
             skillsSorted.forEach(s => {
                 const lvl = getSkillLevel(s.level);
-                const attrId = getPassiveAttr(s.name);
+                const attrId = getPassiveAttr(s.name, rec);
                 const pass = getPassiveValue(rec, s.name, attrId);
                 const pColor = pass >= 7 ? '#D4AF37' : pass >= 5 ? '#4a9b6e' : 'var(--silver-mist)';
-                const isPow = norm(s.name) === norm('Ésotérisme');
+                const isPow = false;   // plus de compétence dédiée aux pouvoirs
                 const safeName = s.name.replace(/'/g, "\\'");
                 skillHtml += `<div class="skill-row">
                     <span class="sr-name" title="${s.name}">${isPow ? '✨ ' : ''}${s.name}</span>
