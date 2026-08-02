@@ -1750,15 +1750,62 @@
         }
 
         .form-mastery-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .posture-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            padding-bottom: 3px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .posture-header:first-child {
+            margin-top: 0;
+        }
+
+        .posture-glyph svg {
+            width: 22px;
+            height: 22px;
+            display: block;
+        }
+
+        .posture-title {
+            font-size: 0.82em;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .posture-tag {
+            font-size: 0.72em;
+            color: var(--silver-chrome);
+            font-style: italic;
+        }
+
+        .posture-forms {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 7px;
         }
 
-        @media (max-width: 1200px) {
-            .form-mastery-grid {
-                grid-template-columns: repeat(3, 1fr);
+        @media (max-width: 900px) {
+            .posture-forms {
+                grid-template-columns: repeat(2, 1fr);
             }
+        }
+
+        .form-mastery-item.known {
+            border-color: var(--posture-color, rgba(179, 102, 255, 0.55));
+            background: color-mix(in srgb, var(--posture-color, #b366ff) 12%, transparent);
+        }
+
+        .form-mastery-item.known .fm-name {
+            color: var(--posture-color, var(--saber-purple));
         }
 
         @media (max-width: 900px) {
@@ -1783,11 +1830,6 @@
             border-color: rgba(179, 102, 255, 0.4);
         }
 
-        .form-mastery-item.known {
-            border-color: rgba(179, 102, 255, 0.55);
-            background: rgba(179, 102, 255, 0.10);
-        }
-
         .form-mastery-item.locked {
             opacity: 0.35;
             cursor: not-allowed;
@@ -1798,10 +1840,6 @@
             font-weight: 600;
             color: var(--light-steel);
             line-height: 1.25;
-        }
-
-        .form-mastery-item.known .fm-name {
-            color: var(--saber-purple);
         }
 
         .form-mastery-item .fm-attr {
@@ -1838,8 +1876,15 @@
         }
 
         .saber-type-icon {
-            font-size: 1.4em;
             margin-bottom: 6px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .saber-type-icon svg {
+            width: 60px;
+            height: 60px;
+            transition: all 0.3s ease;
         }
 
         .saber-type-name {
@@ -1900,6 +1945,13 @@
             border-radius: 4px;
             background: rgba(179, 102, 255, 0.05);
             border: 1px solid rgba(179, 102, 255, 0.2);
+        }
+
+        .form-posture-glyph svg {
+            width: 20px;
+            height: 20px;
+            vertical-align: -4px;
+            margin-right: 7px;
         }
 
         .form-effect-header {
@@ -2681,6 +2733,12 @@
             width: 100%;
         }
 
+        .ctx-forme-posture svg {
+            width: 20px;
+            height: 20px;
+            display: block;
+        }
+
         .ctx-intention {
             grid-column: 1 / -1;
             display: flex;
@@ -3292,6 +3350,7 @@
                             <span class="ctx-label">🗡 Forme</span>
                             <select id="ctx-forme" class="form-select ctx-select"
                                 onchange="setCtxForm(this.value)"></select>
+                            <span class="ctx-forme-posture" id="ctx-forme-posture"></span>
                             <span class="ctx-effect" id="ctx-forme-effect"></span>
                             <div class="ctx-form-counter" id="ctx-form-counter" style="display:none;">
                                 <span class="ctx-label" id="ctx-form-counter-label">Points</span>
@@ -3510,95 +3569,108 @@
 
     <script>
         const SABER_COLORS = {
-            argent: { name: "Argent", effect: "Coût de vos pouvoirs  et maintient des pouvoirs de durée est réduit de 1 PF (minimum 1)." },
-            blanc: { name: "Blanc", effect: "Un pouvoir sublimé gagne +1 en Puissance ; un pouvoir corrompu subit −1 en Puissance." },
-            bleu: { name: "Bleu", effect: "Les pouvoirs utilisés pour protéger quelqu'un d'autre +1 en Puissance." },
-            "bleu-clair": { name: "Bleu clair", effect: "Le personnage ne subit plus le minimum de dégâts des pouvoirs obscurs." },
-            cyan: { name: "Cyan", effect: "Le porteur peut maintenir un pouvoir de durée de type Soutien dont le bonus s'applique à tous les alliés à 10 ft plutôt qu'à lui seul. De plus, lorsqu'il initie un pouvoir conjoint, la DC de synchronisation est réduite de 2 pour tous les participants." },
-            indigo: { name: "Indigo", effect: "Le personnage ne peut jamais être surpris et agit toujours normalement au premier tour d'une confrontation. Lors d'un jet d'initiative, il peut utiliser la Force pour effectuer un double jet." },
-            jaune: { name: "Jaune", effect: "Augmente la puissance des pouvoirs de 1 lorsque le sorcier utilise un bonus tactique ou que l'adversaire subit un malus tactique." },
-            "jaune-vert": { name: "Jaune-Vert", effect: "Lors d'une action tactique, l'utilisateur peut utiliser un pouvoir pour faire un double jet de compétence." },
-            magenta: { name: "Magenta", effect: "Augmente de 3 la consommation en points de force d'un pouvoir pour utiliser un attribut différent pour lancer le pouvoir. " },
-            or: { name: "Or", effect: "Le personnage possède deux points de focalisations par round." },
-            orange: { name: "Orange", effect: "Régénération de Points de Force : 4/heure au lieu de 2." },
-            rose: { name: "Rose", effect: "Les pouvoirs améliorant ou soignant les alliés ont +1 Puissance." },
-            rouge: { name: "Rouge", effect: "Peut augmenter la puissance d'un pouvoir de 2, en échange d'une affliction de gravité 2 auto-infligée." },
-            vert: { name: "Vert", effect: "Après avoir utilisé un Verbe de Force, le prochain pouvoir utilisant un Verbe différent gagne +1 en Puissance." },
-            violet: { name: "Violet", effect: "+1 de Puissance sur les pouvoirs par afflictions différentes subie (maximum +3)." },
-            viridien: { name: "Viridien", effect: "Pouvoirs visant à défaire des pouvoirs en place +2 de puissance." }
+            argent: { name: "Argent", effect: "Avant de lancer un pouvoir offensif, le porteur peut en réduire la Puissance. Chaque point retiré ignore 2 points d'armure de la cible." },
+            blanc: { name: "Blanc", effect: "Un pouvoir sublimé du porteur persiste jusqu'au début de son prochain tour, sans immobiliser de focalisation, sans entretien et sans jet de concentration." },
+            bleu: { name: "Bleu", effect: "Lorsque le porteur emploie un pouvoir pour protéger un allié, il peut effectuer une riposte sans dépenser de point de focalisation supplémentaire." },
+            "bleu-clair": { name: "Bleu clair", effect: "Le porteur ne subit jamais le minimum de dégâts garanti des pouvoirs obscurs. Ses pouvoirs de durée n'exigent aucun jet de concentration lorsqu'il perd de l'Élan." },
+            cyan: { name: "Cyan", effect: "Le porteur peut employer une action d'assistance au bénéfice de toute créature portant un pouvoir bénéfique dont il est à l'origine." },
+            indigo: { name: "Indigo", effect: "Le porteur ne peut jamais être surpris et agit toujours normalement au premier tour d'une confrontation. Lors d'un jet d'initiative, il peut employer un pouvoir pour effectuer un double jet." },
+            jaune: { name: "Jaune", effect: "Lors d'une action tactique, le porteur peut employer un pouvoir pour effectuer un double jet de compétence. La magnitude de ce pouvoir est limitée à la moitié de sa magnitude habituelle, arrondie à l'inférieur." },
+            "jaune-vert": { name: "Jaune-Vert", effect: "Lorsqu'un allié lance un pouvoir, le porteur peut dépenser un point de focalisation pour s'y synchroniser, en suivant les règles du pouvoir conjoint." },
+            magenta: { name: "Magenta", effect: "Le porteur peut lancer un pouvoir avec un attribut mental différent du sien, au prix de 3 Points de Force supplémentaires." },
+            or: { name: "Or", effect: "Le porteur dispose de deux points de focalisation par round." },
+            orange: { name: "Orange", effect: "Le porteur peut employer un pouvoir de durée de type Activation comme une action offensive." },
+            rose: { name: "Rose", effect: "Les soins du porteur ignorent la Convalescence : une blessure déjà traitée par la Force peut l'être à nouveau sans attendre." },
+            rouge: { name: "Rouge", effect: "Le porteur peut dépasser son plafond de magnitude de 2 en lançant un pouvoir obscur, au prix d'une affliction de gravité 1 qui dure jusqu'à la fin de la scène." },
+            vert: { name: "Vert", effect: "Par une action, le porteur peut changer le verbe, la cible, la taille et la localisation d'un pouvoir de durée qu'il maintient, sans le relancer ni payer son coût initial. Le pouvoir conserve sa Puissance." },
+            violet: { name: "Violet", effect: "Lorsque le porteur subit une perte d'Élan, il peut lancer contre la source un pouvoir dont la magnitude ne dépasse pas la gravité subie." },
+            viridien: { name: "Viridien", effect: "Le porteur peut faire partir un pouvoir depuis une créature vivante ou un élément naturel qu'il perçoit, et en mesurer la portée depuis ce point plutôt que depuis lui-même." }
         };
         const SABER_TYPES = {
             standard: { name: "Standard", effect: "+1 de Puissance sur les pouvoirs de Force (main libre disponible)." },
             lourde: { name: "Lame lourde", effect: "Ignore jusqu'à 2 points d'armure de la cible." },
-            jumelle: { name: "Lames jumelées", effect: "Ajoute la qualité des deux armes à la gravité des blessures infligées." },
+            jumelle: { name: "Lames jumelées", effect: "Deux lames maniées de front, un manche dans chaque main." },
             allonge: { name: "Lame d'allonge", effect: "Portée de mêlée étendue à 10 ft." },
-            bifide: { name: "Lame bifide", effect: "+1 efficacité sur les jets de sabre laser si le personnage n'a pas utilisé plus de la moitié de son déplacement ce round." }
+            double: { name: "Double sabre", effect: "Une lame à chaque extrémité d'un même manche." }
         };
+        // ── POSTURES ────────────────────────────────────────────────────────
+        // Quatre postures forment un cycle : Pression bat Finesse, Finesse bat
+        // Fermeté, Fermeté bat Riposte, Riposte bat Pression. Niman reste hors du
+        // cycle. Quand une posture domine celle de l'adversaire, l'effet de la
+        // forme adverse ne s'applique pas contre le porteur.
+        const POSTURES = {
+            pression: {
+                name: "Pression", tag: "ne laisse pas respirer", color: "#ff7a5c",
+                svg: '<svg viewBox="0 0 64 64"><g fill="none" stroke="#ff7a5c" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 12 L36 32 L18 52"/><path d="M34 12 L52 32 L34 52" opacity="0.55"/></g></svg>'
+            },
+            finesse: {
+                name: "Finesse", tag: "trouve l'ouverture", color: "#f0b429",
+                svg: '<svg viewBox="0 0 64 64"><g stroke="#f0b429" stroke-width="7" stroke-linecap="round"><line x1="14" y1="14" x2="50" y2="50"/><line x1="50" y1="14" x2="14" y2="50"/></g><circle cx="32" cy="32" r="4.5" fill="#f0b429"/></svg>'
+            },
+            fermete: {
+                name: "Fermeté", tag: "ne rompt pas", color: "#2dd4bf",
+                svg: '<svg viewBox="0 0 64 64"><g stroke="#2dd4bf" stroke-width="7" stroke-linecap="round"><line x1="32" y1="10" x2="32" y2="52"/><line x1="14" y1="52" x2="50" y2="52"/><line x1="20" y1="43" x2="44" y2="43" stroke-width="4" opacity="0.5"/></g></svg>'
+            },
+            riposte: {
+                name: "Riposte", tag: "punit ce qu'on donne", color: "#b366ff",
+                svg: '<svg viewBox="0 0 64 64"><g stroke="#b366ff" stroke-width="7" stroke-linecap="round"><line x1="12" y1="52" x2="46" y2="14"/><line x1="52" y1="52" x2="18" y2="14"/></g><g stroke="#e0c4ff" stroke-width="2.5" stroke-linecap="round"><line x1="32" y1="10" x2="32" y2="2"/><line x1="22" y1="13" x2="16" y2="6"/><line x1="42" y1="13" x2="48" y2="6"/></g></svg>'
+            },
+            neutre: {
+                name: "Hors cycle", tag: "ne domine rien, rien ne la domine", color: "#8a94a3",
+                svg: '<svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" fill="none" stroke="#8a94a3" stroke-width="5"/><line x1="32" y1="10" x2="32" y2="54" stroke="#8a94a3" stroke-width="4"/><circle cx="32" cy="21" r="4" fill="#8a94a3"/><circle cx="32" cy="43" r="4" fill="#8a94a3"/></svg>'
+            }
+        };
+        // Le vainqueur de chaque posture (ce que la posture domine).
+        const POSTURE_BEATS = { pression: 'finesse', finesse: 'fermete', fermete: 'riposte', riposte: 'pression' };
+
         const COMBAT_FORMS = {
             shiicho: {
-                name: "Forme I - Shii-Cho",
-                attribute: "Endurance",
-                effect: "Peut attaquer tous les adversaires à portée de l'arme en une seule action."
+                name: "Forme I - Shii-Cho", attribute: "Endurance", posture: "fermete",
+                effect: "L'attaque du porteur frappe tous les adversaires à portée de son arme comme un pouvoir de zone : une seule confrontation est résolue, et le nombre de résistances retirées est augmenté du nombre de cibles touchées."
             },
             makashi: {
-                name: "Forme II - Makashi",
-                attribute: "Précision",
-                effect: "Lors d'un combat au corps à corps, vous bénéficiez d'un modificateur d'explosion de 1. Lors d'une confrontation offensive, vos attaques ignorent un nombre de points d'armure égal au nombre d'explosions sur le jet."
+                name: "Forme II - Makashi", attribute: "Précision", posture: "finesse",
+                effect: "En duel au corps à corps contre un adversaire unique, le porteur bénéficie d'un modificateur d'explosion de 1, et chaque explosion de son jet ignore un point d'armure de la cible."
             },
             soresu: {
-                name: "Forme III - Soresu",
-                attribute: "Endurance",
-                effect: "La qualité de l'arme s'applique comme de l'armure au lieu de s'ajouter aux dégâts infligés."
+                name: "Forme III - Soresu", attribute: "Endurance", posture: "fermete",
+                effect: "Lorsque le porteur consacre son action à se concentrer sur sa défense, chaque attaque qu'il reçoit compte double dans le nombre d'attaques par round de la confrontation. De plus, après une confrontation défensive remportée, il inflige le bonus de sa posture défensive comme malus tactique à l'initiateur de l'attaque."
             },
             ataru: {
-                name: "Forme IV - Ataru",
-                attribute: "Vivacité",
-                effect: "Vous pouvez lancer une action tactique d'Athlétisme sur la Vivacité gratuitement, une fois par tour après avoir déclaré une attaque. Chaque action tactique réussie génère un nombre de points de vélocité égal à l'écart avec la DC au lieu des effets habituels. Lorsque vous lancez une attaque, vous pouvez dépenser les points de vélocité pour augmenter sa puissance de 1 par 2 points de vélocité. Le maximum de points de vélocité est égal au niveau de compétence de sabre laser. Passer un round sans attaquer fait perdre tous les points de vélocité."
+                name: "Forme IV - Ataru", attribute: "Vivacité", posture: "pression",
+                effect: "Après avoir déclaré une attaque, le porteur peut effectuer gratuitement une action tactique d'Athlétisme sur la Vivacité, une fois par tour. Chaque action tactique réussie génère un nombre de points de vélocité égal à l'écart avec la DC, au lieu de ses effets habituels. En lançant une attaque, le porteur peut dépenser ces points pour augmenter sa Puissance de 1 par tranche de 2. Le maximum de points de vélocité est égal au niveau de Bagarre ; passer un round sans attaquer les fait tous perdre."
             },
             shien: {
-                name: "Forme V - Shien",
-                attribute: "Intuition",
-                effect: "Après une confrontation défensive contre une attaque à distance, réduit les résistances de la confrontation d'une valeur égale à l'écart de jet. L'écart de jet n'est pas compté dans les dégâts infligés lors d'autres types de confrontation."
+                name: "Forme V - Shien", attribute: "Précision", posture: "riposte",
+                effect: "Toute confrontation défensive du porteur contre un tir de blaster à distance devient une riposte."
             },
             djemso: {
-                name: "Forme V - Djem So",
-                attribute: "Puissance",
-                effect: "L'utilisateur repousse son tour. Lorsque vous remportez une confrontation défensive, vous pouvez immédiatement activer votre action offensive en utilisant l'écart de cette défense comme bonus tactique. Si l'utilisateur n'est pas attaqué, il effectue son action à la fin du round."
+                name: "Forme V - Djem So", attribute: "Puissance", posture: "riposte",
+                effect: "Le porteur repousse son tour. Lorsqu'il remporte une confrontation défensive, il peut immédiatement déclencher son action offensive en employant l'écart de cette défense comme bonus tactique. S'il n'est pas attaqué, il agit à la fin du round."
             },
             niman: {
-                name: "Forme VI - Niman",
-                attribute: "Même attribut que pour l'action tactique",
-                effect: "Après avoir déclaré une attaque au sabre laser, le personnage peut effectuer une action tactique gratuite portée par un pouvoir de Force. Il déclare le verbe et la compétence qui portent la manœuvre : l'action se résout sur l'attribut du verbe, teinte et charge s'appliquant normalement. En cas de réussite, l'attaque déclarée bénéficie du bonus tactique habituel."
+                name: "Forme VI - Niman", attribute: "Attribut du verbe", posture: "neutre",
+                effect: "Lorsque le porteur accompagne son attaque au sabre d'un pouvoir de Force ou maintient un pouvoir de durée, il peut résoudre son attaque sur l'attribut du verbe de ce pouvoir. Si les deux conditions sont réunies, il choisit lequel des deux verbes employer."
             },
             juyo: {
-                name: "Forme VII - Juyo",
-                attribute: "Puissance",
-                effect: "Nécessite d'être emporté par la fureur pour être utilisée. Après avoir une confrontation offensive au sabre, l'utilisateur peut immédiatement enchaîner une seconde attaque (une seule par tour), sur le même adversaire ou un autre à portée. S'il le fait, il subit −2 à toutes ses confrontations défensives jusqu'à son prochain tour. Tout pouvoir de Force lancé dans cette posture est considéré comme obscur."
+                name: "Forme VII - Juyo", attribute: "Puissance", posture: "pression",
+                effect: "Utilisable uniquement en teinte obscure. Après une confrontation offensive au sabre, le porteur peut enchaîner immédiatement une seconde attaque, une seule par tour, sur la même cible ou une autre à portée. S'il le fait, il subit −2 à toutes ses confrontations défensives jusqu'à son prochain tour. Tout pouvoir employé dans cette forme est obscur."
             },
             vaapad: {
-                name: "Forme VII - Vaapad",
-                attribute: "Volonté",
-                effect: "Chaque confrontation offensive déclarée contre l'utilisateur génère 1 point de Conduit (max : niveau de sabre laser) ; 1 point : Riposte sans focalisation, 2 points : attaque supplémentaire immédiate après résolution de son attaque (une par tour). Un round sans être attaqué vide les points de Conduit."
+                name: "Forme VII - Vaapad", attribute: "Puissance", posture: "riposte",
+                effect: "Chaque confrontation offensive déclarée contre le porteur lui génère 1 point de Conduit, qu'il dépense ainsi : 2 points pour effectuer une riposte sans dépenser de focalisation ; 3 points pour enchaîner une attaque supplémentaire immédiatement après la résolution de la sienne, une seule par tour. Le maximum de points de Conduit est égal au niveau de Bagarre ; passer un round sans être attaqué les fait tous perdre."
             },
             jarkai: {
-                name: "Jar'Kai",
-                attribute: "Vivacité",
-                effect: "Ajoute la qualité de la seconde lame à l'armure et non aux dégâts infligés."
+                name: "Jar'Kai", attribute: "Vivacité", posture: "pression",
+                effect: "Le porteur dispose d'un point de focalisation supplémentaire, qui ne peut servir à lancer un pouvoir de durée. Nécessite une lame double ou deux sabres maniés en même temps."
             },
             ysannanite: {
-                name: "Ysannanite",
-                attribute: "Précision",
-                effect: "Lorsque le personnage porte un sabre laser et un blaster, il peut après avoir annoncé une attaque au sabre laser sur son tour utiliser une action tactique de tir avec l'attribut Précision gratuitement."
+                name: "Ysannanite", attribute: "Précision", posture: "finesse",
+                effect: "Muni d'un sabre laser et d'un blaster, le porteur peut, après avoir déclaré une attaque au sabre sur son tour, effectuer gratuitement une action tactique de Tir sur la Précision, puis se déplacer jusqu'à l'adversaire visé avant de porter son attaque au sabre."
             },
-            praetoriaIshu: {
-                name: "Praetoria Ishu",
-                attribute: "Volonté",
-                effect: "Protéger un allié dans la portée de votre arme ne consomme pas de Point de Focalisation."
-            },
-            praetoriaVonil: {
-                name: "Praetoria Vonil",
-                attribute: "Présence",
-                effect: "Lorsqu'un ennemi dans la portée de l'arme reçoit une blessure de la part d'un allié, permet d'attaquer."
+            praetoria: {
+                name: "Praetoria", attribute: "Vivacité", posture: "fermete",
+                effect: "Tant que le porteur est en posture Praetoria, il gagne à la fin de son tour un point de formation par allié à portée de son arme, et confère un point de formation à chaque allié également en Praetoria. Le maximum de points de formation est égal à son niveau de Bagarre. Le porteur dépense 1 point pour défendre un allié à portée de son arme en prenant sa place dans une confrontation défensive, ou 3 points pour rejoindre la confrontation offensive d'un allié et en créer une seconde, simultanée, contre un adversaire à portée de son arme."
             }
         };
         // ========== NIVEAUX D'ATTRIBUTS ==========
@@ -3819,6 +3891,11 @@
                 formSel.innerHTML = '<option value="">' + (known.length ? 'Aucune forme adoptée' : 'Aucune forme maîtrisée') + '</option>'
                     + known.filter(id => COMBAT_FORMS[id]).map(id => `<option value="${id}">${COMBAT_FORMS[id].name}</option>`).join('');
                 formSel.value = appState.saber.form || '';
+                const fPost = document.getElementById('ctx-forme-posture');
+                if (fPost) {
+                    const cf = COMBAT_FORMS[appState.saber.form];
+                    fPost.innerHTML = cf ? (POSTURES[cf.posture] || POSTURES.neutre).svg : '';
+                }
                 const f = COMBAT_FORMS[appState.saber.form];
                 const eff = document.getElementById('ctx-forme-effect');
                 if (eff) { eff.textContent = f ? f.effect : ''; eff.title = f ? f.effect : ''; }
@@ -3877,6 +3954,8 @@
             updateForm();
             if (typeof syncContextBar === 'function') syncContextBar();
         }
+        // Ordre d'affichage des postures ; Niman (neutre) ferme la marche.
+        const POSTURE_ORDER = ['pression', 'finesse', 'fermete', 'riposte', 'neutre'];
         function renderFormMastery() {
             const grid = document.getElementById('form-mastery-grid');
             if (!grid) return;
@@ -3893,15 +3972,30 @@
                 ? 'Aucune forme accessible : le niveau de Bagarre est trop faible.'
                 : 'Répertoire déterminé par le niveau de Bagarre (' + getSaberSkillLevel() + ').';
             grid.innerHTML = '';
-            Object.entries(COMBAT_FORMS).forEach(([id, form]) => {
-                const isKnown = known.includes(id);
-                const full = !isKnown && known.length >= cap;
-                const item = document.createElement('div');
-                item.className = 'form-mastery-item' + (isKnown ? ' known' : '') + (full ? ' locked' : '');
-                item.title = full ? 'Répertoire complet' : form.name + ' · ' + form.attribute;
-                item.onclick = () => toggleKnownForm(id);
-                item.innerHTML = `<span class="fm-name">${form.name}</span><span class="fm-attr">${form.attribute}</span>`;
-                grid.appendChild(item);
+            // Regrouper les formes par posture, dans l'ordre du cycle
+            POSTURE_ORDER.forEach(postId => {
+                const forms = Object.entries(COMBAT_FORMS).filter(([, f]) => f.posture === postId);
+                if (!forms.length) return;
+                const post = POSTURES[postId];
+                const header = document.createElement('div');
+                header.className = 'posture-header';
+                header.style.color = post.color;
+                header.innerHTML = `<span class="posture-glyph">${post.svg}</span><span class="posture-title">${post.name}</span><span class="posture-tag">${post.tag}</span>`;
+                grid.appendChild(header);
+                const row = document.createElement('div');
+                row.className = 'posture-forms';
+                forms.forEach(([id, form]) => {
+                    const isKnown = known.includes(id);
+                    const full = !isKnown && known.length >= cap;
+                    const item = document.createElement('div');
+                    item.className = 'form-mastery-item' + (isKnown ? ' known' : '') + (full ? ' locked' : '');
+                    item.style.setProperty('--posture-color', post.color);
+                    item.title = full ? 'Répertoire complet' : form.name + ' · ' + form.attribute;
+                    item.onclick = () => toggleKnownForm(id);
+                    item.innerHTML = `<span class="fm-name">${form.name}</span><span class="fm-attr">${form.attribute}</span>`;
+                    row.appendChild(item);
+                });
+                grid.appendChild(row);
             });
         }
         function getSaberSkillLevel() {
@@ -3980,6 +4074,7 @@
             if (sel && typeof updateForm === 'function') { sel.value = id; updateForm(); }
             syncContextBar();
         }
+        function refreshSaberTypesSafe() { if (typeof renderSaberTypes === 'function') renderSaberTypes(); }
         function setCtxColor(id) {
             const second = appState.saber.colors[1];
             appState.saber.colors = [id, second].filter(Boolean).filter((c, i, a) => a.indexOf(c) === i).slice(0, 2);
@@ -4331,6 +4426,7 @@
             if (index > -1) appState.saber.colors.splice(index, 1);
             else if (appState.saber.colors.length < 2) appState.saber.colors.push(colorId);
             renderSaberColors();
+            if (typeof renderSaberTypes === 'function') renderSaberTypes();
             if (typeof syncContextBar === 'function') syncContextBar();
         }
         function updateSaberSelectionDisplay() {
@@ -4341,15 +4437,78 @@
                 return `<div class="saber-selected-item"><div class="saber-selected-label">COULEUR ${i + 1}</div><div class="saber-selected-name">${color.name}</div><div class="saber-selected-effect">${color.effect}</div></div>`;
             }).join('');
         }
+        // Teintes des couleurs de lame, pour colorer les sabres SVG.
+        const SABER_COLOR_HEX = {
+            argent: '#c0c0c0', blanc: '#ffffff', bleu: '#0066ff', 'bleu-clair': '#66b3ff',
+            cyan: '#00ffff', indigo: '#4b0082', jaune: '#ffcc00', 'jaune-vert': '#9acd32',
+            magenta: '#ff00ff', or: '#ffd700', orange: '#ff8c00', rose: '#ff69b4',
+            rouge: '#ff0000', vert: '#00ff00', violet: '#8a2be2', viridien: '#40826d'
+        };
+        // Couleur de lame (index 0) et couleur de halo (index 1) d'après la sélection.
+        function saberBladeColors() {
+            const cols = appState.saber.colors || [];
+            const blade = SABER_COLOR_HEX[cols[0]] || '#b366ff';
+            const glow = SABER_COLOR_HEX[cols[1]] || blade;
+            return { blade, glow };
+        }
+        // Construit un sabre SVG. `lames` décrit la géométrie propre au type.
+        function buildSaberSVG(typeId, blade, glow) {
+            const gid = 'g_' + typeId;
+            // Une lame : rectangle arrondi lumineux + cœur blanc, halo par filtre.
+            const oneBlade = (x1, y1, x2, y2, w) =>
+                `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${blade}" stroke-width="${w}" stroke-linecap="round" filter="url(#${gid})"/>` +
+                `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${blade}" stroke-width="${w}" stroke-linecap="round"/>` +
+                `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#fff" stroke-width="${Math.max(1, w - 6)}" stroke-linecap="round" opacity="0.6"/>`;
+            const hilt = (x1, y1, x2, y2) =>
+                `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#2b2f36" stroke-width="7" stroke-linecap="round"/>` +
+                `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#6b7280" stroke-width="3" stroke-linecap="round"/>`;
+            let body = '';
+            if (typeId === 'standard') {
+                body = hilt(50, 88, 50, 70) + oneBlade(50, 66, 50, 10, 9);
+            } else if (typeId === 'lourde') {
+                body = hilt(50, 90, 50, 70) + oneBlade(50, 66, 50, 8, 16);
+            } else if (typeId === 'allonge') {
+                body = hilt(50, 94, 50, 78) + oneBlade(50, 74, 50, 6, 8);
+            } else if (typeId === 'jumelle') {
+                // Dual wield : deux manches distincts côte à côte, une lame chacun.
+                body = hilt(32, 90, 32, 72) + oneBlade(32, 68, 32, 10, 8)
+                     + hilt(68, 90, 68, 72) + oneBlade(68, 68, 68, 10, 8);
+            } else if (typeId === 'double') {
+                // Saberstaff : un seul manche central, une lame à chaque bout.
+                body = hilt(50, 60, 50, 40) + oneBlade(50, 38, 50, 6, 9) + oneBlade(50, 62, 50, 94, 9);
+            } else {
+                body = hilt(50, 88, 50, 70) + oneBlade(50, 66, 50, 10, 9);
+            }
+            return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">` +
+                `<defs><filter id="${gid}" x="-80%" y="-80%" width="260%" height="260%">` +
+                `<feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="${glow}" flood-opacity="1"/>` +
+                `<feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="${glow}" flood-opacity="0.6"/>` +
+                `</filter></defs>${body}</svg>`;
+        }
         function renderSaberTypes() {
             const grid = document.getElementById('saber-types-grid');
             grid.innerHTML = '';
-            const icons = { standard: '⚔', lourde: '🗡', jumelle: '⚔⚔', allonge: '↑', bifide: '⟷' };
+            const { blade, glow } = saberBladeColors();
             Object.entries(SABER_TYPES).forEach(([id, type]) => {
+                const selected = appState.saber.type === id;
                 const item = document.createElement('div');
-                item.className = 'saber-type-item' + (appState.saber.type === id ? ' selected' : '');
+                item.className = 'saber-type-item' + (selected ? ' selected' : '');
+                if (selected) {
+                    item.style.borderColor = blade;
+                    item.style.boxShadow = '0 0 15px ' + glow + '66';
+                    item.style.background = blade + '18';
+                    item.style.opacity = '1';
+                } else {
+                    item.style.borderColor = '';
+                    item.style.boxShadow = '';
+                    item.style.background = '';
+                    item.style.opacity = '0.6';
+                }
                 item.onclick = () => selectSaberType(id);
-                item.innerHTML = `<div class="saber-type-icon">${icons[id] || '⚔'}</div><div class="saber-type-name">${type.name}</div>`;
+                // Toutes les lames s'allument aux couleurs choisies ; la sélection
+                // se distingue par le cadre et le halo de la carte, non par la teinte.
+                const svg = buildSaberSVG(id, blade, glow);
+                item.innerHTML = `<div class="saber-type-icon">${svg}</div><div class="saber-type-name">${type.name}</div>`;
                 grid.appendChild(item);
             });
             updateSaberTypeDisplay();
@@ -4391,8 +4550,11 @@
             const display = document.getElementById('form-effect-display');
             if (formId && COMBAT_FORMS[formId]) {
                 const form = COMBAT_FORMS[formId];
-                document.getElementById('form-name').textContent = form.name;
-                document.getElementById('form-attribute').textContent = form.attribute;
+                const post = POSTURES[form.posture] || POSTURES.neutre;
+                const nameEl = document.getElementById('form-name');
+                nameEl.innerHTML = `<span class="form-posture-glyph">${post.svg}</span>${form.name}`;
+                const attrEl = document.getElementById('form-attribute');
+                attrEl.innerHTML = `${form.attribute} <span style="color:${post.color};font-weight:600">· ${post.name}</span>`;
                 document.getElementById('form-positive').innerHTML = form.effect;
                 display.style.display = 'block';
             } else display.style.display = 'none';
@@ -4477,8 +4639,10 @@
         //   · La CHARGE ÉMOTIONNELLE sublime dans tous les cas, quelle que soit la
         //     teinte. C'est la voie de l'ombre, qui n'exige rien d'autre : les
         //     émotions dont elle se nourrit sont disponibles à tout instant, donc
-        //     le feu vert est presque toujours accordé. C'est aussi la porte de la
-        //     rédemption pour qui n'a aucune trajectoire lumineuse.
+        //     le feu vert est presque toujours accordé.
+        //     Une exception : un pouvoir lumineux qu'une corruption profonde aurait
+        //     corrompu n'est que ramené au neutre. La rédemption reste ouverte, mais
+        //     elle commence par cesser d'être trahi, jamais par retrouver la grâce.
         //   · La LUMIÈRE dispose en plus d'une sublimation acquise, progressive :
         //     elle répond à partir de +20, jusqu'à une magnitude que le palier
         //     d'Harmonie détermine. Sous −40, elle corrompt au contraire.
@@ -4501,10 +4665,11 @@
             return 'jusqu\'à magnitude ' + cap;
         }
         function nvResolveEtat(teinteId, intentionOk, magnitude) {
-            if (intentionOk) return 'sublime';
             const sign = (TEINTES[teinteId] || TEINTES.neutre).sign;
+            const renie = sign > 0 && resonanceValue <= LIGHT_CORRUPT_FLOOR;
+            if (intentionOk) return renie ? 'compose' : 'sublime';
             if (sign > 0) {
-                if (resonanceValue <= LIGHT_CORRUPT_FLOOR) return 'corrompu';
+                if (renie) return 'corrompu';
                 return (magnitude || 0) <= lightSublimCap() ? 'sublime' : 'compose';
             }
             return 'compose';
@@ -4523,10 +4688,15 @@
             const t = TEINTES[appState.teinte] || TEINTES.neutre;
             const head = t.icon + ' ' + t.name;
             const arrow = etat => ' → ' + NV_ETAT_LABEL[etat][0];
-            if (appState.intentionOk) return head + ' · porté par la charge' + arrow('sublime');
+            const renie = t.sign > 0 && resonanceValue <= LIGHT_CORRUPT_FLOOR;
+            if (appState.intentionOk) {
+                return renie
+                    ? head + ' · la charge tient la corruption en échec' + arrow('compose')
+                    : head + ' · porté par la charge' + arrow('sublime');
+            }
             if (t.sign < 0) return head + ' · le geste seul, rien ne le porte' + arrow('compose');
             if (t.sign > 0) {
-                if (resonanceValue <= LIGHT_CORRUPT_FLOOR) return head + ' · corruption trop profonde' + arrow('corrompu');
+                if (renie) return head + ' · corruption trop profonde' + arrow('corrompu');
                 const capTxt = lightSublimCapText();
                 if (typeof magnitude === 'number') {
                     return head + ' · ' + capTxt + arrow(magnitude <= lightSublimCap() ? 'sublime' : 'compose');
@@ -5188,6 +5358,7 @@
             // désormais avec la compétence que la description justifie.
             appState.skills = (appState.skills || []).filter(sk =>
                 (sk.baseName || sk.name) !== 'Combat de Force');
+            if (appState.saber && appState.saber.type === 'bifide') appState.saber.type = 'double';
             document.getElementById('character-name').value = appState.profile.name || '';
             if (appState.profile.image) document.getElementById('profile-image-display').innerHTML = `<img src="${appState.profile.image}" alt="Portrait">`;
             updateAllAttributes();
