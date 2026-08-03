@@ -1628,7 +1628,7 @@
         }
 
         .saber-color-item[data-color="indigo"] {
-            --saber-color: #4b0082;
+            --saber-color: #3F00FF;
         }
 
         .saber-color-item[data-color="jaune"] {
@@ -3335,15 +3335,15 @@
                     <div id="ctx-bar-body">
                         <div class="ctx-row">
                             <span class="ctx-label">🎭 Teinte</span>
-                            <select id="ctx-teinte" class="form-select ctx-select"
-                                onchange="setTeinte(this.value)">
+                            <select id="ctx-teinte" class="form-select ctx-select" onchange="setTeinte(this.value)">
                                 <option value="neutre">⚖️ Neutre (racine)</option>
                                 <option value="lumineux">✨ Lumineux</option>
                                 <option value="obscur">🌑 Obscur</option>
                             </select>
-                            <label class="ctx-intention" title="Le geste est porté par une émotion réelle, et le MJ l'accorde."><input
-                                    type="checkbox" id="ctx-intention"
-                                    onchange="setIntention(this.checked)"> ⚡ Charge émotionnelle</label>
+                            <label class="ctx-intention"
+                                title="Le geste est porté par une émotion réelle, et le MJ l'accorde."><input
+                                    type="checkbox" id="ctx-intention" onchange="setIntention(this.checked)"> ⚡ Charge
+                                émotionnelle</label>
                             <span class="ctx-effect" id="ctx-teinte-effect"></span>
                         </div>
                         <div class="ctx-row">
@@ -3358,7 +3358,7 @@
                                     <button class="ap-btn" onclick="modFormCounter(-1)">−</button>
                                     <span class="ctx-counter-value" id="ctx-form-counter-value">0</span>
                                     <button class="ap-btn" onclick="modFormCounter(1)">+</button>
-                                    <button class="ap-btn end" onclick="resetFormCounter()"
+                                    <button class="ap-btn end" id="ctx-form-counter-reset" onclick="resetFormCounter()"
                                         title="Remettre à zéro (round sans condition)">↺</button>
                                 </div>
                             </div>
@@ -3395,7 +3395,6 @@
                             </div>
                         </div>
                         <div class="ctx-row">
-                            <span class="ctx-label">🌈 Couleur 1</span>
                             <span class="ctx-value" id="ctx-color-name">Aucune</span>
                             <span class="ctx-effect" id="ctx-color-effect"></span>
                         </div>
@@ -3587,11 +3586,11 @@
             viridien: { name: "Viridien", effect: "Le porteur peut faire partir un pouvoir depuis une créature vivante ou un élément naturel qu'il perçoit, et en mesurer la portée depuis ce point plutôt que depuis lui-même." }
         };
         const SABER_TYPES = {
-            standard: { name: "Standard", effect: "+1 de Puissance sur les pouvoirs de Force (main libre disponible)." },
-            lourde: { name: "Lame lourde", effect: "Ignore jusqu'à 2 points d'armure de la cible." },
-            jumelle: { name: "Lames jumelées", effect: "Deux lames maniées de front, un manche dans chaque main." },
-            allonge: { name: "Lame d'allonge", effect: "Portée de mêlée étendue à 10 ft." },
-            double: { name: "Double sabre", effect: "Une lame à chaque extrémité d'un même manche." }
+            standard: { name: "Standard", effect: "Le porteur peut, une fois par round, changer de forme de sabre laser en dehors de son tour." },
+            lourde: { name: "Claymore", effect: "Après avoir réduit les résistances d'un adversaire, son armure est réduite de 2 jusqu'au début du prochain tour du porteur." },
+            jumelle: { name: "Dual wield", effect: "Le porteur dispose d'un point de focalisation supplémentaire, qui ne peut servir à lancer un pouvoir de durée." },
+            allonge: { name: "Pique laser", effect: "La portée de mêlée du porteur est étendue à 10 ft. Toute confrontation défensive contre lui se résout à sa portée d'arme si l'adversaire n'y est pas déjà, et le porteur peut contraindre un adversaire engagé à demeurer à sa portée." },
+            double: { name: "Sabre double", effect: "Le porteur conserve en mémoire le résultat brut de son meilleur jet de Bagarre depuis le début de son tour. Il peut l'employer à la place de tout jet de Bagarre ultérieur qui lui serait inférieur, pour toute action au sabre, jusqu'à ce qu'il perde une confrontation ou au début de son prochain tour, où la mémoire se réinitialise." }
         };
         // ── POSTURES ────────────────────────────────────────────────────────
         // Quatre postures forment un cycle : Pression bat Finesse, Finesse bat
@@ -3634,7 +3633,7 @@
             },
             soresu: {
                 name: "Forme III - Soresu", attribute: "Endurance", posture: "fermete",
-                effect: "Lorsque le porteur consacre son action à se concentrer sur sa défense, chaque attaque qu'il reçoit compte double dans le nombre d'attaques par round de la confrontation. De plus, après une confrontation défensive remportée, il inflige le bonus de sa posture défensive comme malus tactique à l'initiateur de l'attaque."
+                effect: "Lorsque le porteur consacre son action à se concentrer sur sa défense, chaque attaque qu'il reçoit compte double dans le nombre d'attaques par round de la confrontation. De plus, il reçoit un nombre de points d'armure temporaires égal à la moitié de son niveau de Bagarre, qui durent jusqu'au début de son prochain tour. Un point d'armure temporaire est consommé lorsqu'il subit des dégâts."
             },
             ataru: {
                 name: "Forme IV - Ataru", attribute: "Vivacité", posture: "pression",
@@ -3660,16 +3659,12 @@
                 name: "Forme VII - Vaapad", attribute: "Puissance", posture: "riposte",
                 effect: "Chaque confrontation offensive déclarée contre le porteur lui génère 1 point de Conduit, qu'il dépense ainsi : 2 points pour effectuer une riposte sans dépenser de focalisation ; 3 points pour enchaîner une attaque supplémentaire immédiatement après la résolution de la sienne, une seule par tour. Le maximum de points de Conduit est égal au niveau de Bagarre ; passer un round sans être attaqué les fait tous perdre."
             },
-            jarkai: {
-                name: "Jar'Kai", attribute: "Vivacité", posture: "pression",
-                effect: "Le porteur dispose d'un point de focalisation supplémentaire, qui ne peut servir à lancer un pouvoir de durée. Nécessite une lame double ou deux sabres maniés en même temps."
-            },
             ysannanite: {
-                name: "Ysannanite", attribute: "Précision", posture: "finesse",
+                name: "Ysannanite", attribute: "Vivacité", posture: "finesse",
                 effect: "Muni d'un sabre laser et d'un blaster, le porteur peut, après avoir déclaré une attaque au sabre sur son tour, effectuer gratuitement une action tactique de Tir sur la Précision, puis se déplacer jusqu'à l'adversaire visé avant de porter son attaque au sabre."
             },
             praetoria: {
-                name: "Praetoria", attribute: "Vivacité", posture: "fermete",
+                name: "Praetoria", attribute: "Vivacité", posture: "finesse",
                 effect: "Tant que le porteur est en posture Praetoria, il gagne à la fin de son tour un point de formation par allié à portée de son arme, et confère un point de formation à chaque allié également en Praetoria. Le maximum de points de formation est égal à son niveau de Bagarre. Le porteur dépense 1 point pour défendre un allié à portée de son arme en prenant sa place dans une confrontation défensive, ou 3 points pour rejoindre la confrontation offensive d'un allié et en créer une seconde, simultanée, contre un adversaire à portée de son arme."
             }
         };
@@ -3803,12 +3798,7 @@
                 light: 'Harmoniser', lightDesc: "Accorder un esprit troublé, guider une croissance, équilibrer un lieu.",
                 dark: 'Déformer', darkDesc: "Alchimie Sith, tordre une chair, fausser un souvenir."
             },
-            {
-                id: 'guerir', name: 'Guérir', attr: 'Intuition', level: 1,
-                desc: "Restaurer l'intégrité d'une chose. Refermer une plaie, réparer un mécanisme, ressouder une structure, rendre ses forces.",
-                light: 'Purifier', lightDesc: "Purger un poison, laver une corruption, délivrer d'une souillure.",
-                dark: 'Ranimer', darkDesc: "Forcer un mourant à tenir, rappeler ce qui s'éteint, Dark Transfer."
-            },
+
             {
                 id: 'lier', name: 'Lier', attr: 'Présence', level: 1,
                 desc: "Établir une prise entre des êtres ou sur une volonté. Communication télépathique, lien avec une monture, contact mental à distance.",
@@ -3832,7 +3822,13 @@
                 desc: "Connaître ce qui est caché, lointain ou à venir. Force Sense, détecter une présence, pressentir un danger, lire une trace.",
                 light: 'Communier', lightDesc: "Ressentir un lieu vivant, empathie profonde, s'accorder à la Force.",
                 dark: 'Sonder', darkDesc: "Fouiller un esprit sans consentement, arracher un secret, lire pour trahir."
-            }
+            },
+            {
+                id: 'regenerer', name: 'Régénérer', attr: 'Intuition', level: 1,
+                desc: "Restaurer l'intégrité d'une chose. Refermer une plaie, réparer un mécanisme, ressouder une structure, rendre ses forces.",
+                light: 'Guérir', lightDesc: "Purger un poison, laver une corruption, délivrer d'une souillure.",
+                dark: 'Reconstituer', darkDesc: "Forcer un mourant à tenir, rappeler ce qui s'éteint, Dark Transfer."
+            },
         ];
         const FORCE_TARGETS = [
             { id: 'corps', name: 'Corps', desc: "La chair et l'organisme. Muscles, organes, membres, sens physiques : ce qui se coupe et se recoud.", level: 1 },
@@ -3845,7 +3841,7 @@
             { id: 'obscurite', name: 'Obscurité', desc: "Le côté obscur comme substance. Souillure logée dans un lieu, un artefact ou un être.", level: 1 }
         ];
         // Migration des sauvegardes antérieures (anciens verbes / anciennes cibles)
-        const LEGACY_VERB_MAP = { harmoniser: 'guerir', transformer: 'faconner', proteger: 'dissimuler', proteger_old: 'dissimuler' };
+        const LEGACY_VERB_MAP = { harmoniser: 'regenerer', transformer: 'faconner', proteger: 'dissimuler', proteger_old: 'dissimuler' };
         const LEGACY_TARGET_MAP = { bete: 'esprit', flore: 'nature', mecanismes: 'matiere', corruption: 'obscurite' };
         const defaultSkills = ['Art', 'Athlétisme', 'Autorité', 'Bagarre', 'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Informatique', 'Ingénierie', 'Médecine', 'Pilotage', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Tir', 'Tromperie', 'Vigilance'];
         const appState = {
@@ -3860,7 +3856,7 @@
             activePowers: [],
             receivedBuffs: [],
             focalisation: { current: 1, max: 1 },
-            formCounters: { ataru: 0, vaapad: 0 },
+            formCounters: { ataru: 0, vaapad: 0, praetoria: 0, soresu: 0 },
             notes: "",
             saber: { colors: [], form: '', type: 'standard', knownForms: [] },
             teinte: "neutre",
@@ -4003,35 +3999,48 @@
             return sk ? Math.max(1, parseInt(sk.level) || 1) : 1;
         }
         const FORM_COUNTER_META = {
-            ataru: { label: '💨 Vélocité', hint: 'Max : niveau de sabre laser. Un round sans attaquer vide la vélocité.' },
-            vaapad: { label: '🔄 Conduit', hint: 'Max : niveau de sabre laser. Un round sans être attaqué vide le Conduit.' }
+            ataru: { label: '💨 Vélocité', hint: 'Max : niveau de Bagarre. Un round sans attaquer vide la vélocité.' },
+            vaapad: { label: '🔄 Conduit', hint: 'Max : niveau de Bagarre. Un round sans être attaqué vide le Conduit.' },
+            praetoria: { label: '🛡 Formation', hint: 'Max : niveau de Bagarre. 1 point : défendre un allié à portée. 3 points : rejoindre une confrontation offensive alliée et en créer une seconde.' },
+            soresu: { label: '🛡 Armure temp.', hint: 'Concentration défensive : ⌊Bagarre ÷ 2⌋ points, qui est aussi le maximum. Chaque point est consommé en subissant des dégâts, et l\'armure disparaît au début du prochain tour. Le bouton ↺ recharge à la valeur de concentration.', cap: () => Math.floor(getSaberSkillLevel() / 2), refill: () => Math.floor(getSaberSkillLevel() / 2) }
         };
+        function formCounterCap(form) {
+            const meta = FORM_COUNTER_META[form];
+            // Soresu plafonne à ⌊Bagarre ÷ 2⌋ ; les autres au niveau de Bagarre.
+            if (meta && meta.cap) return meta.cap();
+            return getSaberSkillLevel();
+        }
         function syncFormCounter() {
             const box = document.getElementById('ctx-form-counter');
             if (!box) return;
-            if (!appState.formCounters) appState.formCounters = { ataru: 0, vaapad: 0 };
+            if (!appState.formCounters) appState.formCounters = { ataru: 0, vaapad: 0, praetoria: 0, soresu: 0 };
             const form = appState.saber.form;
             const meta = FORM_COUNTER_META[form];
             if (!meta) { box.style.display = 'none'; return; }
             box.style.display = 'flex';
             document.getElementById('ctx-form-counter-label').textContent = meta.label;
             document.getElementById('ctx-form-counter-label').title = meta.hint;
-            const cap = getSaberSkillLevel();
+            const cap = formCounterCap(form);
             if ((appState.formCounters[form] || 0) > cap) appState.formCounters[form] = cap;
             document.getElementById('ctx-form-counter-value').textContent = (appState.formCounters[form] || 0) + ' / ' + cap;
+            // Bouton ↺ : recharge pour les formes qui le définissent (Soresu), sinon remise à zéro.
+            const resetBtn = document.getElementById('ctx-form-counter-reset');
+            if (resetBtn) resetBtn.title = meta.refill ? 'Recharger (concentration défensive)' : 'Remettre à zéro';
         }
         function modFormCounter(delta) {
             const form = appState.saber.form;
             if (!FORM_COUNTER_META[form]) return;
-            if (!appState.formCounters) appState.formCounters = { ataru: 0, vaapad: 0 };
-            const cap = getSaberSkillLevel();
+            if (!appState.formCounters) appState.formCounters = { ataru: 0, vaapad: 0, praetoria: 0, soresu: 0 };
+            const cap = formCounterCap(form);
             appState.formCounters[form] = Math.max(0, Math.min(cap, (appState.formCounters[form] || 0) + delta));
             syncFormCounter();
         }
         function resetFormCounter() {
             const form = appState.saber.form;
-            if (!FORM_COUNTER_META[form]) return;
-            appState.formCounters[form] = 0;
+            const meta = FORM_COUNTER_META[form];
+            if (!meta) return;
+            // Pour Soresu, ↺ recharge à ⌊Bagarre ÷ 2⌋ ; pour les autres, remise à zéro.
+            appState.formCounters[form] = meta.refill ? meta.refill() : 0;
             syncFormCounter();
         }
         function toggleFocUsages() {
@@ -4440,7 +4449,7 @@
         // Teintes des couleurs de lame, pour colorer les sabres SVG.
         const SABER_COLOR_HEX = {
             argent: '#c0c0c0', blanc: '#ffffff', bleu: '#0066ff', 'bleu-clair': '#66b3ff',
-            cyan: '#00ffff', indigo: '#4b0082', jaune: '#ffcc00', 'jaune-vert': '#9acd32',
+            cyan: '#00ffff', indigo: '#3F00FF', jaune: '#ffcc00', 'jaune-vert': '#9acd32',
             magenta: '#ff00ff', or: '#ffd700', orange: '#ff8c00', rose: '#ff69b4',
             rouge: '#ff0000', vert: '#00ff00', violet: '#8a2be2', viridien: '#40826d'
         };
@@ -4456,9 +4465,10 @@
             const gid = 'g_' + typeId;
             // Une lame : rectangle arrondi lumineux + cœur blanc, halo par filtre.
             const oneBlade = (x1, y1, x2, y2, w) =>
-                `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${blade}" stroke-width="${w}" stroke-linecap="round" filter="url(#${gid})"/>` +
+                `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${glow}" stroke-width="${w + 10}" stroke-linecap="round" filter="url(#${gid})"/>` +
+                `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${glow}" stroke-width="${w + 5}" stroke-linecap="round"/>` +
                 `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${blade}" stroke-width="${w}" stroke-linecap="round"/>` +
-                `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#fff" stroke-width="${Math.max(1, w - 6)}" stroke-linecap="round" opacity="0.6"/>`;
+                `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#fff" stroke-width="${Math.max(1, w - 6)}" stroke-linecap="round" opacity="0.55"/>`;
             const hilt = (x1, y1, x2, y2) =>
                 `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#2b2f36" stroke-width="7" stroke-linecap="round"/>` +
                 `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#6b7280" stroke-width="3" stroke-linecap="round"/>`;
@@ -4472,7 +4482,7 @@
             } else if (typeId === 'jumelle') {
                 // Dual wield : deux manches distincts côte à côte, une lame chacun.
                 body = hilt(32, 90, 32, 72) + oneBlade(32, 68, 32, 10, 8)
-                     + hilt(68, 90, 68, 72) + oneBlade(68, 68, 68, 10, 8);
+                    + hilt(68, 90, 68, 72) + oneBlade(68, 68, 68, 10, 8);
             } else if (typeId === 'double') {
                 // Saberstaff : un seul manche central, une lame à chaque bout.
                 body = hilt(50, 60, 50, 40) + oneBlade(50, 38, 50, 6, 9) + oneBlade(50, 62, 50, 94, 9);
@@ -4480,9 +4490,8 @@
                 body = hilt(50, 88, 50, 70) + oneBlade(50, 66, 50, 10, 9);
             }
             return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">` +
-                `<defs><filter id="${gid}" x="-80%" y="-80%" width="260%" height="260%">` +
-                `<feDropShadow dx="0" dy="0" stdDeviation="2.5" flood-color="${glow}" flood-opacity="1"/>` +
-                `<feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="${glow}" flood-opacity="0.6"/>` +
+                `<defs><filter id="${gid}" x="-120%" y="-120%" width="340%" height="340%">` +
+                `<feGaussianBlur stdDeviation="3"/>` +
                 `</filter></defs>${body}</svg>`;
         }
         function renderSaberTypes() {
@@ -5359,6 +5368,11 @@
             appState.skills = (appState.skills || []).filter(sk =>
                 (sk.baseName || sk.name) !== 'Combat de Force');
             if (appState.saber && appState.saber.type === 'bifide') appState.saber.type = 'double';
+            if (appState.saber) {
+                if (appState.saber.form === 'jarkai') appState.saber.form = '';
+                if (Array.isArray(appState.saber.knownForms))
+                    appState.saber.knownForms = appState.saber.knownForms.filter(f => f !== 'jarkai');
+            }
             document.getElementById('character-name').value = appState.profile.name || '';
             if (appState.profile.image) document.getElementById('profile-image-display').innerHTML = `<img src="${appState.profile.image}" alt="Portrait">`;
             updateAllAttributes();
