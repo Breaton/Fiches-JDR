@@ -2739,6 +2739,22 @@
             display: block;
         }
 
+        .ctx-color-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ctx-color-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: transparent;
+            box-shadow: none;
+        }
+
         .ctx-intention {
             grid-column: 1 / -1;
             display: flex;
@@ -3395,13 +3411,28 @@
                             </div>
                         </div>
                         <div class="ctx-row">
+                            <span class="ctx-label">🗡 Sabre</span>
+                            <span class="ctx-value" id="ctx-saber-type">Standard</span>
+                            <span class="ctx-effect" id="ctx-saber-type-effect"></span>
+                        </div>
+                        <div class="ctx-row">
+                            <span class="ctx-label ctx-color-label" id="ctx-color1-label"><span class="ctx-color-dot" id="ctx-color1-dot"></span>Couleur 1</span>
                             <span class="ctx-value" id="ctx-color-name">Aucune</span>
                             <span class="ctx-effect" id="ctx-color-effect"></span>
                         </div>
                         <div class="ctx-row">
-                            <span class="ctx-label">🌈 Couleur 2</span>
+                            <span class="ctx-label ctx-color-label" id="ctx-color2-label"><span class="ctx-color-dot" id="ctx-color2-dot"></span>Couleur 2</span>
                             <span class="ctx-value" id="ctx-color2-name">Aucune</span>
                             <span class="ctx-effect" id="ctx-color2-effect"></span>
+                        </div>
+                        <div class="ctx-row">
+                            <span class="ctx-label">⚖ Alignement</span>
+                            <span class="ctx-value" id="ctx-align-stage">Équilibre</span>
+                            <span class="ctx-effect"><span onclick="toggleAlignEffects()"
+                                    style="cursor:pointer; color:#7fd4ff; user-select:none;" id="align-effects-toggle">▸
+                                    Voir les effets d'alignement actifs</span></span>
+                            <div id="align-effects"
+                                style="display:none; grid-column:1 / -1; margin-top:6px; padding:8px 10px; background:rgba(0,168,255,0.04); border:1px solid rgba(0,168,255,0.15); border-radius:3px; font-size:0.76em; line-height:1.5; color:var(--light-steel);"></div>
                         </div>
                     </div>
                 </div>
@@ -3898,15 +3929,73 @@
                 syncFormCounter();
                 syncFocalisation();
             }
-            // Couleurs (lecture seule, alimentées par la page Sabre)
-            [['ctx-color-name', 0, 'ctx-color-effect'], ['ctx-color2-name', 1, 'ctx-color2-effect']].forEach(([nameId, idx, effId]) => {
+            // Type de sabre (lecture seule, alimenté par la page Sabre)
+            const stEl = document.getElementById('ctx-saber-type');
+            if (stEl) {
+                const st = SABER_TYPES[appState.saber.type] || SABER_TYPES.standard;
+                stEl.textContent = st ? st.name : 'Standard';
+                const steff = document.getElementById('ctx-saber-type-effect');
+                if (steff) { steff.textContent = st ? st.effect : ''; steff.title = st ? st.effect : ''; }
+            }
+            // Couleurs (lecture seule, alimentées par la page Sabre) : pastille + nom
+            [['ctx-color-name', 0, 'ctx-color-effect', 'ctx-color1-dot'], ['ctx-color2-name', 1, 'ctx-color2-effect', 'ctx-color2-dot']].forEach(([nameId, idx, effId, dotId]) => {
                 const nameEl = document.getElementById(nameId);
                 if (!nameEl) return;
-                const c = SABER_COLORS[appState.saber.colors[idx]];
+                const colId = appState.saber.colors[idx];
+                const c = SABER_COLORS[colId];
                 nameEl.textContent = c ? c.name : 'Aucune';
                 const eff = document.getElementById(effId);
                 if (eff) { eff.textContent = c ? c.effect : ''; eff.title = c ? c.effect : ''; }
+                const dot = document.getElementById(dotId);
+                if (dot) dot.style.background = (colId && SABER_COLOR_HEX[colId]) ? SABER_COLOR_HEX[colId] : 'transparent';
             });
+            // Alignement : étape courante + effets actifs
+            if (typeof syncAlignEffects === 'function') syncAlignEffects();
+        }
+        // ── EFFETS D'ALIGNEMENT DANS LE CONTEXTE ────────────────────────────
+        function getActiveResonanceEffects() {
+            const val = resonanceValue;
+            const activeByGroup = {};
+            for (const eff of RESONANCE_EFFECTS) {
+                const active = (eff.side === 'dark' && val <= eff.threshold) ||
+                    (eff.side === 'light' && val >= eff.threshold);
+                if (active) activeByGroup[eff.group] = eff;
+            }
+            return Object.values(activeByGroup);
+        }
+        function syncAlignEffects() {
+            const stageEl = document.getElementById('ctx-align-stage');
+            if (stageEl) {
+                let stage = RESONANCE_STAGES[0];
+                for (const st of RESONANCE_STAGES) if (resonanceValue >= st.threshold) stage = st;
+                // corruption : seuils négatifs, on prend le plus profond atteint
+                if (resonanceValue < 0) {
+                    stage = RESONANCE_STAGES[0];
+                    for (const st of RESONANCE_STAGES) { if (st.threshold <= 0 && resonanceValue <= st.threshold) { stage = st; break; } }
+                }
+                stageEl.textContent = stage.label + ' (' + (resonanceValue > 0 ? '+' : '') + resonanceValue + ')';
+                stageEl.style.color = stage.color;
+            }
+            const box = document.getElementById('align-effects');
+            if (!box) return;
+            const effects = getActiveResonanceEffects();
+            if (!effects.length) {
+                box.innerHTML = '<div style="opacity:0.6;">Aucun effet d\'alignement actif au niveau actuel.</div>';
+                return;
+            }
+            box.innerHTML = effects.map(e => {
+                const col = e.side === 'dark' ? '#ff9944' : '#7fd4ff';
+                const tag = e.kind === 'cost' ? ' <span style="color:#ff6666;">(contrepartie)</span>' : '';
+                return `<div style="margin-bottom:6px;"><span style="color:${col};">${e.icon}</span> ${e.text}${tag}</div>`;
+            }).join('');
+        }
+        function toggleAlignEffects() {
+            const box = document.getElementById('align-effects');
+            const tog = document.getElementById('align-effects-toggle');
+            if (!box) return;
+            const open = box.style.display === 'none';
+            box.style.display = open ? 'block' : 'none';
+            if (tog) tog.textContent = (open ? '▾' : '▸') + ' Voir les effets d\'alignement actifs';
         }
         // ── MAÎTRISE DES FORMES ─────────────────────────────────────────────
         // Le nombre de formes qu'un personnage peut connaître découle de son niveau
@@ -5868,6 +5957,7 @@
             appState.resonance = resonanceValue;       // persiste avec la fiche
             if (typeof syncCharAlignment === 'function') syncCharAlignment();
             renderResonance();
+            if (typeof syncAlignEffects === 'function') syncAlignEffects();
             if (typeof refreshTeinteDisplays === 'function') {
                 const eff = document.getElementById('ctx-teinte-effect');
                 if (eff) { const t = teinteStatusText(); eff.textContent = t; eff.title = t; }
