@@ -892,12 +892,12 @@
         <div class="setting-item"><label>Max Excellent (5)</label><input type="number" id="s_max_c5" value="4" min="0"
             max="21" onchange="updateSettings()"></div>
         <div class="settings-section-title teal">Limites pyramide — Force</div>
-        <div class="setting-item"><label>Max Virtuose (5) — global</label><input type="number" id="s_max_virt" value="1" min="0"
-            max="20" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Max Maître (4) — verbes</label><input type="number" id="s_max_mverbe" value="2" min="0"
-            max="10" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Max Maître (4) — domaines</label><input type="number" id="s_max_mdom" value="2" min="0"
-            max="8" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Max Virtuose (5) — global</label><input type="number" id="s_max_virt" value="1"
+            min="0" max="20" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Max Maître (4) — verbes</label><input type="number" id="s_max_mverbe" value="2"
+            min="0" max="10" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Max Maître (4) — domaines</label><input type="number" id="s_max_mdom" value="2"
+            min="0" max="8" onchange="updateSettings()"></div>
       </div>
     </div>
 
@@ -944,7 +944,7 @@
     <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser</button>
 
     <div class="summary">
-      <h3>⚡ Résumé du vétéran</h3>
+      <h3>⚡ Résumé du Elysaria</h3>
       <div id="summaryContent"></div>
     </div>
 
@@ -961,46 +961,66 @@
       { id: 'art', name: 'Art', alt: 'Création · Artisanat · Danse' }, { id: 'athletisme', name: 'Athlétisme', alt: 'Acrobaties · Agilité · Endurance' }, { id: 'autorite', name: 'Autorité', alt: 'Commandement · Intimidation · Leadership' }, { id: 'bagarre', name: 'Bagarre', alt: 'Sabre laser · Pugilat · Vibrolame' }, { id: 'discretion', name: 'Discrétion', alt: 'Furtivité · Infiltration · Inaperçu' }, { id: 'dressage', name: 'Dressage', alt: 'Apprivoisement · Créatures exotiques · Monture' }, { id: 'eloquence', name: 'Éloquence', alt: 'Diplomatie · Négociation · Séduction' }, { id: 'erudition', name: 'Érudition', alt: 'Lore Jedi · Histoire · Cultures galactiques' }, { id: 'escamotage', name: 'Escamotage', alt: 'Larcin · Crochetage · Prestidigitation' }, { id: 'informatique', name: 'Informatique', alt: 'Slicing · Piratage · Systèmes' }, { id: 'ingenierie', name: 'Ingénierie', alt: 'Réparation · Modifications · Mécanique' }, { id: 'medecine', name: 'Médecine', alt: 'Chirurgie · Soins · Premiers secours' }, { id: 'pilotage', name: 'Pilotage', alt: 'Vaisseau · Speeder · Navette' }, { id: 'recherche', name: 'Recherche', alt: 'Enquête · Investigation · Pistage' }, { id: 'resilience', name: 'Résilience', alt: 'Sang-froid · Bravoure · Calme' }, { id: 'sagacite', name: 'Sagacité', alt: 'Empathie · Intuition · Perspicacité' }, { id: 'strategie', name: 'Stratégie', alt: 'Tactique · Ruse · Planification' }, { id: 'tir', name: 'Tir', alt: 'Blaster · Canonnier · Sniper' }, { id: 'tromperie', name: 'Tromperie', alt: 'Manipulation · Comédie · Bluff' }, { id: 'vigilance', name: 'Vigilance', alt: 'Perception · Instinct · Observation' },
     ];
     const FORCE_VERBS = [
-      { id: 'absorber', name: 'Absorber', alt: "Voler, Drainer, Amortir",
+      {
+        id: 'absorber', name: 'Absorber', alt: "Voler, Drainer, Amortir",
         neutre: "Prendre en soi une énergie ou une essence. Tutaminis, boire la chaleur d'un brasier, capter l'énergie d'un lieu de pouvoir.",
         light: 'Recueillir', lightDesc: "Aspirer un poison, prendre sur soi la douleur d'un blessé, encaisser une décharge destinée à un autre.",
-        dark: 'Drainer', darkDesc: "Siphonner la vitalité d'un être, voler la Force d'un adversaire." },
-      { id: 'amplifier', name: 'Amplifier', alt: 'Renforcer, Exalter, Transcender',
+        dark: 'Drainer', darkDesc: "Siphonner la vitalité d'un être, voler la Force d'un adversaire."
+      },
+      {
+        id: 'amplifier', name: 'Amplifier', alt: 'Renforcer, Exalter, Transcender',
         neutre: "Pousser une chose au-delà de ses limites. Force Speed, accélérer sa course, renforcer sa prise, aiguiser ses sens.",
         light: 'Exalter', lightDesc: "Force Valor, insuffler le courage à une troupe, décupler l'élan d'un allié.",
-        dark: 'Déchaîner', darkDesc: "Décupler sa force par la fureur, rendre une bête enragée, une puissance qui consume." },
-      { id: 'dissimuler', name: 'Dissimuler', alt: 'Cacher, Recouvrir, Voiler',
+        dark: 'Déchaîner', darkDesc: "Décupler sa force par la fureur, rendre une bête enragée, une puissance qui consume."
+      },
+      {
+        id: 'dissimuler', name: 'Dissimuler', alt: 'Cacher, Recouvrir, Voiler',
         neutre: "Soustraire à la perception. Force Cloak, masquer sa présence dans la Force, rendre un objet inaperçu.",
         light: 'Couvrir', lightDesc: "Masquer une retraite, voiler la présence d'un allié, effacer des traces pour épargner.",
-        dark: 'Occulter', darkDesc: "Cacher un piège, faire disparaître une preuve, masquer sa nature avant de frapper." },
-      { id: 'dissiper', name: 'Dissiper', alt: 'Désintégrer, Annuler, Trancher',
+        dark: 'Occulter', darkDesc: "Cacher un piège, faire disparaître une preuve, masquer sa nature avant de frapper."
+      },
+      {
+        id: 'dissiper', name: 'Dissiper', alt: 'Désintégrer, Annuler, Trancher',
         neutre: "Rompre la cohésion d'une chose. Effacer une empreinte de Force, dissoudre un sort inerte, désagréger un obstacle.",
         light: 'Délivrer', lightDesc: "Briser une entrave, défaire une malédiction, annuler un pouvoir néfaste.",
-        dark: 'Anéantir', darkDesc: "Force Destruction, désintégrer une structure ou un corps." },
-      { id: 'regenerer', name: 'Régénérer', alt: 'Guérir, Purifier, Équilibrer',
+        dark: 'Anéantir', darkDesc: "Force Destruction, désintégrer une structure ou un corps."
+      },
+      {
+        id: 'regenerer', name: 'Régénérer', alt: 'Guérir, Purifier, Équilibrer',
         neutre: "Restaurer l'intégrité d'une chose. Refermer une plaie, réparer un mécanisme, ressouder une structure, rendre ses forces.",
         light: 'Guérir', lightDesc: "Purger un poison, laver une corruption, délivrer d'une souillure.",
-        dark: 'Reconstituer', darkDesc: "Forcer un mourant à tenir, rappeler ce qui s'éteint, Dark Transfer." },
-      { id: 'mouvoir', name: 'Mouvoir', alt: 'Déplacer, Propulser, Contraindre',
+        dark: 'Reconstituer', darkDesc: "Forcer un mourant à tenir, rappeler ce qui s'éteint, Dark Transfer."
+      },
+      {
+        id: 'mouvoir', name: 'Mouvoir', alt: 'Déplacer, Propulser, Contraindre',
         neutre: "Déplacer par force cinétique. Télékinésie, Push, Pull, léviter, dégager un passage, actionner un mécanisme à distance.",
         light: 'Soutenir', lightDesc: "Rattraper une chute, soulever un débris qui écrase, porter un blessé.",
-        dark: 'Écraser', darkDesc: "Projeter contre un mur, broyer une gorge, précipiter dans le vide." },
-      { id: 'lier', name: 'Lier', alt: 'Connecter, Asservir, Entraver',
+        dark: 'Écraser', darkDesc: "Projeter contre un mur, broyer une gorge, précipiter dans le vide."
+      },
+      {
+        id: 'lier', name: 'Lier', alt: 'Connecter, Asservir, Entraver',
         neutre: "Établir une prise entre des êtres ou sur une volonté. Communication télépathique, lien avec une monture, contact mental à distance.",
         light: 'Unir', lightDesc: "Lien maître-padawan, méditation de bataille, partager sa force.",
-        dark: 'Asservir', darkDesc: "Domination mentale, marque de servitude, plier une volonté." },
-      { id: 'manifester', name: 'Manifester', alt: 'Barrières, Éclairs, Illusions',
+        dark: 'Asservir', darkDesc: "Domination mentale, marque de servitude, plier une volonté."
+      },
+      {
+        id: 'manifester', name: 'Manifester', alt: 'Barrières, Éclairs, Illusions',
         neutre: "Faire apparaître une forme de Force. Allumer une lueur, créer une illusion simple, dresser un écran d'énergie.",
         light: 'Invoquer', lightDesc: "Appeler une forme en s'accordant à la Force : barrière protectrice, lumière qui repousse l'ombre, éclair de justice.",
-        dark: 'Déverser', darkDesc: "Torrent d'éclairs, spectres de Force, forme qui submerge et terrifie." },
-      { id: 'percevoir', name: 'Percevoir', alt: 'Révéler, Sentir, Prévoir',
+        dark: 'Déverser', darkDesc: "Torrent d'éclairs, spectres de Force, forme qui submerge et terrifie."
+      },
+      {
+        id: 'percevoir', name: 'Percevoir', alt: 'Révéler, Sentir, Prévoir',
         neutre: "Connaître ce qui est caché, lointain ou à venir. Force Sense, détecter une présence, pressentir un danger, lire une trace.",
         light: 'Communier', lightDesc: "Ressentir un lieu vivant, empathie profonde, s'accorder à la Force.",
-        dark: 'Sonder', darkDesc: "Fouiller un esprit sans consentement, arracher un secret, lire pour trahir." },
-      { id: 'faconner', name: 'Façonner', alt: 'Altérer, Muter, Transformer',
+        dark: 'Sonder', darkDesc: "Fouiller un esprit sans consentement, arracher un secret, lire pour trahir."
+      },
+      {
+        id: 'faconner', name: 'Façonner', alt: 'Altérer, Muter, Transformer',
         neutre: "Donner une forme à une chose. Sculpter la pierre, modeler le métal, lever un vent, orienter une flamme.",
         light: 'Harmoniser', lightDesc: "Accorder un esprit troublé, guider une croissance, équilibrer un lieu.",
-        dark: 'Déformer', darkDesc: "Alchimie Sith, tordre une chair, fausser un souvenir." },
+        dark: 'Déformer', darkDesc: "Alchimie Sith, tordre une chair, fausser un souvenir."
+      },
     ];
     const FORCE_TARGETS = [
       { id: 'corps', name: 'Corps', alt: 'Anatomie, blessures, sens physiques' },
@@ -1027,7 +1047,7 @@
     };
     const PROFILES = {
       classique: { label: 'Personnage', budget: 100, attrMax: 7, compMax: 6, magicMax: 4, maxAttr: { 7: 2, 6: 3 }, maxComp: { 6: 1, 5: 3 }, maxVirtuose: 0, maxVerbMaitre: 1, maxTargetMaitre: 1 },
-      elysaria: { label: 'Élysaria (vétéran)', budget: 150, attrMax: 8, compMax: 7, magicMax: 5, maxAttr: { 8: 1, 7: 2, 6: 3 }, maxComp: { 7: 1, 6: 2, 5: 4 }, maxVirtuose: 1, maxVerbMaitre: 2, maxTargetMaitre: 2 },
+      elysaria: { label: 'Élysaria', budget: 175, attrMax: 8, compMax: 7, magicMax: 5, maxAttr: { 8: 1, 7: 2, 6: 3 }, maxComp: { 7: 1, 6: 2, 5: 4 }, maxVirtuose: 1, maxVerbMaitre: 2, maxTargetMaitre: 2 },
     };
     let currentProfile = 'classique';
     function applyProfile(pid) {
@@ -1067,8 +1087,8 @@
     function canIncreaseAttr(id) { const cur = attrValues[id], next = cur + 1; if (next > config.attrMax) return { ok: false, reason: 'Maximum atteint' }; const lim = config.maxAttr[next]; if (lim !== undefined && attrCountAt(next) >= lim) return { ok: false, reason: `Limite pyramide (${lim} max)` }; if (totalSpent() + attrCost(next) - attrCost(cur) > config.budget) return { ok: false, reason: 'Budget insuffisant' }; return { ok: true }; }
     function canIncreaseComp(id) { const cur = compValues[id], next = cur + 1; if (next > config.compMax) return { ok: false, reason: 'Maximum atteint' }; const lim = config.maxComp[next]; if (lim !== undefined && compCountAt(next) >= lim) return { ok: false, reason: `Limite pyramide (${lim} max)` }; if (totalSpent() + compCost(next) - compCost(cur) > config.budget) return { ok: false, reason: 'Budget insuffisant' }; return { ok: true }; }
     const magicCountAt = lv => verbCountAt(lv) + targetCountAt(lv);
-    function canIncreaseVerb(id) { const cur = verbValues[id], next = cur + 1; if (next > (config.magicMax || 5)) return { ok: false, reason: 'Maximum atteint' }; if (next === 5) { if (magicCountAt(5) >= config.maxVirtuose) return { ok: false, reason: config.maxVirtuose === 0 ? 'Virtuose réservé aux vétérans' : `Limite Virtuose (${config.maxVirtuose} max, verbes et cibles confondus)` }; } else if (next === 4) { if (verbCountAt(4) >= config.maxVerbMaitre) return { ok: false, reason: `Limite Maître verbes (${config.maxVerbMaitre} max)` }; } if (totalSpent() + magicCost(next) - magicCost(cur) > config.budget) return { ok: false, reason: 'Budget insuffisant' }; return { ok: true }; }
-    function canIncreaseTarget(id) { const cur = targetValues[id], next = cur + 1; if (next > (config.magicMax || 5)) return { ok: false, reason: 'Maximum atteint' }; if (next === 5) { if (magicCountAt(5) >= config.maxVirtuose) return { ok: false, reason: config.maxVirtuose === 0 ? 'Virtuose réservé aux vétérans' : `Limite Virtuose (${config.maxVirtuose} max, verbes et cibles confondus)` }; } else if (next === 4) { if (targetCountAt(4) >= config.maxTargetMaitre) return { ok: false, reason: `Limite Maître domaines (${config.maxTargetMaitre} max)` }; } if (totalSpent() + magicCost(next) - magicCost(cur) > config.budget) return { ok: false, reason: 'Budget insuffisant' }; return { ok: true }; }
+    function canIncreaseVerb(id) { const cur = verbValues[id], next = cur + 1; if (next > (config.magicMax || 5)) return { ok: false, reason: 'Maximum atteint' }; if (next === 5) { if (magicCountAt(5) >= config.maxVirtuose) return { ok: false, reason: config.maxVirtuose === 0 ? 'Virtuose réservé aux Elysarias' : `Limite Virtuose (${config.maxVirtuose} max, verbes et cibles confondus)` }; } else if (next === 4) { if (verbCountAt(4) >= config.maxVerbMaitre) return { ok: false, reason: `Limite Maître verbes (${config.maxVerbMaitre} max)` }; } if (totalSpent() + magicCost(next) - magicCost(cur) > config.budget) return { ok: false, reason: 'Budget insuffisant' }; return { ok: true }; }
+    function canIncreaseTarget(id) { const cur = targetValues[id], next = cur + 1; if (next > (config.magicMax || 5)) return { ok: false, reason: 'Maximum atteint' }; if (next === 5) { if (magicCountAt(5) >= config.maxVirtuose) return { ok: false, reason: config.maxVirtuose === 0 ? 'Virtuose réservé aux Elysarias' : `Limite Virtuose (${config.maxVirtuose} max, verbes et cibles confondus)` }; } else if (next === 4) { if (targetCountAt(4) >= config.maxTargetMaitre) return { ok: false, reason: `Limite Maître domaines (${config.maxTargetMaitre} max)` }; } if (totalSpent() + magicCost(next) - magicCost(cur) > config.budget) return { ok: false, reason: 'Budget insuffisant' }; return { ok: true }; }
 
     function renderAttrPyramid() { document.getElementById('attrPyramid').innerHTML = [[8, 'Prodigieux', true], [7, 'Exceptionnel', true], [6, 'Supérieur', false]].map(([lv, lb, isN]) => { const c = attrCountAt(lv), m = config.maxAttr[lv]; return `<span class="pyramid-counter">${lb} : <span class="count ${isN ? 'tier-new' : ''} ${c >= m ? 'maxed' : 'ok'}">${c}/${m}</span></span>`; }).join(''); }
     function renderCompPyramid() { document.getElementById('compPyramid').innerHTML = [[7, 'Maître', true], [6, 'Expert', false], [5, 'Excellent', false]].map(([lv, lb, isN]) => { const c = compCountAt(lv), m = config.maxComp[lv]; return `<span class="pyramid-counter">${lb} : <span class="count ${isN ? 'tier-new' : ''} ${c >= m ? 'maxed' : 'ok'}">${c}/${m}</span></span>`; }).join(''); }
