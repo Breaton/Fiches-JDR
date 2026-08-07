@@ -3397,9 +3397,8 @@
                             <div id="foc-usages"
                                 style="display:none; grid-column:1 / -1; margin-top:6px; padding:8px 10px; background:rgba(0,168,255,0.04); border:1px solid rgba(0,168,255,0.15); border-radius:3px; font-size:0.76em; line-height:1.5; color:var(--light-steel);">
                                 <div style="margin-bottom:6px;"><strong>🎲 Action tactique</strong> : jet de compétence
-                                    adapté contre la DC tactique de la confrontation. ajoute un Bonus tactique à un
-                                    prochain jet de son choix pendant le round ou celui de son allié égal à l'écart avec
-                                    la DC.</div>
+                                    adapté contre la DC tactique de la confrontation. L'écart du jet réduit le cran du
+                                    dé de l'encounter sur sa prochaine action de 1 tout les 3 d'écart sur le jet.</div>
                                 <div style="margin-bottom:6px;"><strong>🛡 Protéger un allié</strong> : un allié à 5 ft
                                     prend sa place dans une confrontation défensive, ou tente d'intercepter un sort à
                                     distance sans prendre la place dans la confrontation.</div>
@@ -3416,12 +3415,14 @@
                             <span class="ctx-effect" id="ctx-saber-type-effect"></span>
                         </div>
                         <div class="ctx-row">
-                            <span class="ctx-label ctx-color-label" id="ctx-color1-label"><span class="ctx-color-dot" id="ctx-color1-dot"></span>Couleur 1</span>
+                            <span class="ctx-label ctx-color-label" id="ctx-color1-label"><span class="ctx-color-dot"
+                                    id="ctx-color1-dot"></span>Couleur 1</span>
                             <span class="ctx-value" id="ctx-color-name">Aucune</span>
                             <span class="ctx-effect" id="ctx-color-effect"></span>
                         </div>
                         <div class="ctx-row">
-                            <span class="ctx-label ctx-color-label" id="ctx-color2-label"><span class="ctx-color-dot" id="ctx-color2-dot"></span>Couleur 2</span>
+                            <span class="ctx-label ctx-color-label" id="ctx-color2-label"><span class="ctx-color-dot"
+                                    id="ctx-color2-dot"></span>Couleur 2</span>
                             <span class="ctx-value" id="ctx-color2-name">Aucune</span>
                             <span class="ctx-effect" id="ctx-color2-effect"></span>
                         </div>
@@ -3432,7 +3433,8 @@
                                     style="cursor:pointer; color:#7fd4ff; user-select:none;" id="align-effects-toggle">▸
                                     Voir les effets d'alignement actifs</span></span>
                             <div id="align-effects"
-                                style="display:none; grid-column:1 / -1; margin-top:6px; padding:8px 10px; background:rgba(0,168,255,0.04); border:1px solid rgba(0,168,255,0.15); border-radius:3px; font-size:0.76em; line-height:1.5; color:var(--light-steel);"></div>
+                                style="display:none; grid-column:1 / -1; margin-top:6px; padding:8px 10px; background:rgba(0,168,255,0.04); border:1px solid rgba(0,168,255,0.15); border-radius:3px; font-size:0.76em; line-height:1.5; color:var(--light-steel);">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -3680,7 +3682,7 @@
             },
             niman: {
                 name: "Forme VI - Niman", attribute: "Attribut du verbe", posture: "neutre",
-                effect: "Lorsque le porteur accompagne son attaque au sabre d'un pouvoir de Force ou maintient un pouvoir de durée, il peut résoudre son attaque sur l'attribut du verbe de ce pouvoir. Si les deux conditions sont réunies, il choisit lequel des deux verbes employer."
+                effect: "Lorsque le porteur accompagne son attaque au sabre d'un pouvoir de Force ou maintient un pouvoir de durée, il peut résoudre son attaque sur l'attribut du verbe de ce pouvoir. Si les deux conditions sont réunies, il choisit lequel des deux verbes employer. De plus il peut utiliser un pouvoir de durée d'activation en court pour accompagner une attaque au sabre au lieu de faire un double jet. "
             },
             juyo: {
                 name: "Forme VII - Juyo", attribute: "Puissance", posture: "pression",

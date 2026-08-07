@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestionnaire d'Encounter</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --midnight:#0f1729;
+  --deep-navy:#1a2744;
+  --slate-blue:#2d3a5c;
+  --silver-mist:#8b9dc3;
+  --moonlight:#c9d4e8;
+  --pure-white:#f8fafc;
+  --eclat-gold:#d4a84b;
+  --success-green:#4a9b6e;
+  --soul-blue:#4a90c2;
+  --ombre-purple:#6b4c9a;
+  --vitality-red:#c45c5c;
+  --warm-orange:#d97a4a;
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Nunito Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:var(--font-body);
+  background:linear-gradient(145deg,var(--midnight) 0%,var(--deep-navy) 50%,var(--slate-blue) 100%);
+  background-attachment:fixed;min-height:100vh;padding:14px;color:var(--deep-navy);
+}
+.shell{max-width:1560px;margin:0 auto}
+
+/* ===== BARRE HAUTE ===== */
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;padding:0 2px}
+.topbar h1{font-family:var(--font-display);font-size:1.5rem;font-weight:700;color:var(--pure-white);line-height:1;white-space:nowrap}
+.topbar h1 span{color:var(--eclat-gold)}
+.encounter-name{
+  flex:1 1 200px;min-width:150px;background:rgba(248,250,252,.08);
+  border:1px solid rgba(201,212,232,.25);border-radius:8px;padding:7px 11px;
+  color:var(--pure-white);font-family:var(--font-display);font-size:1rem;font-weight:600;
+}
+.encounter-name::placeholder{color:rgba(201,212,232,.45)}
+.encounter-name:focus{outline:2px solid var(--eclat-gold);outline-offset:1px}
+.ghost-btn{
+  background:rgba(248,250,252,.08);border:1px solid rgba(201,212,232,.28);
+  color:var(--moonlight);border-radius:7px;padding:7px 11px;cursor:pointer;
+  font-family:var(--font-body);font-size:.74rem;font-weight:700;letter-spacing:.3px;
+  transition:all .16s ease;white-space:nowrap;
+}
+.ghost-btn:hover{background:rgba(212,168,75,.18);border-color:var(--eclat-gold);color:var(--eclat-gold)}
+.ghost-btn:focus-visible{outline:2px solid var(--eclat-gold);outline-offset:2px}
+
+/* ===== BANDEAU FUSIONNÉ ===== */
+.board{
+  background:var(--pure-white);border-radius:10px;padding:7px 12px;
+  box-shadow:0 5px 20px rgba(0,0,0,.2);margin-bottom:10px;
+}
+.board-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;min-height:32px}
+.board-row.init{border-top:1px solid rgba(139,157,195,.2);margin-top:5px;padding-top:6px}
+.lbl{
+  font-size:.62rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--silver-mist);flex-shrink:0;white-space:nowrap;
+}
+.lbl b{
+  display:inline-flex;align-items:center;justify-content:center;min-width:15px;height:15px;
+  border-radius:4px;background:var(--slate-blue);color:#fff;font-size:.6rem;margin-left:5px;padding:0 3px;
+}
+.vrule{width:1px;height:18px;background:rgba(139,157,195,.3);flex-shrink:0}
+.notes{
+  flex:1;min-width:140px;border:1px solid rgba(139,157,195,.3);border-radius:6px;
+  padding:5px 8px;font-family:var(--font-body);font-size:.82rem;font-weight:600;
+  color:var(--deep-navy);background:rgba(201,212,232,.14);
+}
+.notes:focus{outline:2px solid var(--soul-blue)}
+.res-track{display:flex;align-items:center;gap:4px}
+.res-btn{
+  width:23px;height:23px;border-radius:5px;border:1px solid rgba(139,157,195,.4);
+  background:rgba(201,212,232,.2);cursor:pointer;font-size:.88rem;font-weight:700;
+  color:var(--deep-navy);line-height:1;transition:all .14s ease;
+}
+.res-btn:hover{background:var(--deep-navy);color:var(--pure-white)}
+.res-val{font-family:var(--font-display);font-size:1.3rem;font-weight:700;min-width:26px;text-align:center;line-height:1}
+.res-val.depleted{color:var(--vitality-red)}
+.res-max{
+  width:44px;text-align:center;border:1px solid rgba(139,157,195,.35);border-radius:5px;
+  padding:3px;font-family:var(--font-body);font-size:.8rem;font-weight:600;
+  color:var(--deep-navy);background:rgba(201,212,232,.14);
+}
+.res-max:focus{outline:2px solid var(--soul-blue)}
+.res-sep{color:var(--silver-mist);font-size:.85rem}
+
+/* créneaux d'initiative */
+.slots{display:flex;gap:5px;flex-wrap:wrap;flex:1;min-width:180px}
+.slot{
+  display:flex;align-items:center;gap:3px;padding:2px 3px 2px 2px;border-radius:6px;
+  border:1px solid rgba(139,157,195,.3);background:rgba(201,212,232,.16);
+  cursor:pointer;transition:all .15s ease;
+}
+.slot:hover{border-color:var(--slate-blue)}
+.slot.active{border-color:var(--eclat-gold);background:rgba(212,168,75,.16);box-shadow:0 0 0 1px var(--eclat-gold)}
+.slot .n{
+  width:16px;height:20px;border-radius:4px;background:var(--slate-blue);color:#fff;
+  font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.slot.active .n{background:var(--eclat-gold);color:var(--midnight)}
+.slot input{
+  width:36px;border:none;border-radius:4px;padding:2px 1px;text-align:center;
+  font-family:var(--font-display);font-size:1.05rem;font-weight:700;
+  color:var(--deep-navy);background:var(--pure-white);
+}
+.slot input:focus{outline:2px solid var(--soul-blue)}
+.slot select{
+  border:none;border-radius:4px;padding:2px 1px;max-width:112px;
+  font-family:var(--font-body);font-size:.68rem;font-weight:600;
+  color:var(--slate-blue);background:var(--pure-white);cursor:pointer;
+}
+.slot select:focus{outline:2px solid var(--soul-blue)}
+.slot .x{
+  width:15px;height:20px;border:none;background:transparent;cursor:pointer;
+  color:var(--silver-mist);font-size:.6rem;line-height:1;border-radius:4px;padding:0;flex-shrink:0;
+}
+.slot .x:hover{background:var(--vitality-red);color:#fff}
+.slots-empty{font-size:.72rem;color:var(--silver-mist);font-weight:600;align-self:center}
+.mini{
+  background:transparent;border:1px solid rgba(139,157,195,.35);color:var(--slate-blue);
+  border-radius:6px;padding:4px 9px;font-size:.66rem;font-weight:800;cursor:pointer;
+  letter-spacing:.4px;transition:all .16s ease;flex-shrink:0;white-space:nowrap;
+}
+.mini:hover{border-color:var(--slate-blue);background:rgba(45,58,92,.09)}
+
+/* ===== TIROIR DE RÉFÉRENCE ===== */
+.ghost-btn.ref{border-color:rgba(212,168,75,.5);color:var(--eclat-gold)}
+.scrim{
+  position:fixed;inset:0;background:rgba(15,23,41,.5);opacity:0;pointer-events:none;
+  transition:opacity .22s ease;z-index:40;
+}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;height:100vh;width:355px;max-width:88vw;z-index:41;
+  background:var(--pure-white);box-shadow:-6px 0 28px rgba(0,0,0,.35);
+  transform:translateX(102%);transition:transform .26s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+.drawer.on{transform:none}
+.drawer-head{
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+  padding:14px 16px 11px;border-bottom:1px solid rgba(139,157,195,.25);
+  font-family:var(--font-display);font-size:1.25rem;font-weight:700;color:var(--deep-navy);
+}
+.drawer-x{
+  width:26px;height:26px;border-radius:6px;border:1px solid rgba(139,157,195,.35);
+  background:transparent;color:var(--silver-mist);cursor:pointer;font-size:.75rem;line-height:1;
+}
+.drawer-x:hover{background:var(--vitality-red);border-color:var(--vitality-red);color:#fff}
+.drawer-body{padding:14px 16px 24px;overflow-y:auto;flex:1}
+.ref-block{margin-bottom:20px}
+.ref-block:last-child{margin-bottom:0}
+.ref-title{
+  font-size:.63rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--silver-mist);margin-bottom:6px;display:flex;align-items:baseline;gap:6px;
+}
+.ref-title span{
+  font-size:.55rem;letter-spacing:.4px;text-transform:none;color:var(--ombre-purple);font-weight:700;
+}
+table.bareme{width:100%;border-collapse:collapse;font-size:.8rem}
+table.bareme td{padding:3px 5px;border-bottom:1px solid rgba(139,157,195,.16)}
+table.bareme td:last-child{text-align:right;font-weight:800;font-family:var(--font-display);font-size:1rem}
+table.bareme tr:last-child td{border-bottom:none}
+table.crans{width:100%;border-collapse:collapse;font-size:.75rem}
+table.crans th{
+  text-align:left;font-size:.55rem;font-weight:800;letter-spacing:.7px;text-transform:uppercase;
+  color:var(--silver-mist);padding:0 4px 4px;
+}
+table.crans td{padding:3px 4px;border-bottom:1px solid rgba(139,157,195,.15);white-space:nowrap}
+table.crans tr:last-child td{border-bottom:none}
+table.crans .cn{font-family:var(--font-display);font-size:1rem;font-weight:700;text-align:center}
+table.crans .cs{font-weight:800;letter-spacing:1.3px;text-align:center;font-size:.65rem}
+table.crans .cf{font-family:var(--font-display);font-size:.9rem;font-weight:600;letter-spacing:.6px}
+table.crans .cf b{color:var(--eclat-gold)}
+table.crans .cavg{font-weight:700;color:var(--silver-mist);text-align:right;font-size:.7rem}
+.hint{font-size:.68rem;color:var(--slate-blue);font-weight:500;margin-top:10px;line-height:1.5}
+.hint b{color:var(--deep-navy)}
+
+/* ===== COLONNES ===== */
+.columns{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+.col-head{display:flex;align-items:center;gap:9px;margin-bottom:8px;padding:0 2px}
+.col-head h2{font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--pure-white)}
+.col-head .rule{flex:1;height:1px;background:rgba(201,212,232,.22)}
+.col-head .mini{
+  background:transparent;border:1px solid rgba(201,212,232,.28);color:var(--moonlight);
+  border-radius:6px;padding:4px 9px;font-size:.66rem;font-weight:800;cursor:pointer;
+  letter-spacing:.4px;transition:all .16s ease;
+}
+.col-head .mini:hover{border-color:var(--eclat-gold);color:var(--eclat-gold)}
+
+/* ===== CARTE ===== */
+.card{
+  background:var(--pure-white);border-radius:9px;padding:8px 10px;
+  box-shadow:0 3px 12px rgba(0,0,0,.16);margin-bottom:7px;border-left:3px solid var(--slate-blue);
+}
+.card.attack{border-left-color:var(--vitality-red)}
+.card.target{border-left-color:var(--soul-blue)}
+.row1{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.card-idx{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--silver-mist);line-height:1;min-width:13px;text-align:center}
+.card-name{
+  flex:1;min-width:64px;border:none;border-bottom:1px solid transparent;background:transparent;
+  font-family:var(--font-display);font-size:1.05rem;font-weight:600;color:var(--deep-navy);padding:1px 2px;
+}
+.card-name:hover{border-bottom-color:rgba(139,157,195,.35)}
+.card-name:focus{outline:none;border-bottom-color:var(--eclat-gold)}
+.card-name::placeholder{color:rgba(139,157,195,.65);font-style:italic}
+.icon-btn{
+  width:22px;height:22px;border-radius:5px;border:1px solid rgba(139,157,195,.3);
+  background:transparent;color:var(--silver-mist);cursor:pointer;font-size:.72rem;
+  line-height:1;transition:all .14s ease;flex-shrink:0;
+}
+.icon-btn:hover{background:var(--vitality-red);border-color:var(--vitality-red);color:#fff}
+.icon-btn.dup:hover{background:var(--soul-blue);border-color:var(--soul-blue)}
+.icon-btn.exp:hover{background:var(--slate-blue);border-color:var(--slate-blue);color:#fff}
+.icon-btn.exp span{display:inline-block;transition:transform .18s ease}
+.card.open .icon-btn.exp span{transform:rotate(180deg)}
+
+/* cran de variance : sélecteur unique */
+.cran{
+  display:flex;align-items:center;gap:1px;border-radius:7px;padding:1px 2px;
+  flex-shrink:0;color:#fff;transition:background .16s ease;
+}
+.cran button{
+  width:18px;height:22px;border:none;background:transparent;cursor:pointer;
+  color:inherit;opacity:.7;font-size:.68rem;line-height:1;border-radius:5px;padding:0;
+}
+.cran button:hover:not(:disabled){background:rgba(255,255,255,.22);opacity:1}
+.cran button:disabled{opacity:.22;cursor:default}
+.cran button:focus-visible{outline:2px solid var(--eclat-gold);outline-offset:1px}
+.cran .v{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-width:38px;line-height:1;cursor:pointer;background:transparent;border:none;
+  color:inherit;padding:1px 2px;border-radius:5px;font-family:inherit;
+}
+.cran .v:hover{background:rgba(255,255,255,.18)}
+.cran .v:focus-visible{outline:2px solid var(--eclat-gold);outline-offset:1px}
+.cran .n{font-family:var(--font-display);font-size:1.05rem;font-weight:700}
+.cran .s{font-size:.5rem;font-weight:800;letter-spacing:1px;opacity:.72;margin-top:1px;height:6px}
+.cran.light,.cran.light .v{color:var(--midnight)}
+.cran.light button:hover:not(:disabled),.cran.light .v:hover{background:rgba(15,23,41,.14)}
+
+/* pastilles de DC lançables */
+.row2{display:flex;align-items:stretch;gap:5px;margin-top:6px;flex-wrap:wrap}
+.dcpill{
+  flex:1;min-width:86px;display:flex;align-items:center;gap:7px;
+  border:1px solid rgba(139,157,195,.32);background:rgba(201,212,232,.16);
+  border-radius:7px;padding:4px 9px;cursor:pointer;text-align:left;
+  font-family:var(--font-body);transition:all .16s ease;
+}
+.dcpill:hover{border-color:var(--slate-blue);background:rgba(201,212,232,.3)}
+.dcpill:focus-visible{outline:2px solid var(--eclat-gold);outline-offset:1px}
+.dcpill .tag{font-size:.58rem;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--silver-mist);line-height:1.2}
+.dcpill .eso-dot{color:var(--ombre-purple)}
+.dcpill .val{font-family:var(--font-display);font-size:1.5rem;font-weight:700;line-height:1;color:var(--deep-navy);margin-left:auto}
+.dcpill .note{font-size:.6rem;font-weight:700;color:var(--silver-mist);line-height:1.2;white-space:nowrap}
+.dcpill.rolled{border-color:transparent;color:#fff}
+.dcpill.rolled .tag,.dcpill.rolled .note{color:rgba(255,255,255,.78)}
+.dcpill.rolled .val{color:#fff;animation:pop .3s ease}
+.dcpill.rolled.light,.dcpill.rolled.light .val{color:var(--midnight)}
+.dcpill.rolled.light .tag,.dcpill.rolled.light .note{color:rgba(15,23,41,.62)}
+@keyframes pop{0%{transform:scale(.75);opacity:.3}60%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
+
+/* cadence de l'attaque */
+.rate{
+  display:flex;align-items:center;gap:4px;border:1px solid rgba(139,157,195,.3);
+  border-radius:7px;background:rgba(201,212,232,.14);padding:3px 7px;flex-shrink:0;
+}
+.rate .k{font-size:.55rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--silver-mist);line-height:1.1}
+.rate input{
+  width:34px;border:1px solid rgba(139,157,195,.35);border-radius:5px;padding:2px;
+  text-align:center;font-family:var(--font-display);font-size:1rem;font-weight:700;
+  color:var(--deep-navy);background:var(--pure-white);
+}
+.rate input:focus{outline:2px solid var(--soul-blue)}
+.rate .asg{
+  min-width:17px;height:17px;border-radius:5px;font-size:.62rem;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  background:rgba(139,157,195,.28);color:var(--slate-blue);padding:0 3px;
+}
+.rate .asg.ok{background:rgba(74,155,110,.22);color:#2f6b4a}
+.rate .asg.over{background:var(--vitality-red);color:#fff}
+
+/* ===== ZONE DÉPLIÉE ===== */
+.detail{display:none;margin-top:9px;padding-top:9px;border-top:1px solid rgba(139,157,195,.2)}
+.card.open .detail{display:block}
+.detail-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+.detail-head .vname{font-size:.68rem;font-weight:800;letter-spacing:.4px}
+.detail-head .avg{font-size:.66rem;font-weight:700;color:var(--silver-mist);margin-left:auto}
+.rail{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-bottom:9px}
+.face{
+  border-radius:5px;padding:5px 1px 3px;text-align:center;background:rgba(201,212,232,.26);
+  font-family:var(--font-display);font-size:.95rem;font-weight:700;color:var(--slate-blue);
+  line-height:1;transition:all .18s ease;
+}
+.face .pip{display:block;font-family:var(--font-body);font-size:.5rem;font-weight:800;color:var(--silver-mist);margin-top:2px}
+.face.peak{background:rgba(212,168,75,.2);color:#8a6a1e}
+.face.peak .pip{color:#b08a2e}
+.face.hit{transform:translateY(-2px) scale(1.08);box-shadow:0 4px 10px rgba(15,23,41,.28);color:#fff}
+.face.hit .pip{color:rgba(255,255,255,.72)}
+.face.hit.light,.face.hit.light .pip{color:var(--midnight)}
+
+.setrow{display:flex;align-items:center;gap:6px;margin-bottom:5px;flex-wrap:wrap}
+.setrow .sl{font-size:.6rem;font-weight:800;letter-spacing:.7px;text-transform:uppercase;color:var(--silver-mist);min-width:56px}
+.dc-input{
+  width:46px;border:1px solid rgba(139,157,195,.4);border-radius:5px;padding:3px 4px;text-align:center;
+  font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--deep-navy);background:var(--pure-white);
+}
+.dc-input:focus{outline:2px solid var(--soul-blue)}
+.dc-preset{
+  border:1px solid rgba(139,157,195,.4);border-radius:5px;padding:3px 4px;
+  font-family:var(--font-body);font-size:.68rem;font-weight:600;color:var(--slate-blue);
+  background:var(--pure-white);max-width:108px;
+}
+.eso-toggle{
+  display:flex;align-items:center;gap:4px;font-size:.62rem;font-weight:800;color:var(--ombre-purple);
+  cursor:pointer;user-select:none;padding:3px 6px;border-radius:5px;
+  border:1px solid rgba(107,76,154,.28);background:rgba(107,76,154,.06);
+}
+.eso-toggle.on{background:rgba(107,76,154,.18);border-color:var(--ombre-purple)}
+.eso-toggle input{accent-color:var(--ombre-purple);cursor:pointer;margin:0}
+
+.fields{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.fields .half{grid-column:span 2}
+.fields .full{grid-column:1/-1}
+.f{display:flex;flex-direction:column;gap:2px}
+.f label{font-size:.57rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--silver-mist)}
+.f input{
+  border:1px solid rgba(139,157,195,.32);border-radius:5px;padding:4px 6px;
+  font-family:var(--font-body);font-size:.79rem;font-weight:600;color:var(--deep-navy);
+  background:rgba(201,212,232,.13);width:100%;
+}
+.f input:focus{outline:2px solid var(--soul-blue);background:var(--pure-white)}
+.f input::placeholder{color:rgba(139,157,195,.75);font-weight:400}
+.hint{
+  font-size:.63rem;color:var(--silver-mist);font-weight:600;margin-top:6px;line-height:1.45;
+}
+
+.add-btn{
+  width:100%;padding:8px;border-radius:8px;cursor:pointer;
+  border:1px dashed rgba(201,212,232,.32);background:rgba(248,250,252,.05);
+  color:var(--moonlight);font-family:var(--font-body);font-size:.75rem;font-weight:800;
+  letter-spacing:.5px;transition:all .16s ease;margin-bottom:14px;
+}
+.add-btn:hover{background:rgba(212,168,75,.13);border-color:var(--eclat-gold);color:var(--eclat-gold)}
+
+/* ===== JOURNAL ===== */
+details.panel{background:var(--pure-white);border-radius:10px;box-shadow:0 5px 20px rgba(0,0,0,.2);overflow:hidden}
+details.panel summary{
+  cursor:pointer;padding:9px 14px;font-weight:800;font-size:.7rem;letter-spacing:1px;
+  text-transform:uppercase;color:var(--slate-blue);list-style:none;display:flex;align-items:center;gap:8px;
+}
+details summary::-webkit-details-marker{display:none}
+details.panel summary::before{content:'\25b8';color:var(--eclat-gold);transition:transform .18s ease}
+details.panel[open] summary::before{transform:rotate(90deg)}
+.log-body{padding:0 14px 12px;max-height:190px;overflow-y:auto}
+.log-line{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:.76rem;border-bottom:1px solid rgba(139,157,195,.13)}
+.log-line:last-child{border-bottom:none}
+.log-chip{font-family:var(--font-display);font-size:1rem;font-weight:700;min-width:34px;text-align:center;padding:0 6px;border-radius:5px;color:#fff}
+.log-chip.light{color:var(--midnight)}
+.log-src{font-weight:700;color:var(--deep-navy);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log-meta{color:var(--silver-mist);font-size:.68rem;font-weight:600;white-space:nowrap}
+.log-empty{color:var(--silver-mist);font-size:.78rem;padding:4px 0 2px}
+
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:rgba(201,212,232,.18);border-radius:3px}
+::-webkit-scrollbar-thumb{background:var(--silver-mist);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--slate-blue)}
+
+@media (max-width:1080px){
+  .columns{grid-template-columns:1fr}
+  .bareme-body{grid-template-columns:1fr}
+  .fields{grid-template-columns:repeat(2,1fr)}
+  .fields .half{grid-column:span 1}
+}
+@media (max-width:600px){
+  body{padding:9px}
+  .fields{grid-template-columns:1fr}
+  .fields .half,.fields .full{grid-column:1/-1}
+  .card-name{flex:1 1 100%;order:-1}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="topbar">
+    <h1>Encounter<span>.</span></h1>
+    <input class="encounter-name" id="enc-name" placeholder="Nom de la confrontation">
+    <button class="ghost-btn" onclick="setAllOpen(false)">Tout replier</button>
+    <button class="ghost-btn" onclick="setAllOpen(true)">Tout déplier</button>
+    <button class="ghost-btn" onclick="newRound()">Effacer les jets</button>
+    <button class="ghost-btn" onclick="exportJSON()">Exporter</button>
+    <button class="ghost-btn" onclick="document.getElementById('import-file').click()">Importer</button>
+    <button class="ghost-btn" onclick="resetAll()">Nouvel encounter</button>
+    <button class="ghost-btn ref" onclick="toggleRef()" id="ref-btn">Barèmes</button>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
+  </div>
+
+  <div class="scrim" id="scrim" onclick="toggleRef(false)"></div>
+  <aside class="drawer" id="drawer" aria-label="Barèmes de référence">
+    <div class="drawer-head">
+      <span>Barèmes</span>
+      <button class="drawer-x" onclick="toggleRef(false)" aria-label="Fermer">✕</button>
+    </div>
+    <div class="drawer-body">
+      <div class="ref-block">
+        <div class="ref-title">DC Compétences</div>
+        <table class="bareme"><tbody id="bar-comp"></tbody></table>
+      </div>
+      <div class="ref-block">
+        <div class="ref-title">DC Obstacles ésotériques<span>dé doublé</span></div>
+        <table class="bareme"><tbody id="bar-eso"></tbody></table>
+      </div>
+      <div class="ref-block">
+        <div class="ref-title">Échelle des crans</div>
+        <table class="crans">
+          <thead><tr><th>Cran</th><th></th><th>Faces du d6</th><th>Moy.</th></tr></thead>
+          <tbody id="cran-table"></tbody>
+        </table>
+        <div class="hint">
+          Un seul cran de −4 à +4, ajustable à tout moment. Cliquer sur sa valeur le ramène au neutre.<br><br>
+          <b>Situation</b> : terrain, surprise, nombre, blessures, moral, action tactique réussie.<br>
+          <b>Approche</b> : faiblesse majeure −2, faiblesse −1, rien 0, résistance +1, immunité +2.<br><br>
+          Les deux familles de raisons se cumulent dans le cran que tu poses.
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="board">
+    <div class="board-row">
+      <span class="lbl">Résistance</span>
+      <div class="res-track">
+        <button class="res-btn" onclick="bumpRes(-1)" aria-label="Retirer 1">−</button>
+        <div class="res-val" id="res-val">0</div>
+        <span class="res-sep">/</span>
+        <input class="res-max" id="res-max" type="number" min="0" value="0"
+               oninput="state.resMax=+this.value||0;if(state.resCur>state.resMax)state.resCur=state.resMax;paintRes();save()">
+        <button class="res-btn" onclick="bumpRes(1)" aria-label="Ajouter 1">+</button>
+        <button class="res-btn" onclick="fillRes()" title="Remplir" aria-label="Remplir">↺</button>
+      </div>
+      <span class="vrule"></span>
+      <span class="lbl">Notes</span>
+      <input class="notes" id="gen-notes" placeholder="Terrain, enjeux, conditions de fuite…"
+             oninput="state.notes=this.value;save()">
+    </div>
+    <div class="board-row init">
+      <span class="lbl">Initiative<b id="apt-count">0</b></span>
+      <div class="slots" id="slots"></div>
+      <button class="mini" onclick="addSlot()" title="Ajouter un créneau">+ Créneau</button>
+      <button class="mini" onclick="sortSlots()" title="Ranger par initiative décroissante">Trier</button>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div>
+      <div class="col-head">
+        <h2>Attaques</h2><div class="rule"></div>
+        <button class="mini" onclick="setColOpen('a',false)">Replier</button>
+        <button class="mini" onclick="setColOpen('a',true)">Déplier</button>
+      </div>
+      <div id="attacks"></div>
+      <button class="add-btn" onclick="addAttack()">+ Attaque</button>
+    </div>
+    <div>
+      <div class="col-head">
+        <h2>Cibles</h2><div class="rule"></div>
+        <button class="mini" onclick="setColOpen('t',false)">Replier</button>
+        <button class="mini" onclick="setColOpen('t',true)">Déplier</button>
+      </div>
+      <div id="targets"></div>
+      <button class="add-btn" onclick="addTarget()">+ Cible</button>
+    </div>
+  </div>
+
+  <details class="panel" open>
+    <summary>Journal des jets</summary>
+    <div class="log-body" id="log-body"><div class="log-empty">Aucun jet pour l'instant.</div></div>
+  </details>
+
+</div>
+
+<script>
+/* ============ ÉCHELLE DES CRANS ============ */
+/* faces : n−2, n−1, n, n, n+1, n+3, moyenne toujours n + 0,17 */
+const CRANS = {};
+[
+  [-4,"Désavantage extrême","−−−−","#7d2f2f",0],
+  [-3,"Désavantage majeur", "−−−", "#a34444",0],
+  [-2,"Désavantage",        "−−",  "#c45c5c",0],
+  [-1,"Désavantage mineur", "−",   "#d97a4a",0],
+  [ 0,"Neutre",             "=",   "#2d3a5c",0],
+  [ 1,"Avantage mineur",    "+",   "#4a90c2",0],
+  [ 2,"Avantage",           "++",  "#4a9b6e",0],
+  [ 3,"Avantage majeur",    "+++", "#c9a227",1],
+  [ 4,"Avantage extrême",   "++++","#d4a84b",1]
+].forEach(([n,name,sym,color,light]) => {
+  CRANS[n] = {n, name, sym, color, light:!!light,
+              faces:[n-2, n-1, n, n, n+1, n+3],
+              avg:(n + 1/6)};
+});
+const CRAN_MIN = -4, CRAN_MAX = 4;
+
+const clampCran = v => Math.max(CRAN_MIN, Math.min(CRAN_MAX, v));
+const cranOf = o => clampCran(o.cran || 0);
+const fmtAvg = v => (v < 0 ? "−" : "+") + Math.abs(v).toFixed(2).replace(".", ",");
+const sgn = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v);
+
+const DC_COMP = [["Très facile",2],["Facile",3],["Standard",5],["Difficile",7],
+                 ["Très difficile",9],["Quasi impossible",12],["Absurde",15]];
+const DC_ESO  = [["Très facile",4],["Facile",6],["Standard",8],["Difficile",12],
+                 ["Très difficile",16],["Quasi impossible",22],["Absurde",25]];
+
+const DEF_LINES = [
+  {field:"dcPhys", eso:"esoPhys", tag:"Phys", label:"Physique"},
+  {field:"dcMent", eso:"esoMent", tag:"Ment", label:"Mentale"},
+  {field:"dcTac",  eso:"esoTac",  tag:"Tact", label:"Tactique"}
+];
+
+/* ============ ÉTAT ============ */
+let uid = 1;
+const nid = () => "k" + (uid++);
+
+function newAttack(){
+  return {id:nid(), name:"", dc:5, eso:false, cran:0, open:false,
+          maxPerTurn:1, count:"", type:"", effect:"", dmgBase:"", dmgMax:"", forces:""};
+}
+function newTarget(){
+  return {id:nid(), name:"", cran:0, open:false,
+          dcPhys:5, esoPhys:false, dcMent:5, esoMent:false, dcTac:5, esoTac:false,
+          armor:"", dmgMax:"", effect:"", weakness:"", resMax:0, resCur:0};
+}
+let state = {name:"", notes:"", atkPerTurn:1, initSlots:[{init:10,atkId:""}], activeSlot:-1,
+             resMax:0, resCur:0, attacks:[newAttack()], targets:[newTarget()], log:[]};
+let rolls = {};
+
+/* ============ CRÉNEAUX D'INITIATIVE ============ */
+const MAX_SLOTS = 12;
+
+/* le nombre de creneaux EST le nombre d'attaques par tour */
+function syncSlots(){
+  state.initSlots = (state.initSlots || []).slice(0, MAX_SLOTS);
+  state.atkPerTurn = state.initSlots.length;
+  if(state.activeSlot >= state.initSlots.length) state.activeSlot = -1;
+}
+function addSlot(){
+  if(state.initSlots.length >= MAX_SLOTS) return;
+  const last = state.initSlots[state.initSlots.length - 1];
+  state.initSlots.push({init: last ? Math.max(0, (+last.init || 0) - 5) : 10, atkId:""});
+  syncSlots(); renderSlots(); renderAttacks(); save();
+}
+function removeSlot(i){
+  state.initSlots.splice(i, 1);
+  if(state.activeSlot === i) state.activeSlot = -1;
+  else if(state.activeSlot > i) state.activeSlot--;
+  syncSlots(); renderSlots(); renderAttacks(); save();
+}
+function setSlotInit(i, v){
+  if(!state.initSlots[i]) return;
+  state.initSlots[i].init = v; save();
+}
+function setSlotAtk(i, id){
+  if(!state.initSlots[i]) return;
+  state.initSlots[i].atkId = id;
+  renderAttacks(); save();
+}
+function setActiveSlot(i){
+  state.activeSlot = (state.activeSlot === i) ? -1 : i;
+  renderSlots(); save();
+}
+function sortSlots(){
+  const act = state.activeSlot >= 0 ? state.initSlots[state.activeSlot] : null;
+  state.initSlots.sort((a,b) => (+b.init || 0) - (+a.init || 0));
+  state.activeSlot = act ? state.initSlots.indexOf(act) : -1;
+  renderSlots(); save();
+}
+/* combien de créneaux pointent vers cette attaque */
+function slotsFor(atkId){
+  return (state.initSlots || []).filter(s => s.atkId === atkId).length;
+}
+
+function renderSlots(){
+  const box = document.getElementById("slots");
+  document.getElementById("apt-count").textContent = state.initSlots.length;
+  if(!state.initSlots.length){
+    box.innerHTML = `<span class="slots-empty">Aucun créneau. L'encounter n'agit pas.</span>`;
+    return;
+  }
+  const opts = state.attacks.map((a,i) =>
+    `<option value="${a.id}">${i+1}. ${esc((a.name||"").trim() || "Attaque")}</option>`).join("");
+  box.innerHTML = state.initSlots.map((s,i) => `
+    <div class="slot${state.activeSlot===i?" active":""}" onclick="setActiveSlot(${i})"
+         title="Cliquer pour marquer le créneau en cours">
+      <span class="n">${i+1}</span>
+      <input type="number" value="${+s.init || 0}" onclick="event.stopPropagation()"
+             oninput="setSlotInit(${i}, +this.value || 0)" aria-label="Initiative du créneau ${i+1}">
+      <select onclick="event.stopPropagation()" onchange="setSlotAtk(${i}, this.value)"
+              aria-label="Attaque du créneau ${i+1}">
+        <option value="">Attaque…</option>${opts}
+      </select>
+      <button class="x" onclick="event.stopPropagation();removeSlot(${i})"
+              title="Retirer ce créneau" aria-label="Retirer le créneau ${i+1}">✕</button>
+    </div>`).join("");
+  state.initSlots.forEach((s,i) => {
+    const sel = box.children[i] && box.children[i].querySelector("select");
+    if(sel) sel.value = state.attacks.some(a => a.id === s.atkId) ? s.atkId : "";
+  });
+}
+
+/* ============ TIROIR DE RÉFÉRENCE ============ */
+function toggleRef(force){
+  const open = force === undefined
+    ? !document.getElementById("drawer").classList.contains("on")
+    : force;
+  document.getElementById("drawer").classList.toggle("on", open);
+  document.getElementById("scrim").classList.toggle("on", open);
+}
+document.addEventListener("keydown", e => { if(e.key === "Escape") toggleRef(false); });
+
+/* ============ PERSISTANCE ============ */
+const KEY = "encounter-mj-v3";
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function load(){
+  try{
+    const raw = localStorage.getItem(KEY); if(!raw) return;
+    adopt(JSON.parse(raw));
+  }catch(e){}
+}
+/* accepte les exports des versions precedentes : 5 crans nommes, puis deux curseurs */
+const LEGACY = {desavantage:-2, inconvenance:-1, neutre:0, avantage:1, tresAvantage:2};
+function adopt(d){
+  if(!d || !Array.isArray(d.attacks) || !Array.isArray(d.targets)) throw new Error("format");
+  state = d;
+  state.log = state.log || [];
+  if(state.atkPerTurn == null) state.atkPerTurn = 1;
+  if(state.activeSlot == null) state.activeSlot = -1;
+  if(!Array.isArray(state.initSlots)) state.initSlots = [];
+  state.initSlots = state.initSlots.map(s => ({init:+(s && s.init) || 0, atkId:(s && s.atkId) || ""}));
+  [...state.attacks, ...state.targets].forEach(o => {
+    if(o.cran == null){
+      if(o.sit != null || o.app != null) o.cran = (o.sit || 0) + (o.app || 0);
+      else if(o.variance !== undefined) o.cran = LEGACY[o.variance] != null ? LEGACY[o.variance] : 0;
+      else o.cran = 0;
+    }
+    o.cran = clampCran(o.cran);
+    delete o.sit; delete o.app; delete o.variance;
+  });
+  state.attacks.forEach(a => { if(a.maxPerTurn == null) a.maxPerTurn = 1; });
+  let max = 0;
+  [...state.attacks, ...state.targets].forEach(o => {
+    const n = parseInt(String(o.id).slice(1), 10);
+    if(!isNaN(n) && n > max) max = n;
+  });
+  uid = max + 1;
+  const ids = new Set(state.attacks.map(a => a.id));
+  state.initSlots.forEach(s => { if(!ids.has(s.atkId)) s.atkId = ""; });
+  syncSlots();
+}
+
+/* ============ RÉSISTANCE ============ */
+function bumpRes(d){
+  state.resCur = Math.max(0, Math.min(state.resMax, (state.resCur||0) + d));
+  paintRes(); save();
+}
+function fillRes(){ state.resCur = state.resMax; paintRes(); save(); }
+function paintRes(){
+  const el = document.getElementById("res-val");
+  el.textContent = state.resCur || 0;
+  el.classList.toggle("depleted", (state.resCur||0) === 0 && state.resMax > 0);
+  document.getElementById("res-max").value = state.resMax || 0;
+}
+function bumpTargetRes(id, d){
+  const t = find("t", id); if(!t) return;
+  t.resCur = Math.max(0, Math.min(t.resMax||0, (t.resCur||0) + d));
+  const el = document.getElementById("tres-" + id);
+  if(el) el.textContent = t.resCur;
+  save();
+}
+function setTargetResMax(id, val){
+  const t = find("t", id); if(!t) return;
+  t.resMax = val;
+  if((t.resCur||0) > val){
+    t.resCur = val;
+    const el = document.getElementById("tres-" + id);
+    if(el) el.textContent = val;
+  }
+  save();
+}
+
+/* ============ TABLES DE RÉFÉRENCE ============ */
+function paintTables(){
+  document.getElementById("bar-comp").innerHTML =
+    DC_COMP.map(([n,v]) => `<tr><td>${n}</td><td>${v}${v>=15?"+":""}</td></tr>`).join("");
+  document.getElementById("bar-eso").innerHTML =
+    DC_ESO.map(([n,v]) => `<tr><td>${n}</td><td>${v}${v>=25?"+":""}</td></tr>`).join("");
+
+  const rows = [];
+  for(let n = CRAN_MAX; n >= CRAN_MIN; n--){
+    const c = CRANS[n];
+    const faces = c.faces.map((f,i) => i === 5 ? `<b>${sgn(f)}</b>` : sgn(f)).join(" ");
+    rows.push(`<tr title="${c.name}">
+      <td class="cn" style="color:${c.color}">${sgn(n)}</td>
+      <td class="cs" style="color:${c.color}">${c.sym}</td>
+      <td class="cf">${faces}</td>
+      <td class="cavg">${fmtAvg(c.avg)}</td>
+    </tr>`);
+  }
+  document.getElementById("cran-table").innerHTML = rows.join("");
+}
+
+/* ============ FRAGMENTS ============ */
+function esc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/"/g,"&quot;")
+    .replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+function cranCtl(kind, o){
+  const c = CRANS[cranOf(o)];
+  return `<div class="cran${c.light?" light":""}" id="cran-${o.id}" style="background:${c.color}">
+    <button ${c.n<=CRAN_MIN?"disabled":""} onclick="bumpCran('${kind}','${o.id}',-1)"
+            aria-label="Descendre d'un cran">◂</button>
+    <button class="v" onclick="setCran('${kind}','${o.id}',0)" title="${c.name} · cliquer pour revenir au neutre">
+      <span class="n">${sgn(c.n)}</span><span class="s">${c.sym}</span>
+    </button>
+    <button ${c.n>=CRAN_MAX?"disabled":""} onclick="bumpCran('${kind}','${o.id}',1)"
+            aria-label="Monter d'un cran">▸</button>
+  </div>`;
+}
+function dcPill(kind, o, field, esoField, tag){
+  const r = rolls[o.id + ":" + field];
+  const esoMark = o[esoField] ? ` <span class="eso-dot">◆</span>` : "";
+  if(!r){
+    return `<button class="dcpill" id="pill-${o.id}-${field}"
+        onclick="doRoll('${kind}','${o.id}','${field}','${esoField}','${tag}')">
+      <span><span class="tag">${tag}${esoMark}</span><br><span class="note">lancer</span></span>
+      <span class="val">${+o[field] || 0}</span></button>`;
+  }
+  const c = CRANS[r.cran];
+  return `<button class="dcpill rolled${c.light?" light":""}" id="pill-${o.id}-${field}"
+      style="background:${c.color}"
+      onclick="doRoll('${kind}','${o.id}','${field}','${esoField}','${tag}')">
+    <span><span class="tag">${tag}${esoMark}</span><br>
+      <span class="note">${r.base} ${sgn(r.mod)} · f${r.face}</span></span>
+    <span class="val">${r.final}</span></button>`;
+}
+function dcSetting(kind, o, field, esoField, label){
+  const eso = o[esoField], dc = o[field];
+  const opts = (eso ? DC_ESO : DC_COMP)
+    .map(([n,v]) => `<option value="${v}"${+dc===v?" selected":""}>${n} · ${v}</option>`).join("");
+  return `<div class="setrow">
+    <span class="sl">${label}</span>
+    <input class="dc-input" type="number" value="${dc}" oninput="setDC('${kind}','${o.id}','${field}',+this.value||0)">
+    <select class="dc-preset" onchange="applyPreset('${kind}','${o.id}','${field}',this)">
+      <option value="">Barème…</option>${opts}</select>
+    <label class="eso-toggle${eso?" on":""}">
+      <input type="checkbox"${eso?" checked":""}
+             onchange="toggleEso('${kind}','${o.id}','${esoField}',this.checked)">Éso</label>
+  </div>`;
+}
+function rateBadge(a){
+  const max = a.maxPerTurn == null ? 1 : a.maxPerTurn;
+  const asg = slotsFor(a.id);
+  const cls = asg === 0 ? "" : asg > max ? "over" : "ok";
+  const title = asg > max
+    ? `${asg} créneaux d'initiative pour un maximum de ${max} par tour`
+    : `${asg} créneau${asg>1?"x":""} d'initiative attribué${asg>1?"s":""}`;
+  return `<div class="rate">
+    <span class="k">Max<br>/tour</span>
+    <input type="number" min="0" value="${max}"
+           oninput="setMaxPerTurn('${a.id}',+this.value||0)" aria-label="Maximum par tour">
+    <span class="asg ${cls}" title="${title}">${asg}</span>
+  </div>`;
+}
+function railBlock(o){
+  const c = CRANS[cranOf(o)];
+  return `<div class="detail-head">
+      <span class="vname" id="vname-${o.id}" style="color:${c.color}">${c.name}</span>
+      <span class="avg" id="avg-${o.id}">moyenne ${fmtAvg(c.avg)}</span>
+    </div>
+    <div class="rail" id="rail-${o.id}">${railFaces(c.n, -1)}</div>`;
+}
+function railFaces(n, hit){
+  const c = CRANS[n];
+  return c.faces.map((val,i) => {
+    const on = i === hit;
+    return `<div class="face${i===5?" peak":""}${on?" hit":""}${on&&c.light?" light":""}"
+      ${on?`style="background:${c.color}"`:""}>${sgn(val)}<span class="pip">${i+1}</span></div>`;
+  }).join("");
+}
+
+/* ============ RENDU ============ */
+function renderAttacks(){
+  document.getElementById("attacks").innerHTML = state.attacks.map((a,i) => `
+  <div class="card attack${a.open?" open":""}" id="card-${a.id}">
+    <div class="row1">
+      <span class="card-idx">${i+1}</span>
+      <input class="card-name" value="${esc(a.name)}" placeholder="Attaque"
+             oninput="setVal('a','${a.id}','name',this.value)">
+      ${cranCtl("a", a)}
+      <button class="icon-btn exp" title="Détails" onclick="toggleOpen('a','${a.id}')"><span>⌄</span></button>
+      <button class="icon-btn dup" title="Dupliquer" onclick="dupItem('a','${a.id}')">⧉</button>
+      <button class="icon-btn" title="Supprimer" onclick="delItem('a','${a.id}')">✕</button>
+    </div>
+    <div class="row2">
+      ${dcPill("a", a, "dc", "eso", "DC")}
+      ${rateBadge(a)}
+    </div>
+    <div class="detail">
+      ${railBlock(a)}
+      ${dcSetting("a", a, "dc", "eso", "DC")}
+      <div class="fields">
+        <div class="f"><label>Nombre</label>
+          <input value="${esc(a.count)}" placeholder="3" oninput="setVal('a','${a.id}','count',this.value)"></div>
+        <div class="f"><label>Type</label>
+          <input value="${esc(a.type)}" placeholder="Tir" oninput="setVal('a','${a.id}','type',this.value)"></div>
+        <div class="f"><label>Dég. base</label>
+          <input value="${esc(a.dmgBase)}" placeholder="2" oninput="setVal('a','${a.id}','dmgBase',this.value)"></div>
+        <div class="f"><label>Dég. max</label>
+          <input value="${esc(a.dmgMax)}" placeholder="5" oninput="setVal('a','${a.id}','dmgMax',this.value)"></div>
+        <div class="f half"><label>Effet particulier</label>
+          <input value="${esc(a.effect)}" placeholder="Ce qui se déclenche en plus" oninput="setVal('a','${a.id}','effect',this.value)"></div>
+        <div class="f half"><label>Force et faiblesse (mémo)</label>
+          <input value="${esc(a.forces)}" placeholder="Feu −1, Glace +1" oninput="setVal('a','${a.id}','forces',this.value)"></div>
+      </div>
+    </div>
+  </div>`).join("");
+}
+
+function renderTargets(){
+  document.getElementById("targets").innerHTML = state.targets.map((t,i) => `
+  <div class="card target${t.open?" open":""}" id="card-${t.id}">
+    <div class="row1">
+      <span class="card-idx">${i+1}</span>
+      <input class="card-name" value="${esc(t.name)}" placeholder="Cible"
+             oninput="setVal('t','${t.id}','name',this.value)">
+      ${cranCtl("t", t)}
+      <button class="icon-btn exp" title="Détails" onclick="toggleOpen('t','${t.id}')"><span>⌄</span></button>
+      <button class="icon-btn dup" title="Dupliquer" onclick="dupItem('t','${t.id}')">⧉</button>
+      <button class="icon-btn" title="Supprimer" onclick="delItem('t','${t.id}')">✕</button>
+    </div>
+    <div class="row2">${DEF_LINES.map(l => dcPill("t", t, l.field, l.eso, l.tag)).join("")}</div>
+    <div class="detail">
+      ${railBlock(t)}
+      ${DEF_LINES.map(l => dcSetting("t", t, l.field, l.eso, l.label)).join("")}
+      <div class="fields">
+        <div class="f"><label>Armure</label>
+          <input value="${esc(t.armor)}" placeholder="2" oninput="setVal('t','${t.id}','armor',this.value)"></div>
+        <div class="f"><label>Dégâts max</label>
+          <input value="${esc(t.dmgMax)}" placeholder="6" oninput="setVal('t','${t.id}','dmgMax',this.value)"></div>
+        <div class="f half"><label>Résistance de la cible</label>
+          <div class="res-track">
+            <button class="res-btn" onclick="bumpTargetRes('${t.id}',-1)" aria-label="Retirer 1">−</button>
+            <span class="res-val" id="tres-${t.id}" style="font-size:1.15rem;min-width:22px">${t.resCur||0}</span>
+            <span class="res-sep">/</span>
+            <input class="res-max" type="number" min="0" value="${t.resMax||0}"
+                   oninput="setTargetResMax('${t.id}',+this.value||0)">
+            <button class="res-btn" onclick="bumpTargetRes('${t.id}',1)" aria-label="Ajouter 1">+</button>
+          </div></div>
+        <div class="f half"><label>Effet particulier</label>
+          <input value="${esc(t.effect)}" placeholder="Réaction, aura, protection" oninput="setVal('t','${t.id}','effect',this.value)"></div>
+        <div class="f half"><label>Résistances et faiblesses (mémo)</label>
+          <input value="${esc(t.weakness)}" placeholder="Électricité −2, Tranchant +1" oninput="setVal('t','${t.id}','weakness',this.value)"></div>
+      </div>
+    </div>
+  </div>`).join("");
+}
+
+function renderAll(){
+  document.getElementById("enc-name").value  = state.name || "";
+  document.getElementById("gen-notes").value = state.notes || "";
+  paintRes(); renderSlots(); renderAttacks(); renderTargets(); renderLog();
+}
+
+/* ============ ÉDITION ============ */
+function find(kind, id){ return (kind === "a" ? state.attacks : state.targets).find(o => o.id === id); }
+function setVal(kind, id, field, val){
+  const o = find(kind, id); if(!o) return;
+  o[field] = val; save();
+  /* le nom d'une attaque alimente les listes de créneaux */
+  if(kind === "a" && field === "name") renderSlots();
+}
+function setMaxPerTurn(id, val){
+  const a = find("a", id); if(!a) return;
+  a.maxPerTurn = val; save();
+  const card = document.getElementById("card-" + id);
+  const badge = card && card.querySelector(".rate .asg");
+  if(badge){
+    const asg = slotsFor(id);
+    badge.className = "asg " + (asg === 0 ? "" : asg > val ? "over" : "ok");
+  }
+}
+
+function setDC(kind, id, field, val){
+  const o = find(kind, id); if(!o) return;
+  o[field] = val; save();
+  if(!rolls[id + ":" + field]){
+    const pill = document.getElementById(`pill-${id}-${field}`);
+    if(pill) pill.querySelector(".val").textContent = val;
+  }
+}
+function applyPreset(kind, id, field, sel){
+  if(sel.value === "") return;
+  const v = +sel.value;
+  const input = sel.parentElement.querySelector(".dc-input");
+  if(input) input.value = v;
+  sel.value = "";
+  setDC(kind, id, field, v);
+}
+function toggleEso(kind, id, esoField, checked){
+  const o = find(kind, id); if(!o) return;
+  o[esoField] = checked; save();
+  kind === "a" ? renderAttacks() : renderTargets();
+}
+
+/* cran de variance */
+function bumpCran(kind, id, d){
+  const o = find(kind, id); if(!o) return;
+  setCran(kind, id, (o.cran || 0) + d);
+}
+function setCran(kind, id, v){
+  const o = find(kind, id); if(!o) return;
+  o.cran = clampCran(v); save();
+  paintCran(kind, id);
+}
+function paintCran(kind, id){
+  const o = find(kind, id); if(!o) return;
+  const c = CRANS[cranOf(o)];
+  const box = document.getElementById("cran-" + id);
+  if(box){
+    box.className = "cran" + (c.light ? " light" : "");
+    box.style.background = c.color;
+    const btns = box.querySelectorAll("button");
+    btns[0].disabled = c.n <= CRAN_MIN;
+    btns[2].disabled = c.n >= CRAN_MAX;
+    const v = box.querySelector(".v");
+    v.title = c.name + " · cliquer pour revenir au neutre";
+    v.innerHTML = `<span class="n">${sgn(c.n)}</span><span class="s">${c.sym}</span>`;
+  }
+  const nm = document.getElementById("vname-" + id);
+  if(nm){ nm.textContent = c.name; nm.style.color = c.color; }
+  const avg = document.getElementById("avg-" + id);
+  if(avg) avg.textContent = "moyenne " + fmtAvg(c.avg);
+  const rail = document.getElementById("rail-" + id);
+  if(rail) rail.innerHTML = railFaces(c.n, -1);
+}
+
+/* ============ PLIAGE ============ */
+function toggleOpen(kind, id){
+  const o = find(kind, id); if(!o) return;
+  o.open = !o.open;
+  const card = document.getElementById("card-" + id);
+  if(card) card.classList.toggle("open", o.open);
+  save();
+}
+function setColOpen(kind, open){
+  (kind === "a" ? state.attacks : state.targets).forEach(o => o.open = open);
+  kind === "a" ? renderAttacks() : renderTargets();
+  save();
+}
+function setAllOpen(open){ setColOpen("a", open); setColOpen("t", open); }
+
+/* ============ AJOUT / SUPPRESSION ============ */
+function addAttack(){ state.attacks.push(newAttack()); renderAttacks(); renderSlots(); save(); }
+function addTarget(){ state.targets.push(newTarget()); renderTargets(); save(); }
+function dupItem(kind, id){
+  const arr = kind === "a" ? state.attacks : state.targets;
+  const i = arr.findIndex(o => o.id === id); if(i < 0) return;
+  arr.splice(i+1, 0, {...arr[i], id:nid()});
+  if(kind === "a"){ renderAttacks(); renderSlots(); } else renderTargets();
+  save();
+}
+function delItem(kind, id){
+  if(kind === "a"){
+    state.attacks = state.attacks.length === 1 ? [newAttack()] : state.attacks.filter(o => o.id !== id);
+    state.initSlots.forEach(s => { if(s.atkId === id) s.atkId = ""; });
+    renderAttacks(); renderSlots();
+  }else{
+    state.targets = state.targets.length === 1 ? [newTarget()] : state.targets.filter(o => o.id !== id);
+    renderTargets();
+  }
+  save();
+}
+
+/* ============ LE JET ============ */
+function doRoll(kind, id, field, esoField, tag){
+  const o = find(kind, id); if(!o) return;
+  const c     = CRANS[cranOf(o)];
+  const idx   = Math.floor(Math.random() * 6);
+  const raw   = c.faces[idx];
+  const eso   = !!o[esoField];
+  const mod   = eso ? raw * 2 : raw;
+  const base  = +o[field] || 0;
+  const final = base + mod;
+
+  rolls[id + ":" + field] = {cran:c.n, base, mod, raw, face:idx+1, final, eso};
+
+  const pill = document.getElementById(`pill-${id}-${field}`);
+  if(pill){
+    const esoMark = eso ? ` <span class="eso-dot">◆</span>` : "";
+    pill.className = "dcpill rolled" + (c.light ? " light" : "");
+    pill.style.background = c.color;
+    pill.innerHTML = `<span><span class="tag">${tag}${esoMark}</span><br>
+        <span class="note">${base} ${sgn(mod)} · f${idx+1}</span></span>
+      <span class="val">${final}</span>`;
+  }
+  const rail = document.getElementById("rail-" + id);
+  if(rail) rail.innerHTML = railFaces(c.n, idx);
+
+  const who = (o.name || "").trim() || (kind === "a" ? "Attaque" : "Cible");
+  state.log.unshift({final, base, mod, face:idx+1, eso, cran:c.n,
+    src:`${who} · ${tag}`,
+    time:new Date().toLocaleTimeString("fr-FR",{hour:"2-digit",minute:"2-digit"})});
+  if(state.log.length > 60) state.log.pop();
+  renderLog(); save();
+}
+
+/* remet les pastilles de DC sur leur valeur de base */
+function newRound(){
+  rolls = {};
+  renderAttacks(); renderTargets();
+}
+
+function renderLog(){
+  const body = document.getElementById("log-body");
+  if(!state.log || !state.log.length){
+    body.innerHTML = `<div class="log-empty">Aucun jet pour l'instant.</div>`;
+    return;
+  }
+  body.innerHTML = state.log.map(l => {
+    const c = CRANS[l.cran] || CRANS[0];
+    return `<div class="log-line">
+      <span class="log-chip${c.light?" light":""}" style="background:${c.color}">${l.final}</span>
+      <span class="log-src">${esc(l.src)}</span>
+      <span class="log-meta">DC ${l.base} ${sgn(l.mod)} · f${l.face} · cran ${sgn(c.n)}${l.eso?" · éso":""} · ${l.time}</span>
+    </div>`;
+  }).join("");
+}
+
+/* ============ FICHIERS ============ */
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = ((state.name || "encounter").replace(/[^\w\-À-ÿ ]/g,"").trim() || "encounter") + ".json";
+  a.click(); URL.revokeObjectURL(a.href);
+}
+function importJSON(ev){
+  const file = ev.target.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      adopt(JSON.parse(r.result));
+      rolls = {}; renderAll(); save();
+    }catch(e){
+      alert("Ce fichier n'est pas un encounter exporté depuis cet outil. Choisis un .json produit par le bouton Exporter.");
+    }
+    ev.target.value = "";
+  };
+  r.readAsText(file);
+}
+function resetAll(){
+  if(!confirm("Repartir d'un encounter vide ? Les blocs et le journal en cours seront effacés.")) return;
+  uid = 1; rolls = {};
+  state = {name:"", notes:"", atkPerTurn:1, initSlots:[{init:10,atkId:""}], activeSlot:-1,
+           resMax:0, resCur:0, attacks:[newAttack()], targets:[newTarget()], log:[]};
+  renderAll(); save();
+}
+
+/* ============ INIT ============ */
+document.getElementById("enc-name").addEventListener("input", e => { state.name = e.target.value; save(); });
+paintTables(); load(); renderAll();
+</script>
+</body>
+</html>
