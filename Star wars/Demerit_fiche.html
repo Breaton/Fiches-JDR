@@ -3396,9 +3396,11 @@
                                     Voir les usages du point de focalisation</span></span>
                             <div id="foc-usages"
                                 style="display:none; grid-column:1 / -1; margin-top:6px; padding:8px 10px; background:rgba(0,168,255,0.04); border:1px solid rgba(0,168,255,0.15); border-radius:3px; font-size:0.76em; line-height:1.5; color:var(--light-steel);">
-                                <div style="margin-bottom:6px;"><strong>🎲 Action tactique</strong> : jet de compétence
-                                    adapté contre la DC tactique de la confrontation. L'écart du jet réduit le cran du
-                                    dé de l'encounter sur sa prochaine action de 1 tout les 3 d'écart sur le jet.</div>
+                                <div style="margin-bottom:6px;"><strong>🎲 Action tactique</strong> : en dépensant
+                                    un point de focalisation, le personnage tente un geste adapté à la situation par un
+                                    jet de compétence contre la DC tactique de la confrontation. Chaque tranche de 3
+                                    points d'écart obtenus abaisse d'un cran le dé de l'encounter lors de sa prochaine
+                                    confrontation.</div>
                                 <div style="margin-bottom:6px;"><strong>🛡 Protéger un allié</strong> : un allié à 5 ft
                                     prend sa place dans une confrontation défensive, ou tente d'intercepter un sort à
                                     distance sans prendre la place dans la confrontation.</div>
@@ -5152,6 +5154,48 @@
             const bonus = all.reduce((a, p) => a + Math.floor(p.puissance / 2), 0);
             return { bonus, label: ' | ✨ ' + all.map(p => `${p.name} +${Math.floor(p.puissance / 2)}`).join(', ') };
         }
+        // ── ÉCHELLES DÉRIVÉES DE LA PUISSANCE ───────────────────────────────
+        // Portée et masse ne coûtent rien : elles dérivent directement de la
+        // Puissance finale du pouvoir (sublimation et modificateurs inclus).
+        const POWER_RANGE = {
+            1: 'Contact / 5 ft', 2: '15 ft', 3: '30 ft (la pièce)', 4: '50 ft',
+            5: '80 ft (champ de bataille)', 6: '120 ft', 7: '200 ft', 8: '400 ft'
+        };
+        function powerRange(p) {
+            if (p <= 0) return '—';
+            if (p >= 9) return 'À vue';
+            return POWER_RANGE[p] || '—';
+        }
+        // Masse déplaçable par Mouvoir (catégorie nommée + repère concret).
+        const MOVE_MASS = {
+            1: ['Menu', 'arme, pierre, datapad'],
+            2: ['Encombrant', 'caisse, un corps'],
+            3: ['Lourd', 'rocher, porte blindée'],
+            4: ['Massif', 'statue, speeder'],
+            5: ['Véhicule', 'chasseur stellaire'],
+            6: ['Structure', 'navette, pan de mur'],
+            7: ['Bâtiment', 'maison, transport blindé'],
+            8: ['Édifice', 'grand bâtiment, vaisseau moyen']
+        };
+        function moveMass(p) {
+            if (p <= 0) return null;
+            if (p >= 9) return ['Croiseur', 'les plus grandes masses qu\'un être puisse mouvoir'];
+            return MOVE_MASS[p] || null;
+        }
+        // Un pouvoir emploie-t-il le verbe Mouvoir ? (par nom, robuste au titre composé)
+        function usesMouvoir(name) {
+            return typeof name === 'string' && /mouvoir/i.test(name);
+        }
+        // Encart d'échelle inséré dans le résumé d'un sort.
+        function powerScaleHtml(puissance, spellName) {
+            if (!puissance || puissance <= 0) return '';
+            let rows = `<span title="Portée maximale d'action du pouvoir">📏 Portée <strong>${powerRange(puissance)}</strong></span>`;
+            if (usesMouvoir(spellName)) {
+                const m = moveMass(puissance);
+                if (m) rows += ` &nbsp;·&nbsp; <span title="Masse maximale déplaçable">🪨 Masse <strong>${m[0]}</strong> <span style="opacity:0.7">(${m[1]})</span></span>`;
+            }
+            return `<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.08);font-size:0.78rem;color:var(--light-steel);">${rows}</div>`;
+        }
         function displayForceResult(data) {
             const r = data.roll;
             const etatLbl = NV_ETAT_LABEL[r.etat][0];
@@ -5174,6 +5218,15 @@
             document.getElementById('result-total-label').textContent = 'PUISSANCE DU SORT';
             document.getElementById('result-total').textContent = data.puissance;
             document.getElementById('result-total').style.color = r.effet > 0 ? '#ff9944' : '';
+            // Encart portée / masse dérivées de la Puissance
+            let scaleBox = document.getElementById('force-scale-box');
+            if (!scaleBox) {
+                scaleBox = document.createElement('div');
+                scaleBox.id = 'force-scale-box';
+                scaleBox.style.cssText = 'width:100%;margin-top:10px;text-align:center;';
+                document.getElementById('dice-container').appendChild(scaleBox);
+            }
+            scaleBox.innerHTML = powerScaleHtml(data.puissance, data.title);
             const sc = document.getElementById('result-sustain');
             if (sc) sc.innerHTML = sustainButtonsHtml();
             document.getElementById('result-overlay').classList.add('active');
@@ -5386,7 +5439,7 @@
             const cSucc = data.forceRoll.casc.filter(Boolean).length;
             const capNote = data.forceRoll.communion ? `<br><span style="color:#ffcc00">☀️ Communion : cascade ${cSucc} → +${cSucc} Puissance & −${cSucc} PA</span>`
                 : data.forceRoll.deferlante ? `<br><span style="color:#c06040">🌑 Déferlante : cascade ${cSucc} → +${cSucc} Puissance</span>` : '';
-            forceSummary.innerHTML = `<strong>⚡ Sort</strong> (${etatLbl}) : <strong style="color:var(--saber-purple)">${data.spellPuissance} Puissance</strong> · coût ${data.forceCout} PA${extra}${capNote}<br><span style="color:var(--silver-chrome)">Puissance ajoutée au jet de compétence : +${data.spellPuissance}</span>`;
+            forceSummary.innerHTML = `<strong>⚡ Sort</strong> (${etatLbl}) : <strong style="color:var(--saber-purple)">${data.spellPuissance} Puissance</strong> · coût ${data.forceCout} PA${extra}${capNote}<br><span style="color:var(--silver-chrome)">Puissance ajoutée au jet de compétence : +${data.spellPuissance}</span>${powerScaleHtml(data.spellPuissance, data.title)}`;
             container.appendChild(forceSummary);
             // Stats compétence + total
             document.getElementById('stat-successes').textContent = data.skillSuccesses;
