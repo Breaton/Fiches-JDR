@@ -2899,6 +2899,35 @@
             'Tir', 'Tromperie', 'Vigilance'
         ];
 
+        // Attributs passifs par défaut par compétence
+        const DEFAULT_SKILL_ATTR = {
+            'Art':            'presence',
+            'Athlétisme':     'puissance',
+            'Autorité':       'presence',
+            'Apothicairerie': 'intelligence',
+            'Bagarre':        'puissance',
+            'Combat Occulte': 'precision',
+            'Discrétion':     'vivacite',
+            'Dressage':       'intuition',
+            'Éloquence':      'presence',
+            'Érudition':      'intelligence',
+            'Escamotage':     'precision',
+            'Ésotérisme':     'volonte',
+            'Médecine':       'intelligence',
+            'Recherche':      'intelligence',
+            'Résilience':     'endurance',
+            'Sagacité':       'intuition',
+            'Stratégie':      'intelligence',
+            'Technologie':    'intelligence',
+            'Tir':            'precision',
+            'Tromperie':      'presence',
+            'Vigilance':      'intuition',
+        };
+
+        function getDefaultSkillAttr(name) {
+            return DEFAULT_SKILL_ATTR[name] || null;
+        }
+
         // ========== NIVEAUX D'ATTRIBUTS ==========
         // Bonus progressif : 1-2 → +0, 3-4 → +2, 5-6 → +4, 7 → +5, 8 → +6
         const ATTRIBUTE_LEVELS = {
@@ -3653,8 +3682,13 @@
             if (!skill) return;
             skill.name = newName;
             skill.baseName = baseName;
+            // Réassigner l'attribut par défaut si non personnalisé
+            if (!skill.defaultAttr || skill.defaultAttr === getDefaultSkillAttr(skill.baseName || skill.name)) {
+                skill.defaultAttr = getDefaultSkillAttr(baseName) || getDefaultSkillAttr(newName) || skill.defaultAttr;
+            }
             document.querySelectorAll('.skill-rename-popup').forEach(p => p.remove());
             renderSkills();
+            renderPassives();
             updateRollSelects();
         }
 
@@ -3667,8 +3701,12 @@
             if (!skill) return;
             skill.name = newName;
             if (baseName) skill.baseName = baseName;
+            if (!skill.defaultAttr) {
+                skill.defaultAttr = getDefaultSkillAttr(baseName || newName);
+            }
             document.querySelectorAll('.skill-rename-popup').forEach(p => p.remove());
             renderSkills();
+            renderPassives();
             updateRollSelects();
         }
 
@@ -3725,11 +3763,13 @@
             appState.skills.push({
                 id: `skill_${Date.now()}`,
                 name,
-                level: 1
+                level: 1,
+                defaultAttr: getDefaultSkillAttr(name)
             });
 
             input.value = '';
             renderSkills();
+            renderPassives();
         }
 
         function modifySkillLevel(id, delta) {
@@ -4854,6 +4894,13 @@
             if (!appState.masteries) appState.masteries = [];
             if (appState.vitesseBonus === undefined) appState.vitesseBonus = 0;
             if (!appState.activeSpells) appState.activeSpells = [];
+            // Assigner un attribut passif par défaut aux compétences qui n'en ont pas
+            (appState.skills || []).forEach(s => {
+                if (!s.defaultAttr) {
+                    const def = getDefaultSkillAttr(s.baseName || s.name);
+                    if (def) s.defaultAttr = def;
+                }
+            });
             (appState.wounds || []).forEach(w => {
                 if (w.stabilized === undefined) w.stabilized = false;
                 if (w.convalescence === undefined) w.convalescence = false;
@@ -4975,7 +5022,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Compétences régulières par défaut (marquées comme base)
             defaultRegularSkills.forEach((name, i) => {
-                appState.skills.push({ id: `regular_${i}`, name, level: 1, isBase: true });
+                appState.skills.push({ id: `regular_${i}`, name, level: 1, isBase: true, defaultAttr: getDefaultSkillAttr(name) });
             });
 
             // Priorité de restauration : import point-buy en attente > sauvegarde locale > défaut
