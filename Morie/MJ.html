@@ -49,7 +49,7 @@
         }
 
         .wrapper {
-            max-width: 1180px;
+            max-width: 1560px;
             margin: 0 auto;
         }
 
@@ -245,8 +245,8 @@
 
         .roster {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
             margin-bottom: 40px;
         }
 
@@ -997,18 +997,41 @@
             try { return JSON.parse(localStorage.getItem(PASSIVE_ATTR_KEY)) || {}; }
             catch (e) { return {}; }
         }
-        function getPassiveAttr(skillName) {
+        function getPassiveAttr(skillName, skillDefaultAttr) {
             const k = norm(skillName);
             const ov = loadPassiveOverrides();
-            return ov[k] || DEFAULT_PASSIVE_ATTR[k] || 'intuition';
+            return ov[k] || skillDefaultAttr || DEFAULT_PASSIVE_ATTR[k] || 'intuition';
         }
         function setPassiveAttr(skillName, attrId) {
             const ov = loadPassiveOverrides();
             const k = norm(skillName);
             if (attrId === DEFAULT_PASSIVE_ATTR[k]) delete ov[k]; else ov[k] = attrId;
             try { localStorage.setItem(PASSIVE_ATTR_KEY, JSON.stringify(ov)); } catch (e) { }
-            render(); // recalcul sur toutes les cartes
+            // Mise à jour en place — sans reconstruire les cartes
+            refreshPassiveValues();
         }
+
+        // Mise à jour en place des valeurs passives (évite de fermer les cartes)
+        function refreshPassiveValues() {
+            const roster = loadRoster();
+            Object.entries(roster).forEach(([key, rec]) => {
+                if (!rec.skills) return;
+                rec.skills.forEach(s => {
+                    const attrId = getPassiveAttr(s.name, s.defaultAttr);
+                    const pass = getPassiveValue(rec, s.name, attrId);
+                    const pColor = pass >= 7 ? '#D4AF37' : pass >= 5 ? '#4a9b6e' : 'var(--silver-mist)';
+                    // Update passive value cell
+                    const passEl = document.querySelector(`#pc-${key} [data-skill-pass="${norm(s.name)}"]`);
+                    if (passEl) { passEl.textContent = pass; passEl.style.color = pColor; }
+                    // Update passive attr select
+                    const selEl = document.querySelector(`#pc-${key} [data-skill-sel="${norm(s.name)}"]`);
+                    if (selEl) selEl.value = attrId;
+                });
+            });
+        }
+
+        // Préserve les cartes déroulées lors d'un render()
+        const expandedCards = new Set();
 
         // ── Définitions (aide-mémoire), telles que fournies ──
         const ATTR_DEFS = [
@@ -1227,16 +1250,17 @@
             let skillHtml = '';
             skillsSorted.forEach(s => {
                 const lvl = getSkillLevel(s.level);
-                const attrId = getPassiveAttr(s.name);
+                const attrId = getPassiveAttr(s.name, s.defaultAttr);
                 const pass = getPassiveValue(rec, s.name, attrId);
                 const pColor = pass >= 7 ? '#D4AF37' : pass >= 5 ? '#4a9b6e' : 'var(--silver-mist)';
                 const isPow = norm(s.name) === norm('Ésotérisme');
                 const safeName = s.name.replace(/'/g, "\\'");
+                const nk = norm(s.name);
                 skillHtml += `<div class="skill-row">
                     <span class="sr-name" title="${s.name}">${isPow ? '✨ ' : ''}${s.name}</span>
                     <span class="sr-lvl" style="color:${lvl.color}" title="Niveau ${s.level}">${lvl.name}<sub>${s.level}</sub></span>
-                    <select class="pl-attr" onchange="setPassiveAttr('${safeName}', this.value)" title="Attribut du passif">${attrOptions(attrId)}</select>
-                    <span class="sr-pass" style="color:${pColor}" title="Valeur passive">${pass}</span>
+                    <select class="pl-attr" data-skill-sel="${nk}" onchange="setPassiveAttr('${safeName}', this.value)" title="Attribut du passif">${attrOptions(attrId)}</select>
+                    <span class="sr-pass" data-skill-pass="${nk}" style="color:${pColor}" title="Valeur passive">${pass}</span>
                 </div>`;
             });
             if (!skillHtml) skillHtml = '<span class="skills-untrained">Aucune compétence.</span>';
@@ -1269,7 +1293,7 @@
                         <div class="kv">${rec.surcharge}</div>
                     </div>
                 </div>
-                <button class="pcard-detail-toggle" onclick="document.getElementById('pc-${key}').classList.toggle('open')">
+                <button class="pcard-detail-toggle" onclick="(function(el){el.classList.toggle('open'); if(el.classList.contains('open')) expandedCards.add(el.id); else expandedCards.delete(el.id);})(document.getElementById('pc-${key}'))">
                     Blessures · Attributs · Compétences ▾
                 </button>
                 <div class="pcard-detail">
@@ -1294,7 +1318,14 @@
                 container.innerHTML = '<div class="empty-state">Aucune fiche suivie pour l\'instant.<br>Clique sur <strong>🔄 Rafraîchir depuis GitHub</strong> une fois que tes joueurs ont sauvegardé en ligne.</div>';
                 return;
             }
+            // Sauvegarder l'état des cartes déroulées avant de reconstruire
+            container.querySelectorAll('.pcard.open').forEach(el => expandedCards.add(el.id));
             container.innerHTML = keys.map(k => renderPlayerCard(k, roster[k])).join('');
+            // Restaurer l'état déroulé
+            expandedCards.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('open');
+            });
         }
 
         function renderReference() {

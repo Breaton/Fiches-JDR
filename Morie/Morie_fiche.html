@@ -1312,6 +1312,18 @@
             padding-right: 6px;
         }
 
+        .skill-attr-select {
+            font-size: 0.72em;
+            padding: 3px 4px;
+            border: 1px solid var(--moonlight);
+            border-radius: 5px;
+            background: rgba(255,255,255,0.5);
+            color: var(--deep-navy);
+            font-family: var(--font-body);
+            width: 52px;
+            cursor: pointer;
+        }
+
         .skill-item {
             background: rgba(201, 212, 232, 0.2);
             border-radius: 10px;
@@ -2233,102 +2245,6 @@
             font-weight: 700;
         }
 
-        .mastery-cat-group-fiche {
-            margin-bottom: 12px;
-        }
-
-        .mastery-cat-header {
-            font-size: 0.72em;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            margin-bottom: 6px;
-        }
-
-        .mastery-card {
-            border: 1px solid;
-            border-radius: 8px;
-            padding: 8px 10px;
-            margin-bottom: 6px;
-        }
-
-        .mastery-card-top {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 6px;
-            flex-wrap: wrap;
-        }
-
-        .mastery-card-bottom {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .mastery-name-field {
-            flex: 1;
-            min-width: 120px;
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid var(--moonlight);
-            border-radius: 5px;
-            padding: 4px 8px;
-            font-size: 0.85em;
-            font-family: var(--font-body);
-            color: var(--deep-navy);
-        }
-
-        .mastery-name-field:focus {
-            outline: none;
-            border-color: var(--ombre-purple);
-        }
-
-        .mastery-skill-select {
-            font-size: 0.78em;
-            border: 1px solid var(--moonlight);
-            border-radius: 5px;
-            padding: 3px 6px;
-            background: white;
-            color: var(--deep-navy);
-            font-family: var(--font-body);
-        }
-
-        .mastery-src-tag {
-            font-size: 0.7em;
-            padding: 2px 7px;
-            border-radius: 10px;
-            white-space: nowrap;
-            font-weight: 600;
-        }
-
-        .mastery-src-tag.auto {
-            background: rgba(99, 153, 34, 0.15);
-            color: #639922;
-        }
-
-        .mastery-src-tag.purch {
-            background: rgba(107, 76, 154, 0.15);
-            color: var(--ombre-purple);
-        }
-
-        .mastery-delete-btn {
-            background: none;
-            border: none;
-            color: var(--silver-mist);
-            cursor: pointer;
-            font-size: 0.85em;
-            padding: 2px 5px;
-            border-radius: 4px;
-        }
-
-        .mastery-delete-btn:hover {
-            color: var(--vitality-red);
-        }
-
-        margin-top: 20px;
-        }
-
         .notes-textarea {
             width: 100%;
             min-height: 200px;
@@ -2889,39 +2805,6 @@
         <!-- PAGE 3 : OBJETS -->
         <div class="page objects-page" id="page-objects">
             <div class="objects-container">
-
-                <div class="card" id="masteries-section" style="margin-bottom:16px;">
-                    <div class="card-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span class="icon" style="background:rgba(99,153,34,0.1);color:#639922;">⚔</span>
-                            Maîtrises
-                        </div>
-                        <div style="display:flex;gap:6px;flex-wrap:wrap;">
-                            <button onclick="addMasteryManual('arme')"
-                                style="padding:3px 8px;font-size:0.73em;background:rgba(99,153,34,0.1);border:1px solid rgba(99,153,34,0.3);border-radius:5px;color:#639922;cursor:pointer;">+
-                                Arme</button>
-                            <button onclick="addMasteryManual('armure_medium')"
-                                style="padding:3px 8px;font-size:0.73em;background:rgba(74,144,194,0.1);border:1px solid rgba(74,144,194,0.3);border-radius:5px;color:#4a90c2;cursor:pointer;">🛡
-                                Médium</button>
-                            <button onclick="addMasteryManual('armure_lourde')"
-                                style="padding:3px 8px;font-size:0.73em;background:rgba(107,76,154,0.1);border:1px solid rgba(107,76,154,0.3);border-radius:5px;color:var(--ombre-purple);cursor:pointer;">🛡
-                                Lourde</button>
-                            <button onclick="addMasteryManual('bouclier')"
-                                style="padding:3px 8px;font-size:0.73em;background:rgba(74,144,194,0.1);border:1px solid rgba(74,144,194,0.3);border-radius:5px;color:#4a90c2;cursor:pointer;">🛡
-                                Bouclier</button>
-                            <button onclick="addMasteryManual('monture')"
-                                style="padding:3px 8px;font-size:0.73em;background:rgba(201,162,39,0.1);border:1px solid rgba(201,162,39,0.3);border-radius:5px;color:#c9a227;cursor:pointer;">+
-                                Monture</button>
-                            <button onclick="addMasteryManual('specialite')"
-                                style="padding:3px 8px;font-size:0.73em;background:rgba(29,158,117,0.1);border:1px solid rgba(29,158,117,0.3);border-radius:5px;color:#1D9E75;cursor:pointer;">+
-                                Spécialité</button>
-                            <button onclick="addMasteryManual('savoir_faire')"
-                                style="padding:3px 8px;font-size:0.73em;background:rgba(186,117,23,0.1);border:1px solid rgba(186,117,23,0.3);border-radius:5px;color:#BA7517;cursor:pointer;">+
-                                Savoir-faire</button>
-                        </div>
-                    </div>
-                    <div id="masteries-list"></div>
-                </div>
 
                 <div class="card">
                     <div class="card-title">
@@ -3790,6 +3673,12 @@
         }
 
         // ========== COMPÉTENCES ==========
+        const ATTR_SHORT = {
+            puissance:'Pui.', vivacite:'Viv.', precision:'Pré.', endurance:'End.',
+            intelligence:'Int.', intuition:'Intu.', volonte:'Vol.', presence:'Pré.s'
+        };
+        const ATTR_IDS = ['puissance','vivacite','precision','endurance','intelligence','intuition','volonte','presence'];
+
         function renderSkills() {
             const list = document.getElementById('regular-skills-list');
             if (!list) return;
@@ -3802,6 +3691,9 @@
                 const level = getSkillLevel(skill.level);
                 const hasAlts = !!(skill.baseName ? SKILL_ALTERNATIVES[skill.baseName] : getBaseSkillName(skill.name));
                 item.className = 'skill-item' + (isPowerSkill ? ' power-skill' : '');
+                const attrOptions = ATTR_IDS.map(a =>
+                    `<option value="${a}"${skill.defaultAttr === a ? ' selected' : ''}>${ATTR_SHORT[a]}</option>`
+                ).join('');
                 item.innerHTML = `
                     <div class="skill-name ${hasAlts || isBaseSkill ? 'skill-renameable' : ''}" id="skill-name-${skill.id}"
                          ${isBaseSkill || hasAlts ? `onclick="openRenameSkill('${skill.id}')" title="Cliquer pour choisir un nom alternatif"` : ''}>
@@ -3813,6 +3705,10 @@
                         <span class="skill-level-value" title="Niveau ${skill.level} • ${level.dice} dés" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${skill.level}</sub></span>
                         <button class="skill-level-btn" onclick="modifySkillLevel('${skill.id}', 1)" ${skill.level >= 8 ? 'disabled' : ''}>+</button>
                     </div>
+                    <select class="skill-attr-select" onchange="updateSkillDefaultAttr('${skill.id}', this.value)" title="Attribut passif">
+                        <option value="">—</option>
+                        ${attrOptions}
+                    </select>
                     ${isBaseSkill ? '' : `<button class="skill-delete-btn" onclick="deleteSkill('${skill.id}')">Supprimer</button>`}
                 `;
                 list.appendChild(item);
@@ -3844,6 +3740,14 @@
                 updateMagicState();
                 renderPassives();
             }
+        }
+
+        function updateSkillDefaultAttr(id, attrId) {
+            const skill = appState.skills.find(s => s.id === id);
+            if (!skill) return;
+            skill.defaultAttr = attrId || null;
+            renderPassives();
+            scheduleAutosave();
         }
 
         function deleteSkill(id) {
@@ -4344,40 +4248,34 @@
         // ========== VALEURS PASSIVES ==========
 
         // Définit quelles compétences ont une valeur passive et avec quel attribut par défaut
-        const PASSIVE_SKILLS = [
-            { skillName: 'Autorité', attrId: 'presence', icon: '😠', label: 'Autorité passive' },
-            { skillName: 'Vigilance', attrId: 'intuition', icon: '👁', label: 'Vigilance passive' },
-            { skillName: 'Recherche', attrId: 'intelligence', icon: '🔍', label: 'Investigation passive' },
-            { skillName: 'Sagacité', attrId: 'intuition', icon: '❤️', label: 'Sagacité passive' },
-            { skillName: 'Érudition', attrId: 'intelligence', icon: '🧠', label: 'Érudition passive' },
-        ];
-
-        function getPassiveValue(skillName, attrId) {
-            const skill = appState.skills.find(s => s.name === skillName);
-            if (!skill) return null;
+        function getPassiveValue(skill, attrId) {
             const attrValue = appState.attributes[attrId] || 4;
             const attrLevel = getAttributeLevel(attrValue);
             const skillLevel = getSkillLevel(skill.level);
             return attrLevel.bonus + Math.floor(skillLevel.dice / 2);
         }
 
+        const ATTR_LABEL_SHORT = {
+            puissance:'Pui', vivacite:'Viv', precision:'Pré', endurance:'End',
+            intelligence:'Int', intuition:'Intu', volonte:'Vol', presence:'Prés'
+        };
+
         function renderPassives() {
             const el = document.getElementById('passives-display');
             if (!el) return;
+            const skillsWithPassive = (appState.skills || []).filter(s => s.defaultAttr);
             let html = '';
-            PASSIVE_SKILLS.forEach(p => {
-                const val = getPassiveValue(p.skillName, p.attrId);
-                if (val === null) return;
-                const tier = val >= 7 ? 'exceptional' : val >= 5 ? 'good' : val >= 3 ? 'average' : 'low';
-                const colors = { exceptional: '#D4AF37', good: '#1D9E75', average: 'var(--silver-mist)', low: 'var(--silver-mist)' };
-                const color = colors[tier];
-                html += `<div class="passive-chip" title="${p.label}">
-                    <span class="passive-icon">${p.icon}</span>
-                    <span class="passive-label">${p.skillName}</span>
+            skillsWithPassive.forEach(s => {
+                const val = getPassiveValue(s, s.defaultAttr);
+                const color = val >= 7 ? '#D4AF37' : val >= 5 ? '#1D9E75' : 'var(--silver-mist)';
+                const attrShort = ATTR_LABEL_SHORT[s.defaultAttr] || s.defaultAttr;
+                html += `<div class="passive-chip" title="${s.name} passif (${s.defaultAttr})">
+                    <span class="passive-label">${s.name}</span>
+                    <span style="font-size:0.68em;color:var(--silver-mist);padding:0 2px;">${attrShort}</span>
                     <span class="passive-value" style="color:${color};">${val}</span>
                 </div>`;
             });
-            el.innerHTML = html || '<span style="color:var(--silver-mist);font-size:0.8em;font-style:italic;">—</span>';
+            el.innerHTML = html || '<span style="color:var(--silver-mist);font-size:0.8em;font-style:italic;">Définir un attribut passif sur les compétences (onglet Compétences)</span>';
         }
 
         function renderAll() {
@@ -4391,7 +4289,6 @@
             renderWounds();
             renderVitesse();
             updateMagicState();
-            renderMasteries();
             renderPassives();
             renderActiveSpells();
         }
@@ -4626,140 +4523,6 @@
             document.getElementById('result-total').textContent = data.successes;
             document.getElementById('result-overlay').classList.add('active');
         }
-        // ========== MAÎTRISES ==========
-
-        const MASTERY_CAT_INFO = {
-            'arme': { label: '⚔ Arme', color: '#639922', bg: 'rgba(99,153,34,0.12)' },
-            'armure_legere': { label: '🛡 Armure Légère', color: '#4a90c2', bg: 'rgba(74,144,194,0.12)' },
-            'armure_medium': { label: '🛡 Armure Médium', color: '#4a90c2', bg: 'rgba(74,144,194,0.15)' },
-            'armure_lourde': { label: '🛡 Armure Lourde', color: '#6b4c9a', bg: 'rgba(107,76,154,0.15)' },
-            'bouclier': { label: '🛡 Bouclier', color: '#4a90c2', bg: 'rgba(74,144,194,0.12)' },
-            'monture': { label: '🐴 Monture/Véhicule', color: '#c9a227', bg: 'rgba(201,162,39,0.12)' },
-            'specialite': { label: '🧠 Spécialité', color: '#1D9E75', bg: 'rgba(29,158,117,0.12)' },
-            'savoir_faire': { label: '✨ Savoir-faire', color: '#BA7517', bg: 'rgba(186,117,23,0.12)' },
-        };
-
-        function renderMasteries() {
-            const el = document.getElementById('masteries-list');
-            if (!el) return;
-            const masteries = appState.masteries || [];
-
-            const ARMOR_CATS = ['armure_legere', 'armure_medium', 'armure_lourde', 'bouclier'];
-            const armorMasteries = masteries.filter(m => ARMOR_CATS.includes(m.category));
-            const namedMasteries = masteries.filter(m => !ARMOR_CATS.includes(m.category));
-
-            let html = '';
-
-            // ── Armures & Bouclier (toggles) ──────────────────────
-            html += `<div style="margin-bottom:12px;">
-                <div style="font-size:0.7em;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--silver-mist);margin-bottom:6px;">🛡 Armures & Bouclier</div>
-                <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;">`;
-
-            // Armure légère — toujours présente
-            html += `<span style="padding:4px 10px;border-radius:5px;font-size:0.78em;font-weight:600;border:1px solid rgba(74,144,194,0.4);background:rgba(74,144,194,0.12);color:#4a90c2;">🛡 Armure Légère <span style="font-size:0.75em;opacity:0.7;">offerte</span></span>`;
-
-            const armorDefs = [
-                { cat: 'armure_medium', label: '🛡 Armure Médium', req: null },
-                { cat: 'armure_lourde', label: '🛡 Armure Lourde', req: 'armure_medium' },
-                { cat: 'bouclier', label: '🛡 Bouclier', req: null },
-            ];
-            armorDefs.forEach(a => {
-                const has = masteries.some(m => m.category === a.cat);
-                const disabled = a.req && !masteries.some(m => m.category === a.req);
-                const activeStyle = has ? 'background:rgba(74,144,194,0.18);border-color:rgba(74,144,194,0.6);color:#4a90c2;' : 'background:transparent;border-color:var(--moonlight);color:var(--silver-mist);';
-                html += `<button onclick="addMasteryManual('${a.cat}')"
-                    style="padding:4px 10px;border-radius:5px;font-size:0.78em;font-weight:600;border:1px solid;cursor:pointer;${activeStyle}${disabled ? 'opacity:0.4;cursor:not-allowed;' : ''}"
-                    ${disabled ? 'disabled title="Requiert Armure Médium"' : ''}>
-                    ${a.label}${has ? ' ✓' : ''}
-                </button>`;
-            });
-            html += `</div></div>`;
-
-            // ── Maîtrises nommées (groupées par catégorie) ─────────
-            if (namedMasteries.length === 0 && masteries.length === 0) {
-                html += '<div style="font-size:0.82em;color:var(--silver-mist);font-style:italic;padding:4px 0;">Aucune maîtrise. Importez depuis le point-buy ou ajoutez manuellement.</div>';
-            } else if (namedMasteries.length > 0) {
-                const groups = {};
-                namedMasteries.forEach(m => {
-                    const cat = m.category || 'savoir_faire';
-                    if (!groups[cat]) groups[cat] = [];
-                    groups[cat].push(m);
-                });
-                Object.entries(groups).forEach(([cat, items]) => {
-                    const ci = MASTERY_CAT_INFO[cat] || { label: cat, color: 'var(--silver-mist)', bg: 'transparent' };
-                    html += `<div class="mastery-cat-group-fiche">
-                        <div class="mastery-cat-header" style="color:${ci.color};">${ci.label}</div>`;
-                    items.forEach(m => {
-                        const srcTag = m.source === 'auto'
-                            ? `<span class="mastery-src-tag auto">Débloquée</span>`
-                            : `<span class="mastery-src-tag purch">${m.cost || 0} pts</span>`;
-                        html += `<div class="mastery-card" style="border-color:${ci.color}20;background:${ci.bg};">
-                            <div class="mastery-card-top">
-                                <input class="mastery-name-field" type="text" value="${(m.name || '').replace(/"/g, '&quot;')}"
-                                    placeholder="Nom de la maîtrise..."
-                                    oninput="updateMasteryField('${m.id}','name',this.value)"/>
-                                ${srcTag}
-                                <button class="mastery-delete-btn" onclick="deleteMastery('${m.id}')" title="Supprimer">✕</button>
-                            </div>
-                            <div class="mastery-card-bottom">
-                                <label style="font-size:0.73em;color:var(--silver-mist);">Liée à :</label>
-                                <select class="mastery-skill-select" onchange="updateMasteryField('${m.id}','linkedSkill',this.value)">
-                                    <option value="">— aucune —</option>
-                                    ${(appState.skills || []).map(s => `<option value="${s.id}" ${m.linkedSkill === s.id ? 'selected' : ''}>${s.name} (niv.${s.level})</option>`).join('')}
-                                </select>
-                                ${m.source === 'auto' && m.autoSkill ? `<span style="font-size:0.72em;color:var(--silver-mist);">Via ${m.autoSkill} niv.${m.autoLevel}</span>` : ''}
-                            </div>
-                        </div>`;
-                    });
-                    html += `</div>`;
-                });
-            }
-
-            el.innerHTML = html;
-        }
-
-        function updateMasteryField(id, field, value) {
-            const m = (appState.masteries || []).find(x => x.id === id);
-            if (m) m[field] = value;
-        }
-
-        function deleteMastery(id) {
-            appState.masteries = (appState.masteries || []).filter(x => x.id !== id);
-            renderMasteries();
-        }
-
-        function addMasteryManual(catId) {
-            if (!appState.masteries) appState.masteries = [];
-
-            // Armor/bouclier = toggle (unique, pas de nom custom)
-            if (['armure_medium', 'armure_lourde', 'bouclier'].includes(catId)) {
-                const exists = appState.masteries.find(m => m.category === catId);
-                if (exists) {
-                    // Toggle off — cascade si médium retiré
-                    if (catId === 'armure_medium') {
-                        appState.masteries = appState.masteries.filter(m => m.category !== 'armure_medium' && m.category !== 'armure_lourde');
-                    } else {
-                        appState.masteries = appState.masteries.filter(m => m.category !== catId);
-                    }
-                } else {
-                    // Toggle on
-                    if (catId === 'armure_lourde' && !appState.masteries.find(m => m.category === 'armure_medium')) {
-                        alert('Armure Lourde requiert Armure Médium.');
-                        return;
-                    }
-                    const ARMOR_NAMES = { armure_medium: 'Armure Médium', armure_lourde: 'Armure Lourde', bouclier: 'Bouclier' };
-                    const ARMOR_COSTS = { armure_medium: 2, armure_lourde: 3, bouclier: 2 };
-                    appState.masteries.push({ id: `${catId}_toggle`, name: ARMOR_NAMES[catId], category: catId, source: 'purchased', linkedSkill: null, cost: ARMOR_COSTS[catId], autoSkill: null, autoLevel: null });
-                }
-                renderMasteries();
-                return;
-            }
-
-            const id = `manual_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
-            appState.masteries.push({ id, name: '', category: catId, source: 'purchased', linkedSkill: null, cost: 0, autoSkill: null, autoLevel: null });
-            renderMasteries();
-        }
-
         function closeResult() {
             document.getElementById('result-overlay').classList.remove('active');
         }
@@ -5023,7 +4786,6 @@
         function applyLoadedState(loaded) {
             Object.assign(appState, loaded);
             applyBackwardCompatDefaults();
-            renderMasteries();
             renderPassives();
             restoreProfileUI();
 
