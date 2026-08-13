@@ -337,8 +337,112 @@
         }
 
         .skills-page {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 28px;
+        }
+
+        /* Liste des compétences sur deux colonnes */
+        .skills-page .skills-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px 20px;
+            align-content: start;
+            max-height: none;
+            overflow-y: visible;
+        }
+
+        .rolls-page {
+            grid-template-columns: 3fr 2fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* === COLONNE CONTEXTE (page Jets) === */
+        .rolls-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .ctx-panel {
+            background: var(--pure-white);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+        }
+
+        .ctx-panel-title {
+            padding: 11px 16px;
+            font-family: var(--font-display);
+            font-size: 0.92em;
+            font-weight: 700;
+            color: var(--deep-navy);
+            background: rgba(139, 157, 195, 0.07);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .ctx-panel-body {
+            padding: 14px 16px;
+        }
+
+        .foc-btn {
+            padding: 3px 9px;
+            background: rgba(74, 144, 194, 0.1);
+            border: 1px solid rgba(74, 144, 194, 0.3);
+            border-radius: 5px;
+            color: #4a90c2;
+            font-size: 0.85em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .foc-btn:hover {
+            background: rgba(74, 144, 194, 0.2);
+        }
+
+        .buff-card {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 10px;
+            background: rgba(29, 158, 117, 0.07);
+            border: 1px solid rgba(29, 158, 117, 0.22);
+            border-left: 3px solid #1D9E75;
+            border-radius: 7px;
+            margin-bottom: 6px;
+        }
+
+        .buff-name {
+            flex: 1;
+            font-size: 0.84em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .buff-puissance {
+            font-family: var(--font-display);
+            font-size: 1.05em;
+            font-weight: 700;
+            color: #1D9E75;
+            white-space: nowrap;
+        }
+
+        .buff-del {
+            background: none;
+            border: none;
+            color: var(--silver-mist);
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 2px 4px;
+        }
+
+        .buff-del:hover {
+            color: var(--vitality-red);
         }
 
         /* CARDS */
@@ -1312,12 +1416,20 @@
             padding-right: 6px;
         }
 
+        .skill-attr-none {
+            width: 52px;
+            text-align: center;
+            font-size: 0.78em;
+            color: var(--silver-mist);
+            opacity: 0.5;
+        }
+
         .skill-attr-select {
             font-size: 0.72em;
             padding: 3px 4px;
             border: 1px solid var(--moonlight);
             border-radius: 5px;
-            background: rgba(255,255,255,0.5);
+            background: rgba(255, 255, 255, 0.5);
             color: var(--deep-navy);
             font-family: var(--font-body);
             width: 52px;
@@ -2190,6 +2302,14 @@
         @media (max-width: 900px) {
 
             .attributes-page,
+            .rolls-page {
+                grid-template-columns: 1fr;
+            }
+
+            .skills-page .skills-list {
+                grid-template-columns: 1fr;
+            }
+
             .skills-page {
                 grid-template-columns: 1fr;
             }
@@ -2212,6 +2332,214 @@
             .nav-tab {
                 text-align: center;
             }
+        }
+
+        /* === JET DE MAGIE EN RÉACTION === */
+        .followup-magic {
+            margin-top: 10px;
+            padding: 12px 14px;
+            background: rgba(107, 76, 154, 0.07);
+            border: 1px solid rgba(107, 76, 154, 0.25);
+            border-radius: 10px;
+        }
+
+        .followup-magic-title {
+            font-weight: 700;
+            font-size: 0.9em;
+            color: var(--ombre-purple);
+            margin-bottom: 2px;
+        }
+
+        .followup-magic-sub {
+            font-size: 0.75em;
+            color: var(--silver-mist);
+            margin-bottom: 8px;
+        }
+
+        .followup-magic-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .followup-magic-row label {
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--deep-navy);
+        }
+
+        .followup-magic-row input[type="number"] {
+            width: 56px;
+            padding: 4px 6px;
+            border: 1px solid var(--moonlight);
+            border-radius: 5px;
+            text-align: center;
+            font-family: var(--font-body);
+        }
+
+        .followup-magic-max {
+            font-size: 0.75em;
+            color: var(--silver-mist);
+        }
+
+        .followup-emotion {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #8a6d00 !important;
+            margin-left: 4px;
+        }
+
+        .followup-emotion input {
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+        }
+
+        .followup-magic-btn {
+            margin-left: auto;
+            padding: 5px 14px;
+            background: linear-gradient(135deg, var(--ombre-purple), #8b6cbf);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.82em;
+            cursor: pointer;
+        }
+
+        .followup-magic-tier {
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-top: 7px;
+        }
+
+        .followup-dice-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .followup-puissance {
+            margin-top: 8px;
+            font-size: 0.92em;
+            color: var(--ombre-purple);
+        }
+
+        .followup-notes {
+            margin-top: 4px;
+            font-size: 0.8em;
+        }
+
+        /* === CONVERSION EN SORT DE DURÉE === */
+        .sustain-block {
+            margin-top: 10px;
+            padding: 10px 12px;
+            background: rgba(107, 76, 154, 0.07);
+            border: 1px solid rgba(107, 76, 154, 0.25);
+            border-radius: 9px;
+        }
+
+        .sustain-label {
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--ombre-purple);
+            margin-bottom: 7px;
+        }
+
+        .sustain-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .sustain-name-input {
+            flex: 1;
+            min-width: 120px;
+            padding: 5px 9px;
+            border: 1px solid var(--moonlight);
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-family: var(--font-body);
+            color: var(--deep-navy);
+        }
+
+        .sustain-name-input:focus {
+            outline: none;
+            border-color: var(--ombre-purple);
+        }
+
+        .sustain-btn {
+            padding: 6px 14px;
+            background: linear-gradient(135deg, var(--ombre-purple), #8b6cbf);
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-weight: 700;
+            font-size: 0.82em;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        /* === PERTURBATION INLINE === */
+        .perturbation-inline {
+            margin-bottom: 10px;
+            padding: 10px 12px;
+            background: rgba(163, 45, 45, 0.06);
+            border: 1px solid rgba(163, 45, 45, 0.25);
+            border-radius: 9px;
+        }
+
+        .perturbation-inline-title {
+            font-size: 0.8em;
+            font-weight: 700;
+            color: var(--vitality-red);
+            margin-bottom: 7px;
+        }
+
+        /* === DÉS DE PERTURBATION (MJ) === */
+        .perturbation-dice-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .perturbation-die {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 46px;
+            padding: 4px 5px;
+            border: 1.5px solid;
+            border-radius: 7px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .perturbation-die .pd-val {
+            font-family: var(--font-display);
+            font-size: 1em;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .perturbation-die .pd-label {
+            font-size: 0.58em;
+            font-weight: 600;
+            margin-top: 2px;
+            text-align: center;
+            line-height: 1.1;
+        }
+
+        .perturbation-summary {
+            margin-top: 6px;
+            font-size: 0.78em;
+            color: var(--vitality-red);
+            font-weight: 600;
         }
 
         .passive-chip {
@@ -2280,6 +2608,7 @@
             <div class="nav-tabs">
                 <button class="nav-tab active" onclick="switchPage('attributes', this)">Personnage</button>
                 <button class="nav-tab" onclick="switchPage('skills', this)">Compétences</button>
+                <button class="nav-tab" onclick="switchPage('rolls', this)">Jets</button>
                 <button class="nav-tab" onclick="switchPage('objects', this)">Objets</button>
             </div>
             <div class="save-controls">
@@ -2413,23 +2742,47 @@
                                 style="font-size:0.72em; color:var(--silver-mist); text-align:center; margin-bottom:10px;">
                                 —</div>
 
-                            <!-- Surcharge -->
+                            <!-- Réserve d'énergie -->
                             <div
                                 style="font-size:0.75em; color:var(--silver-mist); font-weight:600; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em;">
-                                Surcharge</div>
+                                Réserve · par jour</div>
                             <div class="counter-controls">
-                                <button class="counter-btn minus" onclick="adjustSurcharge(-1)">−</button>
+                                <button class="counter-btn minus" onclick="adjustReserve(-1)">−</button>
                                 <div class="counter-value">
-                                    <span id="magic-surcharge-val"
-                                        style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:#BA7517;">0</span>
+                                    <span id="magic-reserve-val"
+                                        style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:var(--ombre-purple);">0</span>
+                                    <span class="counter-separator">/</span>
+                                    <span id="magic-reserve-max"
+                                        style="font-family:var(--font-display); font-size:1.4em; font-weight:700;">0</span>
                                 </div>
-                                <button class="counter-btn plus" onclick="adjustSurcharge(1)">+</button>
+                                <button class="counter-btn plus" onclick="adjustReserve(1)">+</button>
+                            </div>
+                            <div class="counter-bar" style="background:rgba(107,76,154,0.15);">
+                                <div id="magic-reserve-bar"
+                                    style="height:100%; border-radius:4px; background:linear-gradient(90deg,var(--ombre-purple),#9b7cd4); transition:width 0.3s ease; width:100%;">
+                                </div>
                             </div>
 
-                            <!-- Bouton de récupération -->
-                            <button onclick="recentrage()"
+                            <button onclick="resetReserve()"
                                 style="margin-top:10px; width:100%; padding:6px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺
-                                Recentrage — Surcharge à 0</button>
+                                Repos — Réserve pleine, usure à 0</button>
+
+                            <!-- Réserve de Perturbation du MJ -->
+                            <div id="mj-dice-block" style="display:none; margin-top:12px; padding-top:10px; border-top:1px solid rgba(163,45,45,0.2);">
+                                <div style="font-size:0.75em; color:var(--vitality-red); font-weight:600; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em;">
+                                    ⚠ Perturbation · MJ</div>
+                                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                                    <button class="counter-btn minus" onclick="adjustMjDice(-1)">−</button>
+                                    <span id="mj-dice-val" style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:var(--vitality-red);">0</span>
+                                    <span style="font-size:0.75em; color:var(--silver-mist);">dé(s)</span>
+                                    <button class="counter-btn plus" onclick="adjustMjDice(1)">+</button>
+                                    <input type="number" id="mj-dice-spend" value="1" min="1"
+                                        style="width:44px; padding:3px 5px; border:1px solid var(--moonlight); border-radius:5px; text-align:center; font-size:0.85em;">
+                                    <button onclick="usePerturbation()"
+                                        style="flex:1; min-width:90px; padding:5px 8px; background:rgba(163,45,45,0.12); border:1px solid rgba(163,45,45,0.35); border-radius:6px; color:var(--vitality-red); font-size:0.78em; font-weight:600; cursor:pointer;">🎲 Lancer</button>
+                                </div>
+                                <div id="mj-dice-result" style="margin-top:8px;"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -2520,59 +2873,6 @@
                     </div>
                 </div>
 
-                <!-- Valeurs Passives -->
-                <div class="card" style="margin-top:0;">
-                    <div class="card-title">
-                        <span class="icon" style="background:rgba(29,158,117,0.12);color:#1D9E75;">◉</span>
-                        Valeurs Passives
-                        <span style="font-size:0.7em;font-weight:400;color:var(--silver-mist);margin-left:auto;">Bonus
-                            attribut + ⌊Dés÷2⌋</span>
-                    </div>
-                    <div id="passives-display" style="display:flex;flex-wrap:wrap;gap:8px;padding:4px 0;"></div>
-                </div>
-
-                <!-- Sorts de Durée Actifs -->
-                <div class="card" id="active-spells-section" style="margin-top:0;">
-                    <div class="card-title" style="justify-content:space-between;flex-wrap:wrap;gap:8px;">
-                        <div style="display:flex;align-items:center;gap:8px;">
-                            <span class="icon"
-                                style="background:rgba(107,76,154,0.1);color:var(--ombre-purple);">🕐</span>
-                            Sorts de Durée Actifs
-                        </div>
-                        <button onclick="addActiveSpell()"
-                            style="padding:4px 10px;font-size:0.78em;background:rgba(107,76,154,0.1);border:1px solid rgba(107,76,154,0.3);border-radius:6px;color:var(--ombre-purple);cursor:pointer;font-weight:600;">+
-                            Nouveau sort</button>
-                    </div>
-                    <div id="active-spells-list"></div>
-                    <button id="apply-all-turn-costs-btn" onclick="applyAllTurnCosts()"
-                        style="display:none;margin-top:10px;width:100%;padding:9px;background:linear-gradient(135deg,var(--ombre-purple),#9b7cd4);border:none;border-radius:8px;color:white;font-weight:700;font-size:0.85em;cursor:pointer;">▶
-                        Nouveau tour — Appliquer tous les coûts (<span id="total-turn-cost">0</span> Surcharge)</button>
-                </div>
-
-                <!-- Vitesse de déplacement -->
-                <div class="card" style="margin-top:0;">
-                    <div class="card-title">
-                        <span class="icon" style="background:rgba(74,144,194,0.12);color:#4a90c2;">🏃</span>
-                        Vitesse de déplacement
-                    </div>
-                    <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px;">
-                        <span id="vitesse-total-val"
-                            style="font-family:var(--font-display);font-size:2em;font-weight:700;color:#4a90c2;">30</span>
-                        <span style="font-size:0.85em;color:var(--silver-mist);">pieds</span>
-                        <span id="vitesse-breakdown"
-                            style="font-size:0.72em;color:var(--silver-mist);margin-left:auto;text-align:right;"></span>
-                    </div>
-                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                        <label style="font-size:0.78em;color:var(--silver-mist);white-space:nowrap;">✨ Bonus actif
-                            (Puissance du sort) :</label>
-                        <input type="number" id="vitesse-bonus-input" min="0" value="0"
-                            style="width:55px;padding:4px 6px;border:1px solid var(--moonlight);border-radius:5px;text-align:center;"
-                            onchange="updateVitesseBonus(this.value)">
-                        <button onclick="resetVitesseBonus()" title="Réinitialiser"
-                            style="padding:4px 8px;background:rgba(196,92,92,0.08);border:1px solid rgba(196,92,92,0.25);border-radius:5px;color:var(--vitality-red);font-size:0.78em;cursor:pointer;">↺</button>
-                    </div>
-                </div>
-
             </div>
         </div>
 
@@ -2590,7 +2890,10 @@
                 </div>
                 <div class="skills-list" id="regular-skills-list"></div>
             </div>
+        </div>
 
+        <!-- PAGE 3 : JETS -->
+        <div class="page rolls-page" id="page-rolls">
             <div class="roll-section dual">
                 <div class="roll-header">
                     <div class="roll-icon dual">🎲</div>
@@ -2606,9 +2909,6 @@
                             <span style="font-size:1em;">✨</span>
                             <span id="roll-pool-status" style="font-weight:700; font-size:0.95em;"></span>
                         </div>
-                        <button onclick="recentrage()"
-                            style="padding:3px 10px; background:rgba(107,76,154,0.15); border:1px solid rgba(107,76,154,0.3); border-radius:5px; color:var(--ombre-purple); font-size:0.78em; font-weight:600; cursor:pointer;">↺
-                            Recentrage</button>
                     </div>
                     <div style="margin-top:6px; font-size:0.78em; color:var(--silver-mist);" id="roll-pool-details">
                     </div>
@@ -2622,6 +2922,17 @@
                             style="width:16px; height:16px; cursor:pointer;">
                         🔒 Jet privé (n'envoie pas sur Discord)
                     </label>
+                </div>
+
+                <!-- Perturbation appliquée par le MJ -->
+                <div id="perturb-inject-bar" style="display:none; align-items:center; gap:8px; margin-bottom:10px; padding:8px 12px; background:rgba(163,45,45,0.06); border:1px solid rgba(163,45,45,0.22); border-radius:8px; flex-wrap:wrap;">
+                    <label style="display:flex; align-items:center; gap:6px; font-size:0.82em; font-weight:600; color:var(--vitality-red); cursor:pointer;">
+                        <input type="checkbox" id="perturb-inject-toggle" style="width:15px; height:15px; cursor:pointer;">
+                        ⚠ Appliquer des dés de Perturbation
+                    </label>
+                    <input type="number" id="perturb-inject-count" value="1" min="1"
+                        style="width:48px; padding:3px 6px; border:1px solid var(--moonlight); border-radius:5px; text-align:center; font-size:0.85em;">
+                    <span style="font-size:0.76em; color:var(--silver-mist);">sur <span id="perturb-inject-avail">0</span> disponible(s)</span>
                 </div>
 
 
@@ -2671,18 +2982,13 @@
                             onclick="performSimpleRoll()" disabled>
                             🎲 Lancer le jet
                         </button>
-                        <label
-                            style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:0.82em;font-weight:600;color:#BA7517;cursor:pointer;">
-                            <input type="checkbox" id="simple-non-maitrise"
-                                style="width:15px;height:15px;cursor:pointer;">
-                            🔓 Sans maîtrise (−2 niveaux de compétence)
-                        </label>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique</div>
                         <div class="roll-info-content">
                             Dés = niveau de compétence. Seuil = 13 − Attribut.<br>
-                            Explosion basée sur le niveau de compétence.
+                            Explosion basée sur le niveau de compétence.<br>
+                            Après le jet, un <strong>jet de magie</strong> peut être ajouté pour amplifier l'effet.
                         </div>
                     </div>
                 </div>
@@ -2712,9 +3018,9 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Dés magiques injectés</label>
+                                <label class="form-label">Dés magiques</label>
                                 <input id="hybrid-magic-dice" class="bonus-input" type="number" value="1" min="0"
-                                    onchange="updateHybridMagicInfo()">
+                                    oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
@@ -2726,33 +3032,30 @@
                         </div>
                         <label
                             style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
-                            <input type="checkbox" id="hybrid-debridee"
-                                style="width:16px; height:16px; cursor:pointer;">
-                            ✨ Magie Débridée — situation de vie ou de mort, stress intense (Succès→Résonance,
-                            Vide→Instabilité ou Rupture)
+                            <input type="checkbox" id="hybrid-emotion" style="width:16px; height:16px; cursor:pointer;">
+                            🔥 Moment d'émotion
                         </label>
                         <button id="perform-hybrid-roll-btn" class="perform-roll-btn"
                             style="background: linear-gradient(135deg, var(--power-cyan), var(--power-glow)); margin-top: 16px;"
                             onclick="performHybridRoll()" disabled>
                             🎲✨ Lancer le jet
                         </button>
-                        <label
-                            style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:0.82em;font-weight:600;color:#BA7517;cursor:pointer;">
-                            <input type="checkbox" id="hybrid-non-maitrise"
-                                style="width:15px;height:15px;cursor:pointer;">
-                            🔓 Sans maîtrise (−2 niveaux de compétence)
-                        </label>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique Jet + Magie</div>
                         <div class="roll-info-content">
-                            Les dés magiques s'ajoutent aux succès de compétence, lancés selon l'État magique actuel
-                            (Score = Base − Surcharge).<br>
-                            Chaque dé coûte +1 Surcharge, allégé par Flux/Résonance/Transcendance.<br>
-                            Instabilité ajoute +1 Surcharge supplémentaire. Rupture génère un Effet Incontrôlé
-                            (Puissance +2).<br>
-                            <strong>Magie Débridée :</strong> Succès→Résonance, Vide→Instabilité (États S/A) ou Rupture
-                            (États B-E).
+                            Deux jets <strong>séparés</strong> : la compétence détermine si l'action réussit,
+                            la magie détermine la <strong>Puissance</strong> de l'effet (Gravité, portée, ampleur…).<br>
+                            La Puissance ne s'ajoute jamais au Résultat Final.<br>
+                            Faces des dés magiques et <strong>réserve journalière</strong> = niveau d'Ésotérisme.
+                            Le nombre injecté est libre, borné par le max/jet et la réserve restante.<br>
+                            <strong>Usure :</strong> chaque tranche de 5 points d'énergie dépensés abaisse d'un cran
+                            le niveau effectif du dé — les Instabilités puis les Ruptures finissent par apparaître.<br>
+                            <strong>Coût par face :</strong> Transcendance −1 · Résonance 0 · Flux 0 · Succès/Vide +1 ·
+                            Rupture +1 · Instabilité +2<br>
+                            Rupture génère un Effet Incontrôlé (Puissance +2) <em>et</em> donne un dé de Perturbation au MJ.<br>
+                            <strong>Moment d'émotion :</strong> Succès→Résonance, Vide→Instabilité (niv. 6+) ou Rupture
+                            (niv. 1-5).
                         </div>
                     </div>
                 </div>
@@ -2760,25 +3063,18 @@
                 <!-- MAGIE PURE -->
                 <div id="roll-pure" class="roll-panel">
                     <div class="roll-form">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div class="form-group">
-                                <label class="form-label">Dés magiques injectés</label>
-                                <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1"
-                                    onchange="updatePureMagicInfo()">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Magnitude requise (succès)</label>
-                                <input id="pure-magnitude" class="bonus-input" type="number" value="2" min="1" max="10">
-                            </div>
+                        <div class="form-group" style="max-width:220px;">
+                            <label class="form-label">Dés magiques</label>
+                            <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1"
+                                oninput="updatePureMagicInfo()">
                         </div>
                         <div id="pure-magic-info"
                             style="margin-top:10px; padding:10px; background:rgba(107,76,154,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);">
                         </div>
                         <label
                             style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
-                            <input type="checkbox" id="pure-debridee" style="width:16px; height:16px; cursor:pointer;">
-                            ✨ Magie Débridée — situation de vie ou de mort, stress intense (Succès→Résonance,
-                            Vide→Instabilité ou Rupture)
+                            <input type="checkbox" id="pure-emotion" style="width:16px; height:16px; cursor:pointer;">
+                            🔥 Moment d'émotion
                         </label>
                         <button id="perform-pure-roll-btn" class="perform-roll-btn"
                             style="background: linear-gradient(135deg, var(--ombre-purple), #8b6cbf); margin-top: 16px;"
@@ -2789,20 +3085,112 @@
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique Magie Pure</div>
                         <div class="roll-info-content">
-                            Jet uniquement avec les dés magiques selon l'État magique actuel (Score = Base −
-                            Surcharge).<br>
-                            Si le nombre de succès ≥ magnitude → pouvoir réussi.<br>
-                            Instabilité ajoute +1 Surcharge supplémentaire. Rupture génère un Effet Incontrôlé
-                            (Puissance +2).<br>
-                            <strong>Magnitudes :</strong> 1 triviale · 2 simple · 3 modérée · 4 complexe · 5 majeure ·
+                            Jet uniquement avec les dés magiques : faces et <strong>réserve journalière</strong>
+                            déterminées par le niveau d'Ésotérisme.<br>
+                            Les succès donnent la <strong>Puissance</strong> de l'effet.<br>
+                            <strong>Usure :</strong> 5 points d'énergie dépensés = −1 niveau effectif du dé.<br>
+                            Rupture génère un Effet Incontrôlé (Puissance +2) <em>et</em> donne un dé de Perturbation au MJ.<br>
+                            <strong>Puissance :</strong> 1 triviale · 2 simple · 3 modérée · 4 complexe · 5 majeure ·
                             6+ légendaire
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- COLONNE CONTEXTE -->
+            <div class="rolls-sidebar">
+
+                <!-- Vitesse de déplacement -->
+                <div class="ctx-panel">
+                    <div class="ctx-panel-title">🏃 Vitesse de déplacement</div>
+                    <div class="ctx-panel-body">
+                        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+                            <span id="vitesse-total-val"
+                                style="font-family:var(--font-display);font-size:1.9em;font-weight:700;color:#4a90c2;">30</span>
+                            <span style="font-size:0.82em;color:var(--silver-mist);">pieds</span>
+                            <span id="vitesse-breakdown"
+                                style="font-size:0.7em;color:var(--silver-mist);margin-left:auto;text-align:right;"></span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <label style="font-size:0.75em;color:var(--silver-mist);white-space:nowrap;">✨ Bonus (Puissance) :</label>
+                            <input type="number" id="vitesse-bonus-input" min="0" value="0"
+                                style="width:52px;padding:3px 6px;border:1px solid var(--moonlight);border-radius:5px;text-align:center;"
+                                onchange="updateVitesseBonus(this.value)">
+                            <button onclick="resetVitesseBonus()" title="Réinitialiser"
+                                style="padding:3px 8px;background:rgba(196,92,92,0.08);border:1px solid rgba(196,92,92,0.25);border-radius:5px;color:var(--vitality-red);font-size:0.75em;cursor:pointer;">↺</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Points de focalisation -->
+                <div class="ctx-panel">
+                    <div class="ctx-panel-title">🎯 Points de focalisation</div>
+                    <div class="ctx-panel-body">
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <button class="foc-btn" onclick="modFocalisation(-1)">−</button>
+                            <span style="font-family:var(--font-display);font-size:1.3em;font-weight:700;color:#4a90c2;">
+                                <span id="focalisation-current">1</span> /
+                                <input type="number" id="focalisation-max" min="1" max="9" value="1"
+                                    onchange="setFocalisationMax(this.value)"
+                                    style="width:40px;background:transparent;border:1px solid rgba(74,144,194,0.3);border-radius:4px;color:var(--deep-navy);font-family:var(--font-display);font-size:0.85em;text-align:center;">
+                            </span>
+                            <button class="foc-btn" onclick="modFocalisation(1)">+</button>
+                            <button class="foc-btn" onclick="refillFocalisation()" title="Nouveau round">↻</button>
+                        </div>
+                        <div id="foc-usages-toggle" onclick="toggleFocUsages()"
+                            style="margin-top:8px;cursor:pointer;color:#4a90c2;font-size:0.76em;user-select:none;font-weight:600;">▸
+                            Voir les usages du point de focalisation</div>
+                        <div id="foc-usages"
+                            style="display:none;margin-top:6px;padding:8px 10px;background:rgba(74,144,194,0.05);border:1px solid rgba(74,144,194,0.15);border-radius:6px;font-size:0.74em;line-height:1.55;color:var(--slate-blue);">
+                            <div style="margin-bottom:6px;"><strong>🎲 Action tactique</strong> : dépenser un point pour
+                                tenter un geste adapté à la situation par un jet de compétence contre la DC tactique.
+                                Chaque tranche de 3 points d'écart abaisse d'un cran le dé de l'adversaire à sa prochaine
+                                confrontation.</div>
+                            <div style="margin-bottom:6px;"><strong>🛡 Protéger un allié</strong> : un allié à 5 ft prend
+                                sa place dans une confrontation défensive, ou tente d'intercepter un sort à distance.</div>
+                            <div style="margin-bottom:6px;"><strong>⏳ Lancer un sort de durée</strong> : le point reste
+                                immobilisé tant que le sort est actif.</div>
+                            <div><strong>⚔ Riposte</strong> : lors d'une confrontation défensive, attaquer au lieu de se
+                                défendre. Victoire : résolution comme une confrontation offensive. Échec : l'attaque est
+                                subie comme une défense perdue.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sorts de durée -->
+                <div class="ctx-panel" id="active-spells-section">
+                    <div class="ctx-panel-title" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                        <span>⏳ Sorts de durée</span>
+                        <button onclick="addActiveSpell()" class="foc-btn">＋</button>
+                    </div>
+                    <div class="ctx-panel-body">
+                        <div id="active-spells-list"></div>
+                        <button id="apply-all-turn-costs-btn" onclick="applyAllTurnCosts()"
+                            style="display:none;margin-top:8px;width:100%;padding:7px;background:linear-gradient(135deg,var(--ombre-purple),#9b7cd4);border:none;border-radius:7px;color:white;font-weight:700;font-size:0.8em;cursor:pointer;">▶
+                            Nouveau tour — <span id="total-turn-cost">0</span> dés</button>
+                    </div>
+                </div>
+
+                <!-- Buffs reçus -->
+                <div class="ctx-panel">
+                    <div class="ctx-panel-title">🤝 Buffs reçus</div>
+                    <div class="ctx-panel-body">
+                        <div id="received-buffs-list"></div>
+                        <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+                            <input type="text" id="rb-name" placeholder="Nom (ex. Soin de Shuhui)"
+                                style="flex:1;min-width:110px;font-size:0.78em;padding:5px 8px;border:1px solid var(--moonlight);border-radius:5px;">
+                            <input type="number" id="rb-puissance" placeholder="P" min="1"
+                                title="Puissance du sort reçu"
+                                style="width:52px;font-size:0.78em;padding:5px 8px;border:1px solid var(--moonlight);border-radius:5px;text-align:center;">
+                            <button class="foc-btn" onclick="addReceivedBuff()">＋</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
-        <!-- PAGE 3 : OBJETS -->
+        <!-- PAGE 4 : OBJETS -->
         <div class="page objects-page" id="page-objects">
             <div class="objects-container">
 
@@ -2893,7 +3281,7 @@
     <script>
         // ========== COMPÉTENCES RÉGULIÈRES PAR DÉFAUT ==========
         const defaultRegularSkills = [
-            'Art', 'Athlétisme', 'Autorité', 'Apothicairerie', 'Bagarre', 'Combat Occulte',
+            'Art', 'Athlétisme', 'Autorité', 'Apothicairerie', 'Combat',
             'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Ésotérisme',
             'Médecine', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Technologie',
             'Tir', 'Tromperie', 'Vigilance'
@@ -2901,27 +3289,25 @@
 
         // Attributs passifs par défaut par compétence
         const DEFAULT_SKILL_ATTR = {
-            'Art':            'presence',
-            'Athlétisme':     'puissance',
-            'Autorité':       'presence',
+            'Art': 'presence',
+            'Athlétisme': 'puissance',
+            'Autorité': 'presence',
             'Apothicairerie': 'intelligence',
-            'Bagarre':        'puissance',
-            'Combat Occulte': 'precision',
-            'Discrétion':     'vivacite',
-            'Dressage':       'intuition',
-            'Éloquence':      'presence',
-            'Érudition':      'intelligence',
-            'Escamotage':     'precision',
-            'Ésotérisme':     'volonte',
-            'Médecine':       'intelligence',
-            'Recherche':      'intelligence',
-            'Résilience':     'endurance',
-            'Sagacité':       'intuition',
-            'Stratégie':      'intelligence',
-            'Technologie':    'intelligence',
-            'Tir':            'precision',
-            'Tromperie':      'presence',
-            'Vigilance':      'intuition',
+            'Combat': 'puissance',
+            'Discrétion': 'vivacite',
+            'Dressage': 'intuition',
+            'Éloquence': 'presence',
+            'Érudition': 'intelligence',
+            'Escamotage': 'precision',
+            'Médecine': 'intelligence',
+            'Recherche': 'intelligence',
+            'Résilience': 'endurance',
+            'Sagacité': 'intuition',
+            'Stratégie': 'intelligence',
+            'Technologie': 'intelligence',
+            'Tir': 'precision',
+            'Tromperie': 'presence',
+            'Vigilance': 'intuition',
         };
 
         function getDefaultSkillAttr(name) {
@@ -2994,9 +3380,9 @@
             objects: [],
             notes: "",
             currentModal: null,
-            magic: {
-                surcharge: 0
-            },
+            magic: { reserveUsed: 0, mjDice: 0 },
+            focalisation: { current: 1, max: 1 },
+            receivedBuffs: [],
             masteries: [],
             vitesseBonus: 0,
             activeSpells: []
@@ -3008,7 +3394,7 @@
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById(`page-${pageName}`).classList.add('active');
             if (tabEl) tabEl.classList.add('active');
-            if (pageName === 'skills') updateRollSelects();
+            if (pageName === 'skills' || pageName === 'rolls') updateRollSelects();
         }
 
         // ========== ATTRIBUTS ==========
@@ -3202,8 +3588,8 @@
             return WOUND_REFERENCE[idx - 1];
         }
 
-        const WOUND_DC_TABLE = { 1: 5, 2: 7, 3: 10, 4: 13, 5: 16, 6: 19 };
-        const WOUND_STAB_TABLE = { 1: 2, 2: 5, 3: 7, 4: 10, 5: 13, 6: 15 };
+        const WOUND_DC_TABLE = { 1: 2, 2: 5, 3: 7, 4: 10, 5: 13, 6: 15 };
+        const WOUND_STAB_TABLE = { 1: 1, 2: 3, 3: 5, 4: 7, 5: 9, 6: 12 };
 
         function getWoundDC(gravity) {
             if (gravity >= 7) return gravity * 3;
@@ -3244,7 +3630,8 @@
                     </tbody>
                 </table>
                 <div style="font-size:0.7em;color:var(--silver-mist);margin-top:6px;">
-                    <strong>DC Soin</strong> : stabilise + réduit la gravité (−1 mundain, −⌊Puissance÷2⌋ magique + Convalescence)<br>
+                    <strong>DC Soin</strong> : stabilise + réduit la Gravité de <strong>−1</strong> sans utilisation de magie.<br>
+                    <strong>Avec magie réduit de (⌊Puissance÷2⌋ + 1)</strong> avec un jet de magie en cas de réussite<br>
                     <strong>DC Stabilisation</strong> : stabilise uniquement, sans réduction de gravité
                 </div>
             `;
@@ -3342,7 +3729,22 @@
         function toggleHealPuissanceField(id) {
             const checkbox = document.getElementById(`heal-magic-${id}`);
             const puissanceField = document.getElementById(`heal-puissance-${id}`);
-            if (puissanceField) puissanceField.style.display = checkbox.checked ? 'inline-block' : 'none';
+            const preview = document.getElementById(`heal-preview-${id}`);
+            const on = checkbox.checked;
+            if (puissanceField) {
+                puissanceField.style.display = on ? 'inline-block' : 'none';
+                puissanceField.oninput = () => updateHealPreview(id);
+            }
+            if (preview) preview.style.display = on ? 'inline-block' : 'none';
+            updateHealPreview(id);
+        }
+
+        function updateHealPreview(id) {
+            const preview = document.getElementById(`heal-preview-${id}`);
+            const puissanceField = document.getElementById(`heal-puissance-${id}`);
+            if (!preview || !puissanceField) return;
+            const p = parseInt(puissanceField.value) || 0;
+            preview.textContent = `→ −${Math.floor(p / 2) + 1} Gravité`;
         }
 
         function applyHeal(id) {
@@ -3376,6 +3778,7 @@
 
             // Soin complet : atteint le DC soin
             w.stabilized = true;
+            let reduction, detail;
 
             if (isMagic) {
                 if (w.convalescence) {
@@ -3383,13 +3786,17 @@
                     return;
                 }
                 const puissance = parseInt(puissanceInput?.value) || 0;
-                const reduction = Math.floor(puissance / 2);
+                // Médecine + magie : le geste technique (+1) se cumule à l'énergie
+                reduction = Math.floor(puissance / 2) + 1;
+                detail = `⌊${puissance}÷2⌋ + 1 = ${reduction}`;
                 w.gravity = Math.max(0, w.gravity - reduction);
                 if (w.gravity > 0) {
                     w.convalescence = true;
                     w.convalescenceLabel = getWoundRef(w.gravity).conval;
                 }
             } else {
+                reduction = 1;
+                detail = '−1';
                 w.gravity = Math.max(0, w.gravity - 1);
             }
 
@@ -3397,9 +3804,9 @@
 
             if (w.gravity <= 0) {
                 appState.wounds = appState.wounds.filter(x => x.id !== id);
-                showNotification('✓ Blessure stabilisée et guérie !');
+                showNotification(`✓ Blessure guérie ! (${detail})`);
             } else {
-                showNotification(`✓ Stabilisée, Gravité réduite à ${w.gravity}`);
+                showNotification(`✓ Stabilisée, Gravité ${detail} → ${w.gravity}`);
             }
 
             renderWounds();
@@ -3463,7 +3870,8 @@
                                     <input type="checkbox" id="heal-magic-${w.id}" onchange="toggleHealPuissanceField('${w.id}')" ${w.convalescence ? 'disabled title="Convalescence active"' : ''}>
                                     ✨ Soin magique
                                 </label>
-                                <input type="number" id="heal-puissance-${w.id}" placeholder="Puissance" style="display:none;width:70px;">
+                                <input type="number" id="heal-puissance-${w.id}" placeholder="Puiss." title="Puissance du jet de magie" style="display:none;width:70px;">
+                                <span id="heal-preview-${w.id}" style="display:none;font-size:0.78em;color:var(--ombre-purple);font-weight:600;"></span>
                             </div>
                             <div class="heal-form-actions">
                                 <button class="heal-confirm-btn" onclick="applyHeal('${w.id}')">✓ Appliquer</button>
@@ -3474,6 +3882,141 @@
                 `;
                 list.appendChild(row);
             });
+        }
+
+        // Applique les dés de Perturbation choisis à un jet en cours
+        function consumePerturbationForRoll() {
+            const on = document.getElementById('perturb-inject-toggle')?.checked;
+            if (!on) return null;
+            const avail = getMjDice();
+            if (avail <= 0) return null;
+            const n = Math.max(1, Math.min(parseInt(document.getElementById('perturb-inject-count')?.value) || 1, avail));
+            const res = rollPerturbation(n);
+            appState.magic.mjDice = Math.max(0, avail - n + res.keptDice);
+            const tog = document.getElementById('perturb-inject-toggle');
+            if (tog) tog.checked = false;
+            updateMagicState();
+            return { ...res, spent: n };
+        }
+
+        function perturbationHtml(p) {
+            if (!p) return '';
+            let html = '<div class="perturbation-inline"><div class="perturbation-inline-title">⚠ Perturbation (' + p.spent + ' dé' + (p.spent > 1 ? 's' : '') + ')</div><div class="perturbation-dice-row">';
+            p.results.forEach(r => {
+                const info = PERTURBATION_INFO[r.type];
+                html += `<div class="perturbation-die" style="border-color:${info.color};color:${info.color};" title="${info.desc}">
+                    <span class="pd-val">${r.value}</span><span class="pd-label">${info.label}</span></div>`;
+            });
+            html += '</div><div class="perturbation-summary">✗ <strong>' + p.successLoss + '</strong> succès annulé(s)';
+            if (p.dispersions > 0) html += ` · 🌫 ${p.dispersions} dispersion(s)`;
+            if (p.keptDice > 0) html += ` · ↩ ${p.keptDice} dé(s) conservé(s) par le MJ`;
+            html += '</div></div>';
+            return html;
+        }
+
+        // ========== CONVERSION EN SORT DE DURÉE ==========
+        let lastMagicRoll = null;
+
+        function sustainButtonsHtml() {
+            if (!lastMagicRoll || lastMagicRoll.dice <= 0) return '';
+            const upkeep = Math.ceil(lastMagicRoll.dice / 2);
+            return `<div class="sustain-block">
+                <div class="sustain-label">⏳ Transformer en sort de durée — entretien ${upkeep} dés/tour</div>
+                <div class="sustain-row">
+                    <input type="text" id="sustain-name" placeholder="Nom du sort..." class="sustain-name-input">
+                    <button class="sustain-btn" onclick="sustainLastSpell()">⏳ Maintenir</button>
+                </div>
+            </div>`;
+        }
+
+        function sustainLastSpell() {
+            if (!lastMagicRoll) return;
+            const nameEl = document.getElementById('sustain-name');
+            const name = (nameEl?.value || '').trim() || `Sort (P${lastMagicRoll.puissance})`;
+            if (!appState.activeSpells) appState.activeSpells = [];
+            appState.activeSpells.push({
+                id: `spell_${Date.now()}`,
+                name,
+                puissance: lastMagicRoll.puissance,
+                initialDice: lastMagicRoll.dice
+            });
+            const block = document.querySelector('.sustain-block');
+            if (block) block.innerHTML = `<div class="sustain-label" style="color:#1D9E75;">✓ « ${name} » ajouté aux sorts de durée</div>`;
+            lastMagicRoll = null;
+            renderActiveSpells();
+            showNotification(`⏳ « ${name} » maintenu (entretien ${Math.ceil(appState.activeSpells[appState.activeSpells.length-1].initialDice / 2)} dés/tour)`);
+        }
+
+        // ========== POINTS DE FOCALISATION ==========
+
+        function renderFocalisation() {
+            const f = appState.focalisation || { current: 1, max: 1 };
+            const cur = document.getElementById('focalisation-current');
+            const max = document.getElementById('focalisation-max');
+            if (cur) cur.textContent = f.current;
+            if (max) max.value = f.max;
+        }
+
+        function modFocalisation(delta) {
+            const f = appState.focalisation;
+            f.current = Math.max(0, Math.min(f.max, f.current + delta));
+            renderFocalisation();
+        }
+
+        function setFocalisationMax(val) {
+            const f = appState.focalisation;
+            f.max = Math.max(1, Math.min(9, parseInt(val) || 1));
+            f.current = Math.min(f.current, f.max);
+            renderFocalisation();
+        }
+
+        function refillFocalisation() {
+            appState.focalisation.current = appState.focalisation.max;
+            renderFocalisation();
+        }
+
+        function toggleFocUsages() {
+            const el = document.getElementById('foc-usages');
+            const tog = document.getElementById('foc-usages-toggle');
+            if (!el) return;
+            const open = el.style.display !== 'none';
+            el.style.display = open ? 'none' : 'block';
+            if (tog) tog.innerHTML = (open ? '▸' : '▾') + " Voir les usages du point de focalisation";
+        }
+
+        // ========== BUFFS REÇUS ==========
+
+        function renderReceivedBuffs() {
+            const list = document.getElementById('received-buffs-list');
+            if (!list) return;
+            const buffs = appState.receivedBuffs || [];
+            if (buffs.length === 0) {
+                list.innerHTML = '<div style="font-size:0.78em;color:var(--silver-mist);font-style:italic;">Aucun buff actif.</div>';
+                return;
+            }
+            list.innerHTML = buffs.map(b => `<div class="buff-card">
+                <span class="buff-name" title="${(b.name || '').replace(/"/g, '&quot;')}">${b.name || 'Sans nom'}</span>
+                <span class="buff-puissance">P${b.puissance}</span>
+                <button class="buff-del" onclick="deleteReceivedBuff('${b.id}')" title="Retirer">✕</button>
+            </div>`).join('');
+        }
+
+        function addReceivedBuff() {
+            const nameEl = document.getElementById('rb-name');
+            const pEl = document.getElementById('rb-puissance');
+            const name = (nameEl?.value || '').trim();
+            const puissance = parseInt(pEl?.value) || 1;
+            if (!name) return;
+            if (!appState.receivedBuffs) appState.receivedBuffs = [];
+            appState.receivedBuffs.push({ id: `buff_${Date.now()}`, name, puissance });
+            if (nameEl) nameEl.value = '';
+            if (pEl) pEl.value = '';
+            renderReceivedBuffs();
+        }
+
+        function deleteReceivedBuff(id) {
+            appState.receivedBuffs = (appState.receivedBuffs || []).filter(b => b.id !== id);
+            renderReceivedBuffs();
         }
 
         // ========== SORTS DE DURÉE ACTIFS ==========
@@ -3513,16 +4056,45 @@
             const s = (appState.activeSpells || []).find(x => x.id === id);
             if (!s) return;
             const cost = getTurnCost(s.initialDice);
-            applySurchargeDelta(cost);
-            showNotification(`↻ ${s.name || 'Sort'} : +${cost} Surcharge (coût de tour)`);
+            const left = getReserveLeft();
+            if (cost > left) {
+                showNotification(`⚠ Réserve insuffisante (${left} restants, ${cost} requis) — « ${s.name || 'Sort'} » se dissipe`);
+                appState.activeSpells = appState.activeSpells.filter(x => x.id !== id);
+                renderActiveSpells();
+                return;
+            }
+            spendReserve(cost);
+            showNotification(`↻ ${s.name || 'Sort'} : −${cost} énergie (réserve ${getReserveLeft()}/${getReserveMax()})`);
+            renderActiveSpells();
         }
 
         function applyAllTurnCosts() {
             const spells = appState.activeSpells || [];
             if (spells.length === 0) return;
             const total = spells.reduce((sum, s) => sum + getTurnCost(s.initialDice), 0);
-            applySurchargeDelta(total);
-            showNotification(`▶ Nouveau tour : +${total} Surcharge (${spells.length} sort${spells.length > 1 ? 's' : ''} actif${spells.length > 1 ? 's' : ''})`);
+            const left = getReserveLeft();
+
+            if (total > left) {
+                // Dissipation des sorts les plus coûteux jusqu'à tenir dans la réserve
+                const sorted = [...spells].sort((a, b) => getTurnCost(b.initialDice) - getTurnCost(a.initialDice));
+                const dissipated = [];
+                let running = total;
+                for (const s of sorted) {
+                    if (running <= left) break;
+                    running -= getTurnCost(s.initialDice);
+                    dissipated.push(s);
+                }
+                const keptIds = new Set(spells.filter(s => !dissipated.includes(s)).map(s => s.id));
+                appState.activeSpells = spells.filter(s => keptIds.has(s.id));
+                spendReserve(running);
+                renderActiveSpells();
+                showNotification(`⚠ Réserve insuffisante — ${dissipated.length} sort(s) dissipé(s) : ${dissipated.map(s => s.name || 'Sans nom').join(', ')}`);
+                return;
+            }
+
+            spendReserve(total);
+            renderActiveSpells();
+            showNotification(`▶ Nouveau tour : −${total} énergie pour ${spells.length} sort${spells.length > 1 ? 's' : ''} (réserve ${getReserveLeft()}/${getReserveMax()})`);
         }
 
         function renderActiveSpells() {
@@ -3561,7 +4133,7 @@
                             <span class="active-spell-cost-val">${cost}</span>
                         </div>
                     </div>
-                    <button class="active-spell-turn-btn" onclick="applyTurnCost('${s.id}')">▶ Appliquer coût de tour (+${cost} Surcharge)</button>
+                    <button class="active-spell-turn-btn" onclick="applyTurnCost('${s.id}')">▶ Coût de tour : ${cost} dés</button>
                 </div>`;
             }).join('');
 
@@ -3578,8 +4150,7 @@
             'Athlétisme': ['Athlétisme', 'Acrobaties', 'Survie', 'Endurance'],
             'Autorité': ['Autorité', 'Intimidation', 'Leadership', 'Commandement'],
             'Apothicairerie': ['Apothicairerie', 'Herboristerie', 'Botanique', 'Potions'],
-            'Bagarre': ['Bagarre', 'Escrime', 'Arts martiaux', 'Lance'],
-            'Combat Occulte': ['Combat Occulte', 'Duel', 'Combat magique', 'Pouvoir en combat'],
+            'Combat': ['Bagarre', 'Escrime', 'Arts martiaux', 'Lance'],
             'Discrétion': ['Discrétion', 'Furtivité', 'Infiltration', 'Présence effacée'],
             'Dressage': ['Dressage', 'Équitation', 'Apprivoisement', 'Capture'],
             'Éloquence': ['Éloquence', 'Diplomatie', 'Séduction', 'Raison'],
@@ -3712,10 +4283,10 @@
 
         // ========== COMPÉTENCES ==========
         const ATTR_SHORT = {
-            puissance:'Pui.', vivacite:'Viv.', precision:'Pré.', endurance:'End.',
-            intelligence:'Int.', intuition:'Intu.', volonte:'Vol.', presence:'Pré.s'
+            puissance: 'Pui.', vivacite: 'Viv.', precision: 'Pré.', endurance: 'End.',
+            intelligence: 'Int.', intuition: 'Intu.', volonte: 'Vol.', presence: 'Pré.s'
         };
-        const ATTR_IDS = ['puissance','vivacite','precision','endurance','intelligence','intuition','volonte','presence'];
+        const ATTR_IDS = ['puissance', 'vivacite', 'precision', 'endurance', 'intelligence', 'intuition', 'volonte', 'presence'];
 
         function renderSkills() {
             const list = document.getElementById('regular-skills-list');
@@ -3732,6 +4303,13 @@
                 const attrOptions = ATTR_IDS.map(a =>
                     `<option value="${a}"${skill.defaultAttr === a ? ' selected' : ''}>${ATTR_SHORT[a]}</option>`
                 ).join('');
+                // Ésotérisme n'a pas de valeur passive : la magie ne s'exerce pas passivement
+                const attrSelectHtml = isPowerSkill
+                    ? `<span class="skill-attr-none" title="Ésotérisme n'a pas de valeur passive">—</span>`
+                    : `<select class="skill-attr-select" onchange="updateSkillDefaultAttr('${skill.id}', this.value)" title="Attribut passif">
+                        <option value="">—</option>
+                        ${attrOptions}
+                    </select>`;
                 item.innerHTML = `
                     <div class="skill-name ${hasAlts || isBaseSkill ? 'skill-renameable' : ''}" id="skill-name-${skill.id}"
                          ${isBaseSkill || hasAlts ? `onclick="openRenameSkill('${skill.id}')" title="Cliquer pour choisir un nom alternatif"` : ''}>
@@ -3743,10 +4321,7 @@
                         <span class="skill-level-value" title="Niveau ${skill.level} • ${level.dice} dés" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${skill.level}</sub></span>
                         <button class="skill-level-btn" onclick="modifySkillLevel('${skill.id}', 1)" ${skill.level >= 8 ? 'disabled' : ''}>+</button>
                     </div>
-                    <select class="skill-attr-select" onchange="updateSkillDefaultAttr('${skill.id}', this.value)" title="Attribut passif">
-                        <option value="">—</option>
-                        ${attrOptions}
-                    </select>
+                    ${attrSelectHtml}
                     ${isBaseSkill ? '' : `<button class="skill-delete-btn" onclick="deleteSkill('${skill.id}')">Supprimer</button>`}
                 `;
                 list.appendChild(item);
@@ -3785,6 +4360,7 @@
         function updateSkillDefaultAttr(id, attrId) {
             const skill = appState.skills.find(s => s.id === id);
             if (!skill) return;
+            if (skill.name === 'Ésotérisme' || skill.baseName === 'Ésotérisme') { skill.defaultAttr = null; return; }
             skill.defaultAttr = attrId || null;
             renderPassives();
             scheduleAutosave();
@@ -3954,15 +4530,13 @@
             const skillId = document.getElementById('simple-skill-select').value;
             const bonus = parseInt(document.getElementById('simple-bonus').value) || 0;
             const explosionMod = parseInt(document.getElementById('simple-explosion').value) || 0;
-            const nonMaitrise = document.getElementById('simple-non-maitrise')?.checked || false;
 
             const skill = appState.skills.find(s => s.id === skillId);
             if (!skill) return;
 
-            const effectiveLevel = nonMaitrise ? Math.max(1, skill.level - 2) : skill.level;
             const attrValue = appState.attributes[attrName];
             const attrLevel = getAttributeLevel(attrValue);
-            const skillLevel = getSkillLevel(effectiveLevel);
+            const skillLevel = getSkillLevel(skill.level);
             const numDice = skillLevel.dice;
             const attrBonus = attrLevel.bonus;
             const skillBonus = skillLevel.bonus;
@@ -3973,17 +4547,34 @@
 
             const diceResults = rollWithExplosions(numDice, threshold, explosionThreshold);
             const counts = countSuccesses(diceResults, threshold);
-            const successes = counts.successes;
+            const perturb = consumePerturbationForRoll();
+            const successes = Math.max(0, counts.successes - (perturb ? perturb.successLoss : 0));
             const total = successes + attrBonus + skillBonus + bonus;
 
             const explosionText = explosionMod !== 0
                 ? `Explosion ${explosionThreshold}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})`
                 : `Explosion ${explosionThreshold}+`;
-            const nonMaitriseTag = nonMaitrise ? ` · 🔓 Sans maîtrise (niv.${skill.level}→${effectiveLevel})` : '';
+
+            // Contexte conservé pour un éventuel jet de magie en réaction
+            lastRollContext = {
+                skillName: skill.name,
+                baseName: skill.baseName,
+                attrName: capitalize(attrName),
+                threshold,
+                dice: diceResults,
+                successes,
+                neutrals: counts.neutrals,
+                explosions: counts.explosions,
+                attributeBonus: attrBonus,
+                skillBonus,
+                bonus,
+                total,
+                subtitle: `${skill.name} (${capitalize(attrName)}) | ${explosionText}`
+            };
 
             displaySimpleResult({
                 title: 'Jet de Compétence',
-                subtitle: `${skill.name} (${capitalize(attrName)}) | ${explosionText}${nonMaitriseTag}`,
+                subtitle: lastRollContext.subtitle,
                 dice: diceResults,
                 threshold,
                 successes,
@@ -3992,7 +4583,9 @@
                 attributeBonus: attrBonus,
                 skillBonus,
                 bonus,
-                total
+                total,
+                perturb,
+                allowFollowUpMagic: true
             });
             if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), { successes, attrBonus, skillBonus, bonus });
         }
@@ -4033,8 +4626,14 @@
             document.getElementById('stat-attribute-bonus').textContent = data.attributeBonus;
             document.getElementById('stat-skill-bonus').textContent = data.skillBonus || 0;
 
-            // Pas de magnitude pour jet simple
-            document.getElementById('magnitude-result-area').innerHTML = '';
+            // Option : enchaîner un jet de magie (ex. amplifier l'impact après avoir touché)
+            const magArea = document.getElementById('magnitude-result-area');
+            let extra = perturbationHtml(data.perturb);
+            if (data.allowFollowUpMagic && getEsoterismeLevel() > 0) {
+                magArea.innerHTML = extra + renderFollowUpMagicPanel();
+            } else {
+                magArea.innerHTML = extra;
+            }
 
             // Total
             document.getElementById('result-total').textContent = data.total;
@@ -4042,16 +4641,87 @@
             document.getElementById('result-overlay').classList.add('active');
         }
 
+        // ========== JET DE MAGIE EN RÉACTION ==========
+        let lastRollContext = null;
+
+        function renderFollowUpMagicPanel() {
+            const esotLvl = getEsoterismeLevel();
+            const nbDice = getEsoterismeMaxDice();
+            const col = getMagicColor(esotLvl);
+            return `<div class="followup-magic">
+                <div class="followup-magic-title">✨ Ajouter un jet de magie</div>
+                <div class="followup-magic-sub">Amplifie l'effet de ce jet (impact, soin, portée…). N'affecte pas le total ci-dessus.</div>
+                <div class="followup-magic-row">
+                    <label>Dés</label>
+                    <input type="number" id="followup-magic-dice" value="1" min="1" max="${nbDice}">
+                    <span class="followup-magic-max">max ${nbDice}/jet · réserve ${getReserveLeft()}</span>
+                    <label class="followup-emotion">
+                        <input type="checkbox" id="followup-emotion">
+                        🔥 Moment d'émotion
+                    </label>
+                    <button class="followup-magic-btn" onclick="performFollowUpMagic()">Lancer</button>
+                </div>
+                <div class="followup-magic-tier" style="color:${col.color};">Ésotérisme ${esotLvl} — ${describeFaces(esotLvl)}</div>
+                <div id="followup-magic-result"></div>
+            </div>`;
+        }
+
+        function performFollowUpMagic() {
+            const esotLvl = getEsoterismeLevel();
+            if (esotLvl <= 0) return;
+            const requested = parseInt(document.getElementById('followup-magic-dice')?.value) || 1;
+            const count = clampMagicDice(requested);
+            if (count <= 0) { showNotification('⚠ Réserve magique épuisée'); return; }
+            const emotion = document.getElementById('followup-emotion')?.checked || false;
+
+            const effLvl = getEffectiveMagicLevel();
+            const { results, successes, puissanceIncontrolee, instabilites, energyCost, mjGain } =
+                resolveMagicDice(effLvl, count, emotion);
+            spendReserve(energyCost);
+            if (mjGain > 0) addMjDice(mjGain);
+            lastMagicRoll = { puissance: successes, dice: count };
+
+            const resEl = document.getElementById('followup-magic-result');
+            if (resEl) {
+                let html = `<div class="followup-dice-row" id="followup-dice-row"></div>`;
+                html += `<div class="followup-puissance">✨ Puissance : <strong>${successes}</strong></div>`;
+                const notes = [];
+                if (instabilites > 0) notes.push(`<span style="color:#BA7517;">↯ ${instabilites} Instabilité (+${instabilites * 2} énergie)</span>`);
+                if (mjGain > 0) notes.push(`<span style="color:var(--vitality-red);">⚠ +${mjGain} dé(s) de Perturbation au MJ</span>`);
+                if (puissanceIncontrolee > 0) notes.push(`<span style="color:var(--vitality-red);">💥 Effet Incontrôlé ${puissanceIncontrolee} (${getMagnitudeLabel(puissanceIncontrolee)})</span>`);
+                if (notes.length) html += `<div class="followup-notes">${notes.join(' · ')}</div>`;
+
+                html += sustainButtonsHtml();
+                resEl.innerHTML = html;
+
+                const row = document.getElementById('followup-dice-row');
+                results.forEach((d, i) => row.appendChild(renderMagicDie(d, i * 0.06)));
+            }
+
+            if (!isPrivateRoll() && lastRollContext) {
+                sendDiscordRoll(lastRollContext.skillName, lastRollContext.baseName, lastRollContext.total, lastRollContext.attrName, {
+                    successes: lastRollContext.successes,
+                    attrBonus: lastRollContext.attributeBonus,
+                    skillBonus: lastRollContext.skillBonus,
+                    bonus: lastRollContext.bonus,
+                    magic: {
+                        level: esotLvl, results, puissance: successes, emotion,
+                        puissanceIncontrolee, instabilites, followUp: true
+                    }
+                });
+            }
+        }
+
         // ========== SYSTÈME DE DÉS MAGIQUES ==========
 
-        const ETAT_INFO = {
-            S: { name: 'Transcendance', score: '≥10', color: '#8a6d00', bg: 'rgba(212,175,55,0.14)', border: '#D4AF37' },
-            A: { name: 'Maîtrise', score: '5 à 9', color: '#27500A', bg: 'rgba(59,109,17,0.1)', border: '#639922' },
-            B: { name: 'Stable', score: '1 à 4', color: '#085041', bg: 'rgba(29,158,117,0.1)', border: '#1D9E75' },
-            C: { name: 'Tendu', score: '-3 à 0', color: '#633806', bg: 'rgba(186,117,23,0.1)', border: '#BA7517' },
-            D: { name: 'Instable', score: '-7 à -4', color: '#712B13', bg: 'rgba(216,90,48,0.1)', border: '#D85A30' },
-            E: { name: 'Débordement', score: '≤ -8', color: '#501313', bg: 'rgba(163,45,45,0.1)', border: '#A32D2D' },
-        };
+        // Couleur d'affichage selon le niveau d'Ésotérisme
+        function getMagicColor(level) {
+            if (level >= 9) return { color: '#8a6d00', bg: 'rgba(212,175,55,0.14)', border: '#D4AF37' };
+            if (level >= 7) return { color: '#27500A', bg: 'rgba(59,109,17,0.1)', border: '#639922' };
+            if (level >= 5) return { color: '#085041', bg: 'rgba(29,158,117,0.1)', border: '#1D9E75' };
+            if (level >= 3) return { color: '#633806', bg: 'rgba(186,117,23,0.1)', border: '#BA7517' };
+            return { color: '#712B13', bg: 'rgba(216,90,48,0.1)', border: '#D85A30' };
+        }
 
         const FACE_COLORS = {
             'succès': { bg: 'rgba(99,153,34,0.15)', border: '#639922', text: '#27500A' },
@@ -4063,32 +4733,44 @@
             'rupture': { bg: 'rgba(163,45,45,0.15)', border: '#E24B4A', text: '#501313' },
         };
 
-        function getFaceDistribution(etat) {
-            const D = {
-                // Transcendance 1, Résonance 2, Flux 4, Succès 3, Vide 2
-                S: ['vide', 'vide', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'flux', 'résonance', 'résonance', 'transcendance'],
-                // Résonance 2, Flux 3, Succès 5, Vide 2
-                A: ['vide', 'vide', 'succès', 'succès', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'résonance', 'résonance'],
-                // Résonance 2, Flux 3, Succès 4, Vide 1, Instabilité 2
-                B: ['instabilité', 'instabilité', 'vide', 'succès', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'résonance', 'résonance'],
-                // Résonance 1, Flux 3, Succès 4, Vide 1, Instabilité 2, Rupture 1
-                C: ['rupture', 'instabilité', 'instabilité', 'vide', 'succès', 'succès', 'succès', 'succès', 'flux', 'flux', 'flux', 'résonance'],
-                // Flux 1, Succès 2, Vide 1, Instabilité 5, Rupture 3
-                D: ['rupture', 'rupture', 'rupture', 'instabilité', 'instabilité', 'instabilité', 'instabilité', 'instabilité', 'vide', 'succès', 'succès', 'flux'],
-                // Succès 2, Vide 2, Rupture 8
-                E: ['rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'rupture', 'vide', 'vide', 'succès', 'succès'],
-            };
-            return D[etat] || D['E'];
+        // Composition du d12 magique par niveau d'Ésotérisme
+        // [Transcendance, Résonance, Flux, Succès, Vide, Instabilité, Rupture]
+        const MAGIC_FACE_COUNTS = {
+            1: [0, 0, 1, 2, 2, 4, 3],
+            2: [0, 0, 1, 3, 2, 4, 2],
+            3: [0, 1, 2, 3, 2, 3, 1],
+            4: [0, 1, 3, 4, 1, 2, 1],
+            5: [0, 2, 3, 4, 1, 2, 0],
+            6: [0, 2, 3, 5, 2, 0, 0],
+            7: [1, 2, 4, 3, 2, 0, 0],
+            8: [1, 3, 4, 3, 1, 0, 0],
+            9: [2, 3, 4, 3, 0, 0, 0],
+            10: [2, 4, 4, 2, 0, 0, 0],
+        };
+
+        // Construit le d12 : valeurs basses = faces défavorables, valeurs hautes = favorables
+        function getFaceDistribution(level) {
+            const lvl = Math.min(10, Math.max(1, level || 1));
+            const [tr, res, flux, succ, vide, inst, rupt] = MAGIC_FACE_COUNTS[lvl];
+            return [
+                ...Array(rupt).fill('rupture'),
+                ...Array(inst).fill('instabilité'),
+                ...Array(vide).fill('vide'),
+                ...Array(succ).fill('succès'),
+                ...Array(flux).fill('flux'),
+                ...Array(res).fill('résonance'),
+                ...Array(tr).fill('transcendance'),
+            ];
         }
 
-        function rollMagicDie(etat) {
-            const dist = getFaceDistribution(etat);
+        function rollMagicDie(level) {
+            const dist = getFaceDistribution(level);
             const idx = Math.floor(Math.random() * 12);
             return { value: idx + 1, type: dist[idx], isBonus: false };
         }
 
         function rollResonanceDie() {
-            const dist = [...Array(8).fill('succès'), ...Array(4).fill('vide')];
+            const dist = [...Array(4).fill('vide'), ...Array(8).fill('succès')];
             const idx = Math.floor(Math.random() * 12);
             return { value: idx + 1, type: dist[idx], isBonus: true };
         }
@@ -4098,73 +4780,194 @@
             return s ? s.level : 0;
         }
 
-        function getMagicBaseScore() {
-            const lvl = getEsoterismeLevel();
-            const bases = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 6, 6: 9, 7: 13, 8: 18 };
-            return bases[Math.min(8, Math.max(1, lvl))] || 0;
-        }
-
-        function getMagicScore() {
-            return getMagicBaseScore() - appState.magic.surcharge;
-        }
-
-        function getMagicEtat() {
-            const score = getMagicScore();
-            if (score >= 10) return 'S';
-            if (score >= 5) return 'A';
-            if (score >= 1) return 'B';
-            if (score >= -3) return 'C';
-            if (score >= -7) return 'D';
-            return 'E';
-        }
-
+        // Max de dés injectables dans un seul jet
         function getEsoterismeMaxDice() {
             const s = appState.skills.find(s => (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme');
             return s ? getSkillLevel(s.level).dice : 0;
         }
 
-        // Applique un delta net de surcharge (peut être négatif grâce à Flux/Résonance/Transcendance)
-        function applySurchargeDelta(delta) {
-            appState.magic.surcharge = Math.max(0, appState.magic.surcharge + delta);
+        // Réserve d'énergie magique disponible par jour, selon le niveau d'Ésotérisme
+        const MAGIC_RESERVE = { 1: 3, 2: 6, 3: 10, 4: 14, 5: 18, 6: 22, 7: 28, 8: 35, 9: 43, 10: 52 };
+
+        function getReserveMax() {
+            const lvl = getEsoterismeLevel();
+            if (lvl <= 0) return 0;
+            return MAGIC_RESERVE[Math.min(10, lvl)] || 0;
+        }
+
+        // Usure : chaque tranche de 5 dés dépensés abaisse d'un cran le niveau effectif
+        const USURE_TRANCHE = 5;
+
+        function getUsure() {
+            return Math.floor((appState.magic.reserveUsed || 0) / USURE_TRANCHE);
+        }
+
+        // Niveau effectif du dé magique : niveau d'Ésotérisme diminué par l'usure
+        function getEffectiveMagicLevel() {
+            const lvl = getEsoterismeLevel();
+            if (lvl <= 0) return 0;
+            return Math.max(1, lvl - getUsure());
+        }
+
+        // Coût en réserve d'une face donnée
+        const FACE_COST = {
+            'transcendance': -1,
+            'résonance': 0,
+            'flux': 0,
+            'succès': 1,
+            'vide': 1,
+            'instabilité': 2,
+            'rupture': 1,
+        };
+
+        // ===== Réserve de Perturbation du MJ =====
+        function getMjDice() {
+            return appState.magic.mjDice || 0;
+        }
+
+        function addMjDice(n) {
+            appState.magic.mjDice = Math.max(0, getMjDice() + n);
             updateMagicState();
         }
 
-        function adjustSurcharge(delta) {
-            appState.magic.surcharge = Math.max(0, appState.magic.surcharge + delta);
+        function adjustMjDice(delta) {
+            addMjDice(delta);
+        }
+
+        function resetMjDice() {
+            appState.magic.mjDice = 0;
             updateMagicState();
         }
 
-        // Recentrage : une scène de calme sans utiliser sa magie remet la surcharge à 0
-        function recentrage() {
-            appState.magic.surcharge = 0;
+        // Faces du dé de Perturbation (d12) lancé par le MJ
+        const PERTURBATION_FACES = [
+            'rien', 'rien', 'rien', 'rien',
+            'succès', 'succès', 'succès',
+            'succès2', 'succès2',
+            'dispersion', 'dispersion',
+            'retour'
+        ];
+
+        const PERTURBATION_INFO = {
+            'rien':       { label: 'Rien',           desc: 'Aucun effet',                              color: '#888780' },
+            'succès':     { label: '−1 succès',      desc: 'Annule 1 succès du jet',                   color: '#BA7517' },
+            'succès2':    { label: '−2 succès',      desc: 'Annule 2 succès du jet',                   color: '#D85A30' },
+            'dispersion': { label: 'Dispersion',     desc: 'Annule 1 succès et l\'effet déborde',      color: '#A32D2D' },
+            'retour':     { label: 'Retour de flux', desc: 'Annule 2 succès et le MJ garde ce dé',     color: '#501313' },
+        };
+
+        function rollPerturbation(n) {
+            const results = [];
+            let successLoss = 0, keptDice = 0, dispersions = 0;
+            for (let i = 0; i < n; i++) {
+                const v = Math.floor(Math.random() * 12);
+                const type = PERTURBATION_FACES[v];
+                results.push({ value: v + 1, type });
+                if (type === 'succès') successLoss += 1;
+                else if (type === 'succès2') successLoss += 2;
+                else if (type === 'dispersion') { successLoss += 1; dispersions++; }
+                else if (type === 'retour') { successLoss += 2; keptDice++; }
+            }
+            return { results, successLoss, keptDice, dispersions };
+        }
+
+        function usePerturbation() {
+            const avail = getMjDice();
+            if (avail <= 0) { showNotification('⚠ Aucun dé de Perturbation disponible'); return; }
+            const input = document.getElementById('mj-dice-spend');
+            const n = Math.max(1, Math.min(parseInt(input?.value) || 1, avail));
+
+            const { results, successLoss, keptDice, dispersions } = rollPerturbation(n);
+            appState.magic.mjDice = Math.max(0, avail - n + keptDice);
             updateMagicState();
+
+            const out = document.getElementById('mj-dice-result');
+            if (out) {
+                let html = '<div class="perturbation-dice-row">';
+                results.forEach(r => {
+                    const info = PERTURBATION_INFO[r.type];
+                    html += `<div class="perturbation-die" style="border-color:${info.color};color:${info.color};" title="${info.desc}">
+                        <span class="pd-val">${r.value}</span><span class="pd-label">${info.label}</span></div>`;
+                });
+                html += '</div>';
+                html += `<div class="perturbation-summary">✗ <strong>${successLoss}</strong> succès annulé(s)`;
+                if (dispersions > 0) html += ` · 🌫 ${dispersions} dispersion(s)`;
+                if (keptDice > 0) html += ` · ↩ ${keptDice} dé(s) conservé(s) par le MJ`;
+                html += '</div>';
+                out.innerHTML = html;
+            }
+        }
+
+        function getReserveLeft() {
+            return Math.max(0, getReserveMax() - (appState.magic.reserveUsed || 0));
+        }
+
+        function spendReserve(n) {
+            appState.magic.reserveUsed = Math.min(getReserveMax(), (appState.magic.reserveUsed || 0) + n);
+            updateMagicState();
+        }
+
+        function adjustReserve(delta) {
+            appState.magic.reserveUsed = Math.max(0, Math.min(getReserveMax(), (appState.magic.reserveUsed || 0) - delta));
+            updateMagicState();
+        }
+
+        function resetReserve() {
+            appState.magic.reserveUsed = 0;
+            appState.magic.mjDice = 0;
+            updateMagicState();
+        }
+
+        // Nombre de dés réellement lancés : borné par le max/jet ET par la réserve restante
+        function clampMagicDice(requested) {
+            return Math.max(0, Math.min(requested, getEsoterismeMaxDice(), getReserveLeft()));
         }
 
         function updateMagicState() {
             const esotLvl = getEsoterismeLevel();
-            const score = getMagicScore();
-            const etat = getMagicEtat();
-            const info = ETAT_INFO[etat];
-            const surcharge = appState.magic.surcharge;
+            const effLvl = getEffectiveMagicLevel();
+            const usure = getUsure();
+            const col = getMagicColor(effLvl);
             const maxDice = getEsoterismeMaxDice();
 
-            const surchargeEl = document.getElementById('magic-surcharge-val');
             const etatEl = document.getElementById('magic-etat-display');
             const scoreEl = document.getElementById('magic-score-val');
 
-            if (surchargeEl) surchargeEl.textContent = surcharge;
             if (etatEl && esotLvl > 0) {
-                etatEl.textContent = `État ${etat} — ${info.name}`;
-                etatEl.style.color = info.color;
-                etatEl.style.background = info.bg;
-                etatEl.style.border = `1px solid ${info.border}`;
+                etatEl.textContent = usure > 0
+                    ? `Ésotérisme ${esotLvl} → ${effLvl} (usure ${usure})`
+                    : `Ésotérisme ${esotLvl} · ${maxDice} dés`;
+                etatEl.style.color = col.color;
+                etatEl.style.background = col.bg;
+                etatEl.style.border = `1px solid ${col.border}`;
             } else if (etatEl) {
                 etatEl.textContent = 'Aucune compétence Ésotérisme';
                 etatEl.style.color = 'var(--silver-mist)';
                 etatEl.style.background = 'transparent';
                 etatEl.style.border = 'none';
             }
-            if (scoreEl) scoreEl.textContent = esotLvl > 0 ? `Base ${getMagicBaseScore()} − Surcharge ${surcharge} = Score ${score}` : '—';
+            if (scoreEl) scoreEl.textContent = esotLvl > 0 ? describeFaces(effLvl) : '—';
+
+            // Réserve d'énergie
+            const resMax = getReserveMax();
+            const resLeft = getReserveLeft();
+            const resVal = document.getElementById('magic-reserve-val');
+            const resMaxEl = document.getElementById('magic-reserve-max');
+            const resBar = document.getElementById('magic-reserve-bar');
+            if (resVal) resVal.textContent = resLeft;
+            if (resMaxEl) resMaxEl.textContent = resMax;
+            if (resBar) resBar.style.width = resMax > 0 ? `${(resLeft / resMax) * 100}%` : '0%';
+
+            // Réserve de Perturbation du MJ
+            const mjVal = document.getElementById('mj-dice-val');
+            const mjBlock = document.getElementById('mj-dice-block');
+            if (mjVal) mjVal.textContent = getMjDice();
+            if (mjBlock) mjBlock.style.display = esotLvl > 0 ? 'block' : 'none';
+
+            const pBar = document.getElementById('perturb-inject-bar');
+            const pAvail = document.getElementById('perturb-inject-avail');
+            if (pBar) pBar.style.display = getMjDice() > 0 ? 'flex' : 'none';
+            if (pAvail) pAvail.textContent = getMjDice();
 
             // Mini bloc page Compétences
             const rollPool = document.getElementById('roll-page-pool');
@@ -4172,62 +4975,82 @@
             const rollDetails = document.getElementById('roll-pool-details');
             if (rollPool) rollPool.style.display = esotLvl > 0 ? 'block' : 'none';
             if (rollStatus && esotLvl > 0) {
-                rollStatus.textContent = `État ${etat} — ${info.name}`;
-                rollStatus.style.color = info.color;
+                rollStatus.textContent = usure > 0
+                    ? `Ésotérisme ${esotLvl} → ${effLvl} · usure ${usure}`
+                    : `Ésotérisme ${esotLvl} · ${maxDice} dés`;
+                rollStatus.style.color = col.color;
             }
             if (rollDetails) rollDetails.textContent = esotLvl > 0
-                ? `Base ${getMagicBaseScore()} − Surcharge ${surcharge} = Score ${score} · Max/jet : ${maxDice} dés`
+                ? `${describeFaces(effLvl)} · Réserve ${getReserveLeft()}/${getReserveMax()} · MJ ${getMjDice()} dé(s)`
                 : '';
 
             updateHybridMagicInfo();
             updatePureMagicInfo();
         }
 
+        // Résumé lisible de la composition du dé au niveau donné
+        function describeFaces(level) {
+            const lvl = Math.min(10, Math.max(1, level || 1));
+            const [tr, res, flux, succ, vide, inst, rupt] = MAGIC_FACE_COUNTS[lvl];
+            const parts = [];
+            if (tr) parts.push(`☆${tr}`);
+            if (res) parts.push(`✧${res}`);
+            if (flux) parts.push(`≈${flux}`);
+            if (succ) parts.push(`✦${succ}`);
+            if (vide) parts.push(`○${vide}`);
+            if (inst) parts.push(`↯${inst}`);
+            if (rupt) parts.push(`✗${rupt}`);
+            return parts.join(' ');
+        }
+
         function updateHybridMagicInfo() {
             const infoEl = document.getElementById('hybrid-magic-info');
             if (!infoEl) return;
-            const injected = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
-            const maxInject = getEsoterismeMaxDice();
-            const etat = getMagicEtat();
-            const score = getMagicScore();
-            const info = ETAT_INFO[etat];
+            const nbDice = getEsoterismeMaxDice();
+            const esotLvl = getEsoterismeLevel();
+            const effLvl = getEffectiveMagicLevel();
+            const col = getMagicColor(effLvl);
+            const requested = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
+            const left = getReserveLeft();
             infoEl.innerHTML = `
-                <strong>Max injectable :</strong> ${maxInject} dés<br>
-                <span style="color:${info.color};font-weight:600;">État ${etat} — ${info.name} · Base ${getMagicBaseScore()} − Sur. ${appState.magic.surcharge} = Score ${score}</span><br>
-                ${injected > maxInject ? `<span style="color:var(--vitality-red)">⚠ Dépasse le maximum injectable (${maxInject}) !</span>` : ''}
+                <span style="color:${col.color};font-weight:600;">Ésotérisme ${esotLvl}${effLvl < esotLvl ? ` → <strong>${effLvl}</strong> (usure)` : ''}</span> — max ${nbDice} dés/jet · Réserve ${left}/${getReserveMax()}<br>
+                ${describeFaces(effLvl)}<br>
+                <span style="font-size:0.92em;color:var(--silver-mist);">La Puissance obtenue est indépendante du jet de compétence.</span>
+                ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
+                ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
             `;
         }
 
         function updatePureMagicInfo() {
             const infoEl = document.getElementById('pure-magic-info');
             if (!infoEl) return;
-            const injected = parseInt(document.getElementById('pure-magic-dice')?.value) || 1;
-            const maxInject = getEsoterismeMaxDice();
-            const magnitude = parseInt(document.getElementById('pure-magnitude')?.value) || 2;
-            const etat = getMagicEtat();
-            const score = getMagicScore();
-            const info = ETAT_INFO[etat];
+            const nbDice = getEsoterismeMaxDice();
+            const esotLvl = getEsoterismeLevel();
+            const effLvl = getEffectiveMagicLevel();
+            const col = getMagicColor(effLvl);
+            const requested = parseInt(document.getElementById('pure-magic-dice')?.value) || 0;
+            const left = getReserveLeft();
             infoEl.innerHTML = `
-                <strong>Max injectable :</strong> ${maxInject} dés &nbsp;|&nbsp;
-                <strong>Succès requis :</strong> ${magnitude}<br>
-                <span style="color:${info.color};font-weight:600;">État ${etat} — ${info.name} · Base ${getMagicBaseScore()} − Sur. ${appState.magic.surcharge} = Score ${score}</span><br>
-                ${injected > maxInject ? `<span style="color:var(--vitality-red)">⚠ Dépasse le maximum injectable (${maxInject}) !</span>` : ''}
+                <span style="color:${col.color};font-weight:600;">Ésotérisme ${esotLvl}${effLvl < esotLvl ? ` → <strong>${effLvl}</strong> (usure)` : ''}</span> — max ${nbDice} dés/jet · Réserve ${left}/${getReserveMax()}<br>
+                ${describeFaces(effLvl)}
+                ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
+                ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
             `;
         }
 
-        // Magie Débridée : transforme les faces "sûres" en leur version puissante ou instable
-        // Succès -> Résonance (toujours) · Vide -> Instabilité (en S/A) ou Rupture (à partir de B)
-        function applyMagieDebridee(type, etat) {
+        // Moment d'émotion : la magie devient plus forte mais plus risquée
+        // Succès -> Résonance (toujours) · Vide -> Instabilité (niv. 6+) ou Rupture (niv. 1-5)
+        function applyEmotion(type, level) {
             if (type === 'succès') return 'résonance';
-            if (type === 'vide') return (etat === 'S' || etat === 'A') ? 'instabilité' : 'rupture';
+            if (type === 'vide') return level >= 6 ? 'instabilité' : 'rupture';
             return type;
         }
 
         // Résolution des dés magiques
-        // Retourne : résultats, succès (Puissance), Puissance Incontrôlée (Rupture), allègement surcharge, malus surcharge (Instabilité)
-        function resolveMagicDice(etat, count, debridee) {
+        // Retourne : résultats, succès (Puissance), Puissance Incontrôlée (Rupture), nombre d'Instabilités
+        function resolveMagicDice(level, count, emotion) {
             const results = [];
-            let successes = 0, puissanceIncontrolee = 0, surchargeReduction = 0, surchargeMalus = 0;
+            let successes = 0, puissanceIncontrolee = 0, instabilites = 0, energyCost = 0, mjGain = 0;
 
             const cascade = (n) => {
                 for (let i = 0; i < n; i++) {
@@ -4238,37 +5061,36 @@
             };
 
             for (let i = 0; i < count; i++) {
-                const die = rollMagicDie(etat);
-                if (debridee) die.type = applyMagieDebridee(die.type, etat);
+                const die = rollMagicDie(level);
+                if (emotion) die.type = applyEmotion(die.type, level);
                 results.push(die);
+                energyCost += (FACE_COST[die.type] !== undefined ? FACE_COST[die.type] : 1);
                 switch (die.type) {
                     case 'succès':
                         successes++;
                         break;
                     case 'flux':
                         successes++;
-                        surchargeReduction++;
                         break;
                     case 'résonance':
                         successes++;
-                        surchargeReduction += 2;
                         cascade(1);
                         break;
                     case 'transcendance':
                         successes += 2;
-                        surchargeReduction += 2;
                         cascade(2);
                         break;
                     case 'rupture':
                         puissanceIncontrolee += 2;
+                        mjGain++;
                         break;
                     case 'instabilité':
-                        surchargeMalus++;
+                        instabilites++;
                         break;
                     // vide : aucun effet
                 }
             }
-            return { results, successes, puissanceIncontrolee, surchargeReduction, surchargeMalus };
+            return { results, successes, puissanceIncontrolee, instabilites, energyCost, mjGain };
         }
 
         function getMagnitudeLabel(n) {
@@ -4296,8 +5118,8 @@
         }
 
         const ATTR_LABEL_SHORT = {
-            puissance:'Pui', vivacite:'Viv', precision:'Pré', endurance:'End',
-            intelligence:'Int', intuition:'Intu', volonte:'Vol', presence:'Prés'
+            puissance: 'Pui', vivacite: 'Viv', precision: 'Pré', endurance: 'End',
+            intelligence: 'Int', intuition: 'Intu', volonte: 'Vol', presence: 'Prés'
         };
 
         function renderPassives() {
@@ -4331,6 +5153,8 @@
             updateMagicState();
             renderPassives();
             renderActiveSpells();
+            renderFocalisation();
+            renderReceivedBuffs();
         }
 
         function showNotification(msg) {
@@ -4383,58 +5207,53 @@
             const attrName = document.getElementById('hybrid-attr-select').value;
             const skillId = document.getElementById('hybrid-skill-select').value;
             const bonus = parseInt(document.getElementById('hybrid-bonus').value) || 0;
-            const magicDiceCount = parseInt(document.getElementById('hybrid-magic-dice').value) || 0;
-            const debridee = document.getElementById('hybrid-debridee')?.checked || false;
-            const nonMaitrise = document.getElementById('hybrid-non-maitrise')?.checked || false;
+            const emotion = document.getElementById('hybrid-emotion')?.checked || false;
             const skill = appState.skills.find(s => s.id === skillId);
             if (!skill) return;
 
-            const effectiveLevel = nonMaitrise ? Math.max(1, skill.level - 2) : skill.level;
-            const maxInject = getEsoterismeMaxDice();
-            const actualMagic = Math.min(magicDiceCount, maxInject);
+            const esotLvl = getEsoterismeLevel();
+            const requestedMagic = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
+            const actualMagic = clampMagicDice(requestedMagic);
 
             const attrValue = appState.attributes[attrName];
             const attrLevel = getAttributeLevel(attrValue);
-            const skillLevel = getSkillLevel(effectiveLevel);
+            const skillLevel = getSkillLevel(skill.level);
             const threshold = 13 - attrLevel.faces;
             const skillDice = rollWithExplosions(skillLevel.dice, threshold, skillLevel.explosion);
             const skillCounts = countSuccesses(skillDice, threshold);
 
-            const etat = getMagicEtat();
-            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, surchargeReduction, surchargeMalus } = resolveMagicDice(etat, actualMagic, debridee);
+            const effLvl = getEffectiveMagicLevel();
+            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, instabilites, energyCost, mjGain } = resolveMagicDice(effLvl, actualMagic, emotion);
+            if (actualMagic > 0) { spendReserve(energyCost); if (mjGain > 0) addMjDice(mjGain); }
+            lastMagicRoll = actualMagic > 0 ? { puissance: magicSuccesses, dice: actualMagic } : null;
 
-            const scoreBeforeConsume = getMagicScore();
-            const surchargeBeforeConsume = appState.magic.surcharge;
-            const surchargeDelta = actualMagic + surchargeMalus - surchargeReduction;
-            if (actualMagic > 0) applySurchargeDelta(surchargeDelta);
-
-            const total = skillCounts.successes + magicSuccesses + attrLevel.bonus + skillLevel.bonus + bonus;
-            const nonMaitriseTag = nonMaitrise ? ` · 🔓 Sans maîtrise (niv.${skill.level}→${effectiveLevel})` : '';
+            // La magie ne s'ajoute PAS au total du jet de compétence
+            const perturb = consumePerturbationForRoll();
+            const netSkillSuccesses = Math.max(0, skillCounts.successes - (perturb ? perturb.successLoss : 0));
+            const total = netSkillSuccesses + attrLevel.bonus + skillLevel.bonus + bonus;
 
             displayHybridResult({
-                skillName: skill.name + (nonMaitrise ? ` (−2 niv.)` : ''), attrName: capitalize(attrName),
-                skillDice, magicResults, threshold, etat, debridee,
-                skillSuccesses: skillCounts.successes, magicSuccesses,
+                skillName: skill.name, attrName: capitalize(attrName),
+                skillDice, magicResults, threshold, esotLvl, emotion,
+                skillSuccesses: netSkillSuccesses, magicSuccesses, perturb,
                 attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus,
-                bonus, total, puissanceIncontrolee, surchargeReduction, surchargeMalus, actualMagic
+                bonus, total, puissanceIncontrolee, instabilites, mjGain, energyCost, actualMagic
             });
 
             if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), {
-                successes: skillCounts.successes + magicSuccesses,
+                successes: netSkillSuccesses,
                 attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus, bonus,
                 magic: {
-                    etat, results: magicResults, puissance: magicSuccesses, debridee,
-                    puissanceIncontrolee, surchargeReduction, surchargeMalus,
-                    score: scoreBeforeConsume,
-                    surcharge: surchargeBeforeConsume
+                    level: esotLvl, results: magicResults, puissance: magicSuccesses, emotion,
+                    puissanceIncontrolee, instabilites
                 }
             });
         }
 
         function displayHybridResult(data) {
-            const info = ETAT_INFO[data.etat];
+            const info = getMagicColor(data.esotLvl);
             document.getElementById('result-title').textContent = '🎲✨ Jet + Magie';
-            document.getElementById('result-subtitle').textContent = `${data.skillName} (${data.attrName}) + ${data.actualMagic} dé(s) · État ${data.etat} — ${info.name}${data.debridee ? ' · ✨ Débridée' : ''}`;
+            document.getElementById('result-subtitle').textContent = `${data.skillName} (${data.attrName}) + ${data.actualMagic} dé(s) magiques · Ésotérisme ${data.esotLvl}${data.emotion ? ' · 🔥 Émotion' : ''}`;
 
             const diceArea = document.getElementById('dice-display-area');
             diceArea.innerHTML = '';
@@ -4459,15 +5278,15 @@
             if (data.actualMagic > 0) {
                 const magicSection = document.createElement('div');
                 magicSection.className = 'dice-section';
-                const debrideeTag = data.debridee ? ` · <span style="color:#8a6d00;">✨ Débridée</span>` : '';
-                magicSection.innerHTML = `<div class="dice-section-label power" style="color:${info.color}">✨ Magie · État ${data.etat} — ${info.name}${debrideeTag}</div><div class="dice-container" id="hm-dice"></div>${MAGIC_DIE_LEGEND}`;
+                const emotionTag = data.emotion ? ` · <span style="color:#8a6d00;">🔥 Émotion</span>` : '';
+                magicSection.innerHTML = `<div class="dice-section-label power" style="color:${info.color}">✨ Magie · Ésotérisme ${data.esotLvl} — Puissance séparée${emotionTag}</div><div class="dice-container" id="hm-dice"></div>${MAGIC_DIE_LEGEND}`;
                 diceArea.appendChild(magicSection);
                 const hmCont = magicSection.querySelector('#hm-dice');
                 data.magicResults.forEach((d, i) => hmCont.appendChild(renderMagicDie(d, (data.skillDice.length + i) * 0.08)));
             }
 
             const vides = data.magicResults.filter(d => d.type === 'vide').length;
-            document.getElementById('stat-successes').textContent = `${data.skillSuccesses} + ${data.magicSuccesses}`;
+            document.getElementById('stat-successes').textContent = data.skillSuccesses;
             document.getElementById('stat-neutrals').textContent = vides > 0 ? `${vides} vide(s)` : '—';
             document.getElementById('stat-explosions').textContent = data.skillDice.filter(d => d.isExplosion).length;
             document.getElementById('stat-attribute-bonus').textContent = data.attrBonus;
@@ -4476,21 +5295,19 @@
             let mag = `<div class="magnitude-result">`;
             if (data.actualMagic > 0) {
                 mag += `<div class="magnitude-label">✨ Puissance du sort : <strong>${data.magicSuccesses}</strong></div>`;
-                if (data.surchargeReduction > 0) {
-                    mag += `<div class="magnitude-status success" style="color:#1F5C5C;">↓ Bonus : −${data.surchargeReduction} Surcharge (Flux/Résonance/Transcendance)</div>`;
-                }
+                mag += `<div style="font-size:0.8em;color:var(--silver-mist);margin-bottom:4px;">Indépendante du Résultat Final — s'applique à l'effet (Gravité, portée, ampleur…)</div>`;
                 let effets = [];
                 if (data.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
-                if (data.surchargeMalus > 0) effets.push(`↯ +${data.surchargeMalus} Surcharge supplémentaire (Instabilité)`);
+                if (data.instabilites > 0) effets.push(`↯ ${data.instabilites} Instabilité (+${data.instabilites * 2} énergie)`);
+                if (data.mjGain > 0) effets.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
                 if (effets.length) {
                     mag += `<div class="magnitude-status failure">${effets.join(' · ')}</div>`;
-                }
-                if (data.surchargeReduction === 0 && data.puissanceIncontrolee === 0 && data.surchargeMalus === 0) {
+                } else {
                     mag += `<div class="magnitude-status">Magie stable, aucun effet secondaire</div>`;
                 }
             }
             mag += `</div>`;
-            document.getElementById('magnitude-result-area').innerHTML = data.actualMagic > 0 ? mag : '';
+            document.getElementById('magnitude-result-area').innerHTML = perturbationHtml(data.perturb) + (data.actualMagic > 0 ? mag + sustainButtonsHtml() : '');
 
             document.getElementById('result-total').textContent = data.total;
             document.getElementById('result-overlay').classList.add('active');
@@ -4498,46 +5315,40 @@
 
         // ========== MAGIE PURE ==========
         function performPureRoll() {
-            const magicDiceCount = parseInt(document.getElementById('pure-magic-dice').value) || 1;
-            const magnitude = parseInt(document.getElementById('pure-magnitude').value) || 2;
-            const debridee = document.getElementById('pure-debridee')?.checked || false;
-            const maxInject = getEsoterismeMaxDice();
-            const actualDice = Math.min(magicDiceCount, maxInject);
-            const etat = getMagicEtat();
+            const emotion = document.getElementById('pure-emotion')?.checked || false;
             const esotLvl = getEsoterismeLevel();
+            const requestedDice = parseInt(document.getElementById('pure-magic-dice')?.value) || 1;
+            const actualDice = clampMagicDice(requestedDice);
+            if (actualDice <= 0) { showNotification('⚠ Réserve magique épuisée'); return; }
 
-            const { results, successes, puissanceIncontrolee, surchargeReduction, surchargeMalus } = resolveMagicDice(etat, actualDice, debridee);
+            const effLvl = getEffectiveMagicLevel();
+            const { results, successes, puissanceIncontrolee, instabilites, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion);
+            spendReserve(energyCost);
+            if (mjGain > 0) addMjDice(mjGain);
+            lastMagicRoll = { puissance: successes, dice: actualDice };
 
-            const scoreBeforeConsume = getMagicScore();
-            const surchargeBeforeConsume = appState.magic.surcharge;
-            const surchargeDelta = actualDice + surchargeMalus - surchargeReduction;
-            if (actualDice > 0) applySurchargeDelta(surchargeDelta);
-
-            displayPureResult({ results, etat, successes, magnitude, powerSuccess: successes >= magnitude, puissanceIncontrolee, surchargeReduction, surchargeMalus, actualDice, esotLvl, debridee });
+            displayPureResult({ results, successes, puissanceIncontrolee, instabilites, mjGain, energyCost, actualDice, esotLvl, emotion });
 
             if (!isPrivateRoll()) sendDiscordRoll('Pouvoir', null, successes, `Ésotérisme niv.${esotLvl}`, {
                 successes,
                 magic: {
-                    etat, results, isPure: true, puissance: successes, debridee,
-                    magnitude, powerSuccess: successes >= magnitude,
-                    puissanceIncontrolee, surchargeReduction, surchargeMalus,
-                    score: scoreBeforeConsume,
-                    surcharge: surchargeBeforeConsume
+                    level: esotLvl, results, isPure: true, puissance: successes, emotion,
+                    puissanceIncontrolee, instabilites
                 }
             });
         }
 
         function displayPureResult(data) {
-            const info = ETAT_INFO[data.etat];
+            const info = getMagicColor(data.esotLvl);
             document.getElementById('result-title').textContent = '✨ Magie Pure';
-            document.getElementById('result-subtitle').textContent = `${data.actualDice} dé(s) · État ${data.etat} — ${info.name} · Magnitude ${data.magnitude}${data.debridee ? ' · ✨ Débridée' : ''}`;
+            document.getElementById('result-subtitle').textContent = `${data.actualDice} dé(s) · Ésotérisme ${data.esotLvl}${data.emotion ? ' · 🔥 Émotion' : ''}`;
 
             const diceArea = document.getElementById('dice-display-area');
             diceArea.innerHTML = '';
             const section = document.createElement('div');
             section.className = 'dice-section';
-            const debrideeTag = data.debridee ? ` · <span style="color:#8a6d00;">✨ Débridée</span>` : '';
-            section.innerHTML = `<div class="dice-section-label power" style="color:${info.color}">✨ État ${data.etat} — ${info.name}${debrideeTag}</div><div class="dice-container" id="pm-dice"></div>${MAGIC_DIE_LEGEND}`;
+            const emotionTag = data.emotion ? ` · <span style="color:#8a6d00;">🔥 Émotion</span>` : '';
+            section.innerHTML = `<div class="dice-section-label power" style="color:${info.color}">✨ Ésotérisme ${data.esotLvl}${emotionTag}</div><div class="dice-container" id="pm-dice"></div>${MAGIC_DIE_LEGEND}`;
             diceArea.appendChild(section);
             const cont = section.querySelector('#pm-dice');
             data.results.forEach((d, i) => cont.appendChild(renderMagicDie(d, i * 0.08)));
@@ -4550,15 +5361,14 @@
             document.getElementById('stat-skill-bonus').textContent = '—';
 
             let mag = `<div class="magnitude-result">
-                <div class="magnitude-label">Magnitude ${data.magnitude} — Puissance : <strong>${data.successes}</strong></div>
-                <div class="magnitude-status ${data.powerSuccess ? 'success' : 'failure'}">${data.powerSuccess ? '✓ Pouvoir réussi !' : `✗ Échec — il manque ${data.magnitude - data.successes} succès`}</div>`;
-            if (data.surchargeReduction > 0) mag += `<div class="magnitude-status success" style="color:#1F5C5C;margin-top:4px;">↓ Bonus : −${data.surchargeReduction} Surcharge (Flux/Résonance/Transcendance)</div>`;
+                <div class="magnitude-label">✨ Puissance : <strong>${data.successes}</strong></div>`;
             let effetsP = [];
             if (data.puissanceIncontrolee > 0) effetsP.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
-            if (data.surchargeMalus > 0) effetsP.push(`↯ +${data.surchargeMalus} Surcharge supplémentaire (Instabilité)`);
+            if (data.instabilites > 0) effetsP.push(`↯ ${data.instabilites} Instabilité (+${data.instabilites * 2} énergie)`);
+            if (data.mjGain > 0) effetsP.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
             if (effetsP.length) mag += `<div class="magnitude-status failure" style="margin-top:4px;">${effetsP.join(' · ')}</div>`;
             mag += `</div>`;
-            document.getElementById('magnitude-result-area').innerHTML = mag;
+            document.getElementById('magnitude-result-area').innerHTML = mag + sustainButtonsHtml();
 
             document.getElementById('result-total').textContent = data.successes;
             document.getElementById('result-overlay').classList.add('active');
@@ -4794,7 +5604,7 @@
                 skills: (appState.skills || []).map(s => ({ name: s.name, level: s.level })),
                 counters: { health: appState.counters.health },
                 wounds: (appState.wounds || []).map(w => ({ gravity: w.gravity || 0 })),
-                magic: { surcharge: (appState.magic && appState.magic.surcharge) || 0 },
+                magic: { reserveUsed: (appState.magic && appState.magic.reserveUsed) || 0 },
                 vitesseBonus: appState.vitesseBonus || 0,
                 ts: Date.now()
             };
@@ -4838,6 +5648,8 @@
             renderWounds();
             renderVitesse();
             renderActiveSpells();
+            renderFocalisation();
+            renderReceivedBuffs();
             updateRollSelects();
             updateMagicState();
             scheduleAutosave();
@@ -4889,13 +5701,17 @@
         }
 
         function applyBackwardCompatDefaults() {
-            if (!appState.magic) appState.magic = { surcharge: 0 };
-            if (appState.magic.surcharge === undefined) appState.magic.surcharge = 0;
+            if (!appState.magic) appState.magic = { reserveUsed: 0 };
+            if (appState.magic.reserveUsed === undefined) appState.magic.reserveUsed = 0;
+            if (appState.magic.mjDice === undefined) appState.magic.mjDice = 0;
+            if (!appState.focalisation) appState.focalisation = { current: 1, max: 1 };
+            if (!appState.receivedBuffs) appState.receivedBuffs = [];
             if (!appState.masteries) appState.masteries = [];
             if (appState.vitesseBonus === undefined) appState.vitesseBonus = 0;
             if (!appState.activeSpells) appState.activeSpells = [];
             // Assigner un attribut passif par défaut aux compétences qui n'en ont pas
             (appState.skills || []).forEach(s => {
+                if (s.name === 'Ésotérisme' || s.baseName === 'Ésotérisme') { s.defaultAttr = null; return; }
                 if (!s.defaultAttr) {
                     const def = getDefaultSkillAttr(s.baseName || s.name);
                     if (def) s.defaultAttr = def;
@@ -4959,11 +5775,12 @@
             // Bloc magie
             if (details?.magic) {
                 const m = details.magic;
-                const info = ETAT_INFO[m.etat];
-                const debrideeTag = m.debridee ? ' · ✨ *Débridée*' : '';
-                lines.push(`✨ État **${m.etat} — ${info.name}** · Score ${m.score} (Base ${getMagicBaseScore()} − Sur. ${m.surcharge})${debrideeTag}`);
+                const info = getMagicColor(m.level);
+                const emotionTag = m.emotion ? ' · 🔥 *Émotion*' : '';
+                const followUpTag = m.followUp ? ' · ↪ *en réaction*' : '';
+                lines.push(`✨ **Ésotérisme ${m.level}**${emotionTag}${followUpTag}`);
 
-                if (!m.isPure) lines.push(`┈ Puissance du sort : **${m.puissance}**`);
+                if (!m.isPure) lines.push(`┈ Puissance du sort : **${m.puissance}** *(séparée du total)*`);
 
                 // Comptage des faces
                 if (m.results && m.results.length > 0) {
@@ -4976,15 +5793,10 @@
                     if (faceParts.length) lines.push(`┈ Faces : ${faceParts.join(' · ')}`);
                 }
 
-                // Bonus (allègement de surcharge)
-                if (m.surchargeReduction > 0) {
-                    lines.push(`┈ Bonus : −${m.surchargeReduction} Surcharge (Flux/Résonance/Transcendance)`);
-                }
-
                 // Effets négatifs
                 const effets = [];
                 if (m.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${m.puissanceIncontrolee} (${getMagnitudeLabel(m.puissanceIncontrolee)})`);
-                if (m.surchargeMalus > 0) effets.push(`↯ +${m.surchargeMalus} Surcharge supplémentaire (Instabilité)`);
+                if (m.instabilites > 0) effets.push(`↯ ${m.instabilites} Instabilité`);
                 if (effets.length) lines.push(`┈ Effets : ${effets.join(' · ')}`);
             }
 
