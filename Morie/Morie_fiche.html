@@ -2501,6 +2501,189 @@
             margin-bottom: 7px;
         }
 
+        /* === RÉSERVE DE PERTURBATION (page Personnage) === */
+        .perturb-reserve {
+            display: none;
+            margin-top: 14px;
+            background: rgba(163, 45, 45, 0.045);
+            border: 1px solid rgba(163, 45, 45, 0.22);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .perturb-reserve-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 7px 11px;
+            background: rgba(163, 45, 45, 0.09);
+            border-bottom: 1px solid rgba(163, 45, 45, 0.15);
+        }
+
+        .perturb-reserve-name {
+            font-size: 0.76em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--vitality-red);
+        }
+
+        .perturb-reserve-owner {
+            font-size: 0.68em;
+            color: var(--silver-mist);
+            font-style: italic;
+        }
+
+        .perturb-reserve-body {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 11px 8px;
+            flex-wrap: wrap;
+        }
+
+        .perturb-reserve-count {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .perturb-step {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(163, 45, 45, 0.1);
+            border: 1px solid rgba(163, 45, 45, 0.3);
+            border-radius: 5px;
+            color: var(--vitality-red);
+            font-size: 0.9em;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .perturb-step:hover {
+            background: rgba(163, 45, 45, 0.2);
+        }
+
+        .perturb-reserve-num {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            min-width: 52px;
+            justify-content: center;
+        }
+
+        .perturb-reserve-num span:first-child {
+            font-family: var(--font-display);
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--vitality-red);
+            line-height: 1;
+        }
+
+        .perturb-reserve-unit {
+            font-size: 0.7em;
+            color: var(--silver-mist);
+        }
+
+        .perturb-reserve-spend {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .perturb-reserve-spend input {
+            width: 40px;
+            padding: 4px 5px;
+            border: 1px solid var(--moonlight);
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.82em;
+            font-family: var(--font-body);
+        }
+
+        .perturb-reserve-spend button {
+            padding: 5px 11px;
+            background: rgba(163, 45, 45, 0.12);
+            border: 1px solid rgba(163, 45, 45, 0.35);
+            border-radius: 6px;
+            color: var(--vitality-red);
+            font-size: 0.78em;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .perturb-reserve-spend button:hover {
+            background: rgba(163, 45, 45, 0.22);
+        }
+
+        .perturb-reserve-hint {
+            padding: 0 11px 9px;
+            font-size: 0.68em;
+            color: var(--silver-mist);
+            line-height: 1.4;
+        }
+
+        #mj-dice-result:not(:empty) {
+            padding: 0 11px 11px;
+        }
+
+        /* === PERTURBATION SUR UN JET (page Jets) === */
+        .perturb-inject {
+            display: none;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 10px;
+            padding: 6px 11px;
+            background: rgba(163, 45, 45, 0.05);
+            border: 1px solid rgba(163, 45, 45, 0.18);
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--vitality-red);
+            transition: background 0.15s ease;
+        }
+
+        .perturb-inject:hover {
+            background: rgba(163, 45, 45, 0.09);
+        }
+
+        .perturb-inject input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            cursor: pointer;
+            accent-color: var(--vitality-red);
+            flex-shrink: 0;
+        }
+
+        .perturb-inject-text {
+            flex: 1;
+        }
+
+        .perturb-inject input[type="number"] {
+            width: 42px;
+            padding: 2px 4px;
+            border: 1px solid rgba(163, 45, 45, 0.25);
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.95em;
+            font-family: var(--font-body);
+            background: white;
+        }
+
+        .perturb-inject-avail {
+            font-weight: 400;
+            color: var(--silver-mist);
+            font-size: 0.92em;
+        }
+
         /* === DÉS DE PERTURBATION (MJ) === */
         .perturbation-dice-row {
             display: flex;
@@ -2767,21 +2950,28 @@
                                 style="margin-top:10px; width:100%; padding:6px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺
                                 Repos — Réserve pleine, usure à 0</button>
 
-                            <!-- Réserve de Perturbation du MJ -->
-                            <div id="mj-dice-block" style="display:none; margin-top:12px; padding-top:10px; border-top:1px solid rgba(163,45,45,0.2);">
-                                <div style="font-size:0.75em; color:var(--vitality-red); font-weight:600; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.04em;">
-                                    ⚠ Perturbation · MJ</div>
-                                <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                                    <button class="counter-btn minus" onclick="adjustMjDice(-1)">−</button>
-                                    <span id="mj-dice-val" style="font-family:var(--font-display); font-size:1.4em; font-weight:700; color:var(--vitality-red);">0</span>
-                                    <span style="font-size:0.75em; color:var(--silver-mist);">dé(s)</span>
-                                    <button class="counter-btn plus" onclick="adjustMjDice(1)">+</button>
-                                    <input type="number" id="mj-dice-spend" value="1" min="1"
-                                        style="width:44px; padding:3px 5px; border:1px solid var(--moonlight); border-radius:5px; text-align:center; font-size:0.85em;">
-                                    <button onclick="usePerturbation()"
-                                        style="flex:1; min-width:90px; padding:5px 8px; background:rgba(163,45,45,0.12); border:1px solid rgba(163,45,45,0.35); border-radius:6px; color:var(--vitality-red); font-size:0.78em; font-weight:600; cursor:pointer;">🎲 Lancer</button>
+                            <!-- Perturbation : dette accumulée, sous le contrôle du MJ -->
+                            <div id="mj-dice-block" class="perturb-reserve">
+                                <div class="perturb-reserve-head">
+                                    <span class="perturb-reserve-name">⚠ Perturbation</span>
+                                    <span class="perturb-reserve-owner">réserve du MJ</span>
                                 </div>
-                                <div id="mj-dice-result" style="margin-top:8px;"></div>
+                                <div class="perturb-reserve-body">
+                                    <div class="perturb-reserve-count">
+                                        <button class="perturb-step" onclick="adjustMjDice(-1)">−</button>
+                                        <div class="perturb-reserve-num">
+                                            <span id="mj-dice-val">0</span>
+                                            <span class="perturb-reserve-unit">dés</span>
+                                        </div>
+                                        <button class="perturb-step" onclick="adjustMjDice(1)">+</button>
+                                    </div>
+                                    <div class="perturb-reserve-spend">
+                                        <input type="number" id="mj-dice-spend" value="1" min="1">
+                                        <button onclick="usePerturbation()">🎲 Lancer</button>
+                                    </div>
+                                </div>
+                                <div class="perturb-reserve-hint">Alimentée par les Ruptures et Fractures. Se vide au repos.</div>
+                                <div id="mj-dice-result"></div>
                             </div>
                         </div>
                     </div>
@@ -2925,15 +3115,12 @@
                 </div>
 
                 <!-- Perturbation appliquée par le MJ -->
-                <div id="perturb-inject-bar" style="display:none; align-items:center; gap:8px; margin-bottom:10px; padding:8px 12px; background:rgba(163,45,45,0.06); border:1px solid rgba(163,45,45,0.22); border-radius:8px; flex-wrap:wrap;">
-                    <label style="display:flex; align-items:center; gap:6px; font-size:0.82em; font-weight:600; color:var(--vitality-red); cursor:pointer;">
-                        <input type="checkbox" id="perturb-inject-toggle" style="width:15px; height:15px; cursor:pointer;">
-                        ⚠ Appliquer des dés de Perturbation
-                    </label>
-                    <input type="number" id="perturb-inject-count" value="1" min="1"
-                        style="width:48px; padding:3px 6px; border:1px solid var(--moonlight); border-radius:5px; text-align:center; font-size:0.85em;">
-                    <span style="font-size:0.76em; color:var(--silver-mist);">sur <span id="perturb-inject-avail">0</span> disponible(s)</span>
-                </div>
+                <label id="perturb-inject-bar" class="perturb-inject">
+                    <input type="checkbox" id="perturb-inject-toggle">
+                    <span class="perturb-inject-text">⚠ Appliquer la Perturbation à ce jet</span>
+                    <input type="number" id="perturb-inject-count" value="1" min="1" onclick="event.preventDefault(); this.focus();">
+                    <span class="perturb-inject-avail">/ <span id="perturb-inject-avail">0</span></span>
+                </label>
 
 
                 <!-- Tabs pour switcher entre jet simple, jet+magie, magie pure -->
@@ -3050,11 +3237,12 @@
                             Faces des dés magiques et <strong>réserve journalière</strong> = niveau d'Ésotérisme.
                             Le nombre injecté est libre, borné par le max/jet et la réserve restante.<br>
                             <strong>Usure :</strong> chaque tranche de 5 points d'énergie dépensés abaisse d'un cran
-                            le niveau effectif du dé — les Instabilités puis les Ruptures finissent par apparaître.<br>
+                            le niveau effectif du dé — les Ruptures puis les Fractures finissent par apparaître.<br>
                             <strong>Coût par face :</strong> Transcendance −1 · Résonance 0 · Flux 0 · Succès/Vide +1 ·
-                            Rupture +1 · Instabilité +2<br>
-                            Rupture génère un Effet Incontrôlé (Puissance +2) <em>et</em> donne un dé de Perturbation au MJ.<br>
-                            <strong>Moment d'émotion :</strong> Succès→Résonance, Vide→Instabilité (niv. 6+) ou Rupture
+                            Rupture/Fracture +1<br>
+                            <strong>Rupture</strong> : Effet Incontrôlé +2 et <strong>1 dé</strong> de Perturbation au MJ.
+                            <strong>Fracture</strong> : Effet Incontrôlé +3 et <strong>2 dés</strong> de Perturbation.<br>
+                            <strong>Moment d'émotion :</strong> Succès→Résonance, Vide→Rupture (niv. 6+) ou Fracture
                             (niv. 1-5).
                         </div>
                     </div>
@@ -3089,7 +3277,8 @@
                             déterminées par le niveau d'Ésotérisme.<br>
                             Les succès donnent la <strong>Puissance</strong> de l'effet.<br>
                             <strong>Usure :</strong> 5 points d'énergie dépensés = −1 niveau effectif du dé.<br>
-                            Rupture génère un Effet Incontrôlé (Puissance +2) <em>et</em> donne un dé de Perturbation au MJ.<br>
+                            <strong>Rupture</strong> : Effet Incontrôlé +2 et <strong>1 dé</strong> de Perturbation au MJ.
+                            <strong>Fracture</strong> : Effet Incontrôlé +3 et <strong>2 dés</strong> de Perturbation.<br>
                             <strong>Puissance :</strong> 1 triviale · 2 simple · 3 modérée · 4 complexe · 5 majeure ·
                             6+ légendaire
                         </div>
@@ -4675,7 +4864,7 @@
             const emotion = document.getElementById('followup-emotion')?.checked || false;
 
             const effLvl = getEffectiveMagicLevel();
-            const { results, successes, puissanceIncontrolee, instabilites, energyCost, mjGain } =
+            const { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } =
                 resolveMagicDice(effLvl, count, emotion);
             spendReserve(energyCost);
             if (mjGain > 0) addMjDice(mjGain);
@@ -4686,7 +4875,7 @@
                 let html = `<div class="followup-dice-row" id="followup-dice-row"></div>`;
                 html += `<div class="followup-puissance">✨ Puissance : <strong>${successes}</strong></div>`;
                 const notes = [];
-                if (instabilites > 0) notes.push(`<span style="color:#BA7517;">↯ ${instabilites} Instabilité (+${instabilites * 2} énergie)</span>`);
+                if (fractures > 0) notes.push(`<span style="color:#7A1B1B;">✗✗ ${fractures} Fracture</span>`);
                 if (mjGain > 0) notes.push(`<span style="color:var(--vitality-red);">⚠ +${mjGain} dé(s) de Perturbation au MJ</span>`);
                 if (puissanceIncontrolee > 0) notes.push(`<span style="color:var(--vitality-red);">💥 Effet Incontrôlé ${puissanceIncontrolee} (${getMagnitudeLabel(puissanceIncontrolee)})</span>`);
                 if (notes.length) html += `<div class="followup-notes">${notes.join(' · ')}</div>`;
@@ -4706,7 +4895,7 @@
                     bonus: lastRollContext.bonus,
                     magic: {
                         level: esotLvl, results, puissance: successes, emotion,
-                        puissanceIncontrolee, instabilites, followUp: true
+                        puissanceIncontrolee, ruptures, fractures, followUp: true
                     }
                 });
             }
@@ -4729,12 +4918,12 @@
             'flux': { bg: 'rgba(53,166,166,0.15)', border: '#3BA6A6', text: '#1F5C5C' },
             'résonance': { bg: 'rgba(127,119,221,0.15)', border: '#7F77DD', text: '#3C3489' },
             'transcendance': { bg: 'rgba(212,175,55,0.18)', border: '#D4AF37', text: '#8a6d00' },
-            'instabilité': { bg: 'rgba(186,117,23,0.15)', border: '#BA7517', text: '#633806' },
+            'fracture': { bg: 'rgba(107,20,20,0.18)', border: '#7A1B1B', text: '#3D0A0A' },
             'rupture': { bg: 'rgba(163,45,45,0.15)', border: '#E24B4A', text: '#501313' },
         };
 
         // Composition du d12 magique par niveau d'Ésotérisme
-        // [Transcendance, Résonance, Flux, Succès, Vide, Instabilité, Rupture]
+        // [Transcendance, Résonance, Flux, Succès, Vide, Rupture, Fracture]
         const MAGIC_FACE_COUNTS = {
             1: [0, 0, 1, 2, 2, 4, 3],
             2: [0, 0, 1, 3, 2, 4, 2],
@@ -4751,10 +4940,10 @@
         // Construit le d12 : valeurs basses = faces défavorables, valeurs hautes = favorables
         function getFaceDistribution(level) {
             const lvl = Math.min(10, Math.max(1, level || 1));
-            const [tr, res, flux, succ, vide, inst, rupt] = MAGIC_FACE_COUNTS[lvl];
+            const [tr, res, flux, succ, vide, rupt, frac] = MAGIC_FACE_COUNTS[lvl];
             return [
+                ...Array(frac).fill('fracture'),
                 ...Array(rupt).fill('rupture'),
-                ...Array(inst).fill('instabilité'),
                 ...Array(vide).fill('vide'),
                 ...Array(succ).fill('succès'),
                 ...Array(flux).fill('flux'),
@@ -4816,7 +5005,7 @@
             'flux': 0,
             'succès': 1,
             'vide': 1,
-            'instabilité': 2,
+            'fracture': 1,
             'rupture': 1,
         };
 
@@ -4991,15 +5180,15 @@
         // Résumé lisible de la composition du dé au niveau donné
         function describeFaces(level) {
             const lvl = Math.min(10, Math.max(1, level || 1));
-            const [tr, res, flux, succ, vide, inst, rupt] = MAGIC_FACE_COUNTS[lvl];
+            const [tr, res, flux, succ, vide, rupt, frac] = MAGIC_FACE_COUNTS[lvl];
             const parts = [];
             if (tr) parts.push(`☆${tr}`);
             if (res) parts.push(`✧${res}`);
             if (flux) parts.push(`≈${flux}`);
             if (succ) parts.push(`✦${succ}`);
             if (vide) parts.push(`○${vide}`);
-            if (inst) parts.push(`↯${inst}`);
             if (rupt) parts.push(`✗${rupt}`);
+            if (frac) parts.push(`✗✗${frac}`);
             return parts.join(' ');
         }
 
@@ -5039,18 +5228,18 @@
         }
 
         // Moment d'émotion : la magie devient plus forte mais plus risquée
-        // Succès -> Résonance (toujours) · Vide -> Instabilité (niv. 6+) ou Rupture (niv. 1-5)
+        // Succès -> Résonance (toujours) · Vide -> Rupture (niv. 6+) ou Fracture (niv. 1-5)
         function applyEmotion(type, level) {
             if (type === 'succès') return 'résonance';
-            if (type === 'vide') return level >= 6 ? 'instabilité' : 'rupture';
+            if (type === 'vide') return level >= 6 ? 'rupture' : 'fracture';
             return type;
         }
 
         // Résolution des dés magiques
-        // Retourne : résultats, succès (Puissance), Puissance Incontrôlée (Rupture), nombre d'Instabilités
+        // Retourne : résultats, succès (Puissance), Puissance Incontrôlée, dés de Perturbation cédés au MJ
         function resolveMagicDice(level, count, emotion) {
             const results = [];
-            let successes = 0, puissanceIncontrolee = 0, instabilites = 0, energyCost = 0, mjGain = 0;
+            let successes = 0, puissanceIncontrolee = 0, ruptures = 0, fractures = 0, energyCost = 0, mjGain = 0;
 
             const cascade = (n) => {
                 for (let i = 0; i < n; i++) {
@@ -5082,15 +5271,18 @@
                         break;
                     case 'rupture':
                         puissanceIncontrolee += 2;
-                        mjGain++;
+                        ruptures++;
+                        mjGain += 1;
                         break;
-                    case 'instabilité':
-                        instabilites++;
+                    case 'fracture':
+                        puissanceIncontrolee += 3;
+                        fractures++;
+                        mjGain += 2;
                         break;
                     // vide : aucun effet
                 }
             }
-            return { results, successes, puissanceIncontrolee, instabilites, energyCost, mjGain };
+            return { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain };
         }
 
         function getMagnitudeLabel(n) {
@@ -5173,7 +5365,7 @@
                 'flux': 'Flux',
                 'résonance': 'Rés.',
                 'transcendance': 'Trans.',
-                'instabilité': 'Inst.',
+                'fracture': 'Fract.',
                 'rupture': 'Rupt.',
             };
             const el = document.createElement('div');
@@ -5197,7 +5389,7 @@
             <span style="color:#1F5C5C;">● Flux</span>
             <span style="color:#3C3489;">● Résonance</span>
             <span style="color:#8a6d00;">● Transcendance</span>
-            <span style="color:#633806;">● Instabilité</span>
+            <span style="color:#3D0A0A;">● Fracture</span>
             <span style="color:#501313;">● Rupture</span>
             <span style="color:#501313;opacity:0.7;">⋯ dé bonus (cascade)</span>
         </div>`;
@@ -5223,7 +5415,7 @@
             const skillCounts = countSuccesses(skillDice, threshold);
 
             const effLvl = getEffectiveMagicLevel();
-            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, instabilites, energyCost, mjGain } = resolveMagicDice(effLvl, actualMagic, emotion);
+            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualMagic, emotion);
             if (actualMagic > 0) { spendReserve(energyCost); if (mjGain > 0) addMjDice(mjGain); }
             lastMagicRoll = actualMagic > 0 ? { puissance: magicSuccesses, dice: actualMagic } : null;
 
@@ -5237,7 +5429,7 @@
                 skillDice, magicResults, threshold, esotLvl, emotion,
                 skillSuccesses: netSkillSuccesses, magicSuccesses, perturb,
                 attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus,
-                bonus, total, puissanceIncontrolee, instabilites, mjGain, energyCost, actualMagic
+                bonus, total, puissanceIncontrolee, ruptures, fractures, mjGain, energyCost, actualMagic
             });
 
             if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), {
@@ -5245,7 +5437,7 @@
                 attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus, bonus,
                 magic: {
                     level: esotLvl, results: magicResults, puissance: magicSuccesses, emotion,
-                    puissanceIncontrolee, instabilites
+                    puissanceIncontrolee, ruptures, fractures
                 }
             });
         }
@@ -5298,7 +5490,7 @@
                 mag += `<div style="font-size:0.8em;color:var(--silver-mist);margin-bottom:4px;">Indépendante du Résultat Final — s'applique à l'effet (Gravité, portée, ampleur…)</div>`;
                 let effets = [];
                 if (data.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
-                if (data.instabilites > 0) effets.push(`↯ ${data.instabilites} Instabilité (+${data.instabilites * 2} énergie)`);
+                if (data.fractures > 0) effets.push(`✗✗ ${data.fractures} Fracture`);
                 if (data.mjGain > 0) effets.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
                 if (effets.length) {
                     mag += `<div class="magnitude-status failure">${effets.join(' · ')}</div>`;
@@ -5322,18 +5514,18 @@
             if (actualDice <= 0) { showNotification('⚠ Réserve magique épuisée'); return; }
 
             const effLvl = getEffectiveMagicLevel();
-            const { results, successes, puissanceIncontrolee, instabilites, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion);
+            const { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion);
             spendReserve(energyCost);
             if (mjGain > 0) addMjDice(mjGain);
             lastMagicRoll = { puissance: successes, dice: actualDice };
 
-            displayPureResult({ results, successes, puissanceIncontrolee, instabilites, mjGain, energyCost, actualDice, esotLvl, emotion });
+            displayPureResult({ results, successes, puissanceIncontrolee, ruptures, fractures, mjGain, energyCost, actualDice, esotLvl, emotion });
 
             if (!isPrivateRoll()) sendDiscordRoll('Pouvoir', null, successes, `Ésotérisme niv.${esotLvl}`, {
                 successes,
                 magic: {
                     level: esotLvl, results, isPure: true, puissance: successes, emotion,
-                    puissanceIncontrolee, instabilites
+                    puissanceIncontrolee, ruptures, fractures
                 }
             });
         }
@@ -5364,7 +5556,7 @@
                 <div class="magnitude-label">✨ Puissance : <strong>${data.successes}</strong></div>`;
             let effetsP = [];
             if (data.puissanceIncontrolee > 0) effetsP.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
-            if (data.instabilites > 0) effetsP.push(`↯ ${data.instabilites} Instabilité (+${data.instabilites * 2} énergie)`);
+            if (data.fractures > 0) effetsP.push(`✗✗ ${data.fractures} Fracture`);
             if (data.mjGain > 0) effetsP.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
             if (effetsP.length) mag += `<div class="magnitude-status failure" style="margin-top:4px;">${effetsP.join(' · ')}</div>`;
             mag += `</div>`;
@@ -5746,7 +5938,7 @@
 
             const FACE_ICONS = {
                 'succès': '✦', 'vide': '○', 'flux': '≈', 'résonance': '✧', 'transcendance': '☆',
-                'instabilité': '↯', 'rupture': '✗'
+                'rupture': '✗', 'fracture': '✗✗'
             };
 
             // Ligne principale
@@ -5786,7 +5978,7 @@
                 if (m.results && m.results.length > 0) {
                     const counts = {};
                     m.results.forEach(d => { counts[d.type] = (counts[d.type] || 0) + 1; });
-                    const faceOrder = ['transcendance', 'résonance', 'flux', 'succès', 'vide', 'instabilité', 'rupture'];
+                    const faceOrder = ['transcendance', 'résonance', 'flux', 'succès', 'vide', 'rupture', 'fracture'];
                     const faceParts = faceOrder
                         .filter(t => counts[t])
                         .map(t => `${FACE_ICONS[t]} ${counts[t]}× ${t.charAt(0).toUpperCase() + t.slice(1)}`);
@@ -5796,7 +5988,7 @@
                 // Effets négatifs
                 const effets = [];
                 if (m.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${m.puissanceIncontrolee} (${getMagnitudeLabel(m.puissanceIncontrolee)})`);
-                if (m.instabilites > 0) effets.push(`↯ ${m.instabilites} Instabilité`);
+                if (m.fractures > 0) effets.push(`✗✗ ${m.fractures} Fracture`);
                 if (effets.length) lines.push(`┈ Effets : ${effets.join(' · ')}`);
             }
 
