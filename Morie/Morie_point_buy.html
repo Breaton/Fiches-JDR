@@ -612,7 +612,7 @@
         <div class="settings-section-title">Budget total</div>
         <div class="setting-item">
           <label>Budget total</label>
-          <input type="number" id="s_budget" value="100" min="10" max="300" onchange="updateSettings()">
+          <input type="number" id="s_budget" value="80" min="10" max="300" onchange="updateSettings()">
         </div>
 
         <div class="settings-section-title">Coûts cumulatifs — Attributs (depuis Commun 4)</div>
@@ -688,12 +688,12 @@
     <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser</button>
 
     <!-- MAÎTRISES -->
-    </div>
+  </div>
 
-    <div class="summary" id="summary">
-      <h3>Résumé du personnage</h3>
-      <div id="summaryContent"></div>
-    </div>
+  <div class="summary" id="summary">
+    <h3>Résumé du personnage</h3>
+    <div id="summaryContent"></div>
+  </div>
 
   </div>
 
@@ -760,7 +760,7 @@
     // ========================
 
     let config = {
-      budget: 100,
+      budget: 80,
       attrCosts: [0, -4, -3, -2, 0, 6, 8, 12],
       compCosts: [0, 0, 1, 2, 3, 6, 8],
       maxAttr: { 7: 2, 6: 3 },
