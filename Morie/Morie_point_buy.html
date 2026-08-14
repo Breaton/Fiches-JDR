@@ -535,153 +535,6 @@
     }
 
     /* === MAÎTRISES === */
-    .mastery-section {
-      margin-top: 2rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 1.5rem;
-    }
-
-    .mastery-section-title {
-      font-family: 'Cinzel', serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 1.2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .mastery-subsection-title {
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      margin-bottom: 0.6rem;
-      font-family: 'Cinzel', serif;
-    }
-
-    .mastery-row {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.4rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-      flex-wrap: wrap;
-    }
-
-    .mastery-source-tag {
-      font-size: 0.75rem;
-      color: var(--gold);
-      background: rgba(201, 147, 74, 0.12);
-      border: 1px solid rgba(201, 147, 74, 0.3);
-      border-radius: 3px;
-      padding: 1px 7px;
-      white-space: nowrap;
-    }
-
-    .mastery-type-tag {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      white-space: nowrap;
-    }
-
-    .mastery-cat-badge {
-      font-size: 0.75rem;
-      color: #7ecfcf;
-      background: rgba(126, 207, 207, 0.1);
-      border: 1px solid rgba(126, 207, 207, 0.3);
-      border-radius: 3px;
-      padding: 1px 7px;
-      white-space: nowrap;
-    }
-
-    .mastery-name-input {
-      flex: 1;
-      min-width: 120px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      color: var(--text);
-      font-size: 0.85rem;
-      padding: 3px 8px;
-      font-family: inherit;
-    }
-
-    .mastery-name-input:focus {
-      outline: none;
-      border-color: var(--gold);
-    }
-
-    .mastery-cost {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-      white-space: nowrap;
-    }
-
-    .mastery-cost.free {
-      color: var(--green);
-    }
-
-    .mastery-del {
-      background: none;
-      border: 1px solid transparent;
-      color: var(--text-dim);
-      cursor: pointer;
-      font-size: 0.8rem;
-      padding: 2px 6px;
-      border-radius: 3px;
-      transition: all 0.15s;
-    }
-
-    .mastery-del:hover {
-      border-color: var(--red);
-      color: var(--red);
-    }
-
-    .mastery-cat-buttons {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 0.8rem;
-    }
-
-    .mastery-cat-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-
-    .cat-group-label {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-    }
-
-    .mastery-add-btn {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-size: 0.8rem;
-      padding: 4px 10px;
-      border-radius: 3px;
-      cursor: pointer;
-      text-align: left;
-      font-family: inherit;
-      transition: all 0.15s;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .mastery-add-btn:hover {
-      border-color: var(--gold);
-      color: var(--gold);
-    }
 
     .cost-pill {
       background: rgba(201, 147, 74, 0.15);
@@ -759,7 +612,7 @@
         <div class="settings-section-title">Budget total</div>
         <div class="setting-item">
           <label>Budget total</label>
-          <input type="number" id="s_budget" value="80" min="10" max="300" onchange="updateSettings()">
+          <input type="number" id="s_budget" value="100" min="10" max="300" onchange="updateSettings()">
         </div>
 
         <div class="settings-section-title">Coûts cumulatifs — Attributs (depuis Commun 4)</div>
@@ -835,49 +688,6 @@
     <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser</button>
 
     <!-- MAÎTRISES -->
-    <div class="mastery-section">
-      <div class="mastery-section-title">
-        <span>Maîtrises</span>
-        <span style="font-size:0.75rem;color:var(--text-dim);font-family:sans-serif;font-weight:400;">🛡 Armure Légère
-          offerte à tous</span>
-      </div>
-
-      <!-- Auto-unlocked -->
-      <div style="margin-bottom:1.5rem;">
-        <div class="mastery-subsection-title">✨ Maîtrises débloquées par compétence</div>
-        <div id="autoMasteriesDiv"></div>
-      </div>
-
-      <!-- Armures & Bouclier — toggles -->
-      <div style="margin-bottom:1.5rem;">
-        <div class="mastery-subsection-title">🛡 Armures & Bouclier</div>
-        <div id="armorTogglesDiv"></div>
-      </div>
-
-      <!-- Maîtrises nommées achetées -->
-      <div>
-        <div class="mastery-subsection-title">Maîtrises achetées</div>
-        <div class="mastery-cat-buttons">
-          <div class="mastery-cat-group">
-            <span class="cat-group-label">Combat</span>
-            <button class="mastery-add-btn" onclick="addPurchasedMastery('arme')" title="3 pts">⚔ Arme <span
-                class="cost-pill">3</span></button>
-          </div>
-          <div class="mastery-cat-group">
-            <span class="cat-group-label">Déplacement</span>
-            <button class="mastery-add-btn" onclick="addPurchasedMastery('monture')" title="2 pts">🐴 Monture/Véhicule
-              <span class="cost-pill">2</span></button>
-          </div>
-          <div class="mastery-cat-group">
-            <span class="cat-group-label">Savoir</span>
-            <button class="mastery-add-btn" onclick="addPurchasedMastery('specialite')" title="2 pt">🧠 Specialité <span
-                class="cost-pill">2</span></button>
-            <button class="mastery-add-btn" onclick="addPurchasedMastery('savoir_faire')" title="2 pt">✨ Savoir-faire
-              <span class="cost-pill">2</span></button>
-          </div>
-        </div>
-        <div id="purchasedMasteriesDiv"></div>
-      </div>
     </div>
 
     <div class="summary" id="summary">
@@ -927,7 +737,7 @@
       { id: 'athletisme', name: 'Athlétisme', alt: 'Acrobaties · Survie · Endurance' },
       { id: 'autorite', name: 'Autorité', alt: 'Intimidation · Leadership · Commandement' },
       { id: 'apothicairerie', name: 'Apothicairerie', alt: 'Herboristerie · Botanique · Potions' },
-      { id: 'bagarre', name: 'Bagarre', alt: 'Escrime · Arts martiaux · Lance' },
+      { id: 'bagarre', name: 'Combat', alt: 'Bagarre · Escrime · Arts martiaux · Lance' },
       { id: 'discretion', name: 'Discrétion', alt: 'Furtivité · Infiltration · Présence effacée' },
       { id: 'dressage', name: 'Dressage', alt: 'Équitation · Apprivoisement · Capture' },
       { id: 'eloquence', name: 'Éloquence', alt: 'Diplomatie · Séduction · Raison' },
@@ -946,34 +756,11 @@
     ];
 
     // ========================
-    // MAÎTRISES
-    // ========================
-
-    const MASTERY_UNLOCKS = {
-      'bagarre': [{ level: 2, type: 'arme', hint: 'Arme de mêlée' }, { level: 5, type: 'arme', hint: 'Arme de mêlée' }, { level: 7, type: 'arme', hint: 'Arme de mêlée' }],
-      'tir': [{ level: 2, type: 'arme', hint: 'Arme à distance' }, { level: 5, type: 'arme', hint: 'Arme à distance' }],
-      'art': [{ level: 3, type: 'savoir_faire', hint: 'Savoir-faire artistique' }, { level: 5, type: 'savoir_faire', hint: 'Savoir-faire artistique' }],
-      'dressage': [{ level: 3, type: 'monture', hint: 'Monture standard' }, { level: 5, type: 'monture', hint: 'Monture exotique' }],
-      'erudition': [{ level: 3, type: 'specialite', hint: 'specialite' }, { level: 5, type: 'specialite', hint: 'specialite' }],
-      'technologie': [{ level: 3, type: 'savoir_faire', hint: 'Outil spécialisé' }, { level: 5, type: 'savoir_faire', hint: 'Outil spécialisé' }],
-    };
-
-    const MASTERY_CATS = [
-      { id: 'arme', label: '⚔ Arme', cost: 3, hint: 'Épée, Lance, Hache, Arc...' },
-      { id: 'armure_medium', label: '🛡 Armure Médium', cost: 2, hint: 'Requiert Armure Légère (offerte)' },
-      { id: 'armure_lourde', label: '🛡 Armure Lourde', cost: 3, hint: 'Requiert Armure Médium' },
-      { id: 'bouclier', label: '🛡 Bouclier', cost: 2, hint: 'Permet l\'utilisation d\'un bouclier' },
-      { id: 'monture', label: '🐴 Monture/Véhicule', cost: 2, hint: 'Cheval, Navire, Attelage...' },
-      { id: 'specialite', label: '🧠 Spécialite', cost: 2, hint: 'Langue étrangère' },
-      { id: 'savoir_faire', label: '✨ Savoir-faire', cost: 2, hint: 'Cuisine, Instrument, Outil...' },
-    ];
-
-    // ========================
     // STATE
     // ========================
 
     let config = {
-      budget: 80,
+      budget: 100,
       attrCosts: [0, -4, -3, -2, 0, 6, 8, 12],
       compCosts: [0, 0, 1, 2, 3, 6, 8],
       maxAttr: { 7: 2, 6: 3 },
@@ -982,13 +769,6 @@
 
     let attrValues = {};
     let compValues = {};
-    let masteryNames = {};       // key: 'skillId_idx' → string name
-    let purchasedMasteries = []; // [{id, category, name, cost}] — armes, montures, langues, savoir-faire
-    let armorToggles = { medium: false, lourde: false, bouclier: false };
-    // Armure légère = toujours offerte
-
-    const ARMOR_COSTS = { medium: 2, lourde: 3, bouclier: 2 };
-
     ATTRIBUTES.forEach(a => attrValues[a.id] = 4);
     COMPETENCES.forEach(c => compValues[c.id] = 1);
 
@@ -1008,19 +788,7 @@
       let total = 0;
       ATTRIBUTES.forEach(a => total += attrCost(attrValues[a.id]));
       COMPETENCES.forEach(c => total += compCost(compValues[c.id]));
-      purchasedMasteries.forEach(m => total += m.cost);
-      Object.entries(armorToggles).forEach(([k, v]) => { if (v) total += ARMOR_COSTS[k]; });
       return total;
-    }
-
-    function toggleArmor(type) {
-      if (type === 'lourde' && !armorToggles.medium) {
-        alert('Armure Lourde requiert Armure Médium.');
-        return;
-      }
-      armorToggles[type] = !armorToggles[type];
-      if (!armorToggles.medium) armorToggles.lourde = false; // cascade
-      render();
     }
 
     // ========================
@@ -1210,131 +978,7 @@
 
       html += '</div>';
 
-      // Masteries summary
-      const autoM = getAutoMasteries().filter(({ key }) => masteryNames[key]);
-      const purchM = purchasedMasteries.filter(m => m.name);
-      if (autoM.length > 0 || purchM.length > 0) {
-        html += '<div style="margin-top:1.5rem;"><div style="font-family:Cinzel,serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem">Maîtrises</div>';
-        html += '<div class="summary-grid">';
-        autoM.forEach(({ skillId, slot, key }) => {
-          html += `<div class="summary-item"><span class="s-name">${masteryNames[key]}</span><span class="s-level">${MASTERY_CATS.find(c => c.id === slot.type)?.label || slot.type} · offerte</span></div>`;
-        });
-        purchM.forEach(m => {
-          const cat = MASTERY_CATS.find(c => c.id === m.category);
-          html += `<div class="summary-item"><span class="s-name">${m.name}</span><span class="s-level">${cat?.label || m.category} · ${m.cost}pts</span></div>`;
-        });
-        html += '</div></div>';
-      }
-
       el.innerHTML = html;
-    }
-
-    // ========================
-    // MASTERY FUNCTIONS
-    // ========================
-
-    function getAutoMasteries() {
-      const result = [];
-      Object.entries(MASTERY_UNLOCKS).forEach(([skillId, unlocks]) => {
-        const cur = compValues[skillId] || 1;
-        unlocks.forEach((slot, idx) => {
-          if (cur >= slot.level) {
-            result.push({ skillId, idx, slot, key: `${skillId}_${idx}` });
-          }
-        });
-      });
-      return result;
-    }
-
-    function addPurchasedMastery(catId) {
-      if (['armure_medium', 'armure_lourde', 'bouclier'].includes(catId)) { toggleArmor(catId.replace('armure_', '')); return; }
-      const cat = MASTERY_CATS.find(c => c.id === catId);
-      if (!cat) return;
-      const id = `pm_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`;
-      purchasedMasteries.push({ id, category: catId, name: '', cost: cat.cost });
-      render();
-    }
-
-    function removePurchasedMastery(id) {
-      const m = purchasedMasteries.find(x => x.id === id);
-      if (m?.category === 'armure_medium') {
-        purchasedMasteries = purchasedMasteries.filter(x => x.id !== id && x.category !== 'armure_lourde');
-      } else {
-        purchasedMasteries = purchasedMasteries.filter(x => x.id !== id);
-      }
-      render();
-    }
-
-    function updatePurchasedName(id, name) {
-      const m = purchasedMasteries.find(x => x.id === id);
-      if (m) { m.name = name; renderSummary(); }
-    }
-
-    function updateAutoName(key, name) {
-      masteryNames[key] = name;
-      renderSummary();
-    }
-
-    function renderMasteries() {
-      const autoList = getAutoMasteries();
-      const compNames = Object.fromEntries(COMPETENCES.map(c => [c.id, c.name]));
-
-      const autoEl = document.getElementById('autoMasteriesDiv');
-      if (autoEl) {
-        autoEl.innerHTML = autoList.length === 0
-          ? '<p style="color:var(--text-dim);font-style:italic;font-size:0.85rem;">Aucune compétence n\'a encore débloqué de maîtrise (niveau 3 requis).</p>'
-          : autoList.map(({ skillId, slot, key }) => {
-            const val = masteryNames[key] || '';
-            const comp = compNames[skillId] || skillId;
-            const catLabel = MASTERY_CATS.find(c => c.id === slot.type)?.label || slot.type;
-            return `<div class="mastery-row">
-              <div class="mastery-source-tag">${comp} niv.${slot.level}</div>
-              <div class="mastery-type-tag">${catLabel}</div>
-              <input class="mastery-name-input" type="text" placeholder="${slot.hint}..."
-                value="${val.replace(/"/g, '&quot;')}"
-                oninput="updateAutoName('${key}', this.value)">
-              <span class="mastery-cost free">Offerte</span>
-            </div>`;
-          }).join('');
-      }
-
-      // Armor toggle buttons
-      const armorEl = document.getElementById('armorTogglesDiv');
-      if (armorEl) {
-        const armorDefs = [
-          { key: 'medium', label: '🛡 Armure Médium', cost: 2, req: null },
-          { key: 'lourde', label: '🛡 Armure Lourde', cost: 3, req: 'medium' },
-          { key: 'bouclier', label: '🛡 Bouclier', cost: 2, req: null },
-        ];
-        armorEl.innerHTML = armorDefs.map(a => {
-          const active = armorToggles[a.key];
-          const disabled = a.req && !armorToggles[a.req];
-          const reqLabel = a.req ? armorDefs.find(x => x.key === a.req)?.label : '';
-          return `<button class="armor-toggle ${active ? 'active' : ''} ${disabled ? 'disabled' : ''}"
-            onclick="toggleArmor('${a.key}')"
-            ${disabled ? `disabled title="Requiert ${reqLabel}"` : ''}>
-            ${a.label} <span class="cost-pill">${a.cost} pts</span>
-            ${active ? ' ✓' : ''}
-          </button>`;
-        }).join('');
-      }
-
-      const purchEl = document.getElementById('purchasedMasteriesDiv');
-      if (purchEl) {
-        purchEl.innerHTML = purchasedMasteries.length === 0
-          ? '<p style="color:var(--text-dim);font-style:italic;font-size:0.85rem;">Aucune maîtrise achetée.</p>'
-          : purchasedMasteries.map(m => {
-            const cat = MASTERY_CATS.find(c => c.id === m.category);
-            return `<div class="mastery-row">
-              <div class="mastery-cat-badge">${cat?.label || m.category}</div>
-              <input class="mastery-name-input" type="text" placeholder="Nom..."
-                value="${(m.name || '').replace(/"/g, '&quot;')}"
-                oninput="updatePurchasedName('${m.id}', this.value)">
-              <span class="mastery-cost">${m.cost} pts</span>
-              <button class="mastery-del" onclick="removePurchasedMastery('${m.id}')">✕</button>
-            </div>`;
-          }).join('');
-      }
     }
 
     function render() {
@@ -1343,16 +987,12 @@
       renderCompPyramid();
       renderAttrList();
       renderCompList();
-      renderMasteries();
       renderSummary();
     }
 
     function resetAll() {
       ATTRIBUTES.forEach(a => attrValues[a.id] = 4);
       COMPETENCES.forEach(c => compValues[c.id] = 1);
-      masteryNames = {};
-      purchasedMasteries = [];
-      armorToggles = { medium: false, lourde: false, bouclier: false };
       render();
     }
 
@@ -1383,7 +1023,7 @@
     function exportToFiche() {
       const skillNames = {
         art: 'Art', athletisme: 'Athlétisme', autorite: 'Autorité',
-        apothicairerie: 'Apothicairerie', bagarre: 'Bagarre',
+        apothicairerie: 'Apothicairerie', bagarre: 'Combat',
         discretion: 'Discrétion', dressage: 'Dressage', eloquence: 'Éloquence',
         erudition: 'Érudition', escamotage: 'Escamotage', esoterisme: 'Ésotérisme',
         medecine: 'Médecine', recherche: 'Recherche', resilience: 'Résilience',
@@ -1398,51 +1038,10 @@
         isBase: true
       }));
 
+      const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
+      const endurance = attrValues['endurance'] || 4;
       const volonte = attrValues['volonte'] || 4;
-      const powerMax = 30 + volonte * 3;
-
-      // Build masteries array
-      const masteriesExport = [
-        // Armure légère toujours offerte
-        { id: 'auto_armure_legere', name: 'Armure Légère', category: 'armure_legere', source: 'auto', autoSkill: null, autoLevel: null, linkedSkill: null, cost: 0 }
-      ];
-      // Auto-unlocked
-      getAutoMasteries().forEach(({ skillId, slot, key }, i) => {
-        masteriesExport.push({
-          id: `auto_${key}`,
-          name: masteryNames[key] || '',
-          category: slot.type,
-          source: 'auto',
-          autoSkill: skillId,
-          autoLevel: slot.level,
-          linkedSkill: null,
-          cost: 0
-        });
-      });
-      // Add armor toggle masteries
-      const armorDefs = [
-        { key: 'medium', name: 'Armure Médium', category: 'armure_medium', cost: 2 },
-        { key: 'lourde', name: 'Armure Lourde', category: 'armure_lourde', cost: 3 },
-        { key: 'bouclier', name: 'Bouclier', category: 'bouclier', cost: 2 },
-      ];
-      armorDefs.forEach(a => {
-        if (armorToggles[a.key]) {
-          masteriesExport.push({ id: `armor_${a.key}`, name: a.name, category: a.category, source: 'purchased', autoSkill: null, autoLevel: null, linkedSkill: null, cost: a.cost });
-        }
-      });
-      // Purchased named
-      purchasedMasteries.forEach(m => {
-        masteriesExport.push({
-          id: m.id,
-          name: m.name,
-          category: m.category,
-          source: 'purchased',
-          autoSkill: null,
-          autoLevel: null,
-          linkedSkill: null,
-          cost: m.cost
-        });
-      });
+      const elanMax = ELAN_CONTRIB[endurance] + ELAN_CONTRIB[volonte];
 
       const state = {
         profile: { name: '', image: null },
@@ -1457,15 +1056,14 @@
           presence: attrValues['presence']
         },
         counters: {
-          health: { current: powerMax, max: powerMax },
-          power: { current: powerMax, max: powerMax }
+          health: { current: elanMax, max: elanMax },
+          power: { current: elanMax, max: elanMax }
         },
         customResources: [],
         skills: skills,
         wounds: [],
         objects: [],
-        masteries: masteriesExport,
-        magic: { surcharge: 0 },
+        magic: { reserveUsed: 0, mjDice: 0 },
         currentModal: null
       };
 
@@ -1507,6 +1105,7 @@
         'Ésotérisme': 'esoterisme', 'Éloquence': 'eloquence', 'Érudition': 'erudition',
         'Résilience': 'resilience', 'Sagacité': 'sagacite', 'Stratégie': 'strategie',
         'Athlétisme': 'athletisme', 'Autorité': 'autorite', 'Discrétion': 'discretion',
+        'Combat': 'bagarre', 'Bagarre': 'bagarre',
       };
       if (data.attributes) {
         Object.entries(data.attributes).forEach(([k, v]) => { if (k in attrValues) attrValues[k] = Math.max(1, Math.min(8, Number(v))); });
@@ -1515,22 +1114,6 @@
         data.skills.forEach(s => {
           const id = nameToId[s.name] || aliases[s.name];
           if (id) compValues[id] = Math.max(1, Math.min(8, Number(s.level)));
-        });
-      }
-      masteryNames = {}; purchasedMasteries = []; armorToggles = { medium: false, lourde: false, bouclier: false };
-      if (data.masteries) {
-        data.masteries.forEach(m => {
-          if (m.category === 'armure_medium') { armorToggles.medium = true; return; }
-          if (m.category === 'armure_lourde') { armorToggles.lourde = true; return; }
-          if (m.category === 'bouclier') { armorToggles.bouclier = true; return; }
-          if (m.category === 'armure_legere') return;
-          if (m.source === 'auto' && m.autoSkill) {
-            const unlocks = MASTERY_UNLOCKS[m.autoSkill];
-            if (unlocks) { const idx = unlocks.findIndex(u => u.level === m.autoLevel); if (idx !== -1 && m.name) masteryNames[`${m.autoSkill}_${idx}`] = m.name; }
-          } else if (m.source === 'purchased' && m.name) {
-            const cat = MASTERY_CATS.find(c => c.id === m.category);
-            if (cat) purchasedMasteries.push({ id: m.id || `pm_${Date.now()}`, category: m.category, name: m.name, cost: m.cost ?? cat.cost });
-          }
         });
       }
       render();
