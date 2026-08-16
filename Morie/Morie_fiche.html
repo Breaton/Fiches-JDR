@@ -2868,25 +2868,29 @@
 
         .qi-step:hover { background: rgba(29, 158, 117, 0.22); }
 
-        .qi-quick {
+        .qi-stepper {
             display: flex;
-            gap: 4px;
+            align-items: center;
+            gap: 5px;
             margin-left: auto;
         }
 
-        .qi-quick button {
-            padding: 3px 8px;
-            background: rgba(29, 158, 117, 0.08);
-            border: 1px solid rgba(29, 158, 117, 0.25);
+        .qi-amount {
+            width: 46px;
+            padding: 4px 5px;
+            border: 1px solid rgba(29, 158, 117, 0.3);
             border-radius: 5px;
-            color: #085041;
-            font-size: 0.72em;
-            font-weight: 700;
-            cursor: pointer;
+            text-align: center;
+            font-size: 0.85em;
             font-family: var(--font-body);
+            color: #085041;
+            background: white;
         }
 
-        .qi-quick button:hover { background: rgba(29, 158, 117, 0.2); }
+        .qi-amount:focus {
+            outline: none;
+            border-color: #1D9E75;
+        }
 
         .qi-status {
             margin-top: 7px;
@@ -3618,9 +3622,12 @@
                                     <button class="qi-perso-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
                                 </div>
                                 <div class="qi-perso-body">
-                                    <button class="qi-step" onclick="qiAdjust(-1)">−</button>
                                     <span class="qi-perso-num" id="qi-value-perso">0</span>
-                                    <button class="qi-step" onclick="qiAdjust(1)">+</button>
+                                    <div class="qi-stepper">
+                                        <button class="qi-step" onclick="qiStep(-1, 'qi-amount-perso')">−</button>
+                                        <input type="number" id="qi-amount-perso" value="1" min="1" class="qi-amount">
+                                        <button class="qi-step" onclick="qiStep(1, 'qi-amount-perso')">+</button>
+                                    </div>
                                     <span class="qi-perso-status" id="qi-status-perso"></span>
                                 </div>
                             </div>
@@ -4021,12 +4028,11 @@
                     </div>
                     <div class="ctx-panel-body">
                         <div class="qi-pool-row">
-                            <button class="qi-step" onclick="qiAdjust(-1)">−</button>
                             <div class="qi-pool-num" id="qi-value">0</div>
-                            <button class="qi-step" onclick="qiAdjust(1)">+</button>
-                            <div class="qi-quick">
-                                <button onclick="qiAdjust(-5)">−5</button>
-                                <button onclick="qiAdjust(5)">+5</button>
+                            <div class="qi-stepper">
+                                <button class="qi-step" onclick="qiStep(-1, 'qi-amount')">−</button>
+                                <input type="number" id="qi-amount" value="1" min="1" class="qi-amount">
+                                <button class="qi-step" onclick="qiStep(1, 'qi-amount')">+</button>
                             </div>
                         </div>
                         <div class="qi-status" id="qi-status"></div>
@@ -5795,8 +5801,6 @@
         function getReserveMaxBase() {
             const lvl = getEsoterismeLevel();
             if (lvl <= 0) return 0;
-            const ov = appState.magic.reserveMaxOverride;
-            if (ov != null && ov > 0) return ov;
             return MAGIC_RESERVE[Math.min(10, lvl)] || 0;
         }
 
@@ -5813,9 +5817,9 @@
         }
 
         function getReserveMax() {
-            const lvl = getEsoterismeLevel();
-            if (lvl <= 0) return 0;
-            return MAGIC_RESERVE[Math.min(10, lvl)] || 0;
+            const ov = appState.magic?.reserveMaxOverride;
+            if (ov != null && ov > 0) return ov;
+            return getReserveMaxBase();
         }
 
         // Usure : chaque tranche de 5 dés dépensés abaisse d'un cran le niveau effectif
@@ -6659,6 +6663,12 @@
                 }
             } catch (e) { setQiStatus('réseau'); console.error(e); }
             qiBusy = false;
+        }
+
+        // Applique ± le montant saisi dans le champ associé
+        function qiStep(sign, fieldId) {
+            const n = Math.max(1, parseInt(document.getElementById(fieldId)?.value) || 1);
+            qiAdjust(sign * n);
         }
 
         function qiAdjust(delta) {
