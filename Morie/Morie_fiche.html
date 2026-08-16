@@ -2736,6 +2736,31 @@
             color: var(--vitality-red);
         }
 
+        .qi-result-actions {
+            display: flex;
+            gap: 7px;
+            margin-top: 9px;
+            flex-wrap: wrap;
+        }
+
+        .qi-result-actions .qi-btn {
+            flex: 1;
+            min-width: 130px;
+        }
+
+        .qi-done {
+            flex: 1;
+            min-width: 130px;
+            padding: 6px 10px;
+            background: rgba(29, 158, 117, 0.14);
+            border: 1px solid rgba(29, 158, 117, 0.35);
+            border-radius: 6px;
+            color: #085041;
+            font-size: 0.78em;
+            font-weight: 700;
+            text-align: center;
+        }
+
         .qi-btn.kill:hover {
             background: rgba(163, 45, 45, 0.2);
         }
@@ -5215,6 +5240,7 @@
                     </label>
                     <button class="followup-magic-btn" onclick="performFollowUpMagic()">Lancer</button>
                 </div>
+                ${powerRollExtraHtml('followup')}
                 <div class="followup-magic-tier" style="color:${col.color};">Ésotérisme ${esotLvl} — ${describeFaces(esotLvl)}</div>
                 <div id="followup-magic-result"></div>
             </div>`;
@@ -5241,7 +5267,7 @@
                 if (puissanceIncontrolee > 0) notes.push(`<span style="color:var(--vitality-red);">💥 Effet Incontrôlé ${puissanceIncontrolee} (${getMagnitudeLabel(puissanceIncontrolee)})</span>`);
                 if (notes.length) html += `<div class="followup-notes">${notes.join(' · ')}</div>`;
 
-                html += sustainButtonsHtml();
+                html += powerResultActionsHtml(lastMagicRoll) + sustainButtonsHtml();
                 resEl.innerHTML = html;
 
                 const row = document.getElementById('followup-dice-row');
@@ -5519,6 +5545,16 @@
             document.head.appendChild(s);
         }
 
+        // HTML injecté par le pouvoir dans les panneaux de jet
+        function powerRollExtraHtml(source) {
+            return activePower?.renderRollExtra?.(source, appState) || '';
+        }
+
+        // Bloc d'actions du pouvoir affiché sous un résultat magique
+        function powerResultActionsHtml(lastRoll) {
+            return activePower?.renderResultActions?.(lastRoll, appState) || '';
+        }
+
         function renderPowerPanel() {
             const host = document.getElementById('power-panel-host');
             if (!host) return;
@@ -5667,6 +5703,7 @@
                 <span style="font-size:0.92em;color:var(--silver-mist);">La Puissance obtenue est indépendante du jet de compétence.</span>
                 ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
                 ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
+                ${powerRollExtraHtml('hybrid')}
             `;
         }
 
@@ -5684,6 +5721,7 @@
                 ${describeFaces(effLvl)}
                 ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
                 ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
+                ${powerRollExtraHtml('pure')}
             `;
         }
 
@@ -5963,7 +6001,7 @@
                 }
             }
             mag += `</div>`;
-            document.getElementById('magnitude-result-area').innerHTML = perturbationHtml(data.perturb) + (data.actualMagic > 0 ? mag + sustainButtonsHtml() : '');
+            document.getElementById('magnitude-result-area').innerHTML = perturbationHtml(data.perturb) + (data.actualMagic > 0 ? mag + powerResultActionsHtml(lastMagicRoll) + sustainButtonsHtml() : '');
 
             document.getElementById('result-total').textContent = data.total;
             document.getElementById('result-overlay').classList.add('active');
@@ -6024,7 +6062,7 @@
             if (data.mjGain > 0) effetsP.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
             if (effetsP.length) mag += `<div class="magnitude-status failure" style="margin-top:4px;">${effetsP.join(' · ')}</div>`;
             mag += `</div>`;
-            document.getElementById('magnitude-result-area').innerHTML = mag + sustainButtonsHtml();
+            document.getElementById('magnitude-result-area').innerHTML = mag + powerResultActionsHtml(lastMagicRoll) + sustainButtonsHtml();
 
             document.getElementById('result-total').textContent = data.successes;
             document.getElementById('result-overlay').classList.add('active');
