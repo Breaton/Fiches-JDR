@@ -726,16 +726,6 @@
             overflow: hidden;
         }
 
-        .counter-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 0.3s ease;
-        }
-
-        .counter-fill.power {
-            background: linear-gradient(90deg, var(--power-cyan), var(--power-glow));
-        }
-
         /* RESSOURCES PERSONNALISÉES */
         .custom-resources-section {
             margin-top: 16px;
@@ -1790,33 +1780,6 @@
         }
 
         /* DUAL ROLL LAYOUT */
-        .dual-roll-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .roll-column {
-            padding: 16px;
-            border-radius: 12px;
-        }
-
-        .roll-column.skill-roll {
-            background: rgba(74, 155, 110, 0.05);
-            border: 1px solid rgba(74, 155, 110, 0.2);
-        }
-
-        .roll-column.power-roll {
-            background: rgba(107, 76, 154, 0.05);
-            border: 1px solid rgba(107, 76, 154, 0.2);
-        }
-
-        .roll-column-title {
-            font-weight: 600;
-            margin-bottom: 14px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid;
-        }
 
         .roll-column.skill-roll .roll-column-title {
             color: var(--success-green);
@@ -2092,12 +2055,6 @@
             margin-bottom: 4px;
         }
 
-        .magnitude-value {
-            font-family: var(--font-display);
-            font-size: 1.6em;
-            font-weight: 700;
-            color: var(--ombre-purple);
-        }
 
         .magnitude-status {
             font-size: 0.85em;
@@ -2318,9 +2275,6 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .dual-roll-container {
-                grid-template-columns: 1fr;
-            }
         }
 
         @media (max-width: 500px) {
@@ -3043,6 +2997,73 @@
             font-weight: 600;
         }
 
+        .passives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+            gap: 6px;
+        }
+
+        .passive-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: rgba(139, 157, 195, 0.06);
+            border: 1px solid var(--moonlight);
+            border-left: 3px solid var(--silver-mist);
+            transition: border-color 0.2s ease;
+            min-width: 0;
+        }
+
+        .passive-row.mid {
+            border-left-color: #1D9E75;
+            background: rgba(29, 158, 117, 0.06);
+        }
+
+        .passive-row.high {
+            border-left-color: #D4AF37;
+            background: rgba(212, 175, 55, 0.09);
+        }
+
+        .pr-name {
+            flex: 1;
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .pr-attr {
+            font-size: 0.66em;
+            color: var(--silver-mist);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            white-space: nowrap;
+        }
+
+        .pr-val {
+            font-family: var(--font-display);
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--silver-mist);
+            min-width: 18px;
+            text-align: right;
+        }
+
+        .passive-row.mid .pr-val { color: #1D9E75; }
+        .passive-row.high .pr-val { color: #D4AF37; }
+
+        .passives-empty {
+            font-size: 0.78em;
+            color: var(--silver-mist);
+            font-style: italic;
+            padding: 4px 0;
+        }
+
         .passive-chip {
             display: flex;
             align-items: center;
@@ -3058,9 +3079,6 @@
             border-color: rgba(29, 158, 117, 0.4);
         }
 
-        .passive-icon {
-            font-size: 1em;
-        }
 
         .passive-label {
             font-size: 0.75em;
@@ -3380,6 +3398,18 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Valeurs Passives -->
+                <div class="card">
+                    <div class="card-title">
+                        <span class="icon" style="background: rgba(29,158,117,0.12); color:#1D9E75;">◉</span>
+                        Valeurs Passives
+                        <span
+                            style="font-size:0.68em; font-weight:400; color:var(--silver-mist); margin-left:auto;">Bonus
+                            attribut + ⌊Dés ÷ 2⌋</span>
+                    </div>
+                    <div class="passives-grid" id="passives-display"></div>
                 </div>
 
             </div>
@@ -3883,13 +3913,6 @@
         };
 
         // Fonction pour calculer l'explosion d'un niveau de pouvoir combiné
-        function getPowerExplosion(combinedLevel) {
-            if (combinedLevel >= 9) return 8;
-            if (combinedLevel >= 7) return 10;
-            if (combinedLevel >= 5) return 11;
-            return 12;
-        }
-
         // Fonctions utilitaires pour les niveaux
         function getAttributeLevel(value) {
             return ATTRIBUTE_LEVELS[Math.min(8, Math.max(1, value))] || ATTRIBUTE_LEVELS[4];
@@ -3966,22 +3989,6 @@
         }
 
         // ========== COMPTEURS ==========
-        function modifyCounter(type, delta) {
-            const counter = appState.counters[type];
-            counter.current = Math.max(0, Math.min(counter.max, counter.current + delta));
-            updateCounterDisplay(type);
-        }
-
-        function updateCounters() {
-            ['power'].forEach(type => {
-                const current = parseInt(document.getElementById(`${type}-current`).value) || 0;
-                const max = parseInt(document.getElementById(`${type}-max`).value) || 1;
-                appState.counters[type].current = Math.max(0, Math.min(max, current));
-                appState.counters[type].max = Math.max(1, max);
-                updateCounterDisplay(type);
-            });
-        }
-
         function updateCounterDisplay(type) {
             const counter = appState.counters[type];
             if (!counter) return;
@@ -5771,18 +5778,21 @@
             const el = document.getElementById('passives-display');
             if (!el) return;
             const skillsWithPassive = (appState.skills || []).filter(s => s.defaultAttr);
-            let html = '';
-            skillsWithPassive.forEach(s => {
-                const val = getPassiveValue(s, s.defaultAttr);
-                const color = val >= 7 ? '#D4AF37' : val >= 5 ? '#1D9E75' : 'var(--silver-mist)';
+            const rows = skillsWithPassive
+                .map(s => ({ s, val: getPassiveValue(s, s.defaultAttr) }))
+                .sort((a, b) => b.val - a.val);
+
+            const html = rows.map(({ s, val }) => {
+                const tier = val >= 7 ? 'high' : val >= 5 ? 'mid' : 'low';
                 const attrShort = ATTR_LABEL_SHORT[s.defaultAttr] || s.defaultAttr;
-                html += `<div class="passive-chip" title="${s.name} passif (${s.defaultAttr})">
-                    <span class="passive-label">${s.name}</span>
-                    <span style="font-size:0.68em;color:var(--silver-mist);padding:0 2px;">${attrShort}</span>
-                    <span class="passive-value" style="color:${color};">${val}</span>
+                return `<div class="passive-row ${tier}" title="${s.name} · ${capitalize(s.defaultAttr)}">
+                    <span class="pr-name">${s.name}</span>
+                    <span class="pr-attr">${attrShort}</span>
+                    <span class="pr-val">${val}</span>
                 </div>`;
-            });
-            el.innerHTML = html || '<span style="color:var(--silver-mist);font-size:0.8em;font-style:italic;">Définir un attribut passif sur les compétences (onglet Compétences)</span>';
+            }).join('');
+
+            el.innerHTML = html || '<div class="passives-empty">Définir un attribut passif sur les compétences, onglet Compétences.</div>';
         }
 
         function renderAll() {
@@ -6261,20 +6271,6 @@
             return btoa(unescape(encodeURIComponent(JSON.stringify(o))));
         }
 
-        function copyMjCode() {
-            const code = encodeMjSnapshot(buildMjSnapshot());
-            const fallback = () => {
-                window.prompt('Copie ce code MJ et envoie-le au MJ :', code);
-            };
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(code)
-                    .then(() => showNotification('📡 Code MJ copié — envoie-le au MJ'))
-                    .catch(fallback);
-            } else {
-                fallback();
-            }
-        }
-
         function loadFromFile() {
             document.getElementById('file-input').click();
         }
@@ -6282,6 +6278,8 @@
         function applyLoadedState(loaded) {
             Object.assign(appState, loaded);
             applyBackwardCompatDefaults();
+            exposePowerAPI();
+            loadPower();
             renderPassives();
             restoreProfileUI();
 
@@ -6350,6 +6348,8 @@
             if (!appState.magic) appState.magic = { reserveUsed: 0 };
             if (appState.magic.reserveUsed === undefined) appState.magic.reserveUsed = 0;
             if (appState.magic.mjDice === undefined) appState.magic.mjDice = 0;
+            // Le pouvoir peut être déclaré à la racine ou dans profile
+            if (!appState.power && appState.profile?.power) appState.power = appState.profile.power;
             if (appState.power === undefined) appState.power = null;
             if (!appState.focalisation) appState.focalisation = { current: 1, max: 1 };
             if (!appState.receivedBuffs) appState.receivedBuffs = [];
