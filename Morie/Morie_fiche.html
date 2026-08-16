@@ -2634,6 +2634,158 @@
             padding: 0 11px 11px;
         }
 
+        /* === PANNEAU POUVOIR : QI === */
+        .qi-panel .ctx-panel-title {
+            background: rgba(29, 158, 117, 0.1);
+            color: #085041;
+        }
+
+        .qi-pool-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .qi-pool-num {
+            font-family: var(--font-display);
+            font-size: 1.9em;
+            font-weight: 700;
+            color: #1D9E75;
+            min-width: 44px;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .qi-step {
+            width: 21px;
+            height: 21px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(29, 158, 117, 0.1);
+            border: 1px solid rgba(29, 158, 117, 0.3);
+            border-radius: 5px;
+            color: #1D9E75;
+            font-size: 0.85em;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .qi-step:hover {
+            background: rgba(29, 158, 117, 0.2);
+        }
+
+        .qi-domain {
+            font-size: 0.68em;
+            color: var(--silver-mist);
+            font-style: italic;
+            margin-left: auto;
+            text-align: right;
+            max-width: 110px;
+            line-height: 1.3;
+        }
+
+        .qi-inject-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+            padding: 8px 10px;
+            background: rgba(29, 158, 117, 0.06);
+            border: 1px solid rgba(29, 158, 117, 0.2);
+            border-radius: 7px;
+        }
+
+        .qi-inject-row label {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            flex: 1;
+        }
+
+        .qi-inject-row input {
+            width: 46px;
+            padding: 4px 5px;
+            border: 1px solid var(--moonlight);
+            border-radius: 5px;
+            text-align: center;
+            font-family: var(--font-body);
+            font-size: 0.9em;
+        }
+
+        .qi-hint {
+            font-size: 0.68em;
+            color: var(--silver-mist);
+            white-space: nowrap;
+        }
+
+        .qi-note {
+            font-size: 0.68em;
+            color: var(--silver-mist);
+            line-height: 1.4;
+            margin: 6px 0 10px;
+        }
+
+        .qi-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-top: 9px;
+            border-top: 1px solid rgba(29, 158, 117, 0.15);
+        }
+
+        .qi-action-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .qi-action-row label {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--deep-navy);
+        }
+
+        .qi-action-row input {
+            width: 44px;
+            padding: 4px 5px;
+            border: 1px solid var(--moonlight);
+            border-radius: 5px;
+            text-align: center;
+            font-family: var(--font-body);
+            font-size: 0.85em;
+        }
+
+        .qi-btn {
+            flex: 1;
+            padding: 6px 10px;
+            background: rgba(29, 158, 117, 0.12);
+            border: 1px solid rgba(29, 158, 117, 0.35);
+            border-radius: 6px;
+            color: #085041;
+            font-size: 0.78em;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: var(--font-body);
+        }
+
+        .qi-btn:hover {
+            background: rgba(29, 158, 117, 0.22);
+        }
+
+        .qi-btn.kill {
+            background: rgba(163, 45, 45, 0.1);
+            border-color: rgba(163, 45, 45, 0.32);
+            color: var(--vitality-red);
+        }
+
+        .qi-btn.kill:hover {
+            background: rgba(163, 45, 45, 0.2);
+        }
+
         /* === BARRE RESSOURCES MAGIQUES (page Jets) === */
         .magic-res-bar {
             display: none;
@@ -3480,6 +3632,9 @@
             <!-- COLONNE CONTEXTE -->
             <div class="rolls-sidebar">
 
+                <!-- Panneau du pouvoir spécifique (injecté par le module) -->
+                <div id="power-panel-host"></div>
+
                 <!-- Vitesse de déplacement -->
                 <div class="ctx-panel">
                     <div class="ctx-panel-title">🏃 Vitesse de déplacement</div>
@@ -3767,6 +3922,7 @@
             objects: [],
             notes: "",
             currentModal: null,
+            power: null,
             magic: { reserveUsed: 0, mjDice: 0 },
             focalisation: { current: 1, max: 1 },
             receivedBuffs: [],
@@ -5061,16 +5217,12 @@
             const esotLvl = getEsoterismeLevel();
             if (esotLvl <= 0) return;
             const requested = parseInt(document.getElementById('followup-magic-dice')?.value) || 1;
-            const count = clampMagicDice(requested);
-            if (count <= 0) { showNotification('⚠ Réserve magique épuisée'); return; }
             const emotion = document.getElementById('followup-emotion')?.checked || false;
 
-            const effLvl = getEffectiveMagicLevel();
-            const { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } =
-                resolveMagicDice(effLvl, count, emotion);
-            spendReserve(energyCost);
-            if (mjGain > 0) addMjDice(mjGain);
-            lastMagicRoll = { puissance: successes, dice: count };
+            const out = resolveMagicAction({ requested, emotion, source: 'followup' });
+            if (!out) return;
+            const { results, successes, puissanceIncontrolee, ruptures, fractures, mjGain } = out;
+            const count = out.dice;
 
             const resEl = document.getElementById('followup-magic-result');
             if (resEl) {
@@ -5183,7 +5335,8 @@
         function getReserveMax() {
             const lvl = getEsoterismeLevel();
             if (lvl <= 0) return 0;
-            return MAGIC_RESERVE[Math.min(10, lvl)] || 0;
+            const base = MAGIC_RESERVE[Math.min(10, lvl)] || 0;
+            return Math.round(base * (activePower?.reserveMultiplier ?? 1));
         }
 
         // Usure : chaque tranche de 5 dés dépensés abaisse d'un cran le niveau effectif
@@ -5312,6 +5465,86 @@
         // Nombre de dés réellement lancés : borné par le max/jet ET par la réserve restante
         function clampMagicDice(requested) {
             return Math.max(0, Math.min(requested, getEsoterismeMaxDice(), getReserveLeft()));
+        }
+
+        // ========== SYSTÈME DE POUVOIRS SPÉCIFIQUES ==========
+        let activePower = null;
+        let loadedPowerId = null;
+
+        function powerHook(name, ...args) {
+            const h = activePower && activePower.hooks && activePower.hooks[name];
+            return h ? h(...args) : undefined;
+        }
+
+        // API exposée aux modules de pouvoir
+        function exposePowerAPI() {
+            window.resolveMagicAction = resolveMagicAction;
+            window.getEsoterismeMaxDice = getEsoterismeMaxDice;
+            window.getEsoterismeLevel = getEsoterismeLevel;
+            window.getEffectiveMagicLevel = getEffectiveMagicLevel;
+            window.showNotification = showNotification;
+            window.displayPureResult = displayPureResult;
+            window.renderPowerPanel = renderPowerPanel;
+            window.updateMagicState = updateMagicState;
+            window.appState = appState;
+        }
+
+        // Le module appelle registerPower() en se chargeant
+        window.registerPower = function (def) {
+            activePower = def;
+            Object.entries(def.defaultState || {}).forEach(([k, v]) => {
+                if (appState[k] === undefined) appState[k] = v;
+            });
+            Promise.resolve(def.init?.(appState)).then(() => {
+                renderPowerPanel();
+                updateMagicState();
+            });
+        };
+
+        function loadPower() {
+            const id = appState.power;
+            if (!id || id === loadedPowerId) { renderPowerPanel(); return; }
+            activePower = null;
+            loadedPowerId = id;
+            const s = document.createElement('script');
+            s.src = `powers/${id}.js`;
+            s.onerror = () => { console.warn('Pouvoir introuvable :', id); renderPowerPanel(); };
+            document.head.appendChild(s);
+        }
+
+        function renderPowerPanel() {
+            const host = document.getElementById('power-panel-host');
+            if (!host) return;
+            if (!activePower || !activePower.renderPanel) { host.innerHTML = ''; return; }
+            host.innerHTML = activePower.renderPanel(appState);
+            activePower.afterRender?.(appState);
+        }
+
+        // ========== PIPELINE COMMUN DE RÉSOLUTION MAGIQUE ==========
+        function resolveMagicAction({ requested, emotion, source }) {
+            const ctx = { source, requested, emotion, extraDice: 0, abort: false, abortReason: '' };
+
+            powerHook('beforeRoll', ctx, appState);
+            if (ctx.abort) {
+                if (ctx.abortReason) showNotification(ctx.abortReason);
+                return null;
+            }
+
+            const baseDice = clampMagicDice(ctx.requested);
+            const dice = baseDice + (ctx.extraDice || 0);
+            if (dice <= 0) { showNotification('⚠ Réserve magique épuisée'); return null; }
+
+            const effLvl = getEffectiveMagicLevel();
+            const res = resolveMagicDice(effLvl, dice, ctx.emotion);
+
+            powerHook('afterRoll', res, ctx, appState);
+
+            spendReserve(res.energyCost);
+            if (res.mjGain > 0) addMjDice(res.mjGain);
+            lastMagicRoll = { puissance: res.successes, dice };
+
+            renderPowerPanel();
+            return { ...res, ctx, dice, baseDice, effLvl };
         }
 
         function updateMagicState() {
@@ -5567,6 +5800,7 @@
             renderActiveSpells();
             renderFocalisation();
             renderReceivedBuffs();
+            renderPowerPanel();
         }
 
         function showNotification(msg) {
@@ -6116,6 +6350,7 @@
             if (!appState.magic) appState.magic = { reserveUsed: 0 };
             if (appState.magic.reserveUsed === undefined) appState.magic.reserveUsed = 0;
             if (appState.magic.mjDice === undefined) appState.magic.mjDice = 0;
+            if (appState.power === undefined) appState.power = null;
             if (!appState.focalisation) appState.focalisation = { current: 1, max: 1 };
             if (!appState.receivedBuffs) appState.receivedBuffs = [];
             if (!appState.masteries) appState.masteries = [];
@@ -6274,6 +6509,8 @@
                 }
             }
 
+            exposePowerAPI();
+            loadPower();
             renderAll();
             updateGhStatus();
 
