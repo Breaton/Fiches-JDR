@@ -2765,6 +2765,193 @@
             background: rgba(163, 45, 45, 0.2);
         }
 
+        /* === QI PARTAGÉ === */
+        .qi-panel .ctx-panel-title {
+            background: rgba(29, 158, 117, 0.1);
+            color: #085041;
+        }
+
+        .qi-refresh {
+            width: 22px;
+            height: 22px;
+            background: rgba(29, 158, 117, 0.12);
+            border: 1px solid rgba(29, 158, 117, 0.3);
+            border-radius: 5px;
+            color: #1D9E75;
+            font-size: 0.85em;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .qi-refresh:hover { background: rgba(29, 158, 117, 0.25); }
+
+        .qi-pool-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .qi-pool-num {
+            font-family: var(--font-display);
+            font-size: 2em;
+            font-weight: 700;
+            color: #1D9E75;
+            min-width: 46px;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .qi-step {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(29, 158, 117, 0.1);
+            border: 1px solid rgba(29, 158, 117, 0.32);
+            border-radius: 5px;
+            color: #1D9E75;
+            font-size: 0.95em;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+            font-family: var(--font-body);
+        }
+
+        .qi-step:hover { background: rgba(29, 158, 117, 0.22); }
+
+        .qi-quick {
+            display: flex;
+            gap: 4px;
+            margin-left: auto;
+        }
+
+        .qi-quick button {
+            padding: 3px 8px;
+            background: rgba(29, 158, 117, 0.08);
+            border: 1px solid rgba(29, 158, 117, 0.25);
+            border-radius: 5px;
+            color: #085041;
+            font-size: 0.72em;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: var(--font-body);
+        }
+
+        .qi-quick button:hover { background: rgba(29, 158, 117, 0.2); }
+
+        .qi-status {
+            margin-top: 7px;
+            font-size: 0.7em;
+            color: var(--silver-mist);
+            font-style: italic;
+        }
+
+        .qi-note {
+            margin-top: 5px;
+            font-size: 0.7em;
+            color: var(--silver-mist);
+            line-height: 1.4;
+        }
+
+        /* === RESSOURCES DANS LA COLONNE CONTEXTE === */
+        .ctx-res {
+            margin-bottom: 9px;
+        }
+
+        .ctx-res:last-child {
+            margin-bottom: 0;
+        }
+
+        .ctx-res-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .ctx-res-name {
+            font-size: 0.8em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-width: 0;
+        }
+
+        .ctx-res-ctrl {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .ctx-res-ctrl button {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(139, 157, 195, 0.12);
+            border: 1px solid var(--moonlight);
+            border-radius: 4px;
+            color: var(--slate-blue);
+            font-size: 0.75em;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+            font-family: var(--font-body);
+        }
+
+        .ctx-res-ctrl button:hover {
+            background: rgba(139, 157, 195, 0.25);
+        }
+
+        .ctx-res-val {
+            font-family: var(--font-display);
+            font-size: 1.05em;
+            font-weight: 700;
+            color: var(--slate-blue);
+            min-width: 16px;
+            text-align: center;
+        }
+
+        .ctx-res-val.low {
+            color: var(--vitality-red);
+        }
+
+        .ctx-res-sep {
+            color: var(--silver-mist);
+            opacity: 0.5;
+            font-size: 0.85em;
+        }
+
+        .ctx-res-max {
+            font-size: 0.78em;
+            color: var(--silver-mist);
+        }
+
+        .ctx-res-track {
+            height: 4px;
+            background: rgba(139, 157, 195, 0.16);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .ctx-res-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--slate-blue), #6b81ad);
+            transition: width 0.3s ease;
+        }
+
+        .ctx-res-fill.low {
+            background: linear-gradient(90deg, #a33, var(--vitality-red));
+        }
+
         /* === BARRE RESSOURCES MAGIQUES (page Jets) === */
         .magic-res-bar {
             display: none;
@@ -3169,6 +3356,7 @@
                         <button onclick="event.stopPropagation(); openGhLoad();">📥 Charger depuis les saves en
                             ligne</button>
                         <button onclick="event.stopPropagation(); setGhToken();">⚙️ Configurer le jeton GitHub</button>
+                        <button onclick="event.stopPropagation(); qiSetShared(!appState.qiShared); showNotification(appState.qiShared ? '☯ Qi partagé activé' : '☯ Qi partagé désactivé');">☯ Qi partagé</button>
                         <div class="save-menu-status" id="gh-status"></div>
                         <div class="save-menu-sep"></div>
                         <button onclick="event.stopPropagation(); clearAutosave(); closeSaveMenu();">🗑 Effacer la
@@ -3611,6 +3799,11 @@
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
+                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés bonus</label>
+                                <input id="hybrid-bonus-dice" class="bonus-input" type="number" value="0" min="0"
+                                    oninput="updateHybridMagicInfo()">
+                            </div>
+                            <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
                                 <input id="hybrid-bonus" class="bonus-input" type="number" value="0">
                             </div>
@@ -3649,10 +3842,17 @@
                 <!-- MAGIE PURE -->
                 <div id="roll-pure" class="roll-panel">
                     <div class="roll-form">
-                        <div class="form-group" style="max-width:220px;">
-                            <label class="form-label">Dés magiques</label>
-                            <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1"
-                                oninput="updatePureMagicInfo()">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:440px;">
+                            <div class="form-group">
+                                <label class="form-label">Dés magiques</label>
+                                <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1"
+                                    oninput="updatePureMagicInfo()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés bonus</label>
+                                <input id="pure-bonus-dice" class="bonus-input" type="number" value="0" min="0"
+                                    oninput="updatePureMagicInfo()">
+                            </div>
                         </div>
                         <div id="pure-magic-info"
                             style="margin-top:10px; padding:10px; background:rgba(107,76,154,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);">
@@ -3687,8 +3887,34 @@
             <!-- COLONNE CONTEXTE -->
             <div class="rolls-sidebar">
 
-                <!-- Panneau du pouvoir spécifique (injecté par le module) -->
-                <div id="power-panel-host"></div>
+                <!-- Qi partagé -->
+                <div class="ctx-panel qi-panel" id="qi-panel" style="display:none;">
+                    <div class="ctx-panel-title" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                        <span>☯ Qi partagé</span>
+                        <button class="qi-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
+                    </div>
+                    <div class="ctx-panel-body">
+                        <div class="qi-pool-row">
+                            <button class="qi-step" onclick="qiAdjust(-1)">−</button>
+                            <div class="qi-pool-num" id="qi-value">0</div>
+                            <button class="qi-step" onclick="qiAdjust(1)">+</button>
+                            <div class="qi-quick">
+                                <button onclick="qiAdjust(-5)">−5</button>
+                                <button onclick="qiAdjust(5)">+5</button>
+                            </div>
+                        </div>
+                        <div class="qi-status" id="qi-status"></div>
+                        <div class="qi-note">Commun à Shu et Yue. Verse-le via « Dés bonus » sur un jet magique.</div>
+                    </div>
+                </div>
+
+                <!-- Ressources personnalisées -->
+                <div class="ctx-panel" id="ctx-resources-panel">
+                    <div class="ctx-panel-title">◈ Ressources</div>
+                    <div class="ctx-panel-body">
+                        <div id="ctx-resources-list"></div>
+                    </div>
+                </div>
 
                 <!-- Vitesse de déplacement -->
                 <div class="ctx-panel">
@@ -3970,7 +4196,8 @@
             objects: [],
             notes: "",
             currentModal: null,
-            power: null,
+            qiShared: false,
+            qiPool: 0,
             magic: { reserveUsed: 0, mjDice: 0 },
             focalisation: { current: 1, max: 1 },
             receivedBuffs: [],
@@ -3986,6 +4213,7 @@
             document.getElementById(`page-${pageName}`).classList.add('active');
             if (tabEl) tabEl.classList.add('active');
             if (pageName === 'skills' || pageName === 'rolls') updateRollSelects();
+            if (pageName === 'rolls' && appState.qiShared) qiPull(true);
         }
 
         // ========== ATTRIBUTS ==========
@@ -4089,6 +4317,41 @@
                 `;
                 list.appendChild(item);
             });
+
+            renderCtxResources();
+        }
+
+        // Version compacte pour la colonne contexte de la page Jets
+        function renderCtxResources() {
+            const el = document.getElementById('ctx-resources-list');
+            const panel = document.getElementById('ctx-resources-panel');
+            if (!el || !panel) return;
+            const res = appState.customResources || [];
+            panel.style.display = res.length ? 'block' : 'none';
+            if (!res.length) { el.innerHTML = ''; return; }
+
+            el.innerHTML = res.map(r => {
+                const pct = r.max > 0 ? (r.current / r.max) * 100 : 0;
+                const low = pct <= 25;
+                return `<div class="ctx-res">
+                    <div class="ctx-res-top">
+                        <span class="ctx-res-name" title="${(r.name || '').replace(/"/g, '&quot;')}">${r.name || 'Sans nom'}</span>
+                        <span class="ctx-res-ctrl">
+                            <button onclick="modCtxResource('${r.id}', -1)">−</button>
+                            <span class="ctx-res-val ${low ? 'low' : ''}">${r.current}</span><span class="ctx-res-sep">/</span><span class="ctx-res-max">${r.max}</span>
+                            <button onclick="modCtxResource('${r.id}', 1)">+</button>
+                        </span>
+                    </div>
+                    <div class="ctx-res-track"><div class="ctx-res-fill ${low ? 'low' : ''}" style="width:${pct}%"></div></div>
+                </div>`;
+            }).join('');
+        }
+
+        function modCtxResource(id, delta) {
+            const r = (appState.customResources || []).find(x => x.id === id);
+            if (!r) return;
+            r.current = Math.max(0, Math.min(r.max, r.current + delta));
+            renderCustomResources();
         }
 
         // ========== ÉLAN & VITESSE (VALEURS DÉRIVÉES) ==========
@@ -4979,6 +5242,41 @@
                 `;
                 list.appendChild(item);
             });
+
+            renderCtxResources();
+        }
+
+        // Version compacte pour la colonne contexte de la page Jets
+        function renderCtxResources() {
+            const el = document.getElementById('ctx-resources-list');
+            const panel = document.getElementById('ctx-resources-panel');
+            if (!el || !panel) return;
+            const res = appState.customResources || [];
+            panel.style.display = res.length ? 'block' : 'none';
+            if (!res.length) { el.innerHTML = ''; return; }
+
+            el.innerHTML = res.map(r => {
+                const pct = r.max > 0 ? (r.current / r.max) * 100 : 0;
+                const low = pct <= 25;
+                return `<div class="ctx-res">
+                    <div class="ctx-res-top">
+                        <span class="ctx-res-name" title="${(r.name || '').replace(/"/g, '&quot;')}">${r.name || 'Sans nom'}</span>
+                        <span class="ctx-res-ctrl">
+                            <button onclick="modCtxResource('${r.id}', -1)">−</button>
+                            <span class="ctx-res-val ${low ? 'low' : ''}">${r.current}</span><span class="ctx-res-sep">/</span><span class="ctx-res-max">${r.max}</span>
+                            <button onclick="modCtxResource('${r.id}', 1)">+</button>
+                        </span>
+                    </div>
+                    <div class="ctx-res-track"><div class="ctx-res-fill ${low ? 'low' : ''}" style="width:${pct}%"></div></div>
+                </div>`;
+            }).join('');
+        }
+
+        function modCtxResource(id, delta) {
+            const r = (appState.customResources || []).find(x => x.id === id);
+            if (!r) return;
+            r.current = Math.max(0, Math.min(r.max, r.current + delta));
+            renderCustomResources();
         }
 
         function addObject() {
@@ -5233,6 +5531,8 @@
                 <div class="followup-magic-row">
                     <label>Dés</label>
                     <input type="number" id="followup-magic-dice" value="1" min="1" max="${nbDice}">
+                    <label style="font-size:0.8em;font-weight:600;color:var(--ombre-purple);">+ bonus</label>
+                    <input type="number" id="followup-bonus-dice" value="0" min="0" style="width:44px;">
                     <span class="followup-magic-max">max ${nbDice}/jet · réserve ${getReserveLeft()}</span>
                     <label class="followup-emotion">
                         <input type="checkbox" id="followup-emotion">
@@ -5240,7 +5540,6 @@
                     </label>
                     <button class="followup-magic-btn" onclick="performFollowUpMagic()">Lancer</button>
                 </div>
-                ${powerRollExtraHtml('followup')}
                 <div class="followup-magic-tier" style="color:${col.color};">Ésotérisme ${esotLvl} — ${describeFaces(esotLvl)}</div>
                 <div id="followup-magic-result"></div>
             </div>`;
@@ -5252,7 +5551,8 @@
             const requested = parseInt(document.getElementById('followup-magic-dice')?.value) || 1;
             const emotion = document.getElementById('followup-emotion')?.checked || false;
 
-            const out = resolveMagicAction({ requested, emotion, source: 'followup' });
+            const bonusDice = parseInt(document.getElementById('followup-bonus-dice')?.value) || 0;
+            const out = resolveMagicAction({ requested, emotion, source: 'followup', extraDice: bonusDice });
             if (!out) return;
             const { results, successes, puissanceIncontrolee, ruptures, fractures, mjGain } = out;
             const count = out.dice;
@@ -5267,7 +5567,7 @@
                 if (puissanceIncontrolee > 0) notes.push(`<span style="color:var(--vitality-red);">💥 Effet Incontrôlé ${puissanceIncontrolee} (${getMagnitudeLabel(puissanceIncontrolee)})</span>`);
                 if (notes.length) html += `<div class="followup-notes">${notes.join(' · ')}</div>`;
 
-                html += powerResultActionsHtml(lastMagicRoll) + sustainButtonsHtml();
+                html += sustainButtonsHtml();
                 resEl.innerHTML = html;
 
                 const row = document.getElementById('followup-dice-row');
@@ -5368,8 +5668,7 @@
         function getReserveMax() {
             const lvl = getEsoterismeLevel();
             if (lvl <= 0) return 0;
-            const base = MAGIC_RESERVE[Math.min(10, lvl)] || 0;
-            return Math.round(base * (activePower?.reserveMultiplier ?? 1));
+            return MAGIC_RESERVE[Math.min(10, lvl)] || 0;
         }
 
         // Usure : chaque tranche de 5 dés dépensés abaisse d'un cran le niveau effectif
@@ -5500,93 +5799,20 @@
             return Math.max(0, Math.min(requested, getEsoterismeMaxDice(), getReserveLeft()));
         }
 
-        // ========== SYSTÈME DE POUVOIRS SPÉCIFIQUES ==========
-        let activePower = null;
-        let loadedPowerId = null;
-
-        function powerHook(name, ...args) {
-            const h = activePower && activePower.hooks && activePower.hooks[name];
-            return h ? h(...args) : undefined;
-        }
-
-        // API exposée aux modules de pouvoir
-        function exposePowerAPI() {
-            window.resolveMagicAction = resolveMagicAction;
-            window.getEsoterismeMaxDice = getEsoterismeMaxDice;
-            window.getEsoterismeLevel = getEsoterismeLevel;
-            window.getEffectiveMagicLevel = getEffectiveMagicLevel;
-            window.showNotification = showNotification;
-            window.displayPureResult = displayPureResult;
-            window.renderPowerPanel = renderPowerPanel;
-            window.updateMagicState = updateMagicState;
-            window.appState = appState;
-        }
-
-        // Le module appelle registerPower() en se chargeant
-        window.registerPower = function (def) {
-            activePower = def;
-            Object.entries(def.defaultState || {}).forEach(([k, v]) => {
-                if (appState[k] === undefined) appState[k] = v;
-            });
-            Promise.resolve(def.init?.(appState)).then(() => {
-                renderPowerPanel();
-                updateMagicState();
-            });
-        };
-
-        function loadPower() {
-            const id = appState.power;
-            if (!id || id === loadedPowerId) { renderPowerPanel(); return; }
-            activePower = null;
-            loadedPowerId = id;
-            const s = document.createElement('script');
-            s.src = `powers/${id}.js`;
-            s.onerror = () => { console.warn('Pouvoir introuvable :', id); renderPowerPanel(); };
-            document.head.appendChild(s);
-        }
-
-        // HTML injecté par le pouvoir dans les panneaux de jet
-        function powerRollExtraHtml(source) {
-            return activePower?.renderRollExtra?.(source, appState) || '';
-        }
-
-        // Bloc d'actions du pouvoir affiché sous un résultat magique
-        function powerResultActionsHtml(lastRoll) {
-            return activePower?.renderResultActions?.(lastRoll, appState) || '';
-        }
-
-        function renderPowerPanel() {
-            const host = document.getElementById('power-panel-host');
-            if (!host) return;
-            if (!activePower || !activePower.renderPanel) { host.innerHTML = ''; return; }
-            host.innerHTML = activePower.renderPanel(appState);
-            activePower.afterRender?.(appState);
-        }
-
         // ========== PIPELINE COMMUN DE RÉSOLUTION MAGIQUE ==========
-        function resolveMagicAction({ requested, emotion, source }) {
-            const ctx = { source, requested, emotion, extraDice: 0, abort: false, abortReason: '' };
-
-            powerHook('beforeRoll', ctx, appState);
-            if (ctx.abort) {
-                if (ctx.abortReason) showNotification(ctx.abortReason);
-                return null;
-            }
+        function resolveMagicAction({ requested, emotion, source, extraDice }) {
+            const ctx = { source, requested, emotion, extraDice: extraDice || 0 };
 
             const baseDice = clampMagicDice(ctx.requested);
-            const dice = baseDice + (ctx.extraDice || 0);
+            const dice = baseDice + ctx.extraDice;
             if (dice <= 0) { showNotification('⚠ Réserve magique épuisée'); return null; }
 
             const effLvl = getEffectiveMagicLevel();
             const res = resolveMagicDice(effLvl, dice, ctx.emotion);
 
-            powerHook('afterRoll', res, ctx, appState);
-
             spendReserve(res.energyCost);
             if (res.mjGain > 0) addMjDice(res.mjGain);
             lastMagicRoll = { puissance: res.successes, dice };
-
-            renderPowerPanel();
             return { ...res, ctx, dice, baseDice, effLvl };
         }
 
@@ -5696,6 +5922,7 @@
             const effLvl = getEffectiveMagicLevel();
             const col = getMagicColor(effLvl);
             const requested = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
+            const bonusD = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
             const left = getReserveLeft();
             infoEl.innerHTML = `
                 <span style="color:${col.color};font-weight:600;">Ésotérisme ${esotLvl}${effLvl < esotLvl ? ` → <strong>${effLvl}</strong> (usure)` : ''}</span> — max ${nbDice} dés/jet · Réserve ${left}/${getReserveMax()}<br>
@@ -5703,7 +5930,7 @@
                 <span style="font-size:0.92em;color:var(--silver-mist);">La Puissance obtenue est indépendante du jet de compétence.</span>
                 ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
                 ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
-                ${powerRollExtraHtml('hybrid')}
+                ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus → ${Math.min(requested, nbDice, left) + bonusD} dés lancés</span>` : ''}
             `;
         }
 
@@ -5715,13 +5942,14 @@
             const effLvl = getEffectiveMagicLevel();
             const col = getMagicColor(effLvl);
             const requested = parseInt(document.getElementById('pure-magic-dice')?.value) || 0;
+            const bonusD = parseInt(document.getElementById('pure-bonus-dice')?.value) || 0;
             const left = getReserveLeft();
             infoEl.innerHTML = `
                 <span style="color:${col.color};font-weight:600;">Ésotérisme ${esotLvl}${effLvl < esotLvl ? ` → <strong>${effLvl}</strong> (usure)` : ''}</span> — max ${nbDice} dés/jet · Réserve ${left}/${getReserveMax()}<br>
                 ${describeFaces(effLvl)}
                 ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
                 ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
-                ${powerRollExtraHtml('pure')}
+                ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus → ${Math.min(requested, nbDice, left) + bonusD} dés lancés</span>` : ''}
             `;
         }
 
@@ -5848,7 +6076,7 @@
             renderActiveSpells();
             renderFocalisation();
             renderReceivedBuffs();
-            renderPowerPanel();
+            renderQiPanel();
         }
 
         function showNotification(msg) {
@@ -6001,7 +6229,7 @@
                 }
             }
             mag += `</div>`;
-            document.getElementById('magnitude-result-area').innerHTML = perturbationHtml(data.perturb) + (data.actualMagic > 0 ? mag + powerResultActionsHtml(lastMagicRoll) + sustainButtonsHtml() : '');
+            document.getElementById('magnitude-result-area').innerHTML = perturbationHtml(data.perturb) + (data.actualMagic > 0 ? mag + sustainButtonsHtml() : '');
 
             document.getElementById('result-total').textContent = data.total;
             document.getElementById('result-overlay').classList.add('active');
@@ -6062,7 +6290,7 @@
             if (data.mjGain > 0) effetsP.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
             if (effetsP.length) mag += `<div class="magnitude-status failure" style="margin-top:4px;">${effetsP.join(' · ')}</div>`;
             mag += `</div>`;
-            document.getElementById('magnitude-result-area').innerHTML = mag + powerResultActionsHtml(lastMagicRoll) + sustainButtonsHtml();
+            document.getElementById('magnitude-result-area').innerHTML = mag + sustainButtonsHtml();
 
             document.getElementById('result-total').textContent = data.successes;
             document.getElementById('result-overlay').classList.add('active');
@@ -6191,6 +6419,104 @@
             }
         }
 
+        // ===== POOL DE QI PARTAGÉ (Shu & Yue) =====
+        const QI_PATH = `${GH_CFG.dir}/_qi_pool.json`;
+        let qiSha = null;
+        let qiBusy = false;
+
+        function qiApi() {
+            return `https://api.github.com/repos/${GH_CFG.owner}/${GH_CFG.repo}/contents/${QI_PATH}`;
+        }
+
+        function setQiStatus(msg) {
+            const el = document.getElementById('qi-status');
+            if (el) el.textContent = msg || '';
+        }
+
+        function renderQiPanel() {
+            const panel = document.getElementById('qi-panel');
+            const val = document.getElementById('qi-value');
+            if (!panel) return;
+            panel.style.display = appState.qiShared ? 'block' : 'none';
+            if (val) val.textContent = appState.qiPool ?? 0;
+        }
+
+        async function qiPull(silent) {
+            if (!appState.qiShared) return;
+            const token = ghToken();
+            if (!token) { setQiStatus('jeton requis'); return; }
+            if (!silent) setQiStatus('lecture…');
+            try {
+                const res = await fetch(`${qiApi()}?ref=${GH_CFG.branch}&t=${Date.now()}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/vnd.github+json',
+                        'X-GitHub-Api-Version': '2022-11-28'
+                    }
+                });
+                if (res.status === 404) { qiSha = null; appState.qiPool = appState.qiPool ?? 0; setQiStatus('pool neuf'); renderQiPanel(); return; }
+                if (!res.ok) { setQiStatus('erreur ' + res.status); return; }
+                const j = await res.json();
+                qiSha = j.sha;
+                const data = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g, '')))));
+                appState.qiPool = Math.max(0, parseInt(data.qi) || 0);
+                setQiStatus('à jour ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                renderQiPanel();
+            } catch (e) { setQiStatus('réseau'); console.error(e); }
+        }
+
+        async function qiPush(retry) {
+            if (!appState.qiShared) return;
+            const token = ghToken();
+            if (!token) { setGhToken(); return; }
+            if (qiBusy) return;
+            qiBusy = true;
+            setQiStatus('envoi…');
+            const headers = {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            };
+            const payload = { qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
+                              by: (appState.profile && appState.profile.name) || '' };
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+            try {
+                const res = await fetch(qiApi(), {
+                    method: 'PUT', headers,
+                    body: JSON.stringify({
+                        message: `qi ${payload.qi} — ${payload.by}`,
+                        content, branch: GH_CFG.branch,
+                        ...(qiSha ? { sha: qiSha } : {})
+                    })
+                });
+                if (res.ok) {
+                    qiSha = (await res.json()).content.sha;
+                    setQiStatus('synchronisé ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                } else if (res.status === 409 && !retry) {
+                    // Conflit : quelqu'un a écrit entre temps. On relit et on réessaie une fois.
+                    qiBusy = false;
+                    await qiPull(true);
+                    return qiPush(true);
+                } else {
+                    setQiStatus('échec ' + res.status);
+                    showNotification('⚠️ Qi non synchronisé (' + res.status + ')');
+                }
+            } catch (e) { setQiStatus('réseau'); console.error(e); }
+            qiBusy = false;
+        }
+
+        function qiAdjust(delta) {
+            appState.qiPool = Math.max(0, (appState.qiPool ?? 0) + delta);
+            renderQiPanel();
+            qiPush();
+        }
+
+        function qiSetShared(on) {
+            appState.qiShared = !!on;
+            renderQiPanel();
+            if (on) qiPull();
+        }
+
         // ----- Chargement depuis les sauvegardes en ligne -----
         function ghReadHeaders(raw) {
             const h = {
@@ -6316,8 +6642,6 @@
         function applyLoadedState(loaded) {
             Object.assign(appState, loaded);
             applyBackwardCompatDefaults();
-            exposePowerAPI();
-            loadPower();
             renderPassives();
             restoreProfileUI();
 
@@ -6386,9 +6710,8 @@
             if (!appState.magic) appState.magic = { reserveUsed: 0 };
             if (appState.magic.reserveUsed === undefined) appState.magic.reserveUsed = 0;
             if (appState.magic.mjDice === undefined) appState.magic.mjDice = 0;
-            // Le pouvoir peut être déclaré à la racine ou dans profile
-            if (!appState.power && appState.profile?.power) appState.power = appState.profile.power;
-            if (appState.power === undefined) appState.power = null;
+            if (appState.qiShared === undefined) appState.qiShared = false;
+            if (appState.qiPool === undefined) appState.qiPool = 0;
             if (!appState.focalisation) appState.focalisation = { current: 1, max: 1 };
             if (!appState.receivedBuffs) appState.receivedBuffs = [];
             if (!appState.masteries) appState.masteries = [];
@@ -6547,8 +6870,6 @@
                 }
             }
 
-            exposePowerAPI();
-            loadPower();
             renderAll();
             updateGhStatus();
 

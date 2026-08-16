@@ -224,6 +224,38 @@
         }
 
         /* ─── ROSTER ─── */
+        .qi-tile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 13px;
+            background: rgba(74, 155, 110, 0.14);
+            border: 1px solid rgba(74, 155, 110, 0.4);
+            border-radius: 9px;
+        }
+
+        .qi-tile-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #7fd4a5;
+        }
+
+        .qi-tile-val {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #a5e8c4;
+            line-height: 1;
+        }
+
+        .qi-tile-meta {
+            font-size: 0.66rem;
+            color: var(--silver-mist);
+            font-style: italic;
+        }
+
         .roster-head {
             display: flex;
             align-items: baseline;
@@ -968,7 +1000,12 @@
         <!-- ROSTER -->
         <div class="roster-head">
             <h2>Groupe</h2>
-            <div style="display:flex;align-items:center;gap:14px;">
+            <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                <div class="qi-tile" id="qi-tile" style="display:none;">
+                    <span class="qi-tile-label">☯ Qi partagé</span>
+                    <span class="qi-tile-val" id="qi-tile-val">0</span>
+                    <span class="qi-tile-meta" id="qi-tile-meta"></span>
+                </div>
                 <span class="count" id="roster-count">0 personnage</span>
                 <button class="act danger" onclick="clearRoster()" style="font-size:0.74rem;padding:6px 12px;">🗑 Tout
                     vider</button>
@@ -1511,7 +1548,9 @@
                 }
                 if (!res.ok) { setPullStatus('Erreur ' + res.status); return; }
 
-                const files = (await res.json()).filter(f => f.type === 'file' && f.name.endsWith('.json'));
+                const allFiles = (await res.json()).filter(f => f.type === 'file' && f.name.endsWith('.json'));
+                const files = allFiles.filter(f => f.name !== '_qi_pool.json');
+                const qiFile = allFiles.find(f => f.name === '_qi_pool.json');
                 let ok = 0;
                 // Lecture du contenu via l'API authentifiée (Accept: raw) : marche en privé comme en public,
                 // pas de cache CDN, pas d'URL à jeton temporaire à manipuler.
@@ -1525,6 +1564,16 @@
                         if (rec) { upsertRecord(rec); ok++; }
                     } catch (e) { console.warn('Fichier illisible', f.name, e); }
                 }
+                // Pool de Qi partagé (Shu & Yue)
+                if (qiFile) {
+                    try {
+                        const qraw = await fetch(qiFile.url, { headers: rawHeaders, cache: 'no-store' });
+                        if (qraw.ok) renderQiTile(JSON.parse(await qraw.text()));
+                    } catch (e) { console.warn('Qi illisible', e); }
+                } else {
+                    renderQiTile(null);
+                }
+
                 render();
                 const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                 if (files.length && ok === 0) {
@@ -1538,6 +1587,23 @@
                 setPullStatus('Réseau indisponible');
                 if (manual) toast('Impossible de joindre GitHub', true);
                 console.error(e);
+            }
+        }
+
+        function renderQiTile(data) {
+            const tile = document.getElementById('qi-tile');
+            const val = document.getElementById('qi-tile-val');
+            const meta = document.getElementById('qi-tile-meta');
+            if (!tile) return;
+            if (!data) { tile.style.display = 'none'; return; }
+            tile.style.display = 'flex';
+            if (val) val.textContent = data.qi ?? 0;
+            if (meta) {
+                const who = data.by ? data.by : '';
+                const when = data.updated
+                    ? new Date(data.updated).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+                    : '';
+                meta.textContent = [who, when].filter(Boolean).join(' · ');
             }
         }
 
