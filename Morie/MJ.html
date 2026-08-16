@@ -1579,9 +1579,7 @@
                 }
                 if (!res.ok) { setPullStatus('Erreur ' + res.status); return; }
 
-                const allFiles = (await res.json()).filter(f => f.type === 'file' && f.name.endsWith('.json'));
-                const files = allFiles.filter(f => f.name !== '_qi_pool.json');
-                const qiFile = allFiles.find(f => f.name === '_qi_pool.json');
+                const files = (await res.json()).filter(f => f.type === 'file' && f.name.endsWith('.json'));
                 let ok = 0;
                 // Lecture du contenu via l'API authentifiée (Accept: raw) : marche en privé comme en public,
                 // pas de cache CDN, pas d'URL à jeton temporaire à manipuler.
@@ -1595,15 +1593,12 @@
                         if (rec) { upsertRecord(rec); ok++; }
                     } catch (e) { console.warn('Fichier illisible', f.name, e); }
                 }
-                // Pool de Qi partagé (Shu & Yue)
-                if (qiFile) {
-                    try {
-                        const qraw = await fetch(qiFile.url, { headers: rawHeaders, cache: 'no-store' });
-                        if (qraw.ok) renderQiTile(JSON.parse(await qraw.text()));
-                    } catch (e) { console.warn('Qi illisible', e); }
-                } else {
-                    renderQiTile(null);
-                }
+                // Pool de Qi partagé (Shu & Yue), dans son sous-dossier dédié
+                try {
+                    const qUrl = `https://api.github.com/repos/${GH_CFG.owner}/${GH_CFG.repo}/contents/${GH_CFG.dir}/shared/qi_pool.json?ref=${GH_CFG.branch}&t=${Date.now()}`;
+                    const qraw = await fetch(qUrl, { headers: rawHeaders, cache: 'no-store' });
+                    renderQiTile(qraw.ok ? JSON.parse(await qraw.text()) : null);
+                } catch (e) { renderQiTile(null); console.warn('Qi illisible', e); }
 
                 render();
                 const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });

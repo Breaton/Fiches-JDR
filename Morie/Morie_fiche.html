@@ -6453,7 +6453,9 @@
                 'Accept': 'application/vnd.github+json',
                 'X-GitHub-Api-Version': '2022-11-28'
             };
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify(appState, null, 2))));
+            const toSave = { ...appState };
+            delete toSave.qiPool;   // le pool partagé vit dans son propre fichier
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(toSave, null, 2))));
 
             updateGhStatus('Envoi…');
             try {
@@ -6492,7 +6494,7 @@
         }
 
         // ===== POOL DE QI PARTAGÉ (Shu & Yue) =====
-        const QI_PATH = `${GH_CFG.dir}/_qi_pool.json`;
+        const QI_PATH = `${GH_CFG.dir}/shared/qi_pool.json`;
         let qiSha = null;
         let qiBusy = false;
 
@@ -6584,10 +6586,28 @@
             qiPush();
         }
 
+        // Relecture automatique : retour sur l'onglet, focus fenêtre, et toutes les 60 s
+        let qiPollTimer = null;
+
+        function startQiAutoSync() {
+            if (qiPollTimer) clearInterval(qiPollTimer);
+            if (!appState.qiShared) return;
+            qiPollTimer = setInterval(() => {
+                if (!document.hidden && appState.qiShared) qiPull(true);
+            }, 60000);
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && appState.qiShared) qiPull(true);
+        });
+        window.addEventListener('focus', () => {
+            if (appState.qiShared) { qiPull(true); startQiAutoSync(); }
+        });
+
         function qiSetShared(on) {
             appState.qiShared = !!on;
             renderQiPanel();
-            if (on) qiPull();
+            if (on) { qiPull(); startQiAutoSync(); }
         }
 
         // ----- Chargement depuis les sauvegardes en ligne -----
@@ -6717,7 +6737,7 @@
             applyBackwardCompatDefaults();
             renderPassives();
             restoreProfileUI();
-            if (appState.qiShared) qiPull(true);
+            if (appState.qiShared) { qiPull(true); startQiAutoSync(); }
 
             updateAllAttributes();
             updateCounterDisplay('power');
@@ -6786,6 +6806,8 @@
             if (appState.magic.mjDice === undefined) appState.magic.mjDice = 0;
             if (appState.profile?.qiShared !== undefined) appState.qiShared = !!appState.profile.qiShared;
             if (appState.qiShared === undefined) appState.qiShared = false;
+            // La valeur du pool fait toujours autorité côté GitHub : on repart de 0 en attendant qiPull()
+            if (appState.qiShared) appState.qiPool = appState.qiPool ?? 0;
             if (appState.qiPool === undefined) appState.qiPool = 0;
             if (!appState.focalisation) appState.focalisation = { current: 1, max: 1 };
             if (!appState.receivedBuffs) appState.receivedBuffs = [];
@@ -6947,6 +6969,7 @@
 
             renderAll();
             updateGhStatus();
+            if (appState.qiShared) { qiPull(true); startQiAutoSync(); }
 
             if (pendingPB) showNotification('✓ Personnage importé depuis le point-buy');
             else if (restoredFromAutosave) showNotification('💾 Session précédente restaurée automatiquement');
