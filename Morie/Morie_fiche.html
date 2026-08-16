@@ -5960,7 +5960,7 @@
             if (dice <= 0) { showNotification('⚠ Réserve magique épuisée'); return null; }
 
             const effLvl = getEffectiveMagicLevel();
-            const res = resolveMagicDice(effLvl, dice, ctx.emotion);
+            const res = resolveMagicDice(effLvl, dice, ctx.emotion, baseDice);
 
             spendReserve(res.energyCost);
             if (res.mjGain > 0) addMjDice(res.mjGain);
@@ -6088,7 +6088,7 @@
                 <span style="font-size:0.92em;color:var(--silver-mist);">La Puissance obtenue est indépendante du jet de compétence.</span>
                 ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
                 ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
-                ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus → ${Math.min(requested, nbDice, left) + bonusD} dés lancés</span>` : ''}
+                ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus (sans coût d'énergie) → ${Math.min(requested, nbDice, left) + bonusD} dés lancés</span>` : ''}
             `;
         }
 
@@ -6107,7 +6107,7 @@
                 ${describeFaces(effLvl)}
                 ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
                 ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
-                ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus → ${Math.min(requested, nbDice, left) + bonusD} dés lancés</span>` : ''}
+                ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus (sans coût d'énergie) → ${Math.min(requested, nbDice, left) + bonusD} dés lancés</span>` : ''}
             `;
         }
 
@@ -6121,7 +6121,9 @@
 
         // Résolution des dés magiques
         // Retourne : résultats, succès (Puissance), Puissance Incontrôlée, dés de Perturbation cédés au MJ
-        function resolveMagicDice(level, count, emotion) {
+        // paidDice : nombre de dés qui consomment la réserve (les dés bonus sont gratuits)
+        function resolveMagicDice(level, count, emotion, paidDice) {
+            const billable = (paidDice === undefined) ? count : paidDice;
             const results = [];
             let successes = 0, puissanceIncontrolee = 0, ruptures = 0, fractures = 0, energyCost = 0, mjGain = 0;
 
@@ -6137,7 +6139,7 @@
                 const die = rollMagicDie(level);
                 if (emotion) die.type = applyEmotion(die.type, level);
                 results.push(die);
-                energyCost += (FACE_COST[die.type] !== undefined ? FACE_COST[die.type] : 1);
+                if (i < billable) energyCost += (FACE_COST[die.type] !== undefined ? FACE_COST[die.type] : 1);
                 switch (die.type) {
                     case 'succès':
                         successes++;
@@ -6305,7 +6307,7 @@
             const hybridBonus = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
             const totalMagicDice = actualMagic + hybridBonus;
             const effLvl = getEffectiveMagicLevel();
-            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, totalMagicDice, emotion);
+            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, totalMagicDice, emotion, actualMagic);
             if (totalMagicDice > 0) { spendReserve(energyCost); if (mjGain > 0) addMjDice(mjGain); }
             lastMagicRoll = totalMagicDice > 0 ? { puissance: magicSuccesses, dice: totalMagicDice } : null;
             actualMagic = totalMagicDice;
@@ -6402,11 +6404,12 @@
             const esotLvl = getEsoterismeLevel();
             const requestedDice = parseInt(document.getElementById('pure-magic-dice')?.value) || 1;
             const pureBonus = parseInt(document.getElementById('pure-bonus-dice')?.value) || 0;
-            const actualDice = clampMagicDice(requestedDice) + pureBonus;
+            const paidDice = clampMagicDice(requestedDice);
+            const actualDice = paidDice + pureBonus;
             if (actualDice <= 0) { showNotification('⚠ Réserve magique épuisée'); return; }
 
             const effLvl = getEffectiveMagicLevel();
-            const { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion);
+            const { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion, paidDice);
             spendReserve(energyCost);
             if (mjGain > 0) addMjDice(mjGain);
             lastMagicRoll = { puissance: successes, dice: actualDice };
