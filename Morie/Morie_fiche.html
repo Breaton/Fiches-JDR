@@ -2855,6 +2855,65 @@
             line-height: 1.4;
         }
 
+        .qi-perso {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(29, 158, 117, 0.22);
+        }
+
+        .qi-perso-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        .qi-perso-name {
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #085041;
+        }
+
+        .qi-perso-refresh {
+            width: 20px;
+            height: 20px;
+            background: rgba(29, 158, 117, 0.12);
+            border: 1px solid rgba(29, 158, 117, 0.3);
+            border-radius: 5px;
+            color: #1D9E75;
+            font-size: 0.8em;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .qi-perso-body {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .qi-perso-num {
+            font-family: var(--font-display);
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #1D9E75;
+            min-width: 38px;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .qi-perso-status {
+            font-size: 0.66em;
+            color: var(--silver-mist);
+            font-style: italic;
+            margin-left: auto;
+            text-align: right;
+        }
+
         /* === RESSOURCES DANS LA COLONNE CONTEXTE === */
         .ctx-res {
             margin-bottom: 9px;
@@ -3356,7 +3415,6 @@
                         <button onclick="event.stopPropagation(); openGhLoad();">📥 Charger depuis les saves en
                             ligne</button>
                         <button onclick="event.stopPropagation(); setGhToken();">⚙️ Configurer le jeton GitHub</button>
-                        <button onclick="event.stopPropagation(); qiSetShared(!appState.qiShared); showNotification(appState.qiShared ? '☯ Qi partagé activé' : '☯ Qi partagé désactivé');">☯ Qi partagé</button>
                         <div class="save-menu-status" id="gh-status"></div>
                         <div class="save-menu-sep"></div>
                         <button onclick="event.stopPropagation(); clearAutosave(); closeSaveMenu();">🗑 Effacer la
@@ -3498,6 +3556,20 @@
                             <button onclick="resetReserve()"
                                 style="margin-top:10px; width:100%; padding:6px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺
                                 Repos — Réserve pleine, usure à 0</button>
+
+                            <!-- Qi partagé -->
+                            <div id="qi-perso-block" class="qi-perso" style="display:none;">
+                                <div class="qi-perso-head">
+                                    <span class="qi-perso-name">☯ Qi partagé</span>
+                                    <button class="qi-perso-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
+                                </div>
+                                <div class="qi-perso-body">
+                                    <button class="qi-step" onclick="qiAdjust(-1)">−</button>
+                                    <span class="qi-perso-num" id="qi-value-perso">0</span>
+                                    <button class="qi-step" onclick="qiAdjust(1)">+</button>
+                                    <span class="qi-perso-status" id="qi-status-perso"></span>
+                                </div>
+                            </div>
 
                             <!-- Perturbation : dette accumulée, sous le contrôle du MJ -->
                             <div id="mj-dice-block" class="perturb-reserve">
@@ -6429,16 +6501,17 @@
         }
 
         function setQiStatus(msg) {
-            const el = document.getElementById('qi-status');
-            if (el) el.textContent = msg || '';
+            document.querySelectorAll('#qi-status, #qi-status-perso').forEach(el => el.textContent = msg || '');
         }
 
         function renderQiPanel() {
+            const on = !!appState.qiShared;
+            const qi = appState.qiPool ?? 0;
             const panel = document.getElementById('qi-panel');
-            const val = document.getElementById('qi-value');
-            if (!panel) return;
-            panel.style.display = appState.qiShared ? 'block' : 'none';
-            if (val) val.textContent = appState.qiPool ?? 0;
+            const perso = document.getElementById('qi-perso-block');
+            if (panel) panel.style.display = on ? 'block' : 'none';
+            if (perso) perso.style.display = on ? 'block' : 'none';
+            document.querySelectorAll('#qi-value, #qi-value-perso').forEach(el => el.textContent = qi);
         }
 
         async function qiPull(silent) {
@@ -6644,6 +6717,7 @@
             applyBackwardCompatDefaults();
             renderPassives();
             restoreProfileUI();
+            if (appState.qiShared) qiPull(true);
 
             updateAllAttributes();
             updateCounterDisplay('power');
@@ -6710,6 +6784,7 @@
             if (!appState.magic) appState.magic = { reserveUsed: 0 };
             if (appState.magic.reserveUsed === undefined) appState.magic.reserveUsed = 0;
             if (appState.magic.mjDice === undefined) appState.magic.mjDice = 0;
+            if (appState.profile?.qiShared !== undefined) appState.qiShared = !!appState.profile.qiShared;
             if (appState.qiShared === undefined) appState.qiShared = false;
             if (appState.qiPool === undefined) appState.qiPool = 0;
             if (!appState.focalisation) appState.focalisation = { current: 1, max: 1 };
