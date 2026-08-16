@@ -3601,7 +3601,8 @@
                             <div class="reserve-override">
                                 <label>Max :</label>
                                 <input type="number" id="reserve-max-input" min="1"
-                                    placeholder="auto" onchange="setReserveOverride(this.value)">
+                                    placeholder="auto" oninput="setReserveOverride(this.value)"
+                                    onchange="setReserveOverride(this.value)">
                                 <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺ auto</button>
                                 <span id="reserve-base-hint"></span>
                             </div>
@@ -6292,7 +6293,7 @@
 
             const esotLvl = getEsoterismeLevel();
             const requestedMagic = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
-            const actualMagic = clampMagicDice(requestedMagic);
+            let actualMagic = clampMagicDice(requestedMagic);
 
             const attrValue = appState.attributes[attrName];
             const attrLevel = getAttributeLevel(attrValue);
@@ -6301,10 +6302,13 @@
             const skillDice = rollWithExplosions(skillLevel.dice, threshold, skillLevel.explosion);
             const skillCounts = countSuccesses(skillDice, threshold);
 
+            const hybridBonus = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
+            const totalMagicDice = actualMagic + hybridBonus;
             const effLvl = getEffectiveMagicLevel();
-            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualMagic, emotion);
-            if (actualMagic > 0) { spendReserve(energyCost); if (mjGain > 0) addMjDice(mjGain); }
-            lastMagicRoll = actualMagic > 0 ? { puissance: magicSuccesses, dice: actualMagic } : null;
+            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, totalMagicDice, emotion);
+            if (totalMagicDice > 0) { spendReserve(energyCost); if (mjGain > 0) addMjDice(mjGain); }
+            lastMagicRoll = totalMagicDice > 0 ? { puissance: magicSuccesses, dice: totalMagicDice } : null;
+            actualMagic = totalMagicDice;
 
             // La magie ne s'ajoute PAS au total du jet de compétence
             const perturb = consumePerturbationForRoll();
@@ -6397,7 +6401,8 @@
             const emotion = document.getElementById('pure-emotion')?.checked || false;
             const esotLvl = getEsoterismeLevel();
             const requestedDice = parseInt(document.getElementById('pure-magic-dice')?.value) || 1;
-            const actualDice = clampMagicDice(requestedDice);
+            const pureBonus = parseInt(document.getElementById('pure-bonus-dice')?.value) || 0;
+            const actualDice = clampMagicDice(requestedDice) + pureBonus;
             if (actualDice <= 0) { showNotification('⚠ Réserve magique épuisée'); return; }
 
             const effLvl = getEffectiveMagicLevel();
@@ -6582,6 +6587,7 @@
         const QI_PATH = `${GH_CFG.dir}/shared/qi_pool.json`;
         let qiSha = null;
         let qiBusy = false;
+        let qiDirty = false;
 
         function qiApi() {
             return `https://api.github.com/repos/${GH_CFG.owner}/${GH_CFG.repo}/contents/${QI_PATH}`;
@@ -6629,8 +6635,9 @@
             if (!appState.qiShared) return;
             const token = ghToken();
             if (!token) { setGhToken(); return; }
-            if (qiBusy) return;
+            if (qiBusy) { qiDirty = true; return; }   // un envoi est en cours : on repassera après
             qiBusy = true;
+            qiDirty = false;
             setQiStatus('envoi…');
             const headers = {
                 'Authorization': `Bearer ${token}`,
@@ -6663,6 +6670,8 @@
                 }
             } catch (e) { setQiStatus('réseau'); console.error(e); }
             qiBusy = false;
+            // Une modification est survenue pendant l'envoi : on renvoie la valeur à jour
+            if (qiDirty) { qiDirty = false; qiPush(); }
         }
 
         // Applique ± le montant saisi dans le champ associé
@@ -6671,10 +6680,15 @@
             qiAdjust(sign * n);
         }
 
+        let qiPushTimer = null;
+
         function qiAdjust(delta) {
             appState.qiPool = Math.max(0, (appState.qiPool ?? 0) + delta);
             renderQiPanel();
-            qiPush();
+            setQiStatus('modifié…');
+            // Regroupe les clics rapprochés en un seul envoi
+            if (qiPushTimer) clearTimeout(qiPushTimer);
+            qiPushTimer = setTimeout(() => { qiPushTimer = null; qiPush(); }, 500);
         }
 
         // Relecture automatique : retour sur l'onglet, focus fenêtre, et toutes les 60 s
