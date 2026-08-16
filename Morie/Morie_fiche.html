@@ -2634,6 +2634,172 @@
             padding: 0 11px 11px;
         }
 
+        /* === BARRE RESSOURCES MAGIQUES (page Jets) === */
+        .magic-res-bar {
+            display: none;
+            margin-bottom: 12px;
+            background: rgba(107, 76, 154, 0.06);
+            border: 1px solid rgba(107, 76, 154, 0.22);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .mrb-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 8px 13px;
+            background: rgba(107, 76, 154, 0.09);
+            border-bottom: 1px solid rgba(107, 76, 154, 0.16);
+        }
+
+        .mrb-title {
+            font-weight: 700;
+            font-size: 0.88em;
+            color: var(--ombre-purple);
+        }
+
+        .mrb-faces {
+            font-size: 0.74em;
+            color: var(--silver-mist);
+            letter-spacing: 0.04em;
+        }
+
+        .mrb-body {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            align-items: start;
+            padding: 10px 13px 11px;
+        }
+
+        .mrb-gauge-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .mrb-label {
+            font-size: 0.72em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--silver-mist);
+        }
+
+        .mrb-nums {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--font-display);
+            font-size: 1.05em;
+            font-weight: 700;
+            color: var(--ombre-purple);
+        }
+
+        .mrb-sep {
+            opacity: 0.4;
+            font-weight: 400;
+        }
+
+        .mrb-step {
+            width: 19px;
+            height: 19px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(107, 76, 154, 0.1);
+            border: 1px solid rgba(107, 76, 154, 0.28);
+            border-radius: 4px;
+            color: var(--ombre-purple);
+            font-size: 0.78em;
+            font-weight: 700;
+            font-family: var(--font-body);
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .mrb-step:hover {
+            background: rgba(107, 76, 154, 0.2);
+        }
+
+        .mrb-step.danger {
+            background: rgba(163, 45, 45, 0.1);
+            border-color: rgba(163, 45, 45, 0.3);
+            color: var(--vitality-red);
+        }
+
+        .mrb-step.danger:hover {
+            background: rgba(163, 45, 45, 0.2);
+        }
+
+        .mrb-track {
+            height: 5px;
+            background: rgba(107, 76, 154, 0.15);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .mrb-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--ombre-purple), #9b7cd4);
+            transition: width 0.3s ease;
+            width: 100%;
+        }
+
+        .mrb-sub {
+            margin-top: 4px;
+            font-size: 0.7em;
+            color: var(--silver-mist);
+        }
+
+        .mrb-perturb {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 132px;
+            padding-left: 14px;
+            border-left: 1px solid rgba(107, 76, 154, 0.15);
+        }
+
+        .mrb-perturb .mrb-nums {
+            color: var(--vitality-red);
+        }
+
+        .mrb-rest {
+            padding: 4px 9px;
+            background: rgba(107, 76, 154, 0.1);
+            border: 1px solid rgba(107, 76, 154, 0.28);
+            border-radius: 5px;
+            color: var(--ombre-purple);
+            font-size: 0.74em;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--font-body);
+        }
+
+        .mrb-rest:hover {
+            background: rgba(107, 76, 154, 0.2);
+        }
+
+        @media (max-width: 720px) {
+            .mrb-body {
+                grid-template-columns: 1fr;
+            }
+
+            .mrb-perturb {
+                padding-left: 0;
+                border-left: none;
+                padding-top: 10px;
+                border-top: 1px solid rgba(107, 76, 154, 0.15);
+            }
+        }
+
         /* === PERTURBATION SUR UN JET (page Jets) === */
         .perturb-inject {
             display: none;
@@ -2970,7 +3136,8 @@
                                         <button onclick="usePerturbation()">🎲 Lancer</button>
                                     </div>
                                 </div>
-                                <div class="perturb-reserve-hint">Alimentée par les Ruptures et Fractures. Se vide au repos.</div>
+                                <div class="perturb-reserve-hint">Alimentée par les Ruptures et Fractures. Se vide au
+                                    repos.</div>
                                 <div id="mj-dice-result"></div>
                             </div>
                         </div>
@@ -3091,16 +3258,42 @@
                 </div>
 
                 <!-- Mini état magique -->
-                <div id="roll-page-pool"
-                    style="display:none; margin-bottom:12px; padding:10px 14px; background:rgba(107,76,154,0.08); border:1px solid rgba(107,76,154,0.2); border-radius:10px;">
-                    <div
-                        style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="font-size:1em;">✨</span>
-                            <span id="roll-pool-status" style="font-weight:700; font-size:0.95em;"></span>
-                        </div>
+                <div id="roll-page-pool" class="magic-res-bar">
+                    <div class="mrb-head">
+                        <span class="mrb-title">✨ <span id="roll-pool-status"></span></span>
+                        <span class="mrb-faces" id="roll-pool-details"></span>
                     </div>
-                    <div style="margin-top:6px; font-size:0.78em; color:var(--silver-mist);" id="roll-pool-details">
+                    <div class="mrb-body">
+                        <!-- Réserve d'énergie -->
+                        <div class="mrb-gauge">
+                            <div class="mrb-gauge-top">
+                                <span class="mrb-label">Réserve d'énergie</span>
+                                <span class="mrb-nums">
+                                    <button class="mrb-step" onclick="adjustReserve(-1)" title="Dépenser 1">−</button>
+                                    <span id="roll-res-left">0</span><span class="mrb-sep">/</span><span
+                                        id="roll-res-max">0</span>
+                                    <button class="mrb-step" onclick="adjustReserve(1)" title="Récupérer 1">+</button>
+                                </span>
+                            </div>
+                            <div class="mrb-track">
+                                <div class="mrb-fill" id="roll-res-bar"></div>
+                            </div>
+                            <div class="mrb-sub" id="roll-usure-txt"></div>
+                        </div>
+
+                        <!-- Perturbation MJ -->
+                        <div class="mrb-perturb">
+                            <div class="mrb-gauge-top">
+                                <span class="mrb-label" style="color:var(--vitality-red);">⚠ Perturbation MJ</span>
+                                <span class="mrb-nums">
+                                    <button class="mrb-step danger" onclick="adjustMjDice(-1)">−</button>
+                                    <span id="roll-mj-val">0</span>
+                                    <button class="mrb-step danger" onclick="adjustMjDice(1)">+</button>
+                                </span>
+                            </div>
+                            <button class="mrb-rest" onclick="resetReserve()"
+                                title="Réserve pleine, usure et Perturbation à zéro">↺ Repos</button>
+                        </div>
                     </div>
                 </div>
 
@@ -3118,7 +3311,8 @@
                 <label id="perturb-inject-bar" class="perturb-inject">
                     <input type="checkbox" id="perturb-inject-toggle">
                     <span class="perturb-inject-text">⚠ Appliquer la Perturbation à ce jet</span>
-                    <input type="number" id="perturb-inject-count" value="1" min="1" onclick="event.preventDefault(); this.focus();">
+                    <input type="number" id="perturb-inject-count" value="1" min="1"
+                        onclick="event.preventDefault(); this.focus();">
                     <span class="perturb-inject-avail">/ <span id="perturb-inject-avail">0</span></span>
                 </label>
 
@@ -3232,18 +3426,15 @@
                         <div class="roll-info-title">Mécanique Jet + Magie</div>
                         <div class="roll-info-content">
                             Deux jets <strong>séparés</strong> : la compétence détermine si l'action réussit,
-                            la magie détermine la <strong>Puissance</strong> de l'effet (Gravité, portée, ampleur…).<br>
-                            La Puissance ne s'ajoute jamais au Résultat Final.<br>
-                            Faces des dés magiques et <strong>réserve journalière</strong> = niveau d'Ésotérisme.
-                            Le nombre injecté est libre, borné par le max/jet et la réserve restante.<br>
-                            <strong>Usure :</strong> chaque tranche de 5 points d'énergie dépensés abaisse d'un cran
-                            le niveau effectif du dé — les Ruptures puis les Fractures finissent par apparaître.<br>
-                            <strong>Coût par face :</strong> Transcendance −1 · Résonance 0 · Flux 0 · Succès/Vide +1 ·
-                            Rupture/Fracture +1<br>
-                            <strong>Rupture</strong> : Effet Incontrôlé +2 et <strong>1 dé</strong> de Perturbation au MJ.
-                            <strong>Fracture</strong> : Effet Incontrôlé +3 et <strong>2 dés</strong> de Perturbation.<br>
-                            <strong>Moment d'émotion :</strong> Succès→Résonance, Vide→Rupture (niv. 6+) ou Fracture
-                            (niv. 1-5).
+                            la magie détermine la <strong>Puissance</strong> de l'effet.<br>
+                            La Puissance ne s'ajoute jamais au Résultat Final. La valeur de la <strong>puissance divisée
+                                par deux</strong> sera utilisée pour modifier une valeur de l'action. (La gravitée
+                            infligée, les palliers de soin, la vitesse de déplacement etc...)<br>
+                            <strong>Usure :</strong> Tout les 5 points d'énergie dépensés = −1 niveau effectif du
+                            dé.<br>
+                            <strong>Rupture</strong> : Effet Incontrôlé donnent <strong>1 ou 2 dé(s)</strong> de
+                            Perturbation au
+                            MJ.
                         </div>
                     </div>
                 </div>
@@ -3276,11 +3467,11 @@
                             Jet uniquement avec les dés magiques : faces et <strong>réserve journalière</strong>
                             déterminées par le niveau d'Ésotérisme.<br>
                             Les succès donnent la <strong>Puissance</strong> de l'effet.<br>
-                            <strong>Usure :</strong> 5 points d'énergie dépensés = −1 niveau effectif du dé.<br>
-                            <strong>Rupture</strong> : Effet Incontrôlé +2 et <strong>1 dé</strong> de Perturbation au MJ.
-                            <strong>Fracture</strong> : Effet Incontrôlé +3 et <strong>2 dés</strong> de Perturbation.<br>
-                            <strong>Puissance :</strong> 1 triviale · 2 simple · 3 modérée · 4 complexe · 5 majeure ·
-                            6+ légendaire
+                            <strong>Usure :</strong> Tout les 5 points d'énergie dépensés = −1 niveau effectif du
+                            dé.<br>
+                            <strong>Rupture</strong> : Effet Incontrôlé donnent <strong>1 ou 2 dé(s)</strong> de
+                            Perturbation au
+                            MJ.
                         </div>
                     </div>
                 </div>
@@ -3301,7 +3492,8 @@
                                 style="font-size:0.7em;color:var(--silver-mist);margin-left:auto;text-align:right;"></span>
                         </div>
                         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-                            <label style="font-size:0.75em;color:var(--silver-mist);white-space:nowrap;">✨ Bonus (Puissance) :</label>
+                            <label style="font-size:0.75em;color:var(--silver-mist);white-space:nowrap;">✨ Bonus
+                                (Puissance) :</label>
                             <input type="number" id="vitesse-bonus-input" min="0" value="0"
                                 style="width:52px;padding:3px 6px;border:1px solid var(--moonlight);border-radius:5px;text-align:center;"
                                 onchange="updateVitesseBonus(this.value)">
@@ -3317,7 +3509,8 @@
                     <div class="ctx-panel-body">
                         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
                             <button class="foc-btn" onclick="modFocalisation(-1)">−</button>
-                            <span style="font-family:var(--font-display);font-size:1.3em;font-weight:700;color:#4a90c2;">
+                            <span
+                                style="font-family:var(--font-display);font-size:1.3em;font-weight:700;color:#4a90c2;">
                                 <span id="focalisation-current">1</span> /
                                 <input type="number" id="focalisation-max" min="1" max="9" value="1"
                                     onchange="setFocalisationMax(this.value)"
@@ -3327,16 +3520,20 @@
                             <button class="foc-btn" onclick="refillFocalisation()" title="Nouveau round">↻</button>
                         </div>
                         <div id="foc-usages-toggle" onclick="toggleFocUsages()"
-                            style="margin-top:8px;cursor:pointer;color:#4a90c2;font-size:0.76em;user-select:none;font-weight:600;">▸
+                            style="margin-top:8px;cursor:pointer;color:#4a90c2;font-size:0.76em;user-select:none;font-weight:600;">
+                            ▸
                             Voir les usages du point de focalisation</div>
                         <div id="foc-usages"
                             style="display:none;margin-top:6px;padding:8px 10px;background:rgba(74,144,194,0.05);border:1px solid rgba(74,144,194,0.15);border-radius:6px;font-size:0.74em;line-height:1.55;color:var(--slate-blue);">
                             <div style="margin-bottom:6px;"><strong>🎲 Action tactique</strong> : dépenser un point pour
                                 tenter un geste adapté à la situation par un jet de compétence contre la DC tactique.
-                                Chaque tranche de 3 points d'écart abaisse d'un cran le dé de l'adversaire à sa prochaine
+                                Chaque tranche de 3 points d'écart abaisse d'un cran le dé de l'adversaire à sa
+                                prochaine
                                 confrontation.</div>
-                            <div style="margin-bottom:6px;"><strong>🛡 Protéger un allié</strong> : un allié à 5 ft prend
-                                sa place dans une confrontation défensive, ou tente d'intercepter un sort à distance.</div>
+                            <div style="margin-bottom:6px;"><strong>🛡 Protéger un allié</strong> : un allié à 5 ft
+                                prend
+                                sa place dans une confrontation défensive, ou tente d'intercepter un sort à distance.
+                            </div>
                             <div style="margin-bottom:6px;"><strong>⏳ Lancer un sort de durée</strong> : le point reste
                                 immobilisé tant que le sort est actif.</div>
                             <div><strong>⚔ Riposte</strong> : lors d'une confrontation défensive, attaquer au lieu de se
@@ -3348,7 +3545,8 @@
 
                 <!-- Sorts de durée -->
                 <div class="ctx-panel" id="active-spells-section">
-                    <div class="ctx-panel-title" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <div class="ctx-panel-title"
+                        style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                         <span>⏳ Sorts de durée</span>
                         <button onclick="addActiveSpell()" class="foc-btn">＋</button>
                     </div>
@@ -3393,7 +3591,7 @@
                     <div class="add-object-section">
                         <div class="add-object-field" style="flex: 2;">
                             <label>Nom de l'objet</label>
-                            <input type="text" id="object-name" placeholder="Ex: Épée enchantée">
+                            <input type="text" id="object-name" placeholder="Ex: Marjorie est folle.">
                         </div>
                         <div class="add-object-field" style="flex: 0; min-width: 100px;">
                             <label>Qualité</label>
@@ -4133,7 +4331,7 @@
             if (block) block.innerHTML = `<div class="sustain-label" style="color:#1D9E75;">✓ « ${name} » ajouté aux sorts de durée</div>`;
             lastMagicRoll = null;
             renderActiveSpells();
-            showNotification(`⏳ « ${name} » maintenu (entretien ${Math.ceil(appState.activeSpells[appState.activeSpells.length-1].initialDice / 2)} dés/tour)`);
+            showNotification(`⏳ « ${name} » maintenu (entretien ${Math.ceil(appState.activeSpells[appState.activeSpells.length - 1].initialDice / 2)} dés/tour)`);
         }
 
         // ========== POINTS DE FOCALISATION ==========
@@ -4619,13 +4817,17 @@
         }
 
         // ========== SWITCH MODE JETS ==========
+        let currentRollMode = 'simple';
+
         function switchRollMode(mode, tabEl) {
+            currentRollMode = mode;
             document.querySelectorAll('.roll-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.roll-panel').forEach(p => p.classList.remove('active'));
             tabEl.classList.add('active');
             document.getElementById(`roll-${mode}`).classList.add('active');
             if (mode === 'hybrid') updateHybridMagicInfo();
             if (mode === 'pure') updatePureMagicInfo();
+            updateMagicState();
         }
 
         // ========== MISE À JOUR DES SELECTS ==========
@@ -4925,16 +5127,16 @@
         // Composition du d12 magique par niveau d'Ésotérisme
         // [Transcendance, Résonance, Flux, Succès, Vide, Rupture, Fracture]
         const MAGIC_FACE_COUNTS = {
-            1: [0, 0, 1, 2, 2, 4, 3],
-            2: [0, 0, 1, 3, 2, 4, 2],
-            3: [0, 1, 2, 3, 2, 3, 1],
-            4: [0, 1, 3, 4, 1, 2, 1],
-            5: [0, 2, 3, 4, 1, 2, 0],
-            6: [0, 2, 3, 5, 2, 0, 0],
-            7: [1, 2, 4, 3, 2, 0, 0],
-            8: [1, 3, 4, 3, 1, 0, 0],
-            9: [2, 3, 4, 3, 0, 0, 0],
-            10: [2, 4, 4, 2, 0, 0, 0],
+            1: [0, 1, 0, 3, 1, 4, 3],
+            2: [0, 2, 0, 4, 0, 4, 2],
+            3: [0, 2, 2, 4, 0, 3, 1],
+            4: [0, 3, 3, 4, 1, 1, 0],
+            5: [0, 5, 2, 3, 1, 1, 0],
+            6: [0, 5, 4, 2, 1, 0, 0],
+            7: [1, 4, 3, 3, 1, 0, 0],
+            8: [2, 4, 3, 2, 1, 0, 0],
+            9: [2, 5, 3, 1, 1, 0, 0],
+            10: [3, 5, 2, 1, 1, 0, 0],
         };
 
         // Construit le d12 : valeurs basses = faces défavorables, valeurs hautes = favorables
@@ -5038,11 +5240,11 @@
         ];
 
         const PERTURBATION_INFO = {
-            'rien':       { label: 'Rien',           desc: 'Aucun effet',                              color: '#888780' },
-            'succès':     { label: '−1 succès',      desc: 'Annule 1 succès du jet',                   color: '#BA7517' },
-            'succès2':    { label: '−2 succès',      desc: 'Annule 2 succès du jet',                   color: '#D85A30' },
-            'dispersion': { label: 'Dispersion',     desc: 'Annule 1 succès et l\'effet déborde',      color: '#A32D2D' },
-            'retour':     { label: 'Retour de flux', desc: 'Annule 2 succès et le MJ garde ce dé',     color: '#501313' },
+            'rien': { label: 'Rien', desc: 'Aucun effet', color: '#888780' },
+            'succès': { label: '−1 succès', desc: 'Annule 1 succès du jet', color: '#BA7517' },
+            'succès2': { label: '−2 succès', desc: 'Annule 2 succès du jet', color: '#D85A30' },
+            'dispersion': { label: 'Dispersion', desc: 'Annule 1 succès et l\'effet déborde', color: '#A32D2D' },
+            'retour': { label: 'Retour de flux', desc: 'Annule 2 succès et le MJ garde ce dé', color: '#501313' },
         };
 
         function rollPerturbation(n) {
@@ -5162,12 +5364,30 @@
             const rollPool = document.getElementById('roll-page-pool');
             const rollStatus = document.getElementById('roll-pool-status');
             const rollDetails = document.getElementById('roll-pool-details');
-            if (rollPool) rollPool.style.display = esotLvl > 0 ? 'block' : 'none';
+            // Visible uniquement sur les onglets magiques
+            const magicMode = (currentRollMode === 'hybrid' || currentRollMode === 'pure');
+            if (rollPool) rollPool.style.display = (esotLvl > 0 && magicMode) ? 'block' : 'none';
             if (rollStatus && esotLvl > 0) {
                 rollStatus.textContent = usure > 0
-                    ? `Ésotérisme ${esotLvl} → ${effLvl} · usure ${usure}`
-                    : `Ésotérisme ${esotLvl} · ${maxDice} dés`;
+                    ? `Ésotérisme ${esotLvl} → ${effLvl} · ${maxDice} dés max`
+                    : `Ésotérisme ${esotLvl} · ${maxDice} dés max`;
                 rollStatus.style.color = col.color;
+            }
+
+            // Jauges interactives de la page Jets
+            const rLeft = document.getElementById('roll-res-left');
+            const rMax = document.getElementById('roll-res-max');
+            const rBar = document.getElementById('roll-res-bar');
+            const rUsure = document.getElementById('roll-usure-txt');
+            const rMj = document.getElementById('roll-mj-val');
+            if (rLeft) rLeft.textContent = resLeft;
+            if (rMax) rMax.textContent = resMax;
+            if (rBar) rBar.style.width = resMax > 0 ? `${(resLeft / resMax) * 100}%` : '0%';
+            if (rMj) rMj.textContent = getMjDice();
+            if (rUsure) {
+                rUsure.textContent = usure > 0
+                    ? `Usure ${usure} : le dé est tombé au niveau ${effLvl}`
+                    : `Prochaine usure dans ${USURE_TRANCHE - ((appState.magic.reserveUsed || 0) % USURE_TRANCHE)} points`;
             }
             if (rollDetails) rollDetails.textContent = esotLvl > 0
                 ? `${describeFaces(effLvl)} · Réserve ${getReserveLeft()}/${getReserveMax()} · MJ ${getMjDice()} dé(s)`
