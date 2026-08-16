@@ -1266,6 +1266,7 @@
                 storedHealth,
                 reserveUsed: (obj.magic && obj.magic.reserveUsed) ? parseInt(obj.magic.reserveUsed) || 0 : 0,
                 mjDice: (obj.magic && obj.magic.mjDice) ? parseInt(obj.magic.mjDice) || 0 : 0,
+                reserveMaxOverride: (obj.magic && obj.magic.reserveMaxOverride != null) ? parseInt(obj.magic.reserveMaxOverride) || null : null,
                 qiShared: !!(obj.qiShared || (obj.profile && obj.profile.qiShared)),
                 vitesseBonus: parseInt(obj.vitesseBonus) || 0,
                 updatedAt: obj.ts || Date.now()
@@ -1274,7 +1275,7 @@
 
         /* ── Valeurs dérivées ── */
         // Réserve d'énergie magique par niveau d'Ésotérisme
-        const MAGIC_RESERVE = { 1: 3, 2: 6, 3: 10, 4: 13, 5: 17, 6: 22, 7: 28, 8: 35, 9: 43, 10: 52 };
+        const MAGIC_RESERVE = { 1: 3, 2: 6, 3: 10, 4: 14, 5: 18, 6: 22, 7: 28, 8: 35, 9: 43, 10: 52 };
         const USURE_TRANCHE = 5;
 
         function getEsoLevel(rec) {
@@ -1284,6 +1285,7 @@
 
         function getReserveMax(rec) {
             const lvl = getEsoLevel(rec);
+            if (rec.reserveMaxOverride != null && rec.reserveMaxOverride > 0) return rec.reserveMaxOverride;
             return lvl > 0 ? (MAGIC_RESERVE[Math.min(10, lvl)] || 0) : 0;
         }
 

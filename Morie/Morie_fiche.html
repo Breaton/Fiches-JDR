@@ -2765,6 +2765,53 @@
             background: rgba(163, 45, 45, 0.2);
         }
 
+        .reserve-override {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin: 6px 0 7px;
+            flex-wrap: wrap;
+        }
+
+        .reserve-override label {
+            font-size: 0.7em;
+            font-weight: 600;
+            color: var(--silver-mist);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .reserve-override input {
+            width: 52px;
+            padding: 3px 6px;
+            border: 1px solid var(--moonlight);
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.82em;
+            font-family: var(--font-body);
+        }
+
+        .reserve-override button {
+            padding: 3px 8px;
+            background: rgba(107, 76, 154, 0.1);
+            border: 1px solid rgba(107, 76, 154, 0.28);
+            border-radius: 5px;
+            color: var(--ombre-purple);
+            font-size: 0.7em;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: var(--font-body);
+        }
+
+        .reserve-override button:hover { background: rgba(107, 76, 154, 0.2); }
+
+        .reserve-override span {
+            font-size: 0.68em;
+            color: var(--silver-mist);
+            font-style: italic;
+            margin-left: auto;
+        }
+
         /* === QI PARTAGÉ === */
         .qi-panel .ctx-panel-title {
             background: rgba(29, 158, 117, 0.1);
@@ -3547,6 +3594,13 @@
                                 </div>
                                 <button class="counter-btn plus" onclick="adjustReserve(1)">+</button>
                             </div>
+                            <div class="reserve-override">
+                                <label>Max :</label>
+                                <input type="number" id="reserve-max-input" min="1"
+                                    placeholder="auto" onchange="setReserveOverride(this.value)">
+                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺ auto</button>
+                                <span id="reserve-base-hint"></span>
+                            </div>
                             <div class="counter-bar" style="background:rgba(107,76,154,0.15);">
                                 <div id="magic-reserve-bar"
                                     style="height:100%; border-radius:4px; background:linear-gradient(90deg,var(--ombre-purple),#9b7cd4); transition:width 0.3s ease; width:100%;">
@@ -3866,12 +3920,12 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Dés magiques</label>
+                                <label class="form-label">Magnitude</label>
                                 <input id="hybrid-magic-dice" class="bonus-input" type="number" value="1" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés bonus</label>
+                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques bonus</label>
                                 <input id="hybrid-bonus-dice" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
@@ -3916,12 +3970,12 @@
                     <div class="roll-form">
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:440px;">
                             <div class="form-group">
-                                <label class="form-label">Dés magiques</label>
+                                <label class="form-label">Magnitude</label>
                                 <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1"
                                     oninput="updatePureMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés bonus</label>
+                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques bonus</label>
                                 <input id="pure-bonus-dice" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updatePureMagicInfo()">
                             </div>
@@ -4270,7 +4324,7 @@
             currentModal: null,
             qiShared: false,
             qiPool: 0,
-            magic: { reserveUsed: 0, mjDice: 0 },
+            magic: { reserveUsed: 0, mjDice: 0, reserveMaxOverride: null },
             focalisation: { current: 1, max: 1 },
             receivedBuffs: [],
             masteries: [],
@@ -5737,6 +5791,27 @@
         // Réserve d'énergie magique disponible par jour, selon le niveau d'Ésotérisme
         const MAGIC_RESERVE = { 1: 3, 2: 6, 3: 10, 4: 14, 5: 18, 6: 22, 7: 28, 8: 35, 9: 43, 10: 52 };
 
+        // Ajustement manuel du maximum de réserve (override)
+        function getReserveMaxBase() {
+            const lvl = getEsoterismeLevel();
+            if (lvl <= 0) return 0;
+            const ov = appState.magic.reserveMaxOverride;
+            if (ov != null && ov > 0) return ov;
+            return MAGIC_RESERVE[Math.min(10, lvl)] || 0;
+        }
+
+        function setReserveOverride(val) {
+            const v = parseInt(val);
+            appState.magic.reserveMaxOverride = (isNaN(v) || v <= 0) ? null : v;
+            appState.magic.reserveUsed = Math.min(appState.magic.reserveUsed || 0, getReserveMax());
+            updateMagicState();
+        }
+
+        function clearReserveOverride() {
+            appState.magic.reserveMaxOverride = null;
+            updateMagicState();
+        }
+
         function getReserveMax() {
             const lvl = getEsoterismeLevel();
             if (lvl <= 0) return 0;
@@ -5922,6 +5997,12 @@
             if (resVal) resVal.textContent = resLeft;
             if (resMaxEl) resMaxEl.textContent = resMax;
             if (resBar) resBar.style.width = resMax > 0 ? `${(resLeft / resMax) * 100}%` : '0%';
+
+            const ovInput = document.getElementById('reserve-max-input');
+            const ovHint = document.getElementById('reserve-base-hint');
+            const ov = appState.magic.reserveMaxOverride;
+            if (ovInput && document.activeElement !== ovInput) ovInput.value = ov != null ? ov : '';
+            if (ovHint) ovHint.textContent = ov != null ? `(niveau : ${getReserveMaxBase()})` : `niveau ${esotLvl}`;
 
             // Réserve de Perturbation du MJ
             const mjVal = document.getElementById('mj-dice-val');
@@ -6804,6 +6885,7 @@
             if (!appState.magic) appState.magic = { reserveUsed: 0 };
             if (appState.magic.reserveUsed === undefined) appState.magic.reserveUsed = 0;
             if (appState.magic.mjDice === undefined) appState.magic.mjDice = 0;
+            if (appState.magic.reserveMaxOverride === undefined) appState.magic.reserveMaxOverride = null;
             if (appState.profile?.qiShared !== undefined) appState.qiShared = !!appState.profile.qiShared;
             if (appState.qiShared === undefined) appState.qiShared = false;
             // La valeur du pool fait toujours autorité côté GitHub : on repart de 0 en attendant qiPull()
