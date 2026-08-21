@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="lesbian.png" type="image/png">
-  <title>Création de Personnage - Aequor</title>
+  <title>Création de Personnage — Aequor</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap');
 
@@ -630,15 +630,15 @@
             max="50" onchange="updateSettings()"></div>
 
         <div class="settings-section-title">Coûts cumulatifs — Compétences</div>
-        <div class="setting-item"><label>Novice (2)</label><input type="number" id="s_cc2" value="1" min="0" max="50"
+        <div class="setting-item"><label>Novice (2)</label><input type="number" id="s_cc2" value="2" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Compétent (3)</label><input type="number" id="s_cc3" value="2" min="0" max="50"
+        <div class="setting-item"><label>Compétent (3)</label><input type="number" id="s_cc3" value="4" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="3" min="0" max="50"
+        <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="7" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Excellent (5)</label><input type="number" id="s_cc5" value="5" min="0" max="50"
+        <div class="setting-item"><label>Excellent (5)</label><input type="number" id="s_cc5" value="10" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Expert (6)</label><input type="number" id="s_cc6" value="8" min="0" max="50"
+        <div class="setting-item"><label>Expert (6)</label><input type="number" id="s_cc6" value="14" min="0" max="50"
             onchange="updateSettings()"></div>
 
         <div class="settings-section-title">Limites pyramide — Attributs</div>
@@ -688,12 +688,12 @@
     <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser</button>
 
     <!-- MAÎTRISES -->
-  </div>
+    </div>
 
-  <div class="summary" id="summary">
-    <h3>Résumé du personnage</h3>
-    <div id="summaryContent"></div>
-  </div>
+    <div class="summary" id="summary">
+      <h3>Résumé du personnage</h3>
+      <div id="summaryContent"></div>
+    </div>
 
   </div>
 
@@ -761,10 +761,14 @@
 
     let config = {
       budget: 85,
-      attrCosts: [0, -4, -3, -2, 0, 6, 8, 12],
-      compCosts: [0, 0, 1, 2, 3, 6, 8],
-      maxAttr: { 7: 2, 6: 3 },
-      maxComp: { 6: 1, 5: 3 },
+      // Index = valeur. Remboursements réduits, sommets escaladants.
+      attrCosts: [0, -3, -2, -1, 0, 5, 11, 19, 30],
+      compCosts: [0, 0, 2, 4, 7, 10, 14, 19, 25],
+      maxAttr: {},          // plus de plafond dur : la courbe de coût fait le travail
+      maxComp: {},
+      maxAttrSum: 36,       // moyenne maximale de 4,5 sur 8 attributs
+      attrCap: 8,
+      compCap: 8,
     };
 
     let attrValues = {};
@@ -799,6 +803,10 @@
       return ATTRIBUTES.filter(a => attrValues[a.id] === level).length;
     }
 
+    function attrSum() {
+      return ATTRIBUTES.reduce((s, a) => s + attrValues[a.id], 0);
+    }
+
     function compCountAt(level) {
       return COMPETENCES.filter(c => compValues[c.id] === level).length;
     }
@@ -806,7 +814,10 @@
     function canIncreaseAttr(id) {
       const cur = attrValues[id];
       const next = cur + 1;
-      if (next > 7) return { ok: false, reason: 'Maximum atteint' };
+      if (next > config.attrCap) return { ok: false, reason: 'Maximum atteint' };
+      if (attrSum() + 1 > config.maxAttrSum) {
+        return { ok: false, reason: `Somme maximale ${config.maxAttrSum} (moyenne ${(config.maxAttrSum / ATTRIBUTES.length).toFixed(1)})` };
+      }
       const limit = config.maxAttr[next];
       if (limit !== undefined && attrCountAt(next) >= limit) {
         return { ok: false, reason: `Limite pyramide (${limit} max)` };
@@ -816,10 +827,11 @@
       return { ok: true, cost };
     }
 
+
     function canIncreaseComp(id) {
       const cur = compValues[id];
       const next = cur + 1;
-      if (next > 6) return { ok: false, reason: 'Maximum atteint' };
+      if (next > config.compCap) return { ok: false, reason: 'Maximum atteint' };
       const limit = config.maxComp[next];
       if (limit !== undefined && compCountAt(next) >= limit) {
         return { ok: false, reason: `Limite pyramide (${limit} max)` };
@@ -835,6 +847,16 @@
 
     function renderAttrPyramid() {
       const el = document.getElementById('attrPyramid');
+      const s = attrSum();
+      const max = config.maxAttrSum;
+      const full = s >= max;
+      el.innerHTML = `<span class="pyramid-counter">Somme : <span class="count ${full ? 'maxed' : 'ok'}">${s}</span> / ${max}</span>`
+        + `<span class="pyramid-counter">Moyenne : <span class="count ok">${(s / ATTRIBUTES.length).toFixed(1)}</span> / ${(max / ATTRIBUTES.length).toFixed(1)}</span>`;
+      return;
+    }
+
+    function renderAttrPyramidLegacy() {
+      const el = document.getElementById('attrPyramid');
       let html = '';
       [[7, 'Exceptionnel'], [6, 'Supérieur']].forEach(([level, label]) => {
         const count = attrCountAt(level);
@@ -849,14 +871,12 @@
     function renderCompPyramid() {
       const el = document.getElementById('compPyramid');
       let html = '';
-      [[6, 'Expert'], [5, 'Excellent']].forEach(([level, label]) => {
+      [[8, 'Absolue'], [7, 'Maître'], [6, 'Expert'], [5, 'Excellent']].forEach(([level, label]) => {
         const count = compCountAt(level);
-        const max = config.maxComp[level];
-        const cls = max !== undefined && count >= max ? 'maxed' : 'ok';
-        const maxStr = max !== undefined && max < 99 ? `/${max}` : '';
-        html += `<span class="pyramid-counter">${label} : <span class="count ${cls}">${count}${maxStr}</span></span>`;
+        if (!count) return;
+        html += `<span class="pyramid-counter">${label} : <span class="count ok">${count}</span></span>`;
       });
-      el.innerHTML = html;
+      el.innerHTML = html || '<span class="pyramid-counter" style="opacity:0.5">Aucune spécialisation</span>';
     }
 
     function renderAttrList() {
@@ -1099,6 +1119,16 @@
       input.click();
     }
 
+    // Une fiche antérieure peut dépasser le plafond actuel : on l'accepte telle quelle
+    function relaxConstraintsForLegacy() {
+      const s = attrSum();
+      if (s > config.maxAttrSum) {
+        config.maxAttrSum = s;   // on n'oblige pas à démonter une fiche existante
+        return true;
+      }
+      return false;
+    }
+
     function loadFicheJSON(data) {
       const nameToId = Object.fromEntries(COMPETENCES.map(c => [c.name, c.id]));
       const aliases = {
@@ -1116,8 +1146,10 @@
           if (id) compValues[id] = Math.max(1, Math.min(8, Number(s.level)));
         });
       }
+      const relaxed = relaxConstraintsForLegacy();
       render();
-      alert('✓ Personnage chargé depuis la fiche !');
+      alert('✓ Personnage chargé depuis la fiche !'
+        + (relaxed ? `\n\nNote : la somme d'attributs (${attrSum()}) dépasse le plafond actuel de 36. La contrainte a été assouplie pour cette fiche.` : ''));
     }
 
     function toggleSettings() {
