@@ -612,17 +612,17 @@
         <div class="settings-section-title">Budget total</div>
         <div class="setting-item">
           <label>Budget total</label>
-          <input type="number" id="s_budget" value="95" min="10" max="300" onchange="updateSettings()">
+          <input type="number" id="s_budget" value="85" min="10" max="300" onchange="updateSettings()">
         </div>
 
         <div class="settings-section-title">Coûts cumulatifs — Attributs (depuis Commun 4)</div>
-        <div class="setting-item"><label>Déficient (1) remboursé</label><input type="number" id="s_ac1" value="-3"
+        <div class="setting-item"><label>Déficient (1) remboursé</label><input type="number" id="s_ac1" value="-4"
             min="-20" max="0" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Faible (2) remboursé</label><input type="number" id="s_ac2" value="-2"
+        <div class="setting-item"><label>Faible (2) remboursé</label><input type="number" id="s_ac2" value="-3"
             min="-20" max="0" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Médiocre (3) remboursé</label><input type="number" id="s_ac3" value="-1"
+        <div class="setting-item"><label>Médiocre (3) remboursé</label><input type="number" id="s_ac3" value="-2"
             min="-20" max="0" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Élevé (5)</label><input type="number" id="s_ac5" value="5" min="0" max="50"
+        <div class="setting-item"><label>Élevé (5)</label><input type="number" id="s_ac5" value="6" min="0" max="50"
             onchange="updateSettings()"></div>
         <div class="setting-item"><label>Supérieur (6)</label><input type="number" id="s_ac6" value="8" min="0" max="50"
             onchange="updateSettings()"></div>
@@ -630,15 +630,15 @@
             max="50" onchange="updateSettings()"></div>
 
         <div class="settings-section-title">Coûts cumulatifs — Compétences</div>
-        <div class="setting-item"><label>Novice (2)</label><input type="number" id="s_cc2" value="2" min="0" max="50"
+        <div class="setting-item"><label>Novice (2)</label><input type="number" id="s_cc2" value="1" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Compétent (3)</label><input type="number" id="s_cc3" value="4" min="0" max="50"
+        <div class="setting-item"><label>Compétent (3)</label><input type="number" id="s_cc3" value="2" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="7" min="0" max="50"
+        <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="3" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Excellent (5)</label><input type="number" id="s_cc5" value="10" min="0" max="50"
+        <div class="setting-item"><label>Excellent (5)</label><input type="number" id="s_cc5" value="6" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Expert (6)</label><input type="number" id="s_cc6" value="14" min="0" max="50"
+        <div class="setting-item"><label>Expert (6)</label><input type="number" id="s_cc6" value="8" min="0" max="50"
             onchange="updateSettings()"></div>
 
         <div class="settings-section-title">Limites pyramide — Attributs</div>
@@ -760,14 +760,14 @@
     // ========================
 
     let config = {
-      budget: 95,
-      // Index = valeur. Remboursements réduits, sommets escaladants.
-      attrCosts: [0, -3, -2, -1, 0, 5, 11, 19, 30],
-      compCosts: [0, 0, 2, 4, 7, 10, 14, 19, 25],
-      maxAttr: { 8: 1, 7: 2, 6: 3 },
-      maxComp: { 8: 1, 7: 1, 6: 2, 5: 3 },
-      attrCap: 8,
-      compCap: 8,
+      budget: 85,
+      // Coûts cumulatifs depuis la baseline 4 (Commun). Valeurs négatives = remboursement.
+      attrCosts: [0, -4, -3, -2, 0, 6, 8, 12],
+      compCosts: [0, 0, 1, 2, 3, 6, 8],
+      maxAttr: { 7: 2, 6: 3 },
+      maxComp: { 6: 1, 5: 3 },
+      attrCap: 7,
+      compCap: 6,
     };
 
     let attrValues = {};
@@ -840,7 +840,7 @@
     function renderAttrPyramid() {
       const el = document.getElementById('attrPyramid');
       let html = '';
-      [[8, 'Prodigieux'], [7, 'Exceptionnel'], [6, 'Supérieur']].forEach(([level, label]) => {
+      [[7, 'Exceptionnel'], [6, 'Supérieur']].forEach(([level, label]) => {
         const count = attrCountAt(level);
         const max = config.maxAttr[level];
         const cls = max !== undefined && count >= max ? 'maxed' : 'ok';
@@ -853,7 +853,7 @@
     function renderCompPyramid() {
       const el = document.getElementById('compPyramid');
       let html = '';
-      [[8, 'Absolue'], [7, 'Maître'], [6, 'Expert'], [5, 'Excellent']].forEach(([level, label]) => {
+      [[6, 'Expert'], [5, 'Excellent']].forEach(([level, label]) => {
         const count = compCountAt(level);
         const max = config.maxComp[level];
         const cls = max !== undefined && count >= max ? 'maxed' : 'ok';
@@ -1106,11 +1106,11 @@
     // Une fiche antérieure peut dépasser les limites actuelles : on les assouplit pour elle
     function relaxConstraintsForLegacy() {
       let relaxed = false;
-      [8, 7, 6].forEach(lv => {
+      [7, 6].forEach(lv => {
         const n = attrCountAt(lv);
         if (config.maxAttr[lv] !== undefined && n > config.maxAttr[lv]) { config.maxAttr[lv] = n; relaxed = true; }
       });
-      [8, 7, 6, 5].forEach(lv => {
+      [6, 5].forEach(lv => {
         const n = compCountAt(lv);
         if (config.maxComp[lv] !== undefined && n > config.maxComp[lv]) { config.maxComp[lv] = n; relaxed = true; }
       });
