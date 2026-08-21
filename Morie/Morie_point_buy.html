@@ -612,7 +612,7 @@
         <div class="settings-section-title">Budget total</div>
         <div class="setting-item">
           <label>Budget total</label>
-          <input type="number" id="s_budget" value="85" min="10" max="300" onchange="updateSettings()">
+          <input type="number" id="s_budget" value="95" min="10" max="300" onchange="updateSettings()">
         </div>
 
         <div class="settings-section-title">Coûts cumulatifs — Attributs (depuis Commun 4)</div>
@@ -760,13 +760,12 @@
     // ========================
 
     let config = {
-      budget: 85,
+      budget: 95,
       // Index = valeur. Remboursements réduits, sommets escaladants.
       attrCosts: [0, -3, -2, -1, 0, 5, 11, 19, 30],
       compCosts: [0, 0, 2, 4, 7, 10, 14, 19, 25],
-      maxAttr: {},          // plus de plafond dur : la courbe de coût fait le travail
-      maxComp: {},
-      maxAttrSum: 36,       // moyenne maximale de 4,5 sur 8 attributs
+      maxAttr: { 8: 1, 7: 2, 6: 3 },
+      maxComp: { 8: 1, 7: 1, 6: 2, 5: 3 },
       attrCap: 8,
       compCap: 8,
     };
@@ -803,10 +802,6 @@
       return ATTRIBUTES.filter(a => attrValues[a.id] === level).length;
     }
 
-    function attrSum() {
-      return ATTRIBUTES.reduce((s, a) => s + attrValues[a.id], 0);
-    }
-
     function compCountAt(level) {
       return COMPETENCES.filter(c => compValues[c.id] === level).length;
     }
@@ -815,9 +810,6 @@
       const cur = attrValues[id];
       const next = cur + 1;
       if (next > config.attrCap) return { ok: false, reason: 'Maximum atteint' };
-      if (attrSum() + 1 > config.maxAttrSum) {
-        return { ok: false, reason: `Somme maximale ${config.maxAttrSum} (moyenne ${(config.maxAttrSum / ATTRIBUTES.length).toFixed(1)})` };
-      }
       const limit = config.maxAttr[next];
       if (limit !== undefined && attrCountAt(next) >= limit) {
         return { ok: false, reason: `Limite pyramide (${limit} max)` };
@@ -847,18 +839,8 @@
 
     function renderAttrPyramid() {
       const el = document.getElementById('attrPyramid');
-      const s = attrSum();
-      const max = config.maxAttrSum;
-      const full = s >= max;
-      el.innerHTML = `<span class="pyramid-counter">Somme : <span class="count ${full ? 'maxed' : 'ok'}">${s}</span> / ${max}</span>`
-        + `<span class="pyramid-counter">Moyenne : <span class="count ok">${(s / ATTRIBUTES.length).toFixed(1)}</span> / ${(max / ATTRIBUTES.length).toFixed(1)}</span>`;
-      return;
-    }
-
-    function renderAttrPyramidLegacy() {
-      const el = document.getElementById('attrPyramid');
       let html = '';
-      [[7, 'Exceptionnel'], [6, 'Supérieur']].forEach(([level, label]) => {
+      [[8, 'Prodigieux'], [7, 'Exceptionnel'], [6, 'Supérieur']].forEach(([level, label]) => {
         const count = attrCountAt(level);
         const max = config.maxAttr[level];
         const cls = max !== undefined && count >= max ? 'maxed' : 'ok';
@@ -873,10 +855,12 @@
       let html = '';
       [[8, 'Absolue'], [7, 'Maître'], [6, 'Expert'], [5, 'Excellent']].forEach(([level, label]) => {
         const count = compCountAt(level);
-        if (!count) return;
-        html += `<span class="pyramid-counter">${label} : <span class="count ok">${count}</span></span>`;
+        const max = config.maxComp[level];
+        const cls = max !== undefined && count >= max ? 'maxed' : 'ok';
+        const maxStr = max !== undefined ? `/${max}` : '';
+        html += `<span class="pyramid-counter">${label} : <span class="count ${cls}">${count}${maxStr}</span></span>`;
       });
-      el.innerHTML = html || '<span class="pyramid-counter" style="opacity:0.5">Aucune spécialisation</span>';
+      el.innerHTML = html;
     }
 
     function renderAttrList() {
@@ -1119,14 +1103,18 @@
       input.click();
     }
 
-    // Une fiche antérieure peut dépasser le plafond actuel : on l'accepte telle quelle
+    // Une fiche antérieure peut dépasser les limites actuelles : on les assouplit pour elle
     function relaxConstraintsForLegacy() {
-      const s = attrSum();
-      if (s > config.maxAttrSum) {
-        config.maxAttrSum = s;   // on n'oblige pas à démonter une fiche existante
-        return true;
-      }
-      return false;
+      let relaxed = false;
+      [8, 7, 6].forEach(lv => {
+        const n = attrCountAt(lv);
+        if (config.maxAttr[lv] !== undefined && n > config.maxAttr[lv]) { config.maxAttr[lv] = n; relaxed = true; }
+      });
+      [8, 7, 6, 5].forEach(lv => {
+        const n = compCountAt(lv);
+        if (config.maxComp[lv] !== undefined && n > config.maxComp[lv]) { config.maxComp[lv] = n; relaxed = true; }
+      });
+      return relaxed;
     }
 
     function loadFicheJSON(data) {
@@ -1149,7 +1137,7 @@
       const relaxed = relaxConstraintsForLegacy();
       render();
       alert('✓ Personnage chargé depuis la fiche !'
-        + (relaxed ? `\n\nNote : la somme d'attributs (${attrSum()}) dépasse le plafond actuel de 36. La contrainte a été assouplie pour cette fiche.` : ''));
+        + (relaxed ? '\n\nNote : cette fiche dépasse certaines limites actuelles. Elles ont été assouplies pour la conserver telle quelle.' : ''));
     }
 
     function toggleSettings() {
