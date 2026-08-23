@@ -2803,7 +2803,9 @@
             font-family: var(--font-body);
         }
 
-        .reserve-override button:hover { background: rgba(107, 76, 154, 0.2); }
+        .reserve-override button:hover {
+            background: rgba(107, 76, 154, 0.2);
+        }
 
         .reserve-override span {
             font-size: 0.68em;
@@ -2830,7 +2832,9 @@
             line-height: 1;
         }
 
-        .qi-refresh:hover { background: rgba(29, 158, 117, 0.25); }
+        .qi-refresh:hover {
+            background: rgba(29, 158, 117, 0.25);
+        }
 
         .qi-pool-row {
             display: flex;
@@ -2866,7 +2870,9 @@
             font-family: var(--font-body);
         }
 
-        .qi-step:hover { background: rgba(29, 158, 117, 0.22); }
+        .qi-step:hover {
+            background: rgba(29, 158, 117, 0.22);
+        }
 
         .qi-stepper {
             display: flex;
@@ -3376,8 +3382,13 @@
             text-align: right;
         }
 
-        .passive-row.mid .pr-val { color: #1D9E75; }
-        .passive-row.high .pr-val { color: #D4AF37; }
+        .passive-row.mid .pr-val {
+            color: #1D9E75;
+        }
+
+        .passive-row.high .pr-val {
+            color: #D4AF37;
+        }
 
         .passives-empty {
             font-size: 0.78em;
@@ -3600,10 +3611,10 @@
                             </div>
                             <div class="reserve-override">
                                 <label>Max :</label>
-                                <input type="number" id="reserve-max-input" min="1"
-                                    placeholder="auto" oninput="setReserveOverride(this.value)"
-                                    onchange="setReserveOverride(this.value)">
-                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺ auto</button>
+                                <input type="number" id="reserve-max-input" min="1" placeholder="auto"
+                                    oninput="setReserveOverride(this.value)" onchange="setReserveOverride(this.value)">
+                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺
+                                    auto</button>
                                 <span id="reserve-base-hint"></span>
                             </div>
                             <div class="counter-bar" style="background:rgba(107,76,154,0.15);">
@@ -3620,7 +3631,8 @@
                             <div id="qi-perso-block" class="qi-perso" style="display:none;">
                                 <div class="qi-perso-head">
                                     <span class="qi-perso-name">☯ Qi partagé</span>
-                                    <button class="qi-perso-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
+                                    <button class="qi-perso-refresh" onclick="qiPull()"
+                                        title="Relire depuis GitHub">↻</button>
                                 </div>
                                 <div class="qi-perso-body">
                                     <span class="qi-perso-num" id="qi-value-perso">0</span>
@@ -3933,7 +3945,9 @@
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques bonus</label>
+                                <label class="form-label"
+                                    title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques
+                                    bonus</label>
                                 <input id="hybrid-bonus-dice" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
@@ -3969,6 +3983,9 @@
                             <strong>Rupture</strong> : Effet Incontrôlé donnent <strong>1 ou 2 dé(s)</strong> de
                             Perturbation au
                             MJ.
+                            <strong>Rupture</strong> : Effet Incontrôlé donnent <strong>1 ou 2 dé(s)</strong> de
+                            Perturbation au
+                            MJ.
                         </div>
                     </div>
                 </div>
@@ -3983,7 +4000,9 @@
                                     oninput="updatePureMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques bonus</label>
+                                <label class="form-label"
+                                    title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques
+                                    bonus</label>
                                 <input id="pure-bonus-dice" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updatePureMagicInfo()">
                             </div>
@@ -4013,6 +4032,9 @@
                             <strong>Rupture</strong> : Effet Incontrôlé donnent <strong>1 ou 2 dé(s)</strong> de
                             Perturbation au
                             MJ.
+                            <strong>Rupture</strong> : Effet Incontrôlé donnent <strong>1 ou 2 dé(s)</strong> de
+                            Perturbation au
+                            MJ.
                         </div>
                     </div>
                 </div>
@@ -4023,7 +4045,8 @@
 
                 <!-- Qi partagé -->
                 <div class="ctx-panel qi-panel" id="qi-panel" style="display:none;">
-                    <div class="ctx-panel-title" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <div class="ctx-panel-title"
+                        style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                         <span>☯ Qi partagé</span>
                         <button class="qi-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
                     </div>
@@ -5715,6 +5738,7 @@
             const out = resolveMagicAction({ requested, emotion, source: 'followup', extraDice: bonusDice });
             if (!out) return;
             const { results, successes, puissanceIncontrolee, ruptures, fractures, mjGain } = out;
+            const { results, successes, puissanceIncontrolee, ruptures, fractures, mjGain } = out;
             const count = out.dice;
 
             const resEl = document.getElementById('followup-magic-result');
@@ -5723,7 +5747,9 @@
                 html += `<div class="followup-puissance">✨ Puissance : <strong>${successes}</strong></div>`;
                 const notes = [];
                 if (fractures > 0) notes.push(`<span style="color:#7A1B1B;">✗✗ ${fractures} Fracture</span>`);
+                if (fractures > 0) notes.push(`<span style="color:#7A1B1B;">✗✗ ${fractures} Fracture</span>`);
                 if (mjGain > 0) notes.push(`<span style="color:var(--vitality-red);">⚠ +${mjGain} dé(s) de Perturbation au MJ</span>`);
+                if (puissanceIncontrolee > 0) notes.push(`<span style="color:var(--vitality-red);">💥 Effet Incontrôlé ${puissanceIncontrolee} (${getMagnitudeLabel(puissanceIncontrolee)})</span>`);
                 if (puissanceIncontrolee > 0) notes.push(`<span style="color:var(--vitality-red);">💥 Effet Incontrôlé ${puissanceIncontrolee} (${getMagnitudeLabel(puissanceIncontrolee)})</span>`);
                 if (notes.length) html += `<div class="followup-notes">${notes.join(' · ')}</div>`;
 
@@ -5742,6 +5768,7 @@
                     bonus: lastRollContext.bonus,
                     magic: {
                         level: esotLvl, results, puissance: successes, emotion,
+                        puissanceIncontrolee, ruptures, fractures, followUp: true
                         puissanceIncontrolee, ruptures, fractures, followUp: true
                     }
                 });
@@ -6153,6 +6180,7 @@
             const billable = (paidDice === undefined) ? count : paidDice;
             const results = [];
             let successes = 0, puissanceIncontrolee = 0, ruptures = 0, fractures = 0, energyCost = 0, mjGain = 0;
+            let successes = 0, puissanceIncontrolee = 0, ruptures = 0, fractures = 0, energyCost = 0, mjGain = 0;
 
             const cascade = (n) => {
                 for (let i = 0; i < n; i++) {
@@ -6184,10 +6212,12 @@
                         break;
                     case 'rupture':
                         puissanceIncontrolee += 2;
+                        puissanceIncontrolee += 2;
                         ruptures++;
                         mjGain += 1;
                         break;
                     case 'fracture':
+                        puissanceIncontrolee += 3;
                         puissanceIncontrolee += 3;
                         fractures++;
                         mjGain += 2;
@@ -6195,6 +6225,17 @@
                     // vide : aucun effet
                 }
             }
+            return { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain };
+        }
+
+        function getMagnitudeLabel(n) {
+            if (n <= 0) return null;
+            if (n === 1) return 'Triviale';
+            if (n === 2) return 'Simple';
+            if (n === 3) return 'Modérée';
+            if (n === 4) return 'Complexe';
+            if (n === 5) return 'Majeure';
+            return 'Légendaire';
             return { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain };
         }
 
@@ -6335,6 +6376,7 @@
             const totalMagicDice = actualMagic + hybridBonus;
             const effLvl = getEffectiveMagicLevel();
             const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, totalMagicDice, emotion, actualMagic);
+            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, totalMagicDice, emotion, actualMagic);
             if (totalMagicDice > 0) { spendReserve(energyCost); if (mjGain > 0) addMjDice(mjGain); }
             lastMagicRoll = totalMagicDice > 0 ? { puissance: magicSuccesses, dice: totalMagicDice } : null;
             actualMagic = totalMagicDice;
@@ -6350,6 +6392,7 @@
                 skillSuccesses: netSkillSuccesses, magicSuccesses, perturb,
                 attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus,
                 bonus, total, puissanceIncontrolee, ruptures, fractures, mjGain, energyCost, actualMagic
+                bonus, total, puissanceIncontrolee, ruptures, fractures, mjGain, energyCost, actualMagic
             });
 
             if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), {
@@ -6357,6 +6400,7 @@
                 attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus, bonus,
                 magic: {
                     level: esotLvl, results: magicResults, puissance: magicSuccesses, emotion,
+                    puissanceIncontrolee, ruptures, fractures
                     puissanceIncontrolee, ruptures, fractures
                 }
             });
@@ -6403,12 +6447,15 @@
             document.getElementById('stat-explosions').textContent = data.skillDice.filter(d => d.isExplosion).length;
             document.getElementById('stat-attribute-bonus').textContent = data.attrBonus;
             document.getElementById('stat-skill-bonus').textContent = data.skillBonus;
+            document.getElementById('stat-skill-bonus').textContent = data.skillBonus;
 
             let mag = `<div class="magnitude-result">`;
             if (data.actualMagic > 0) {
                 mag += `<div class="magnitude-label">✨ Puissance du sort : <strong>${data.magicSuccesses}</strong></div>`;
                 mag += `<div style="font-size:0.8em;color:var(--silver-mist);margin-bottom:4px;">Indépendante du Résultat Final — s'applique à l'effet (Gravité, portée, ampleur…)</div>`;
                 let effets = [];
+                if (data.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
+                if (data.fractures > 0) effets.push(`✗✗ ${data.fractures} Fracture`);
                 if (data.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
                 if (data.fractures > 0) effets.push(`✗✗ ${data.fractures} Fracture`);
                 if (data.mjGain > 0) effets.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
@@ -6437,16 +6484,19 @@
 
             const effLvl = getEffectiveMagicLevel();
             const { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion, paidDice);
+            const { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion, paidDice);
             spendReserve(energyCost);
             if (mjGain > 0) addMjDice(mjGain);
             lastMagicRoll = { puissance: successes, dice: actualDice };
 
+            displayPureResult({ results, successes, puissanceIncontrolee, ruptures, fractures, mjGain, energyCost, actualDice, esotLvl, emotion });
             displayPureResult({ results, successes, puissanceIncontrolee, ruptures, fractures, mjGain, energyCost, actualDice, esotLvl, emotion });
 
             if (!isPrivateRoll()) sendDiscordRoll('Pouvoir', null, successes, `Ésotérisme niv.${esotLvl}`, {
                 successes,
                 magic: {
                     level: esotLvl, results, isPure: true, puissance: successes, emotion,
+                    puissanceIncontrolee, ruptures, fractures
                     puissanceIncontrolee, ruptures, fractures
                 }
             });
@@ -6477,6 +6527,8 @@
             let mag = `<div class="magnitude-result">
                 <div class="magnitude-label">✨ Puissance : <strong>${data.successes}</strong></div>`;
             let effetsP = [];
+            if (data.puissanceIncontrolee > 0) effetsP.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
+            if (data.fractures > 0) effetsP.push(`✗✗ ${data.fractures} Fracture`);
             if (data.puissanceIncontrolee > 0) effetsP.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
             if (data.fractures > 0) effetsP.push(`✗✗ ${data.fractures} Fracture`);
             if (data.mjGain > 0) effetsP.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
@@ -6674,8 +6726,10 @@
                 'Accept': 'application/vnd.github+json',
                 'X-GitHub-Api-Version': '2022-11-28'
             };
-            const payload = { qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
-                              by: (appState.profile && appState.profile.name) || '' };
+            const payload = {
+                qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
+                by: (appState.profile && appState.profile.name) || ''
+            };
             const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
             try {
                 const res = await fetch(qiApi(), {
@@ -7036,6 +7090,8 @@
 
                 // Effets négatifs
                 const effets = [];
+                if (m.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${m.puissanceIncontrolee} (${getMagnitudeLabel(m.puissanceIncontrolee)})`);
+                if (m.fractures > 0) effets.push(`✗✗ ${m.fractures} Fracture`);
                 if (m.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${m.puissanceIncontrolee} (${getMagnitudeLabel(m.puissanceIncontrolee)})`);
                 if (m.fractures > 0) effets.push(`✗✗ ${m.fractures} Fracture`);
                 if (effets.length) lines.push(`┈ Effets : ${effets.join(' · ')}`);
