@@ -557,6 +557,8 @@
       <div class="budget-remaining" id="budgetRemaining">80 restants</div>
       <button class="settings-toggle" onclick="exportToFiche()" style="border-color:var(--gold-dim);color:var(--gold)">↓
         Exporter vers Fiche</button>
+      <button class="settings-toggle" onclick="importFromFiche()"
+        style="border-color:rgba(126,207,207,0.4);color:#7ecfcf">↑ Importer depuis Fiche</button>
       <button class="settings-toggle" onclick="toggleSettings()">⚙ Paramètres</button>
     </div>
 
@@ -1085,6 +1087,9 @@
       };
 
       const json = JSON.stringify(state, null, 2);
+      // Sauvegarde dans localStorage pour ouverture automatique de la fiche
+      localStorage.setItem('aequor_pb_export', JSON.stringify(state));
+      // Téléchargement JSON de secours
       const blob = new Blob([json], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -1092,6 +1097,93 @@
       a.download = 'personnage.json';
       a.click();
       URL.revokeObjectURL(url);
+      // Ouvre la fiche dans un nouvel onglet
+      window.open('Morie_fiche.html', '_blank');
+    }
+    function importFromFiche() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+          try { loadFicheJSON(JSON.parse(evt.target.result)); }
+          catch { alert('Fichier JSON invalide ou non reconnu.'); }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+    // Une fiche antérieure peut dépasser les limites actuelles : on les assouplit pour elle
+    function relaxConstraintsForLegacy() {
+      return false;   // plus de limites par niveau : la surcharge régule seule
+    }
+
+    function loadFicheJSON(data) {
+      const nameToId = Object.fromEntries(COMPETENCES.map(c => [c.name, c.id]));
+      const aliases = {
+        'Ésotérisme': 'esoterisme', 'Éloquence': 'eloquence', 'Érudition': 'erudition',
+        'Résilience': 'resilience', 'Sagacité': 'sagacite', 'Stratégie': 'strategie',
+        'Athlétisme': 'athletisme', 'Autorité': 'autorite', 'Discrétion': 'discretion',
+        'Combat': 'bagarre', 'Bagarre': 'bagarre',
+      };
+      if (data.attributes) {
+        Object.entries(data.attributes).forEach(([k, v]) => { if (k in attrValues) attrValues[k] = Math.max(1, Math.min(8, Number(v))); });
+      }
+      if (data.skills) {
+        data.skills.forEach(s => {
+          const id = nameToId[s.name] || aliases[s.name];
+          if (!id) return;
+          const comp = COMPETENCES.find(x => x.id === id);
+          const floor = comp && comp.noBase ? 0 : 1;
+          compValues[id] = Math.max(floor, Math.min(8, Number(s.level)));
+        });
+      }
+      const relaxed = relaxConstraintsForLegacy();
+      render();
+      alert('✓ Personnage chargé depuis la fiche !'
+        + (relaxed ? '\n\nNote : cette fiche dépasse certaines limites actuelles. Elles ont été assouplies pour la conserver telle quelle.' : ''));
+    }
+
+    function toggleSettings() {
+      document.getElementById('settingsPanel').classList.toggle('open');
+    }
+
+    function updateSettings() {
+      config.budget = parseInt(document.getElementById('s_budget').value) || 60;
+      config.attrCosts = [0,
+        parseInt(document.getElementById('s_ac1').value) || 0,
+        parseInt(document.getElementById('s_ac2').value) || 0,
+        parseInt(document.getElementById('s_ac3').value) || 0,
+        0, // Commun (4) = baseline = 0
+        parseInt(document.getElementById('s_ac5').value) || 0,
+        parseInt(document.getElementById('s_ac6').value) || 0,
+        parseInt(document.getElementById('s_ac7').value) || 0,
+        parseInt(document.getElementById('s_ac8').value) || 0,
+      ];
+      config.compCosts = [0,
+        parseInt(document.getElementById('s_cc1')?.value) || -2,
+        parseInt(document.getElementById('s_cc2').value) || 0,
+        0, // Ordinaire (3) = baseline = 0
+        parseInt(document.getElementById('s_cc4').value) || 0,
+        parseInt(document.getElementById('s_cc5').value) || 0,
+        parseInt(document.getElementById('s_cc6').value) || 0,
+        parseInt(document.getElementById('s_cc7').value) || 0,
+        parseInt(document.getElementById('s_cc8').value) || 0,
+      ];
+      config.maxAttr = {
+        7: parseInt(document.getElementById('s_max_a7').value) || 0,
+        6: parseInt(document.getElementById('s_max_a6').value) || 0,
+        5: parseInt(document.getElementById('s_max_a5').value) || 99,
+      };
+      config.maxComp = {
+        6: parseInt(document.getElementById('s_max_c6').value) || 0,
+        5: parseInt(document.getElementById('s_max_c5').value) || 0,
+        4: parseInt(document.getElementById('s_max_c4').value) || 99,
+      };
+      render();
     }
 
     // ========================
