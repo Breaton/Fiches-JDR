@@ -627,7 +627,7 @@
         <div class="settings-section-title">Budget total</div>
         <div class="setting-item">
           <label>Budget total</label>
-          <input type="number" id="s_budget" value="90" min="10" max="300" onchange="updateSettings()">
+          <input type="number" id="s_budget" value="100" min="10" max="300" onchange="updateSettings()">
         </div>
 
         <div class="settings-section-title">Coûts cumulatifs — Attributs (depuis Commun 4)</div>
@@ -637,25 +637,29 @@
             min="-20" max="0" onchange="updateSettings()"></div>
         <div class="setting-item"><label>Médiocre (3) remboursé</label><input type="number" id="s_ac3" value="0"
             min="-20" max="0" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Élevé (5)</label><input type="number" id="s_ac5" value="2" min="0" max="50"
+        <div class="setting-item"><label>Élevé (5)</label><input type="number" id="s_ac5" value="3" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Supérieur (6)</label><input type="number" id="s_ac6" value="4" min="0" max="50"
+        <div class="setting-item"><label>Supérieur (6)</label><input type="number" id="s_ac6" value="7" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Prodigieux (8)</label><input type="number" id="s_ac8" value="9" min="0"
+        <div class="setting-item"><label>Prodigieux (8)</label><input type="number" id="s_ac8" value="18" min="0"
             max="60" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Exceptionnel (7)</label><input type="number" id="s_ac7" value="6" min="0"
+        <div class="setting-item"><label>Exceptionnel (7)</label><input type="number" id="s_ac7" value="12" min="0"
             max="50" onchange="updateSettings()"></div>
 
         <div class="settings-section-title">Coûts cumulatifs — Compétences</div>
-        <div class="setting-item"><label>Novice (2)</label><input type="number" id="s_cc2" value="-1" min="0" max="50"
+        <div class="setting-item"><label>Inapte (1) rendu</label><input type="number" id="s_cc1" value="-2" min="-10"
+            max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Maladroit (2) rendu</label><input type="number" id="s_cc2" value="-1" min="-10" max="0"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Compétent (3)</label><input type="number" id="s_cc3" value="0" min="0" max="50"
+                <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="3" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="1" min="0" max="50"
+        <div class="setting-item"><label>Excellent (5)</label><input type="number" id="s_cc5" value="6" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Excellent (5)</label><input type="number" id="s_cc5" value="3" min="0" max="50"
-            onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Expert (6)</label><input type="number" id="s_cc6" value="4" min="0" max="50"
+        <div class="setting-item"><label>Absolue (8)</label><input type="number" id="s_cc8" value="21" min="0"
+            max="60" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Maître (7)</label><input type="number" id="s_cc7" value="15" min="0"
+            max="60" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Expert (6)</label><input type="number" id="s_cc6" value="10" min="0" max="50"
             onchange="updateSettings()"></div>
 
         <div class="settings-section-title">Limites pyramide — Attributs</div>
@@ -779,19 +783,21 @@
     // ========================
 
     let config = {
-      budget: 90,
+      budget: 100,
       surchargeEnabled: true,   // le pic renchérit les autres attributs
       attrCap: 8,
       // Coûts cumulatifs depuis la baseline 4 (Commun). Valeurs négatives = remboursement.
-      attrCosts: [0, -2, -1, 0, 0, 2, 4, 6, 9],
-      compCosts: [0, -2, -1, 0, 1, 3, 4, 6, 7],
+      attrCosts: [0, -2, -1, 0, 0, 3, 7, 12, 18],
+      compCosts: [0, -2, -1, 0, 3, 6, 10, 15, 21],
       maxAttr: {},
       maxComp: {},
       compCap: 8,
       // Seuil au-delà duquel chaque niveau ajoute à la surcharge
       attrThreshold: 5,
       compThreshold: 6,
-      compReliefCap: 8,   // au-delà, les lacunes n'allègent plus
+      compReliefCap: 8,        // plafond global des lacunes
+      compReliefPerSkill: 1,   // une compétence n'allège jamais de plus de 1
+      compRefundCap: 6,        // total maximum rendu au pool par les lacunes
       noBaseEntry: 3,     // surcoût d'accès pour une compétence sans socle (Ésotérisme)
     };
 
@@ -831,6 +837,7 @@
     function excessOf(v, th) { return Math.max(0, v - th); }
 
     // Côté compétences, la surcharge démarre à Excellent et croît de 1 par cran
+    const COMP_SURCHARGE_FROM = 5;   // Excellent : premier niveau qui génère et subit la surcharge
     const COMP_EXCESS = { 5: 1, 6: 2, 7: 3, 8: 4 };
     function compExcessOf(v) { return COMP_EXCESS[v] || 0; }
 
@@ -851,7 +858,9 @@
       COMPETENCES.forEach(x => {
         if (x.id === id) return;
         brut += compExcessOf(compValues[x.id]);
-        if (!x.noBase && compValues[x.id] < COMP_BASE) relief += COMP_BASE - compValues[x.id];
+        if (!x.noBase && compValues[x.id] < COMP_BASE) {
+          relief += Math.min(COMP_BASE - compValues[x.id], config.compReliefPerSkill);
+        }
       });
       return Math.max(0, brut - Math.min(relief, config.compReliefCap));
     }
@@ -863,8 +872,9 @@
       return attrValues[id] > ATTR_BASE ? attrRateFor(id) : 0;
     }
 
+    // La surcharge n'est payée qu'à partir d'Excellent, comme elle n'est générée qu'à partir de là
     function compSurchargeCost(id) {
-      return compValues[id] > COMP_BASE ? compRateFor(id) : 0;
+      return compValues[id] >= COMP_SURCHARGE_FROM ? compRateFor(id) : 0;
     }
 
     function surchargeAttr() {
@@ -881,7 +891,7 @@
       const brut = vals.reduce((s, v) => s + compExcessOf(v), 0);
       const reliefRaw = COMPETENCES
         .filter(x => !x.noBase && compValues[x.id] < COMP_BASE)
-        .reduce((s, x) => s + (COMP_BASE - compValues[x.id]), 0);
+        .reduce((s, x) => s + Math.min(COMP_BASE - compValues[x.id], config.compReliefPerSkill), 0);
       const relief = Math.min(reliefRaw, config.compReliefCap);
       const cost = COMPETENCES.reduce((s, x) => s + compSurchargeCost(x.id), 0);
       return { peak: Math.max(...vals), brut, relief, rate: Math.max(0, brut - relief), cost };
@@ -889,10 +899,20 @@
 
     function surchargeInfo() { return surchargeAttr(); }
 
+    // Total rendu par les compétences sous Ordinaire, borné par compRefundCap
+    function compRefundTotal() {
+      const raw = COMPETENCES
+        .filter(x => !x.noBase)
+        .reduce((s, x) => s + Math.min(0, config.compCosts[compValues[x.id]] || 0), 0);
+      return Math.max(raw, -config.compRefundCap);
+    }
+
     function totalSpent() {
       let total = 0;
       ATTRIBUTES.forEach(a => total += attrCost(attrValues[a.id]));
-      COMPETENCES.forEach(c => total += compCost(compValues[c.id], c));
+      // Les coûts positifs seuls ici : les remboursements passent par compRefundTotal
+      COMPETENCES.forEach(c => total += Math.max(0, compCost(compValues[c.id], c)));
+      total += compRefundTotal();
       if (config.surchargeEnabled) total += surchargeAttr().cost + surchargeComp().cost;
       return total;
     }
@@ -966,9 +986,14 @@
       const el = document.getElementById('compPyramid');
       if (config.surchargeEnabled) {
         const s = surchargeComp();
-        el.innerHTML = balanceHtml(s,
-          `Excès : Excellent +1, Expert +2, Maître +3, Absolue +4 — moins les lacunes sous Ordinaire (max ${config.compReliefCap})`,
-          "Surcharge appliquée une fois à chaque compétence investie au-dessus d'Ordinaire");
+        let h = balanceHtml(s,
+          `Excès : Excellent +1, Expert +2, Maître +3, Absolue +4 — chaque compétence sous Ordinaire allège de 1 au plus (total max ${config.compReliefCap})`,
+          "Surcharge appliquée une fois à chaque compétence à Excellent ou au-delà");
+        const refund = compRefundTotal();
+        if (refund < 0) {
+          h += `<span class="pyramid-counter" title="Points rendus par les compétences sous Ordinaire (max ${config.compRefundCap})">Rendu : <span class="count ok">${refund}</span> pts</span>`;
+        }
+        el.innerHTML = h;
         return;
       }
       let html = '';
@@ -1276,12 +1301,15 @@
         parseInt(document.getElementById('s_ac7').value) || 0,
         parseInt(document.getElementById('s_ac8').value) || 0,
       ];
-      config.compCosts = [0, 0,
+      config.compCosts = [0,
+        parseInt(document.getElementById('s_cc1')?.value) || -2,
         parseInt(document.getElementById('s_cc2').value) || 0,
-        parseInt(document.getElementById('s_cc3').value) || 0,
+        0, // Ordinaire (3) = baseline = 0
         parseInt(document.getElementById('s_cc4').value) || 0,
         parseInt(document.getElementById('s_cc5').value) || 0,
         parseInt(document.getElementById('s_cc6').value) || 0,
+        parseInt(document.getElementById('s_cc7').value) || 0,
+        parseInt(document.getElementById('s_cc8').value) || 0,
       ];
       config.maxAttr = {
         7: parseInt(document.getElementById('s_max_a7').value) || 0,
