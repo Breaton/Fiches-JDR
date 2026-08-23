@@ -649,16 +649,16 @@
         <div class="settings-section-title">Coûts cumulatifs — Compétences</div>
         <div class="setting-item"><label>Inapte (1) rendu</label><input type="number" id="s_cc1" value="-2" min="-10"
             max="0" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Maladroit (2) rendu</label><input type="number" id="s_cc2" value="-1" min="-10" max="0"
-            onchange="updateSettings()"></div>
-                <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="3" min="0" max="50"
+        <div class="setting-item"><label>Maladroit (2) rendu</label><input type="number" id="s_cc2" value="-1" min="-10"
+            max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="3" min="0" max="50"
             onchange="updateSettings()"></div>
         <div class="setting-item"><label>Excellent (5)</label><input type="number" id="s_cc5" value="6" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Absolue (8)</label><input type="number" id="s_cc8" value="21" min="0"
-            max="60" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Maître (7)</label><input type="number" id="s_cc7" value="15" min="0"
-            max="60" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Absolue (8)</label><input type="number" id="s_cc8" value="21" min="0" max="60"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Maître (7)</label><input type="number" id="s_cc7" value="15" min="0" max="60"
+            onchange="updateSettings()"></div>
         <div class="setting-item"><label>Expert (6)</label><input type="number" id="s_cc6" value="10" min="0" max="50"
             onchange="updateSettings()"></div>
 
@@ -709,12 +709,12 @@
     <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser</button>
 
     <!-- MAÎTRISES -->
-    </div>
+  </div>
 
-    <div class="summary" id="summary">
-      <h3>Résumé du personnage</h3>
-      <div id="summaryContent"></div>
-    </div>
+  <div class="summary" id="summary">
+    <h3>Résumé du personnage</h3>
+    <div id="summaryContent"></div>
+  </div>
 
   </div>
 
@@ -1018,7 +1018,7 @@
         const costDisplay = costVal < 0
           ? `<span class="cost-num" style="color:var(--green)">${costVal} pts</span>`
           : `<span class="cost-num">${costVal + sur}</span> pts` +
-            (sur > 0 ? `<span class="cost-sur" title="Surcharge subie : +${rate} (global moins ce que cette ligne génère)">${costVal} + ${sur}</span>` : '');
+          (sur > 0 ? `<span class="cost-sur" title="Surcharge subie : +${rate} (global moins ce que cette ligne génère)">${costVal} + ${sur}</span>` : '');
         const canUp = canIncreaseAttr(a.id);
         const canDown = val > 1;
 
