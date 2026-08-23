@@ -2804,9 +2804,7 @@
             font-family: var(--font-body);
         }
 
-        .reserve-override button:hover {
-            background: rgba(107, 76, 154, 0.2);
-        }
+        .reserve-override button:hover { background: rgba(107, 76, 154, 0.2); }
 
         .reserve-override span {
             font-size: 0.68em;
@@ -2833,9 +2831,7 @@
             line-height: 1;
         }
 
-        .qi-refresh:hover {
-            background: rgba(29, 158, 117, 0.25);
-        }
+        .qi-refresh:hover { background: rgba(29, 158, 117, 0.25); }
 
         .qi-pool-row {
             display: flex;
@@ -2871,9 +2867,7 @@
             font-family: var(--font-body);
         }
 
-        .qi-step:hover {
-            background: rgba(29, 158, 117, 0.22);
-        }
+        .qi-step:hover { background: rgba(29, 158, 117, 0.22); }
 
         .qi-stepper {
             display: flex;
@@ -3383,13 +3377,8 @@
             text-align: right;
         }
 
-        .passive-row.mid .pr-val {
-            color: #1D9E75;
-        }
-
-        .passive-row.high .pr-val {
-            color: #D4AF37;
-        }
+        .passive-row.mid .pr-val { color: #1D9E75; }
+        .passive-row.high .pr-val { color: #D4AF37; }
 
         .passives-empty {
             font-size: 0.78em;
@@ -3612,10 +3601,10 @@
                             </div>
                             <div class="reserve-override">
                                 <label>Max :</label>
-                                <input type="number" id="reserve-max-input" min="1" placeholder="auto"
-                                    oninput="setReserveOverride(this.value)" onchange="setReserveOverride(this.value)">
-                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺
-                                    auto</button>
+                                <input type="number" id="reserve-max-input" min="1"
+                                    placeholder="auto" oninput="setReserveOverride(this.value)"
+                                    onchange="setReserveOverride(this.value)">
+                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺ auto</button>
                                 <span id="reserve-base-hint"></span>
                             </div>
                             <div class="counter-bar" style="background:rgba(107,76,154,0.15);">
@@ -3632,8 +3621,7 @@
                             <div id="qi-perso-block" class="qi-perso" style="display:none;">
                                 <div class="qi-perso-head">
                                     <span class="qi-perso-name">☯ Qi partagé</span>
-                                    <button class="qi-perso-refresh" onclick="qiPull()"
-                                        title="Relire depuis GitHub">↻</button>
+                                    <button class="qi-perso-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
                                 </div>
                                 <div class="qi-perso-body">
                                     <span class="qi-perso-num" id="qi-value-perso">0</span>
@@ -3946,9 +3934,7 @@
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label"
-                                    title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques
-                                    bonus</label>
+                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques bonus</label>
                                 <input id="hybrid-bonus-dice" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
@@ -3997,9 +3983,7 @@
                                     oninput="updatePureMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label"
-                                    title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques
-                                    bonus</label>
+                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques bonus</label>
                                 <input id="pure-bonus-dice" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updatePureMagicInfo()">
                             </div>
@@ -4038,8 +4022,7 @@
 
                 <!-- Qi partagé -->
                 <div class="ctx-panel qi-panel" id="qi-panel" style="display:none;">
-                    <div class="ctx-panel-title"
-                        style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <div class="ctx-panel-title" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                         <span>☯ Qi partagé</span>
                         <button class="qi-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
                     </div>
@@ -4300,11 +4283,11 @@
         };
 
         // ========== NIVEAUX DE COMPÉTENCES ==========
-        // Explosion basée sur le tier : Novice(1-3)=12, Confirmé(4-5)=11, Expert(6-7)=10, Absolu(8)=8
+        // Explosion basée sur le tier : Inapte à Ordinaire = 12, Qualifié/Excellent = 11, Expert/Maître = 10, Absolue = 8
         const SKILL_LEVELS = {
-            1: { name: 'Ignorant', dice: 1, explosion: 12, bonus: 0, color: '#c45c5c' },
-            2: { name: 'Novice', dice: 2, explosion: 12, bonus: 0, color: '#d97a4a' },
-            3: { name: 'Compétent', dice: 3, explosion: 12, bonus: 1, color: '#c9a227' },
+            1: { name: 'Inapte', dice: 1, explosion: 12, bonus: 0, color: '#c45c5c' },
+            2: { name: 'Maladroit', dice: 2, explosion: 12, bonus: 0, color: '#d97a4a' },
+            3: { name: 'Ordinaire', dice: 3, explosion: 12, bonus: 1, color: '#c9a227' },
             4: { name: 'Qualifié', dice: 4, explosion: 11, bonus: 1, color: '#8b9dc3' },
             5: { name: 'Excellent', dice: 5, explosion: 11, bonus: 2, color: '#4a9b6e' },
             6: { name: 'Expert', dice: 6, explosion: 10, bonus: 2, color: '#4a90c2' },
@@ -4318,7 +4301,10 @@
             return ATTRIBUTE_LEVELS[Math.min(8, Math.max(1, value))] || ATTRIBUTE_LEVELS[4];
         }
 
+        const SKILL_LEVEL_NONE = { name: 'Aucune', dice: 0, explosion: 12, bonus: 0, color: 'var(--silver-mist)' };
+
         function getSkillLevel(value) {
+            if (value <= 0) return SKILL_LEVEL_NONE;
             return SKILL_LEVELS[Math.min(8, Math.max(1, value))] || SKILL_LEVELS[1];
         }
 
@@ -5337,7 +5323,8 @@
         function modifySkillLevel(id, delta) {
             const skill = appState.skills.find(s => s.id === id);
             if (skill) {
-                skill.level = Math.max(1, Math.min(8, skill.level + delta));
+                const floor = (skill.baseName || skill.name) === 'Ésotérisme' ? 0 : 1;
+                skill.level = Math.max(floor, Math.min(8, skill.level + delta));
                 renderSkills();
                 updateMagicState();
                 renderPassives();
@@ -6645,10 +6632,8 @@
                 'Accept': 'application/vnd.github+json',
                 'X-GitHub-Api-Version': '2022-11-28'
             };
-            const payload = {
-                qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
-                by: (appState.profile && appState.profile.name) || ''
-            };
+            const payload = { qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
+                              by: (appState.profile && appState.profile.name) || '' };
             const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
             try {
                 const res = await fetch(qiApi(), {
@@ -7046,8 +7031,10 @@
         // ========== INITIALISATION ==========
         document.addEventListener('DOMContentLoaded', function () {
             // Compétences régulières par défaut (marquées comme base)
+            // Ordinaire (3) est le socle de tout adulte ; Ésotérisme démarre à 0 (pas de magie par défaut)
             defaultRegularSkills.forEach((name, i) => {
-                appState.skills.push({ id: `regular_${i}`, name, level: 1, isBase: true, defaultAttr: getDefaultSkillAttr(name) });
+                const lvl = name === 'Ésotérisme' ? 0 : 3;
+                appState.skills.push({ id: `regular_${i}`, name, level: lvl, isBase: true, defaultAttr: getDefaultSkillAttr(name) });
             });
 
             // Priorité de restauration : import point-buy en attente > sauvegarde locale > défaut
