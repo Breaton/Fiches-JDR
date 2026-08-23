@@ -1990,6 +1990,7 @@
             color: white;
         }
 
+
         .die.explosion {
             background: linear-gradient(135deg, var(--eclat-gold), var(--eclat-glow));
             color: var(--deep-navy);
@@ -3980,12 +3981,8 @@
                             infligée, les palliers de soin, la vitesse de déplacement etc...)<br>
                             <strong>Usure :</strong> Tout les 5 points d'énergie dépensés = −1 niveau effectif du
                             dé.<br>
-                            <strong>Rupture</strong> : Effet Incontrôlé donnent <strong>1 ou 2 dé(s)</strong> de
-                            Perturbation au
-                            MJ.
-                            <strong>Rupture</strong> : Effet Incontrôlé donnent <strong>1 ou 2 dé(s)</strong> de
-                            Perturbation au
-                            MJ.
+                            <strong>Rupture</strong> : 1 dé de Perturbation au MJ.
+                            <strong>Fracture</strong> : 2 dés. Le MJ les dépense quand il le décide.
                         </div>
                     </div>
                 </div>
@@ -4029,12 +4026,8 @@
                             Les succès donnent la <strong>Puissance</strong> de l'effet.<br>
                             <strong>Usure :</strong> Tout les 5 points d'énergie dépensés = −1 niveau effectif du
                             dé.<br>
-                            <strong>Rupture</strong> : Effet Incontrôlé donnent <strong>1 ou 2 dé(s)</strong> de
-                            Perturbation au
-                            MJ.
-                            <strong>Rupture</strong> : Effet Incontrôlé donnent <strong>1 ou 2 dé(s)</strong> de
-                            Perturbation au
-                            MJ.
+                            <strong>Rupture</strong> : 1 dé de Perturbation au MJ.
+                            <strong>Fracture</strong> : 2 dés. Le MJ les dépense quand il le décide.
                         </div>
                     </div>
                 </div>
@@ -4307,39 +4300,16 @@
         };
 
         // ========== NIVEAUX DE COMPÉTENCES ==========
-        // Explosion basée sur le tier : Inapte à Ordinaire = 12, Qualifié/Excellent = 11, Expert/Maître = 10, Absolue = 8
+        // Explosion basée sur le tier : Novice(1-3)=12, Confirmé(4-5)=11, Expert(6-7)=10, Absolu(8)=8
         const SKILL_LEVELS = {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            1: { name: 'Inapte', dice: 1, explosion: 12, bonus: 0, color: '#c45c5c' },
-            2: { name: 'Maladroit', dice: 2, explosion: 12, bonus: 0, color: '#d97a4a' },
-            3: { name: 'Ordinaire', dice: 3, explosion: 12, bonus: 1, color: '#c9a227' },
+            1: { name: 'Ignorant', dice: 1, explosion: 12, bonus: 0, color: '#c45c5c' },
+            2: { name: 'Novice', dice: 2, explosion: 12, bonus: 0, color: '#d97a4a' },
+            3: { name: 'Compétent', dice: 3, explosion: 12, bonus: 1, color: '#c9a227' },
             4: { name: 'Qualifié', dice: 4, explosion: 11, bonus: 1, color: '#8b9dc3' },
             5: { name: 'Excellent', dice: 5, explosion: 11, bonus: 2, color: '#4a9b6e' },
             6: { name: 'Expert', dice: 6, explosion: 10, bonus: 2, color: '#4a90c2' },
             7: { name: 'Maître', dice: 8, explosion: 10, bonus: 3, color: '#6b4c9a' },
             8: { name: 'Absolue', dice: 10, explosion: 8, bonus: 4, color: '#d4a84b' }
-=======
-=======
->>>>>>> parent of d513194 (Back to senses before big update)
-=======
->>>>>>> parent of d513194 (Back to senses before big update)
-            1: { name: 'Ignorant', dice: 1, explosion: 12, bonus: 0, color: '#c45c5c' },
-            2: { name: 'Novice', dice: 2, explosion: 12, bonus: 1, color: '#d97a4a' },
-            3: { name: 'Compétent', dice: 3, explosion: 11, bonus: 2, color: '#c9a227' },
-            4: { name: 'Qualifié', dice: 4, explosion: 11, bonus: 3, color: '#8b9dc3' },
-            5: { name: 'Excellent', dice: 5, explosion: 10, bonus: 4, color: '#4a9b6e' },
-            6: { name: 'Expert', dice: 6, explosion: 10, bonus: 5, color: '#4a90c2' },
-            7: { name: 'Maître', dice: 7, explosion: 9, bonus: 6, color: '#6b4c9a' },
-            8: { name: 'Absolue', dice: 8, explosion: 8, bonus: 7, color: '#d4a84b' }
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of d513194 (Back to senses before big update)
-=======
->>>>>>> parent of d513194 (Back to senses before big update)
-=======
->>>>>>> parent of d513194 (Back to senses before big update)
         };
 
         // Fonction pour calculer l'explosion d'un niveau de pouvoir combiné
@@ -4348,10 +4318,7 @@
             return ATTRIBUTE_LEVELS[Math.min(8, Math.max(1, value))] || ATTRIBUTE_LEVELS[4];
         }
 
-        const SKILL_LEVEL_NONE = { name: 'Aucune', dice: 0, explosion: 12, bonus: 0, color: 'var(--silver-mist)' };
-
         function getSkillLevel(value) {
-            if (value <= 0) return SKILL_LEVEL_NONE;
             return SKILL_LEVELS[Math.min(8, Math.max(1, value))] || SKILL_LEVELS[1];
         }
 
@@ -5370,8 +5337,7 @@
         function modifySkillLevel(id, delta) {
             const skill = appState.skills.find(s => s.id === id);
             if (skill) {
-                const floor = (skill.baseName || skill.name) === 'Ésotérisme' ? 0 : 1;
-                skill.level = Math.max(floor, Math.min(8, skill.level + delta));
+                skill.level = Math.max(1, Math.min(8, skill.level + delta));
                 renderSkills();
                 updateMagicState();
                 renderPassives();
@@ -5737,8 +5703,7 @@
             const bonusDice = parseInt(document.getElementById('followup-bonus-dice')?.value) || 0;
             const out = resolveMagicAction({ requested, emotion, source: 'followup', extraDice: bonusDice });
             if (!out) return;
-            const { results, successes, puissanceIncontrolee, ruptures, fractures, mjGain } = out;
-            const { results, successes, puissanceIncontrolee, ruptures, fractures, mjGain } = out;
+            const { results, successes, ruptures, fractures, mjGain } = out;
             const count = out.dice;
 
             const resEl = document.getElementById('followup-magic-result');
@@ -5746,11 +5711,7 @@
                 let html = `<div class="followup-dice-row" id="followup-dice-row"></div>`;
                 html += `<div class="followup-puissance">✨ Puissance : <strong>${successes}</strong></div>`;
                 const notes = [];
-                if (fractures > 0) notes.push(`<span style="color:#7A1B1B;">✗✗ ${fractures} Fracture</span>`);
-                if (fractures > 0) notes.push(`<span style="color:#7A1B1B;">✗✗ ${fractures} Fracture</span>`);
                 if (mjGain > 0) notes.push(`<span style="color:var(--vitality-red);">⚠ +${mjGain} dé(s) de Perturbation au MJ</span>`);
-                if (puissanceIncontrolee > 0) notes.push(`<span style="color:var(--vitality-red);">💥 Effet Incontrôlé ${puissanceIncontrolee} (${getMagnitudeLabel(puissanceIncontrolee)})</span>`);
-                if (puissanceIncontrolee > 0) notes.push(`<span style="color:var(--vitality-red);">💥 Effet Incontrôlé ${puissanceIncontrolee} (${getMagnitudeLabel(puissanceIncontrolee)})</span>`);
                 if (notes.length) html += `<div class="followup-notes">${notes.join(' · ')}</div>`;
 
                 html += sustainButtonsHtml();
@@ -5768,8 +5729,7 @@
                     bonus: lastRollContext.bonus,
                     magic: {
                         level: esotLvl, results, puissance: successes, emotion,
-                        puissanceIncontrolee, ruptures, fractures, followUp: true
-                        puissanceIncontrolee, ruptures, fractures, followUp: true
+                        ruptures, fractures, mjGain, followUp: true
                     }
                 });
             }
@@ -6179,8 +6139,7 @@
         function resolveMagicDice(level, count, emotion, paidDice) {
             const billable = (paidDice === undefined) ? count : paidDice;
             const results = [];
-            let successes = 0, puissanceIncontrolee = 0, ruptures = 0, fractures = 0, energyCost = 0, mjGain = 0;
-            let successes = 0, puissanceIncontrolee = 0, ruptures = 0, fractures = 0, energyCost = 0, mjGain = 0;
+            let successes = 0, ruptures = 0, fractures = 0, energyCost = 0, mjGain = 0;
 
             const cascade = (n) => {
                 for (let i = 0; i < n; i++) {
@@ -6211,42 +6170,17 @@
                         cascade(2);
                         break;
                     case 'rupture':
-                        puissanceIncontrolee += 2;
-                        puissanceIncontrolee += 2;
                         ruptures++;
                         mjGain += 1;
                         break;
                     case 'fracture':
-                        puissanceIncontrolee += 3;
-                        puissanceIncontrolee += 3;
                         fractures++;
                         mjGain += 2;
                         break;
                     // vide : aucun effet
                 }
             }
-            return { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain };
-        }
-
-        function getMagnitudeLabel(n) {
-            if (n <= 0) return null;
-            if (n === 1) return 'Triviale';
-            if (n === 2) return 'Simple';
-            if (n === 3) return 'Modérée';
-            if (n === 4) return 'Complexe';
-            if (n === 5) return 'Majeure';
-            return 'Légendaire';
-            return { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain };
-        }
-
-        function getMagnitudeLabel(n) {
-            if (n <= 0) return null;
-            if (n === 1) return 'Triviale';
-            if (n === 2) return 'Simple';
-            if (n === 3) return 'Modérée';
-            if (n === 4) return 'Complexe';
-            if (n === 5) return 'Majeure';
-            return 'Légendaire';
+            return { results, successes, ruptures, fractures, energyCost, mjGain };
         }
 
         function isPrivateRoll() {
@@ -6375,8 +6309,7 @@
             const hybridBonus = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
             const totalMagicDice = actualMagic + hybridBonus;
             const effLvl = getEffectiveMagicLevel();
-            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, totalMagicDice, emotion, actualMagic);
-            const { results: magicResults, successes: magicSuccesses, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, totalMagicDice, emotion, actualMagic);
+            const { results: magicResults, successes: magicSuccesses, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, totalMagicDice, emotion, actualMagic);
             if (totalMagicDice > 0) { spendReserve(energyCost); if (mjGain > 0) addMjDice(mjGain); }
             lastMagicRoll = totalMagicDice > 0 ? { puissance: magicSuccesses, dice: totalMagicDice } : null;
             actualMagic = totalMagicDice;
@@ -6391,8 +6324,7 @@
                 skillDice, magicResults, threshold, esotLvl, emotion,
                 skillSuccesses: netSkillSuccesses, magicSuccesses, perturb,
                 attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus,
-                bonus, total, puissanceIncontrolee, ruptures, fractures, mjGain, energyCost, actualMagic
-                bonus, total, puissanceIncontrolee, ruptures, fractures, mjGain, energyCost, actualMagic
+                bonus, total, ruptures, fractures, mjGain, energyCost, actualMagic
             });
 
             if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), {
@@ -6400,8 +6332,7 @@
                 attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus, bonus,
                 magic: {
                     level: esotLvl, results: magicResults, puissance: magicSuccesses, emotion,
-                    puissanceIncontrolee, ruptures, fractures
-                    puissanceIncontrolee, ruptures, fractures
+                    ruptures, fractures, mjGain
                 }
             });
         }
@@ -6446,18 +6377,13 @@
             document.getElementById('stat-neutrals').textContent = vides > 0 ? `${vides} vide(s)` : '—';
             document.getElementById('stat-explosions').textContent = data.skillDice.filter(d => d.isExplosion).length;
             document.getElementById('stat-attribute-bonus').textContent = data.attrBonus;
-            document.getElementById('stat-skill-bonus').textContent = data.skillBonus;
-            document.getElementById('stat-skill-bonus').textContent = data.skillBonus;
+            document.getElementById('stat-skill-bonus').textContent = data.skillBonus || 0;
 
             let mag = `<div class="magnitude-result">`;
             if (data.actualMagic > 0) {
                 mag += `<div class="magnitude-label">✨ Puissance du sort : <strong>${data.magicSuccesses}</strong></div>`;
                 mag += `<div style="font-size:0.8em;color:var(--silver-mist);margin-bottom:4px;">Indépendante du Résultat Final — s'applique à l'effet (Gravité, portée, ampleur…)</div>`;
                 let effets = [];
-                if (data.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
-                if (data.fractures > 0) effets.push(`✗✗ ${data.fractures} Fracture`);
-                if (data.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
-                if (data.fractures > 0) effets.push(`✗✗ ${data.fractures} Fracture`);
                 if (data.mjGain > 0) effets.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
                 if (effets.length) {
                     mag += `<div class="magnitude-status failure">${effets.join(' · ')}</div>`;
@@ -6483,21 +6409,18 @@
             if (actualDice <= 0) { showNotification('⚠ Réserve magique épuisée'); return; }
 
             const effLvl = getEffectiveMagicLevel();
-            const { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion, paidDice);
-            const { results, successes, puissanceIncontrolee, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion, paidDice);
+            const { results, successes, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion, paidDice);
             spendReserve(energyCost);
             if (mjGain > 0) addMjDice(mjGain);
             lastMagicRoll = { puissance: successes, dice: actualDice };
 
-            displayPureResult({ results, successes, puissanceIncontrolee, ruptures, fractures, mjGain, energyCost, actualDice, esotLvl, emotion });
-            displayPureResult({ results, successes, puissanceIncontrolee, ruptures, fractures, mjGain, energyCost, actualDice, esotLvl, emotion });
+            displayPureResult({ results, successes, ruptures, fractures, mjGain, energyCost, actualDice, esotLvl, emotion });
 
             if (!isPrivateRoll()) sendDiscordRoll('Pouvoir', null, successes, `Ésotérisme niv.${esotLvl}`, {
                 successes,
                 magic: {
                     level: esotLvl, results, isPure: true, puissance: successes, emotion,
-                    puissanceIncontrolee, ruptures, fractures
-                    puissanceIncontrolee, ruptures, fractures
+                    ruptures, fractures, mjGain
                 }
             });
         }
@@ -6527,10 +6450,6 @@
             let mag = `<div class="magnitude-result">
                 <div class="magnitude-label">✨ Puissance : <strong>${data.successes}</strong></div>`;
             let effetsP = [];
-            if (data.puissanceIncontrolee > 0) effetsP.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
-            if (data.fractures > 0) effetsP.push(`✗✗ ${data.fractures} Fracture`);
-            if (data.puissanceIncontrolee > 0) effetsP.push(`💥 Effet Incontrôlé — Puissance ${data.puissanceIncontrolee} (${getMagnitudeLabel(data.puissanceIncontrolee)})`);
-            if (data.fractures > 0) effetsP.push(`✗✗ ${data.fractures} Fracture`);
             if (data.mjGain > 0) effetsP.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
             if (effetsP.length) mag += `<div class="magnitude-status failure" style="margin-top:4px;">${effetsP.join(' · ')}</div>`;
             mag += `</div>`;
@@ -7090,10 +7009,7 @@
 
                 // Effets négatifs
                 const effets = [];
-                if (m.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${m.puissanceIncontrolee} (${getMagnitudeLabel(m.puissanceIncontrolee)})`);
-                if (m.fractures > 0) effets.push(`✗✗ ${m.fractures} Fracture`);
-                if (m.puissanceIncontrolee > 0) effets.push(`💥 Effet Incontrôlé — Puissance ${m.puissanceIncontrolee} (${getMagnitudeLabel(m.puissanceIncontrolee)})`);
-                if (m.fractures > 0) effets.push(`✗✗ ${m.fractures} Fracture`);
+                if (m.mjGain > 0) effets.push(`⚠ +${m.mjGain} dé(s) de Perturbation au MJ`);
                 if (effets.length) lines.push(`┈ Effets : ${effets.join(' · ')}`);
             }
 
@@ -7130,10 +7046,8 @@
         // ========== INITIALISATION ==========
         document.addEventListener('DOMContentLoaded', function () {
             // Compétences régulières par défaut (marquées comme base)
-            // Ordinaire (3) est le socle de tout adulte ; Ésotérisme démarre à 0 (pas de magie par défaut)
             defaultRegularSkills.forEach((name, i) => {
-                const lvl = name === 'Ésotérisme' ? 0 : 3;
-                appState.skills.push({ id: `regular_${i}`, name, level: lvl, isBase: true, defaultAttr: getDefaultSkillAttr(name) });
+                appState.skills.push({ id: `regular_${i}`, name, level: 1, isBase: true, defaultAttr: getDefaultSkillAttr(name) });
             });
 
             // Priorité de restauration : import point-buy en attente > sauvegarde locale > défaut
