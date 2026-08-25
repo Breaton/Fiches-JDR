@@ -557,6 +557,7 @@
       <div class="budget-remaining" id="budgetRemaining">80 restants</div>
       <button class="settings-toggle" onclick="exportToFiche()" style="border-color:var(--gold-dim);color:var(--gold)">↓
         Exporter vers Fiche</button>
+      <button class="settings-toggle" onclick="importFromFiche()">↑ Importer depuis Fiche</button>
       <button class="settings-toggle" onclick="toggleSettings()">⚙ Paramètres</button>
     </div>
 
@@ -667,7 +668,7 @@
     // Ordinaire (3) est le socle : ce que sait faire un adulte fonctionnel.
     // En dessous, le personnage a un véritable empêchement.
     const COMP_LEVELS = [
-      { val: 1, label: 'Ingnorant' },
+      { val: 1, label: 'Ignorant' },
       { val: 2, label: 'Novice' },
       { val: 3, label: 'Compétent' },
       { val: 4, label: 'Qualifié' },
@@ -1046,7 +1047,7 @@
     function exportToFiche() {
       const skillNames = {
         art: 'Art', athletisme: 'Athlétisme', autorite: 'Autorité',
-        apothicairerie: 'Apothicairerie', bagarre: 'Bagarre', combat_occulte: 'Combat Occulte',
+        apothicairerie: 'Apothicairerie', combat: 'Combat',
         discretion: 'Discrétion', dressage: 'Dressage', eloquence: 'Éloquence',
         erudition: 'Érudition', escamotage: 'Escamotage', esoterisme: 'Ésotérisme',
         medecine: 'Médecine', recherche: 'Recherche', resilience: 'Résilience',
@@ -1061,8 +1062,8 @@
         isBase: true
       }));
 
-      const volonte = attrValues['volonte'] || 4;
-      const powerMax = 30 + volonte * 3;
+      const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
+      const elanMax = (ELAN_CONTRIB[attrValues['endurance']] || 5) + (ELAN_CONTRIB[attrValues['volonte']] || 5);
 
       const state = {
         profile: { name: '', image: null },
@@ -1077,13 +1078,17 @@
           presence: attrValues['presence']
         },
         counters: {
-          health: { current: powerMax, max: powerMax },
-          power: { current: powerMax, max: powerMax }
+          health: { current: elanMax, max: elanMax },
+          power: { current: elanMax, max: elanMax }
         },
         customResources: [],
         skills: skills,
         wounds: [],
         objects: [],
+        notes: '',
+        magic: { reserveUsed: 0, mjDice: 0 },
+        vitesseBonus: 0,
+        activeSpells: [],
         currentModal: null
       };
 
@@ -1095,6 +1100,80 @@
       a.download = 'personnage.json';
       a.click();
       URL.revokeObjectURL(url);
+    }
+
+    // ========================
+    // IMPORT DEPUIS UNE FICHE
+    // ========================
+
+    function importFromFiche() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json,application/json';
+      input.onchange = e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = evt => {
+          try { loadFicheJSON(JSON.parse(evt.target.result)); }
+          catch (err) { alert('Fichier illisible : ' + err.message); }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    function loadFicheJSON(data) {
+      const nameToId = Object.fromEntries(COMPETENCES.map(c => [c.name, c.id]));
+      // Anciens noms encore présents dans certaines sauvegardes
+      const aliases = {
+        'Bagarre': 'combat', 'Combat': 'combat',
+        'Ésotérisme': 'esoterisme', 'Éloquence': 'eloquence', 'Érudition': 'erudition',
+        'Résilience': 'resilience', 'Sagacité': 'sagacite', 'Stratégie': 'strategie',
+        'Athlétisme': 'athletisme', 'Autorité': 'autorite', 'Discrétion': 'discretion',
+        'Médecine': 'medecine', 'Apothicairerie': 'apothicairerie',
+      };
+
+      if (data.attributes) {
+        Object.entries(data.attributes).forEach(([k, v]) => {
+          if (k in attrValues) attrValues[k] = Math.max(1, Math.min(7, Number(v) || 4));
+        });
+      }
+
+      const ignored = [];
+      if (Array.isArray(data.skills)) {
+        COMPETENCES.forEach(c => compValues[c.id] = 3);   // socle Ordinaire
+        data.skills.forEach(s => {
+          if (!s || !s.name) return;
+          const id = nameToId[s.name] || aliases[s.name] || nameToId[s.baseName] || aliases[s.baseName];
+          if (!id) { ignored.push(s.name); return; }
+          compValues[id] = Math.max(1, Math.min(6, Number(s.level) || 3));
+        });
+      }
+
+      const relaxed = relaxLimitsForLegacy();
+      render();
+
+      let msg = '✓ Personnage importé.';
+      if (ignored.length) msg += '\n\nCompétences ignorées : ' + ignored.join(', ');
+      if (relaxed) msg += '\n\nCette fiche dépasse certaines limites actuelles ; elles ont été assouplies pour la conserver telle quelle.';
+      const over = totalSpent() - config.budget;
+      if (over > 0) msg += `\n\nBudget dépassé de ${over} points.`;
+      alert(msg);
+    }
+
+    // Une fiche antérieure peut dépasser les plafonds : on les élargit plutôt que de la tronquer
+    function relaxLimitsForLegacy() {
+      let relaxed = false;
+      [7, 6, 5].forEach(lv => {
+        const n = attrCountAt(lv);
+        if (config.maxAttr[lv] !== undefined && n > config.maxAttr[lv]) { config.maxAttr[lv] = n; relaxed = true; }
+      });
+      [6, 5, 4].forEach(lv => {
+        const n = compCountAt(lv);
+        if (config.maxComp[lv] !== undefined && n > config.maxComp[lv]) { config.maxComp[lv] = n; relaxed = true; }
+      });
+      return relaxed;
     }
 
     // ========================

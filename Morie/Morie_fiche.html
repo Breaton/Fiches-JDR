@@ -1991,6 +1991,177 @@
         }
 
 
+        /* === PANNEAU DE PROBABILITÉS === */
+        .roll-stats-host {
+            margin-top: 12px;
+        }
+
+        .stats-toggle {
+            width: 100%;
+            padding: 6px 10px;
+            background: rgba(139, 157, 195, 0.08);
+            border: 1px solid var(--moonlight);
+            border-radius: 7px;
+            color: var(--slate-blue);
+            font-size: 0.78em;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            font-family: var(--font-body);
+        }
+
+        .stats-toggle:hover {
+            background: rgba(139, 157, 195, 0.16);
+        }
+
+        .stats-panel {
+            margin-top: 8px;
+            padding: 12px 14px;
+            background: rgba(139, 157, 195, 0.05);
+            border: 1px solid var(--moonlight);
+            border-radius: 9px;
+        }
+
+        .stats-pool {
+            font-size: 0.76em;
+            color: var(--slate-blue);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .stats-grid div {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .stats-grid span {
+            font-size: 0.66em;
+            color: var(--silver-mist);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .stats-grid strong {
+            font-family: var(--font-display);
+            font-size: 1.1em;
+            color: var(--deep-navy);
+        }
+
+        .stats-grid strong.warn {
+            color: var(--vitality-red);
+        }
+
+        .stat-bar-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 3px;
+        }
+
+        .sb-label {
+            font-size: 0.7em;
+            color: var(--silver-mist);
+            width: 32px;
+            text-align: right;
+        }
+
+        .sb-track {
+            flex: 1;
+            height: 7px;
+            background: rgba(139, 157, 195, 0.16);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .sb-fill {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, var(--slate-blue), #6b81ad);
+            border-radius: 4px;
+        }
+
+        .sb-val {
+            font-size: 0.7em;
+            color: var(--slate-blue);
+            width: 34px;
+            font-weight: 600;
+        }
+
+        .stats-note {
+            margin-top: 9px;
+            font-size: 0.66em;
+            color: var(--silver-mist);
+            font-style: italic;
+            line-height: 1.4;
+        }
+
+        .faces-summary {
+            font-size: 0.72em;
+            color: var(--slate-blue);
+            margin-bottom: 8px;
+            letter-spacing: 0.02em;
+        }
+
+        .faces-summary.weak {
+            opacity: 0.85;
+        }
+
+        .face-die {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-width: 2px;
+            border-style: solid;
+            background: rgba(255, 255, 255, 0.55);
+            font-weight: 700;
+        }
+
+        .face-die {
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .face-die .fd-val {
+            font-family: var(--font-display);
+            font-size: 0.9em;
+            line-height: 1;
+        }
+
+        .face-die .fd-sym {
+            font-size: 0.7em;
+            line-height: 1;
+        }
+
+        .face-die.from-explosion {
+            box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+        }
+
+        .face-die.trained {
+            background: rgba(29, 158, 117, 0.08);
+        }
+
+        .face-die.weak {
+            background: rgba(163, 45, 45, 0.1);
+            border-style: dashed;
+        }
+
+        .dice-legend {
+            margin-top: 8px;
+            font-size: 0.68em;
+            color: var(--silver-mist);
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
         .die.explosion {
             background: linear-gradient(135deg, var(--eclat-gold), var(--eclat-glow));
             color: var(--deep-navy);
@@ -3880,7 +4051,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
-                                <input id="simple-bonus" class="bonus-input" type="number" value="0">
+                                <input id="simple-bonus" class="bonus-input" type="number" value="0" oninput="renderRollStats('simple')">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Mod. Explosion</label>
@@ -3893,6 +4064,7 @@
                             onclick="performSimpleRoll()" disabled>
                             🎲 Lancer le jet
                         </button>
+                        <div id="simple-stats" class="roll-stats-host"></div>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique</div>
@@ -3940,7 +4112,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
-                                <input id="hybrid-bonus" class="bonus-input" type="number" value="0">
+                                <input id="hybrid-bonus" class="bonus-input" type="number" value="0" oninput="renderRollStats('hybrid')">
                             </div>
                         </div>
                         <div id="hybrid-magic-info"
@@ -3956,6 +4128,7 @@
                             onclick="performHybridRoll()" disabled>
                             🎲✨ Lancer le jet
                         </button>
+                        <div id="hybrid-stats" class="roll-stats-host"></div>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique Jet + Magie</div>
@@ -4211,15 +4384,15 @@
                         <div class="stat-value" id="stat-neutrals">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">Explosions</div>
+                        <div class="stat-label">Éclats</div>
                         <div class="stat-value" id="stat-explosions">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">Bonus Attribut</div>
+                        <div class="stat-label">Bonus / Malus</div>
                         <div class="stat-value" id="stat-attribute-bonus">0</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-label">Bonus Compétence</div>
+                        <div class="stat-label">Relances</div>
                         <div class="stat-value" id="stat-skill-bonus">0</div>
                     </div>
                 </div>
@@ -4271,28 +4444,46 @@
 
         // ========== NIVEAUX D'ATTRIBUTS ==========
         // Bonus progressif : 1-2 → +0, 3-4 → +2, 5-6 → +4, 7 → +5, 8 → +6
+        // Faces du d12, pondérées par l'attribut : [Éclat, Succès, Vide, Revers, Revers+]
+        // Éclat : +1 et relance · Succès : +1 · Vide : 0 · Revers : −1 · Revers+ : −1 et relance
         const ATTRIBUTE_LEVELS = {
-            1: { name: 'Déficient', faces: 1, bonus: 0, color: '#c45c5c' },
-            2: { name: 'Faible', faces: 2, bonus: 1, color: '#d97a4a' },
-            3: { name: 'Médiocre', faces: 3, bonus: 1, color: '#c9a227' },
-            4: { name: 'Commun', faces: 4, bonus: 2, color: '#8b9dc3' },
-            5: { name: 'Élevé', faces: 5, bonus: 2, color: '#4a9b6e' },
-            6: { name: 'Supérieur', faces: 6, bonus: 3, color: '#4a90c2' },
-            7: { name: 'Exceptionnel', faces: 7, bonus: 3, color: '#6b4c9a' },
-            8: { name: 'Prodigieux', faces: 9, bonus: 4, color: '#d4a84b' }
+            1: { name: 'Déficient', faces: [0, 2, 6, 3, 1], color: '#c45c5c' },
+            2: { name: 'Faible', faces: [0, 3, 6, 2, 1], color: '#d97a4a' },
+            3: { name: 'Médiocre', faces: [0, 4, 7, 1, 0], color: '#c9a227' },
+            4: { name: 'Commun', faces: [1, 5, 6, 0, 0], color: '#8b9dc3' },
+            5: { name: 'Élevé', faces: [1, 6, 5, 0, 0], color: '#4a9b6e' },
+            6: { name: 'Supérieur', faces: [2, 6, 4, 0, 0], color: '#4a90c2' },
+            7: { name: 'Exceptionnel', faces: [2, 7, 3, 0, 0], color: '#6b4c9a' },
+            8: { name: 'Prodigieux', faces: [3, 7, 2, 0, 0], color: '#d4a84b' }
+        };
+
+        // Socle commun à tous les jets
+        const SOCLE_DICE = 3;
+
+        // Une seule relance par dé : le maximum reste prévisible
+        const MAX_CHAIN = 1;
+
+        // La maîtrise permet de relancer les dés stériles : plus on est compétent, plus on insiste
+        const SKILL_REROLLS = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1, 6: 1, 7: 2, 8: 2 };
+        function getSkillRerolls(lv) { return SKILL_REROLLS[Math.max(1, Math.min(8, lv))] ?? 0; }
+
+        // Dés ajoutés par les compétences sous Ordinaire : uniquement Vide / Revers / Revers+
+        const NEGATIVE_DICE = {
+            1: { faces: [0, 0, 3, 6, 3] },   // Inapte
+            2: { faces: [0, 0, 6, 4, 2] }    // Maladroit
         };
 
         // ========== NIVEAUX DE COMPÉTENCES ==========
-        // Explosion basée sur le tier : Inapte à Ordinaire = 12, Qualifié/Excellent = 11, Expert/Maître = 10, Absolue = 8
+        // add : dés ajoutés au socle. Négatif = dés défavorables du profil correspondant.
         const SKILL_LEVELS = {
-            1: { name: 'Inapte', dice: 1, explosion: 12, bonus: 0, color: '#c45c5c' },
-            2: { name: 'Maladroit', dice: 2, explosion: 12, bonus: 0, color: '#d97a4a' },
-            3: { name: 'Ordinaire', dice: 3, explosion: 12, bonus: 1, color: '#c9a227' },
-            4: { name: 'Qualifié', dice: 4, explosion: 11, bonus: 1, color: '#8b9dc3' },
-            5: { name: 'Excellent', dice: 5, explosion: 11, bonus: 2, color: '#4a9b6e' },
-            6: { name: 'Expert', dice: 6, explosion: 10, bonus: 2, color: '#4a90c2' },
-            7: { name: 'Maître', dice: 8, explosion: 10, bonus: 3, color: '#6b4c9a' },
-            8: { name: 'Absolue', dice: 10, explosion: 8, bonus: 4, color: '#d4a84b' }
+            1: { name: 'Inapte', add: -1, dice: 4, color: '#c45c5c' },
+            2: { name: 'Maladroit', add: -1, dice: 4, color: '#d97a4a' },
+            3: { name: 'Ordinaire', add: 1, dice: 4, color: '#c9a227' },
+            4: { name: 'Qualifié', add: 2, dice: 5, color: '#8b9dc3' },
+            5: { name: 'Excellent', add: 3, dice: 6, color: '#4a9b6e' },
+            6: { name: 'Expert', add: 4, dice: 7, color: '#4a90c2' },
+            7: { name: 'Maître', add: 5, dice: 8, color: '#6b4c9a' },
+            8: { name: 'Absolue', add: 7, dice: 10, color: '#d4a84b' }
         };
 
         // Fonction pour calculer l'explosion d'un niveau de pouvoir combiné
@@ -4301,7 +4492,7 @@
             return ATTRIBUTE_LEVELS[Math.min(8, Math.max(1, value))] || ATTRIBUTE_LEVELS[4];
         }
 
-        const SKILL_LEVEL_NONE = { name: 'Aucune', dice: 0, explosion: 12, bonus: 0, color: 'var(--silver-mist)' };
+        const SKILL_LEVEL_NONE = { name: 'Aucune', add: 0, dice: 3, color: 'var(--silver-mist)' };
 
         function getSkillLevel(value) {
             if (value <= 0) return SKILL_LEVEL_NONE;
@@ -4367,7 +4558,8 @@
             const val = appState.attributes[attr];
             const level = getAttributeLevel(val);
             el.innerHTML = `<span style="color: ${level.color}">${level.name}</span><sub style="opacity: 0.6; font-size: 0.6em; margin-left: 2px;">${val}</sub>`;
-            el.title = `Niveau ${val} • ${level.faces} faces • +${level.bonus} bonus`;
+            const [e, s, v, r, x] = level.faces;
+            el.title = `Niveau ${val} · ✦${e} ●${s} ○${v}` + (r ? ` ▼${r}` : '') + (x ? ` ▼▼${x}` : '');
         }
 
         function updateAllAttributes() {
@@ -5486,6 +5678,23 @@
                 }
             }
 
+            // Attributs : afficher le niveau courant dans les options
+            ['simple-attr-select', 'hybrid-attr-select'].forEach(id => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                const cur = sel.value;
+                sel.innerHTML = '<option value="">— Sélectionner —</option>';
+                ATTR_IDS.forEach(a => {
+                    const lv = appState.attributes[a] || 4;
+                    const info = getAttributeLevel(lv);
+                    const opt = document.createElement('option');
+                    opt.value = a;
+                    opt.textContent = `${capitalize(a)} - ${info.name} (${lv})`;
+                    sel.appendChild(opt);
+                });
+                if (cur) sel.value = cur;
+            });
+
             updateRollButtons();
         }
 
@@ -5497,6 +5706,7 @@
             if (simpleBtn) {
                 simpleBtn.disabled = !simpleAttr?.value || !simpleSkill?.value;
             }
+            renderRollStats('simple');
 
             // Jet hybride
             const hybridAttr = document.getElementById('hybrid-attr-select');
@@ -5505,6 +5715,7 @@
             if (hybridBtn) {
                 hybridBtn.disabled = !hybridAttr?.value || !hybridSkill?.value;
             }
+            renderRollStats('hybrid');
         }
 
         // ========== SYSTÈME DE DÉS ==========
@@ -5512,29 +5723,285 @@
             return Math.floor(Math.random() * 12) + 1;
         }
 
-        function rollWithExplosions(numDice, threshold, explosionThreshold = 12) {
-            const results = [];
+        // Panneau dépliable sous chaque jet
+        const rollStatsOpen = { simple: false, hybrid: false };
+
+        function toggleRollStats(mode) {
+            rollStatsOpen[mode] = !rollStatsOpen[mode];
+            renderRollStats(mode);
+        }
+
+        function renderRollStats(mode) {
+            const host = document.getElementById(`${mode}-stats`);
+            if (!host) return;
+            const attrName = document.getElementById(`${mode}-attr-select`)?.value;
+            const skillId = document.getElementById(`${mode}-skill-select`)?.value;
+            const skill = appState.skills.find(s => s.id === skillId);
+
+            if (!attrName || !skill) { host.innerHTML = ''; return; }
+
+            const bonus = parseInt(document.getElementById(`${mode}-bonus`)?.value) || 0;
+            const open = rollStatsOpen[mode];
+            const head = `<button class="stats-toggle" onclick="toggleRollStats('${mode}')">${open ? '▾' : '▸'} Probabilités de ce jet</button>`;
+
+            if (!open) { host.innerHTML = head; return; }
+
+            const st = computeRollStats(appState.attributes[attrName] || 4, skill.level, bonus);
+            const attr = getAttributeLevel(appState.attributes[attrName] || 4);
+            const sk = getSkillLevel(skill.level);
+            const nb = SOCLE_DICE + Math.max(0, sk.add || 0);
+            const neg = sk.add < 0 ? -sk.add : 0;
+            const pct = v => Math.round(v * 100) + '%';
+
+            host.innerHTML = head + `<div class="stats-panel">
+                <div class="stats-pool">${nb} dé(s) ${attr.name}${neg ? ` + ${neg} dé(s) ${sk.name}` : ''}${bonus ? ` · modificateur ${bonus > 0 ? '+' : ''}${bonus}` : ''}</div>
+                <div class="faces-summary">${facesSummary(attr.faces)}</div>
+                ${neg ? `<div class="faces-summary weak">Dés de faiblesse : ${facesSummary(NEGATIVE_DICE[Math.max(1, Math.min(2, skill.level))].faces)}</div>` : ''}
+                <div class="stats-grid">
+                    <div><span>Moyenne</span><strong>${st.mean.toFixed(2)}</strong></div>
+                    <div><span>Minimum</span><strong>${st.min}</strong></div>
+                    <div><span>Maximum</span><strong>${st.max}</strong></div>
+                </div>
+                <div class="stats-note">${getSkillRerolls(skill.level) ? getSkillRerolls(skill.level) + ' relance(s) de Vide offerte(s) par la maîtrise · ' : ''}une seule explosion par dé.</div>
+            </div>`;
+        }
+
+        // ========== STATISTIQUES D'UN JET ==========
+        // Distribution exacte d'un lot de dés (convolution), relances incluses
+        function poolDistribution(counts, numDice, maxChain = MAX_CHAIN) {
+            // Distribution d'un seul dé, en développant les relances
+            let single = new Map();
+            const add = (m, k, p) => m.set(k, (m.get(k) || 0) + p);
+            const explore = (val, prob, depth) => {
+                if (depth > maxChain || prob < 1e-12) { add(single, val, prob); return; }
+                FACE_ORDER.forEach((k, i) => {
+                    const n = counts[i];
+                    if (!n) return;
+                    const p = prob * n / 12;
+                    const info = FACE_INFO[k];
+                    if (info.explodes && depth < maxChain) explore(val + info.value, p, depth + 1);
+                    else add(single, val + info.value, p);
+                });
+            };
+            explore(0, 1, 0);
+
+            let dist = new Map([[0, 1]]);
+            for (let d = 0; d < numDice; d++) {
+                const next = new Map();
+                dist.forEach((p1, v1) => single.forEach((p2, v2) => add(next, v1 + v2, p1 * p2)));
+                dist = next;
+            }
+            return dist;
+        }
+
+        function convolve(a, b) {
+            const out = new Map();
+            a.forEach((p1, v1) => b.forEach((p2, v2) => out.set(v1 + v2, (out.get(v1 + v2) || 0) + p1 * p2)));
+            return out;
+        }
+
+        // Statistiques du jet tel que configuré
+        function computeRollStats(attrValue, skillValue, bonus = 0) {
+            const attr = getAttributeLevel(attrValue);
+            const skill = getSkillLevel(skillValue);
+            const add = skill.add || 0;
+
+            let dist = poolDistribution(attr.faces, SOCLE_DICE);
+            if (add > 0) dist = convolve(dist, poolDistribution(trainedFaces(attr.faces), add));
+            if (add < 0) {
+                const neg = NEGATIVE_DICE[Math.max(1, Math.min(2, skillValue))];
+                if (neg) dist = convolve(dist, poolDistribution(neg.faces, -add));
+            }
+
+            // Relances de Vide : chaque relance ajoute l'espérance conditionnelle d'un dé rejoué
+            const rr = getSkillRerolls(skillValue);
+            if (rr > 0) {
+                const src = add > 0 ? trainedFaces(attr.faces) : attr.faces;
+                const one = poolDistribution(src, 1);
+                const pVide = one.get(0) || 0;
+                // Un dé relancé remplace un Vide : on ajoute rr fois la distribution d'un dé,
+                // pondérée par la probabilité qu'un Vide soit disponible
+                for (let i = 0; i < rr; i++) {
+                    const scaled = new Map();
+                    one.forEach((p, v) => scaled.set(v, p * pVide));
+                    scaled.set(0, (scaled.get(0) || 0) + (1 - pVide));
+                    dist = convolve(dist, scaled);
+                }
+            }
+
+            const rows = [...dist.entries()]
+                .map(([v, p]) => [v + bonus, p])
+                .sort((a, b) => a[0] - b[0]);
+            const total = rows.reduce((s, r) => s + r[1], 0);
+            let mean = 0, cum = 0, median = null, p10 = null, p90 = null;
+            rows.forEach(([v, p]) => mean += v * p / total);
+            rows.forEach(([v, p]) => {
+                cum += p / total;
+                if (p10 === null && cum >= 0.10) p10 = v;
+                if (median === null && cum >= 0.50) median = v;
+                if (p90 === null && cum >= 0.90) p90 = v;
+            });
+            const min = rows[0][0], max = rows[rows.length - 1][0];
+            const pNeg = rows.filter(r => r[0] < 0).reduce((s, r) => s + r[1], 0) / total;
+            const pZero = rows.filter(r => r[0] === 0).reduce((s, r) => s + r[1], 0) / total;
+
+            // Probabilité d'atteindre chaque seuil
+            const thresholds = {};
+            [1, 2, 3, 4, 5, 6, 8, 10].forEach(t => {
+                thresholds[t] = rows.filter(r => r[0] >= t).reduce((s, r) => s + r[1], 0) / total;
+            });
+
+            return { mean, median, min, max, p10, p90, pNeg, pZero, thresholds, rows, total };
+        }
+
+        // ========== SYSTÈME DE FACES ==========
+        const FACE_INFO = {
+            eclat:   { label: 'Éclat',   sym: '✦', value: 1,  explodes: true,  color: '#D4AF37' },
+            succes:  { label: 'Succès',  sym: '●', value: 1,  explodes: false, color: '#1D9E75' },
+            vide:    { label: 'Vide',    sym: '○', value: 0,  explodes: false, color: '#8b9dc3' },
+            revers:  { label: 'Revers',  sym: '▼', value: -1, explodes: false, color: '#c45c5c' },
+            reversP: { label: 'Revers+', sym: '▼▼', value: -1, explodes: true,  color: '#A32D2D' },
+        };
+        const FACE_ORDER = ['eclat', 'succes', 'vide', 'revers', 'reversP'];
+
+        // Construit le d12 du pire au meilleur : Revers+ en 1, Éclat en 12
+        // counts = [Éclat, Succès, Vide, Revers, Revers+]
+        function buildFaces(counts) {
+            const [e, s, v, r, x] = counts;
+            const faces = [];
+            for (let n = 0; n < x; n++) faces.push('reversP');
+            for (let n = 0; n < r; n++) faces.push('revers');
+            for (let n = 0; n < v; n++) faces.push('vide');
+            for (let n = 0; n < s; n++) faces.push('succes');
+            for (let n = 0; n < e; n++) faces.push('eclat');
+            return faces;
+        }
+
+        // Première face qui rapporte un succès (1 à 12)
+        function successFrom(counts) {
+            const [e, s, v, r, x] = counts;
+            return (s + e) > 0 ? x + r + v + 1 : null;
+        }
+
+        function rollFace(faces) {
+            const i = Math.floor(Math.random() * 12);
+            return { type: faces[i], value: i + 1 };
+        }
+
+        // Lance un lot de dés d'un même profil. Éclat et Revers+ relancent le dé.
+        function rollPool(counts, numDice, source, out) {
             for (let i = 0; i < numDice; i++) {
-                let roll = rollD12();
-                results.push({ value: roll, isExplosion: false });
-                // Maximum 1 explosion par dé
-                if (roll >= explosionThreshold) {
-                    roll = rollD12();
-                    results.push({ value: roll, isExplosion: true });
+                const faces = buildFaces(counts);
+                let chain = 0;
+                let again = true;
+                while (again && chain <= MAX_CHAIN) {
+                    again = false;
+                    const { type, value } = rollFace(faces);
+                    out.push({ type, value, source, counts, isExplosion: chain > 0 });
+                    if (FACE_INFO[type].explodes && chain < MAX_CHAIN) { chain++; again = true; }
+                }
+            }
+        }
+
+        // La formation neutralise le risque : les Revers du profil deviennent des Vide
+        function trainedFaces(counts) {
+            const [e, s, v, r, x] = counts;
+            return [e, s, v + r + x, 0, 0];
+        }
+
+        // Jet complet : socle pondéré par l'attribut + dés de compétence
+        function rollSkillCheck(attrValue, skillValue) {
+            const attr = getAttributeLevel(attrValue);
+            const skill = getSkillLevel(skillValue);
+            const results = [];
+            const add = skill.add || 0;
+
+            // Socle : profil brut de l'attribut, Revers compris
+            rollPool(attr.faces, SOCLE_DICE, 'socle', results);
+
+            // Dés de compétence : même profil, sans les Revers
+            if (add > 0) rollPool(trainedFaces(attr.faces), add, 'competence', results);
+
+            // Compétence sous Ordinaire : dés défavorables dédiés
+            if (add < 0) {
+                const neg = NEGATIVE_DICE[Math.max(1, Math.min(2, skillValue))];
+                if (neg) rollPool(neg.faces, -add, 'faiblesse', results);
+            }
+
+            // Relances offertes par la maîtrise : on rejoue les dés stériles
+            let left = getSkillRerolls(skillValue);
+            for (const die of results) {
+                if (left <= 0) break;
+                if (die.type !== 'vide') continue;
+                left--;
+                die.wasReroll = true;
+                const faces = buildFaces(die.counts);
+                let chain = 0, again = true;
+                let cur = die;
+                while (again && chain <= MAX_CHAIN) {
+                    again = false;
+                    const { type, value } = rollFace(faces);
+                    if (chain === 0) { cur.type = type; cur.value = value; }
+                    else results.push({ type, value, source: die.source, counts: die.counts, isExplosion: true, wasReroll: true });
+                    if (FACE_INFO[type].explodes && chain < MAX_CHAIN) { chain++; again = true; }
                 }
             }
             return results;
         }
 
-        function countSuccesses(diceResults, threshold) {
-            let successes = 0, neutrals = 0, explosions = 0;
+        // « Réussite sur 7+ · ✦12 ●7-11 ○1-6 »
+        function facesSummary(counts) {
+            const [e, s, v, r, x] = counts;
+            const parts = [];
+            let lo = 1;
+            const seg = (n, sym, color) => {
+                if (!n) return;
+                const hi = lo + n - 1;
+                parts.push(`<span style="color:${color}">${sym}${n > 1 ? lo + '-' + hi : lo}</span>`);
+                lo = hi + 1;
+            };
+            seg(x, FACE_INFO.reversP.sym, FACE_INFO.reversP.color);
+            seg(r, FACE_INFO.revers.sym, FACE_INFO.revers.color);
+            seg(v, FACE_INFO.vide.sym, FACE_INFO.vide.color);
+            seg(s, FACE_INFO.succes.sym, FACE_INFO.succes.color);
+            seg(e, FACE_INFO.eclat.sym, FACE_INFO.eclat.color);
+            const from = successFrom(counts);
+            const head = from ? `<strong>Réussite sur ${from}+</strong> · ` : `<strong>Aucune réussite possible</strong> · `;
+            return head + parts.join(' ');
+        }
+
+        const FACE_LEGEND = `<div class="dice-legend">` +
+            FACE_ORDER.map(k => `<span style="color:${FACE_INFO[k].color}">${FACE_INFO[k].sym} ${FACE_INFO[k].label}</span>`).join(' · ') +
+            `</div>`;
+
+        function renderFaceDie(d, delay) {
+            const info = FACE_INFO[d.type];
+            const el = document.createElement('div');
+            el.className = 'die face-die'
+                + (d.isExplosion ? ' from-explosion' : '')
+                + (d.source === 'faiblesse' ? ' weak' : '')
+                + (d.source === 'competence' ? ' trained' : '');
+            el.style.animationDelay = `${delay}s`;
+            el.style.borderColor = info.color;
+            el.style.color = info.color;
+            const src = d.source === 'faiblesse' ? ' · dé de faiblesse'
+                : d.source === 'competence' ? ' · dé de compétence' : ' · socle';
+            el.title = info.label + src;
+            el.innerHTML = `<span class="fd-val">${d.value}</span><span class="fd-sym">${info.sym}</span>`;
+            return el;
+        }
+
+        function countSuccesses(diceResults, skillValue) {
+            let total = 0, eclats = 0, revers = 0, explosions = 0;
             diceResults.forEach(d => {
+                const info = FACE_INFO[d.type];
+                total += info.value;
+                if (d.type === 'eclat') eclats++;
+                if (d.type === 'revers' || d.type === 'reversP') revers++;
                 if (d.isExplosion) explosions++;
-                if (d.value >= threshold) successes++;
-                else if (d.value > 2) neutrals++;
-                // Les 1-2 ne sont comptés nulle part (échecs critiques visuels seulement)
             });
-            return { successes, neutrals, explosions };
+            const rerolled = diceResults.filter(d => d.wasReroll).length;
+            return { successes: total, eclats, revers, explosions, rerolled, neutrals: 0 };
         }
 
         // ========== JET SIMPLE ==========
@@ -5550,57 +6017,48 @@
             const attrValue = appState.attributes[attrName];
             const attrLevel = getAttributeLevel(attrValue);
             const skillLevel = getSkillLevel(skill.level);
-            const numDice = skillLevel.dice;
-            const attrBonus = attrLevel.bonus;
-            const skillBonus = skillLevel.bonus;
-            const threshold = 13 - attrLevel.faces;
 
-            const baseExplosion = skillLevel.explosion;
-            const explosionThreshold = Math.max(3, Math.min(12, baseExplosion - explosionMod));
-
-            const diceResults = rollWithExplosions(numDice, threshold, explosionThreshold);
-            const counts = countSuccesses(diceResults, threshold);
+            const diceResults = rollSkillCheck(attrValue, skill.level);
+            const counts = countSuccesses(diceResults, skill.level);
             const perturb = consumePerturbationForRoll();
-            const successes = Math.max(0, counts.successes - (perturb ? perturb.successLoss : 0));
-            const total = successes + attrBonus + skillBonus + bonus;
+            const successes = counts.successes - (perturb ? perturb.successLoss : 0);
+            const total = successes + bonus;
 
-            const explosionText = explosionMod !== 0
-                ? `Explosion ${explosionThreshold}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})`
-                : `Explosion ${explosionThreshold}+`;
+            const nbDice = SOCLE_DICE + Math.max(0, skillLevel.add || 0);
+            const negDice = skillLevel.add < 0 ? -skillLevel.add : 0;
+            const poolText = `${nbDice} dé(s) ${attrLevel.name}`
+                + (negDice ? ` + ${negDice} dé(s) ${skillLevel.name}` : '');
 
             // Contexte conservé pour un éventuel jet de magie en réaction
             lastRollContext = {
                 skillName: skill.name,
                 baseName: skill.baseName,
                 attrName: capitalize(attrName),
-                threshold,
                 dice: diceResults,
                 successes,
-                neutrals: counts.neutrals,
+                eclats: counts.eclats,
+                revers: counts.revers,
                 explosions: counts.explosions,
-                attributeBonus: attrBonus,
-                skillBonus,
                 bonus,
                 total,
-                subtitle: `${skill.name} (${capitalize(attrName)}) | ${explosionText}`
+                subtitle: `${skill.name} (${capitalize(attrName)}) · ${skillLevel.name} | ${poolText}`
             };
 
             displaySimpleResult({
                 title: 'Jet de Compétence',
                 subtitle: lastRollContext.subtitle,
                 dice: diceResults,
-                threshold,
+                facesInfo: facesSummary(attrLevel.faces),
                 successes,
-                neutrals: counts.neutrals,
+                eclats: counts.eclats,
+                revers: counts.revers,
                 explosions: counts.explosions,
-                attributeBonus: attrBonus,
-                skillBonus,
                 bonus,
                 total,
                 perturb,
                 allowFollowUpMagic: true
             });
-            if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), { successes, attrBonus, skillBonus, bonus });
+            if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), { successes, bonus, eclats: counts.eclats, revers: counts.revers });
         }
 
         function displaySimpleResult(data) {
@@ -5614,30 +6072,22 @@
             const diceSection = document.createElement('div');
             diceSection.className = 'dice-section';
             diceSection.innerHTML = `
-                <div class="dice-section-label skill">Seuil ${data.threshold}+</div>
+                <div class="dice-section-label skill">Faces obtenues</div>
+                ${data.facesInfo ? `<div class="faces-summary">${data.facesInfo}</div>` : ''}
                 <div class="dice-container"></div>
+                ${FACE_LEGEND}
             `;
             diceArea.appendChild(diceSection);
 
             const diceContainer = diceSection.querySelector('.dice-container');
-            data.dice.forEach((d, i) => {
-                const die = document.createElement('div');
-                die.className = 'die';
-                die.textContent = d.value;
-                die.style.animationDelay = `${i * 0.08}s`;
-                if (d.isExplosion) die.classList.add('explosion');
-                else if (d.value <= 2) die.classList.add('universal-failure');
-                else if (d.value >= data.threshold) die.classList.add('success');
-                else die.classList.add('failure');
-                diceContainer.appendChild(die);
-            });
+            data.dice.forEach((d, i) => diceContainer.appendChild(renderFaceDie(d, i * 0.08)));
 
             // Stats
             document.getElementById('stat-successes').textContent = data.successes;
-            document.getElementById('stat-neutrals').textContent = data.neutrals;
-            document.getElementById('stat-explosions').textContent = data.explosions;
-            document.getElementById('stat-attribute-bonus').textContent = data.attributeBonus;
-            document.getElementById('stat-skill-bonus').textContent = data.skillBonus || 0;
+            document.getElementById('stat-neutrals').textContent = data.revers || 0;
+            document.getElementById('stat-explosions').textContent = data.eclats || 0;
+            document.getElementById('stat-attribute-bonus').textContent = data.bonus || 0;
+            document.getElementById('stat-skill-bonus').textContent = data.explosions || 0;
 
             // Option : enchaîner un jet de magie (ex. amplifier l'impact après avoir touché)
             const magArea = document.getElementById('magnitude-result-area');
@@ -6181,7 +6631,11 @@
             const attrValue = appState.attributes[attrId] || 4;
             const attrLevel = getAttributeLevel(attrValue);
             const skillLevel = getSkillLevel(skill.level);
-            return attrLevel.bonus + Math.floor(skillLevel.dice / 2);
+            // Espérance approchée : nombre de dés × valeur moyenne d'un dé de cet attribut
+            const [e, s, v, r, x] = attrLevel.faces;
+            const perDie = (e + s - r - x) / (12 - e - x);
+            const nb = SOCLE_DICE + Math.max(0, skillLevel.add || 0);
+            return Math.max(0, Math.round(nb * perDie));
         }
 
         const ATTR_LABEL_SHORT = {
@@ -6289,9 +6743,8 @@
             const attrValue = appState.attributes[attrName];
             const attrLevel = getAttributeLevel(attrValue);
             const skillLevel = getSkillLevel(skill.level);
-            const threshold = 13 - attrLevel.faces;
-            const skillDice = rollWithExplosions(skillLevel.dice, threshold, skillLevel.explosion);
-            const skillCounts = countSuccesses(skillDice, threshold);
+            const skillDice = rollSkillCheck(attrValue, skill.level);
+            const skillCounts = countSuccesses(skillDice, skill.level);
 
             const hybridBonus = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
             const totalMagicDice = actualMagic + hybridBonus;
@@ -6303,20 +6756,21 @@
 
             // La magie ne s'ajoute PAS au total du jet de compétence
             const perturb = consumePerturbationForRoll();
-            const netSkillSuccesses = Math.max(0, skillCounts.successes - (perturb ? perturb.successLoss : 0));
-            const total = netSkillSuccesses + attrLevel.bonus + skillLevel.bonus + bonus;
+            const netSkillSuccesses = skillCounts.successes - (perturb ? perturb.successLoss : 0);
+            const total = netSkillSuccesses + bonus;
 
             displayHybridResult({
                 skillName: skill.name, attrName: capitalize(attrName),
-                skillDice, magicResults, threshold, esotLvl, emotion,
+                skillDice, magicResults, esotLvl, emotion,
+                facesInfo: facesSummary(attrLevel.faces),
                 skillSuccesses: netSkillSuccesses, magicSuccesses, perturb,
-                attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus,
+                eclats: skillCounts.eclats, revers: skillCounts.revers,
                 bonus, total, ruptures, fractures, mjGain, energyCost, actualMagic
             });
 
             if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), {
                 successes: netSkillSuccesses,
-                attrBonus: attrLevel.bonus, skillBonus: skillLevel.bonus, bonus,
+                bonus,
                 magic: {
                     level: esotLvl, results: magicResults, puissance: magicSuccesses, emotion,
                     ruptures, fractures, mjGain
@@ -6334,20 +6788,10 @@
 
             const skillSection = document.createElement('div');
             skillSection.className = 'dice-section';
-            skillSection.innerHTML = `<div class="dice-section-label skill">⚔ Compétence (Seuil ${data.threshold}+)</div><div class="dice-container" id="hs-dice"></div>`;
+            skillSection.innerHTML = `<div class="dice-section-label skill">⚔ Compétence</div>${data.facesInfo ? `<div class="faces-summary">${data.facesInfo}</div>` : ''}<div class="dice-container" id="hs-dice"></div>${FACE_LEGEND}`;
             diceArea.appendChild(skillSection);
             const hsCont = skillSection.querySelector('#hs-dice');
-            data.skillDice.forEach((d, i) => {
-                const el = document.createElement('div');
-                el.className = 'die';
-                el.style.animationDelay = `${i * 0.08}s`;
-                el.textContent = d.value;
-                if (d.isExplosion) el.classList.add('explosion');
-                else if (d.value <= 2) el.classList.add('universal-failure');
-                else if (d.value >= data.threshold) el.classList.add('success');
-                else el.classList.add('failure');
-                hsCont.appendChild(el);
-            });
+            data.skillDice.forEach((d, i) => hsCont.appendChild(renderFaceDie(d, i * 0.08)));
 
             if (data.actualMagic > 0) {
                 const magicSection = document.createElement('div');
@@ -6362,7 +6806,7 @@
             const vides = data.magicResults.filter(d => d.type === 'vide').length;
             document.getElementById('stat-successes').textContent = data.skillSuccesses;
             document.getElementById('stat-neutrals').textContent = vides > 0 ? `${vides} vide(s)` : '—';
-            document.getElementById('stat-explosions').textContent = data.skillDice.filter(d => d.isExplosion).length;
+            document.getElementById('stat-explosions').textContent = data.skillDice.filter(d => d.type === 'eclat').length;
             document.getElementById('stat-attribute-bonus').textContent = data.attrBonus;
             document.getElementById('stat-skill-bonus').textContent = data.skillBonus || 0;
 
