@@ -601,15 +601,13 @@
             min="0" max="8" onchange="updateSettings()"></div>
         <div class="setting-item"><label>Max Supérieur (6)</label><input type="number" id="s_max_a6" value="2" min="0"
             max="8" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Max Élevé (5)</label><input type="number" id="s_max_a5" value="4" min="0"
+        <div class="setting-item"><label>Max Élevé (5)</label><input type="number" id="s_max_a5" value="3" min="0"
             max="8" onchange="updateSettings()"></div>
 
         <div class="settings-section-title">Limites pyramide — Compétences</div>
-        <div class="setting-item"><label>Max Expert (6)</label><input type="number" id="s_max_c6" value="1" min="0"
+        <div class="setting-item"><label>Max Expert (6)</label><input type="number" id="s_max_c6" value="2" min="0"
             max="21" onchange="updateSettings()"></div>
         <div class="setting-item"><label>Max Excellent (5)</label><input type="number" id="s_max_c5" value="3" min="0"
-            max="21" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Max Qualifié (4)</label><input type="number" id="s_max_c4" value="5" min="0"
             max="21" onchange="updateSettings()"></div>
       </div>
     </div>
@@ -719,10 +717,10 @@
     let config = {
       budget: 80,
       // Coûts cumulatifs depuis la baseline 4 (Commun). Valeurs négatives = remboursement.
-      attrCosts: [0, -3, -2, -1, 0, 5, 9, 12], // index = value, baseline = 4
+      attrCosts: [0, -5, -3, -2, 0, 5, 9, 12], // index = value, baseline = 4
       compCosts: [0, -3, -1, 0, 3, 5, 8],
-      maxAttr: { 7: 1, 6: 2, 5: 4 },
-      maxComp: { 6: 1, 5: 3, 4: 5 },
+      maxAttr: { 7: 1, 6: 2, 5: 3 },
+      maxComp: { 6: 2, 5: 3, },
     };
 
     let attrValues = {};
@@ -818,7 +816,7 @@
     function renderCompPyramid() {
       const el = document.getElementById('compPyramid');
       let html = '';
-      [[6, 'Expert'], [5, 'Excellent'], [4, 'Qualifié']].forEach(([level, label]) => {
+      [[6, 'Expert'], [5, 'Excellent']].forEach(([level, label]) => {
         const count = compCountAt(level);
         const max = config.maxComp[level];
         const cls = count >= max ? 'maxed' : 'ok';
