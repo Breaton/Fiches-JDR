@@ -668,9 +668,9 @@
     // Ordinaire (3) est le socle : ce que sait faire un adulte fonctionnel.
     // En dessous, le personnage a un véritable empêchement.
     const COMP_LEVELS = [
-      { val: 1, label: 'Ignorant' },
-      { val: 2, label: 'Novice' },
-      { val: 3, label: 'Compétent' },
+      { val: 1, label: 'Inapte' },
+      { val: 2, label: 'Maladroit' },
+      { val: 3, label: 'Ordinaire' },
       { val: 4, label: 'Qualifié' },
       { val: 5, label: 'Excellent' },
       { val: 6, label: 'Expert' },
@@ -719,8 +719,8 @@
     let config = {
       budget: 80,
       // Coûts cumulatifs depuis la baseline 4 (Commun). Valeurs négatives = remboursement.
-      attrCosts: [0, -3, -2, -1, 0, 5, 8, 12], // index = value, baseline = 4
-      compCosts: [0, 0, 1, 2, 3, 5, 8],
+      attrCosts: [0, -3, -2, -1, 0, 5, 9, 12], // index = value, baseline = 4
+      compCosts: [0, -3, -1, 0, 3, 5, 8],
       maxAttr: { 7: 1, 6: 2, 5: 4 },
       maxComp: { 6: 1, 5: 3, 4: 5 },
     };
@@ -729,7 +729,7 @@
     let compValues = {};
 
     ATTRIBUTES.forEach(a => attrValues[a.id] = 4);
-    COMPETENCES.forEach(c => compValues[c.id] = 1);
+    COMPETENCES.forEach(c => compValues[c.id] = 3);
 
     // ========================
     // COST CALCULATION
