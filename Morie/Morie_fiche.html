@@ -2975,7 +2975,9 @@
             font-family: var(--font-body);
         }
 
-        .reserve-override button:hover { background: rgba(107, 76, 154, 0.2); }
+        .reserve-override button:hover {
+            background: rgba(107, 76, 154, 0.2);
+        }
 
         .reserve-override span {
             font-size: 0.68em;
@@ -3002,7 +3004,9 @@
             line-height: 1;
         }
 
-        .qi-refresh:hover { background: rgba(29, 158, 117, 0.25); }
+        .qi-refresh:hover {
+            background: rgba(29, 158, 117, 0.25);
+        }
 
         .qi-pool-row {
             display: flex;
@@ -3038,7 +3042,9 @@
             font-family: var(--font-body);
         }
 
-        .qi-step:hover { background: rgba(29, 158, 117, 0.22); }
+        .qi-step:hover {
+            background: rgba(29, 158, 117, 0.22);
+        }
 
         .qi-stepper {
             display: flex;
@@ -3548,8 +3554,13 @@
             text-align: right;
         }
 
-        .passive-row.mid .pr-val { color: #1D9E75; }
-        .passive-row.high .pr-val { color: #D4AF37; }
+        .passive-row.mid .pr-val {
+            color: #1D9E75;
+        }
+
+        .passive-row.high .pr-val {
+            color: #D4AF37;
+        }
 
         .passives-empty {
             font-size: 0.78em;
@@ -3772,10 +3783,10 @@
                             </div>
                             <div class="reserve-override">
                                 <label>Max :</label>
-                                <input type="number" id="reserve-max-input" min="1"
-                                    placeholder="auto" oninput="setReserveOverride(this.value)"
-                                    onchange="setReserveOverride(this.value)">
-                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺ auto</button>
+                                <input type="number" id="reserve-max-input" min="1" placeholder="auto"
+                                    oninput="setReserveOverride(this.value)" onchange="setReserveOverride(this.value)">
+                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺
+                                    auto</button>
                                 <span id="reserve-base-hint"></span>
                             </div>
                             <div class="counter-bar" style="background:rgba(107,76,154,0.15);">
@@ -3792,7 +3803,8 @@
                             <div id="qi-perso-block" class="qi-perso" style="display:none;">
                                 <div class="qi-perso-head">
                                     <span class="qi-perso-name">☯ Qi partagé</span>
-                                    <button class="qi-perso-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
+                                    <button class="qi-perso-refresh" onclick="qiPull()"
+                                        title="Relire depuis GitHub">↻</button>
                                 </div>
                                 <div class="qi-perso-body">
                                     <span class="qi-perso-num" id="qi-value-perso">0</span>
@@ -4051,7 +4063,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
-                                <input id="simple-bonus" class="bonus-input" type="number" value="0" oninput="renderRollStats('simple')">
+                                <input id="simple-bonus" class="bonus-input" type="number" value="0"
+                                    oninput="renderRollStats('simple')">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Mod. Explosion</label>
@@ -4106,13 +4119,16 @@
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques bonus</label>
+                                <label class="form-label"
+                                    title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques
+                                    bonus</label>
                                 <input id="hybrid-bonus-dice" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
-                                <input id="hybrid-bonus" class="bonus-input" type="number" value="0" oninput="renderRollStats('hybrid')">
+                                <input id="hybrid-bonus" class="bonus-input" type="number" value="0"
+                                    oninput="renderRollStats('hybrid')">
                             </div>
                         </div>
                         <div id="hybrid-magic-info"
@@ -4156,7 +4172,9 @@
                                     oninput="updatePureMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques bonus</label>
+                                <label class="form-label"
+                                    title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques
+                                    bonus</label>
                                 <input id="pure-bonus-dice" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updatePureMagicInfo()">
                             </div>
@@ -4195,7 +4213,8 @@
 
                 <!-- Qi partagé -->
                 <div class="ctx-panel qi-panel" id="qi-panel" style="display:none;">
-                    <div class="ctx-panel-title" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <div class="ctx-panel-title"
+                        style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                         <span>☯ Qi partagé</span>
                         <button class="qi-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
                     </div>
@@ -4753,16 +4772,14 @@
             return WOUND_REFERENCE[idx - 1];
         }
 
-        const WOUND_DC_TABLE = { 1: 2, 2: 5, 3: 7, 4: 10, 5: 13, 6: 15 };
-        const WOUND_STAB_TABLE = { 1: 1, 2: 3, 3: 5, 4: 7, 5: 9, 6: 12 };
+        const WOUND_DC_TABLE = { 1: 1, 2: 3, 3: 5, 4: 7, 5: 9, 6: 11, 7: 13 };
+        const WOUND_STAB_TABLE = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 6, 6: 8, 7: 10 };
 
         function getWoundDC(gravity) {
-            if (gravity >= 7) return gravity * 3;
             return WOUND_DC_TABLE[Math.max(1, gravity)] || WOUND_DC_TABLE[1];
         }
 
         function getStabDC(gravity) {
-            if (gravity >= 7) return 14;
             return WOUND_STAB_TABLE[Math.max(1, gravity)] || WOUND_STAB_TABLE[1];
         }
 
@@ -5856,11 +5873,11 @@
 
         // ========== SYSTÈME DE FACES ==========
         const FACE_INFO = {
-            eclat:   { label: 'Éclat',   sym: '✦', value: 1,  explodes: true,  color: '#D4AF37' },
-            succes:  { label: 'Succès',  sym: '●', value: 1,  explodes: false, color: '#1D9E75' },
-            vide:    { label: 'Vide',    sym: '○', value: 0,  explodes: false, color: '#8b9dc3' },
-            revers:  { label: 'Revers',  sym: '▼', value: -1, explodes: false, color: '#c45c5c' },
-            reversP: { label: 'Revers+', sym: '▼▼', value: -1, explodes: true,  color: '#A32D2D' },
+            eclat: { label: 'Éclat', sym: '✦', value: 1, explodes: true, color: '#D4AF37' },
+            succes: { label: 'Succès', sym: '●', value: 1, explodes: false, color: '#1D9E75' },
+            vide: { label: 'Vide', sym: '○', value: 0, explodes: false, color: '#8b9dc3' },
+            revers: { label: 'Revers', sym: '▼', value: -1, explodes: false, color: '#c45c5c' },
+            reversP: { label: 'Revers+', sym: '▼▼', value: -1, explodes: true, color: '#A32D2D' },
         };
         const FACE_ORDER = ['eclat', 'succes', 'vide', 'revers', 'reversP'];
 
@@ -7076,8 +7093,10 @@
                 'Accept': 'application/vnd.github+json',
                 'X-GitHub-Api-Version': '2022-11-28'
             };
-            const payload = { qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
-                              by: (appState.profile && appState.profile.name) || '' };
+            const payload = {
+                qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
+                by: (appState.profile && appState.profile.name) || ''
+            };
             const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
             try {
                 const res = await fetch(qiApi(), {
