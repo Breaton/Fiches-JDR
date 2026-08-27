@@ -533,6 +533,30 @@
       margin-left: 0.3rem;
     }
 
+    .import-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid var(--gold-dim);
+      border-radius: 6px;
+      color: var(--gold);
+      font-size: 0.78rem;
+    }
+
+    .import-tag button {
+      background: none;
+      border: none;
+      color: var(--gold);
+      cursor: pointer;
+      font-size: 0.9em;
+      padding: 0 2px;
+      opacity: 0.7;
+    }
+
+    .import-tag button:hover { opacity: 1; }
+
     .divider {
       height: 1px;
       background: var(--border);
@@ -555,9 +579,9 @@
         <span class="total" id="totalDisplay">80</span>
       </div>
       <div class="budget-remaining" id="budgetRemaining">80 restants</div>
-      <button class="settings-toggle" onclick="exportToFiche()" style="border-color:var(--gold-dim);color:var(--gold)">↓
-        Exporter vers Fiche</button>
+      <button class="settings-toggle" id="exportBtn" onclick="exportToFiche()" style="border-color:var(--gold-dim);color:var(--gold)">↓ Exporter vers Fiche</button>
       <button class="settings-toggle" onclick="importFromFiche()">↑ Importer depuis Fiche</button>
+      <span id="importBanner"></span>
       <button class="settings-toggle" onclick="toggleSettings()">⚙ Paramètres</button>
     </div>
 
@@ -1042,6 +1066,9 @@
     // EXPORT VERS FICHE
     // ========================
 
+    // Fiche d'origine conservée pour une mise à jour non destructive
+    let importedFiche = null;
+
     function exportToFiche() {
       const skillNames = {
         art: 'Art', athletisme: 'Athlétisme', autorite: 'Autorité',
@@ -1053,19 +1080,39 @@
         tir: 'Tir', tromperie: 'Tromperie', vigilance: 'Vigilance'
       };
 
-      const skills = COMPETENCES.map((c, i) => ({
-        id: `regular_${i}`,
-        name: skillNames[c.id] || c.name,
-        level: compValues[c.id],
-        isBase: true
-      }));
+      // Si une fiche a été importée, on conserve ses compétences (noms alternatifs,
+      // attribut passif, compétences ajoutées à la main) et on ne change que le niveau
+      let skills;
+      if (importedFiche && Array.isArray(importedFiche.skills)) {
+        const idFor = s => {
+          const n = s.baseName || s.name;
+          const hit = COMPETENCES.find(x => (skillNames[x.id] || x.name) === n || x.name === n);
+          return hit ? hit.id : null;
+        };
+        skills = importedFiche.skills.map(s => {
+          const id = idFor(s);
+          return id ? { ...s, level: compValues[id] } : { ...s };
+        });
+        // Compétences de base absentes de la fiche importée
+        COMPETENCES.forEach((x, i) => {
+          const nm = skillNames[x.id] || x.name;
+          if (!skills.some(s => (s.baseName || s.name) === nm)) {
+            skills.push({ id: `regular_${i}`, name: nm, level: compValues[x.id], isBase: true });
+          }
+        });
+      } else {
+        skills = COMPETENCES.map((c, i) => ({
+          id: `regular_${i}`,
+          name: skillNames[c.id] || c.name,
+          level: compValues[c.id],
+          isBase: true
+        }));
+      }
 
       const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
       const elanMax = (ELAN_CONTRIB[attrValues['endurance']] || 5) + (ELAN_CONTRIB[attrValues['volonte']] || 5);
 
-      const state = {
-        profile: { name: '', image: null },
-        attributes: {
+      const attributes = {
           puissance: attrValues['puissance'],
           vivacite: attrValues['vivacite'],
           precision: attrValues['precision'],
@@ -1074,28 +1121,46 @@
           intuition: attrValues['intuition'],
           volonte: attrValues['volonte'],
           presence: attrValues['presence']
-        },
-        counters: {
-          health: { current: elanMax, max: elanMax },
-          power: { current: elanMax, max: elanMax }
-        },
-        customResources: [],
-        skills: skills,
-        wounds: [],
-        objects: [],
-        notes: '',
-        magic: { reserveUsed: 0, mjDice: 0 },
-        vitesseBonus: 0,
-        activeSpells: [],
-        currentModal: null
       };
+
+      let state;
+      if (importedFiche) {
+        // Mise à jour : tout est conservé, seuls attributs et niveaux changent
+        state = { ...importedFiche, attributes, skills };
+        // L'Élan maximum suit les attributs, en gardant la valeur courante plafonnée
+        const prev = importedFiche.counters?.health || {};
+        state.counters = {
+          ...importedFiche.counters,
+          health: { current: Math.min(prev.current ?? elanMax, elanMax), max: elanMax },
+          power: { current: Math.min(prev.current ?? elanMax, elanMax), max: elanMax }
+        };
+      } else {
+        state = {
+          profile: { name: '', image: null },
+          attributes,
+          counters: {
+            health: { current: elanMax, max: elanMax },
+            power: { current: elanMax, max: elanMax }
+          },
+          customResources: [],
+          skills,
+          wounds: [],
+          objects: [],
+          notes: '',
+          magic: { reserveUsed: 0, mjDice: 0 },
+          vitesseBonus: 0,
+          activeSpells: [],
+          currentModal: null
+        };
+      }
 
       const json = JSON.stringify(state, null, 2);
       const blob = new Blob([json], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'personnage.json';
+      const nm = (state.profile && state.profile.name || '').trim();
+      a.download = (nm ? nm.replace(/[^\w\-]+/g, '_') : 'personnage') + '.json';
       a.click();
       URL.revokeObjectURL(url);
     }
@@ -1103,6 +1168,26 @@
     // ========================
     // IMPORT DEPUIS UNE FICHE
     // ========================
+
+    function renderImportBanner() {
+      const el = document.getElementById('importBanner');
+      const btn = document.getElementById('exportBtn');
+      if (!el) return;
+      if (!importedFiche) {
+        el.innerHTML = '';
+        if (btn) btn.innerHTML = '↓ Exporter vers Fiche';
+        return;
+      }
+      const nm = (importedFiche.profile && importedFiche.profile.name) || 'fiche sans nom';
+      el.innerHTML = `<span class="import-tag">Mise à jour de <strong>${nm}</strong>
+        <button onclick="clearImport()" title="Repartir d'une fiche vierge">✕</button></span>`;
+      if (btn) btn.innerHTML = '↓ Mettre à jour la fiche';
+    }
+
+    function clearImport() {
+      importedFiche = null;
+      renderImportBanner();
+    }
 
     function importFromFiche() {
       const input = document.createElement('input');
@@ -1122,6 +1207,7 @@
     }
 
     function loadFicheJSON(data) {
+      importedFiche = JSON.parse(JSON.stringify(data));   // copie de référence
       const nameToId = Object.fromEntries(COMPETENCES.map(c => [c.name, c.id]));
       // Anciens noms encore présents dans certaines sauvegardes
       const aliases = {
@@ -1152,7 +1238,8 @@
       const relaxed = relaxLimitsForLegacy();
       render();
 
-      let msg = '✓ Personnage importé.';
+      renderImportBanner();
+      let msg = '✓ Personnage importé. L\'export mettra à jour cette fiche en conservant blessures, objets, notes et magie.';
       if (ignored.length) msg += '\n\nCompétences ignorées : ' + ignored.join(', ');
       if (relaxed) msg += '\n\nCette fiche dépasse certaines limites actuelles ; elles ont été assouplies pour la conserver telle quelle.';
       const over = totalSpent() - config.budget;
