@@ -6648,9 +6648,12 @@
             let basePower = 0;               // Puissance des dés seuls, avant modificateurs
             let powerMod = 0;                // Amplification / Dissipation cumulées
             let ruptures = 0, fractures = 0, elanLoss = 0;
-            let energyCost = count;                 // 1 point par dé engagé
+            // Seuls les dés payés comptent pour le coût en énergie et le tribut au MJ :
+            // les dés bonus (Qi, artefact, aide extérieure) sont gratuits et ne rendent pas plus risqué.
+            const billable = (paidDice === undefined || paidDice === null) ? count : paidDice;
+            let energyCost = billable;               // 1 point par dé payé
             const maxDiceForLevel = getEsoterismeMaxDice();
-            let mjGain = baseMjDice(count, maxDiceForLevel);  // tribut selon le ratio d'engagement
+            let mjGain = baseMjDice(billable, maxDiceForLevel);  // tribut selon le ratio d'engagement des dés payés
             const effects = [];
 
             let queue = count;
