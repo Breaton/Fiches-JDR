@@ -2103,6 +2103,96 @@
             line-height: 1.4;
         }
 
+        /* === RÉCAPITULATIF DE PUISSANCE === */
+        .power-recap {
+            margin: 6px 0 10px;
+            padding: 8px 10px;
+            background: rgba(139, 157, 195, 0.06);
+            border: 1px solid var(--moonlight);
+            border-radius: 8px;
+        }
+
+        .pr-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78em;
+            padding: 3px 0;
+        }
+
+        .pr-row span { color: var(--slate-blue); }
+        .pr-row strong { font-family: var(--font-display); font-size: 1.05em; }
+
+        .pr-base strong { color: var(--deep-navy); }
+        .pr-plus strong { color: #1D9E75; }
+        .pr-minus strong { color: var(--vitality-red); }
+
+        .pr-total {
+            border-top: 1px solid var(--moonlight);
+            margin-top: 4px;
+            padding-top: 6px;
+            font-weight: 700;
+        }
+        .pr-total span { color: var(--deep-navy); font-weight: 700; }
+        .pr-total strong { color: var(--gold); font-size: 1.2em; }
+
+        /* Dés magiques enrichis : label, valeur, effet tiré */
+        .magic-die {
+            flex-direction: column;
+            gap: 1px;
+            height: 58px;
+            font-size: 13px;
+            padding-top: 3px;
+        }
+
+        .magic-die .md-label {
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .magic-die .md-value {
+            font-size: 0.75em;
+            opacity: 0.65;
+            line-height: 1;
+        }
+
+        .magic-die .md-effect {
+            font-size: 0.58em;
+            font-weight: 600;
+            line-height: 1.1;
+            margin-top: 2px;
+            padding: 1px 4px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .d8-effects {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin: 8px 0;
+        }
+
+        .d8-eff {
+            font-size: 0.72em;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 5px;
+            border: 1px solid;
+        }
+
+        .d8-eff.good {
+            background: rgba(29, 158, 117, 0.1);
+            border-color: rgba(29, 158, 117, 0.35);
+            color: #085041;
+        }
+
+        .d8-eff.bad {
+            background: rgba(163, 45, 45, 0.1);
+            border-color: rgba(163, 45, 45, 0.35);
+            color: var(--vitality-red);
+        }
+
         .faces-summary {
             font-size: 0.72em;
             color: var(--slate-blue);
@@ -2183,30 +2273,41 @@
         }
 
         .result-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 12px 0;
         }
 
         .stat-item {
             background: rgba(201, 212, 232, 0.2);
-            padding: 14px;
-            border-radius: 10px;
+            padding: 7px 14px;
+            border-radius: 9px;
             text-align: center;
+            flex: 0 1 auto;
+            min-width: 68px;
+        }
+
+        .stat-item.hidden {
+            display: none;
+        }
+
+        .stat-item.stat-main {
+            background: rgba(107, 76, 154, 0.1);
         }
 
         .stat-label {
-            font-size: 0.8em;
+            font-size: 0.68em;
             color: var(--silver-mist);
-            margin-bottom: 6px;
+            margin-bottom: 2px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
 
         .stat-value {
             font-family: var(--font-display);
-            font-size: 1.4em;
+            font-size: 1.15em;
             font-weight: 600;
             color: var(--deep-navy);
         }
@@ -2975,9 +3076,7 @@
             font-family: var(--font-body);
         }
 
-        .reserve-override button:hover {
-            background: rgba(107, 76, 154, 0.2);
-        }
+        .reserve-override button:hover { background: rgba(107, 76, 154, 0.2); }
 
         .reserve-override span {
             font-size: 0.68em;
@@ -3004,9 +3103,7 @@
             line-height: 1;
         }
 
-        .qi-refresh:hover {
-            background: rgba(29, 158, 117, 0.25);
-        }
+        .qi-refresh:hover { background: rgba(29, 158, 117, 0.25); }
 
         .qi-pool-row {
             display: flex;
@@ -3042,9 +3139,7 @@
             font-family: var(--font-body);
         }
 
-        .qi-step:hover {
-            background: rgba(29, 158, 117, 0.22);
-        }
+        .qi-step:hover { background: rgba(29, 158, 117, 0.22); }
 
         .qi-stepper {
             display: flex;
@@ -3554,13 +3649,8 @@
             text-align: right;
         }
 
-        .passive-row.mid .pr-val {
-            color: #1D9E75;
-        }
-
-        .passive-row.high .pr-val {
-            color: #D4AF37;
-        }
+        .passive-row.mid .pr-val { color: #1D9E75; }
+        .passive-row.high .pr-val { color: #D4AF37; }
 
         .passives-empty {
             font-size: 0.78em;
@@ -3783,10 +3873,10 @@
                             </div>
                             <div class="reserve-override">
                                 <label>Max :</label>
-                                <input type="number" id="reserve-max-input" min="1" placeholder="auto"
-                                    oninput="setReserveOverride(this.value)" onchange="setReserveOverride(this.value)">
-                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺
-                                    auto</button>
+                                <input type="number" id="reserve-max-input" min="1"
+                                    placeholder="auto" oninput="setReserveOverride(this.value)"
+                                    onchange="setReserveOverride(this.value)">
+                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺ auto</button>
                                 <span id="reserve-base-hint"></span>
                             </div>
                             <div class="counter-bar" style="background:rgba(107,76,154,0.15);">
@@ -3797,14 +3887,13 @@
 
                             <button onclick="resetReserve()"
                                 style="margin-top:10px; width:100%; padding:6px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺
-                                Repos — Réserve pleine, usure à 0</button>
+                                Repos — Réserve pleine</button>
 
                             <!-- Qi partagé -->
                             <div id="qi-perso-block" class="qi-perso" style="display:none;">
                                 <div class="qi-perso-head">
                                     <span class="qi-perso-name">☯ Qi partagé</span>
-                                    <button class="qi-perso-refresh" onclick="qiPull()"
-                                        title="Relire depuis GitHub">↻</button>
+                                    <button class="qi-perso-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
                                 </div>
                                 <div class="qi-perso-body">
                                     <span class="qi-perso-num" id="qi-value-perso">0</span>
@@ -3991,7 +4080,6 @@
                             <div class="mrb-track">
                                 <div class="mrb-fill" id="roll-res-bar"></div>
                             </div>
-                            <div class="mrb-sub" id="roll-usure-txt"></div>
                         </div>
 
                         <!-- Perturbation MJ -->
@@ -4005,7 +4093,7 @@
                                 </span>
                             </div>
                             <button class="mrb-rest" onclick="resetReserve()"
-                                title="Réserve pleine, usure et Perturbation à zéro">↺ Repos</button>
+                                title="Réserve pleine et Perturbation à zéro">↺ Repos</button>
                         </div>
                     </div>
                 </div>
@@ -4033,8 +4121,7 @@
                 <!-- Tabs pour switcher entre jet simple, jet+magie, magie pure -->
                 <div class="roll-tabs">
                     <button class="roll-tab active" onclick="switchRollMode('simple', this)">🎲 Jet Simple</button>
-                    <button class="roll-tab" onclick="switchRollMode('hybrid', this)">🎲✨ Jet + Magie</button>
-                    <button class="roll-tab" onclick="switchRollMode('pure', this)">✨ Magie Pure</button>
+                    <button class="roll-tab" onclick="switchRollMode('hybrid', this)">✨ Magie</button>
                 </div>
 
                 <!-- JET SIMPLE -->
@@ -4063,8 +4150,7 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
-                                <input id="simple-bonus" class="bonus-input" type="number" value="0"
-                                    oninput="renderRollStats('simple')">
+                                <input id="simple-bonus" class="bonus-input" type="number" value="0" oninput="renderRollStats('simple')">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Mod. Explosion</label>
@@ -4108,9 +4194,9 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Compétence</label>
+                                <label class="form-label" title="Laisser vide pour une magie pure, sans support technique">Compétence <span style="opacity:.6;font-weight:400">(facultatif)</span></label>
                                 <select id="hybrid-skill-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
+                                    <option value="">— Aucune : magie pure —</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -4119,16 +4205,13 @@
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label"
-                                    title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques
-                                    bonus</label>
+                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques bonus</label>
                                 <input id="hybrid-bonus-dice" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
-                                <input id="hybrid-bonus" class="bonus-input" type="number" value="0"
-                                    oninput="renderRollStats('hybrid')">
+                                <input id="hybrid-bonus" class="bonus-input" type="number" value="0" oninput="renderRollStats('hybrid')">
                             </div>
                         </div>
                         <div id="hybrid-magic-info"
@@ -4142,79 +4225,40 @@
                         <button id="perform-hybrid-roll-btn" class="perform-roll-btn"
                             style="background: linear-gradient(135deg, var(--power-cyan), var(--power-glow)); margin-top: 16px;"
                             onclick="performHybridRoll()" disabled>
-                            🎲✨ Lancer le jet
+                            ✨ Lancer le jet
                         </button>
                         <div id="hybrid-stats" class="roll-stats-host"></div>
                     </div>
                     <div class="roll-info" style="margin-top: 16px;">
-                        <div class="roll-info-title">Mécanique Jet + Magie</div>
+                        <div class="roll-info-title">Mécanique de la Magie</div>
                         <div class="roll-info-content">
-                            Deux jets <strong>séparés</strong> : la compétence détermine si l'action réussit,
-                            la magie détermine la <strong>Puissance</strong> de l'effet.<br>
+                            Sans compétence, le jet ne produit qu'une <strong>Puissance</strong> : la magie agit seule.<br>
+                            Avec une compétence, deux jets <strong>séparés</strong> : la compétence détermine si l'action
+                            réussit, la magie détermine la Puissance de l'effet.<br>
                             La Puissance ne s'ajoute jamais au Résultat Final. La valeur de la <strong>puissance divisée
                                 par deux</strong> sera utilisée pour modifier une valeur de l'action. (La gravitée
                             infligée, les palliers de soin, la vitesse de déplacement etc...)<br>
-                            <strong>Usure :</strong> Tout les 5 points d'énergie dépensés = −1 niveau effectif du
-                            dé.<br>
-                            <strong>Rupture</strong> : 1 dé de Perturbation au MJ.
-                            <strong>Fracture</strong> : 2 dés. Le MJ les dépense quand il le décide.
+                            <strong>Coût :</strong> 1 point d'énergie par dé engagé. Chaque jet cède au MJ
+                            ⌈dés ÷ 2⌉ dés de Perturbation.<br>
+                            <strong>Puissance :</strong> Succès +1 · Résonance +2 · Transcendance +3<br>
+                            <strong>Effets secondaires (1d12)</strong> — Résonance et Transcendance :
+                            Stabilité (fréquent), Fluidité, Amplification, Cascade (rare).
+                            Rupture et Fracture : Résistance (fréquent), Fuite, Dissipation, Contrecoup (rare).
+                            Transcendance et Fracture <strong>doublent</strong> l'effet.<br>
+                            <strong>Tribut au MJ :</strong> proportionnel au ratio dés engagés / dés maximum —
+                            rester sous son plafond limite le risque.<br>
+                            <strong>Moment d'émotion :</strong> chaque face monte d'un cran, le Vide disparaît.
                         </div>
                     </div>
                 </div>
 
-                <!-- MAGIE PURE -->
-                <div id="roll-pure" class="roll-panel">
-                    <div class="roll-form">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:440px;">
-                            <div class="form-group">
-                                <label class="form-label">Magnitude</label>
-                                <input id="pure-magic-dice" class="bonus-input" type="number" value="1" min="1"
-                                    oninput="updatePureMagicInfo()">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label"
-                                    title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques
-                                    bonus</label>
-                                <input id="pure-bonus-dice" class="bonus-input" type="number" value="0" min="0"
-                                    oninput="updatePureMagicInfo()">
-                            </div>
-                        </div>
-                        <div id="pure-magic-info"
-                            style="margin-top:10px; padding:10px; background:rgba(107,76,154,0.08); border-radius:8px; font-size:0.85em; color:var(--slate-blue);">
-                        </div>
-                        <label
-                            style="display:flex; align-items:center; gap:6px; margin-top:8px; font-size:0.85em; font-weight:600; color:#8a6d00; cursor:pointer;">
-                            <input type="checkbox" id="pure-emotion" style="width:16px; height:16px; cursor:pointer;">
-                            🔥 Moment d'émotion
-                        </label>
-                        <button id="perform-pure-roll-btn" class="perform-roll-btn"
-                            style="background: linear-gradient(135deg, var(--ombre-purple), #8b6cbf); margin-top: 16px;"
-                            onclick="performPureRoll()">
-                            ✨ Lancer le pouvoir
-                        </button>
-                    </div>
-                    <div class="roll-info" style="margin-top: 16px;">
-                        <div class="roll-info-title">Mécanique Magie Pure</div>
-                        <div class="roll-info-content">
-                            Jet uniquement avec les dés magiques : faces et <strong>réserve journalière</strong>
-                            déterminées par le niveau d'Ésotérisme.<br>
-                            Les succès donnent la <strong>Puissance</strong> de l'effet.<br>
-                            <strong>Usure :</strong> Tout les 5 points d'énergie dépensés = −1 niveau effectif du
-                            dé.<br>
-                            <strong>Rupture</strong> : 1 dé de Perturbation au MJ.
-                            <strong>Fracture</strong> : 2 dés. Le MJ les dépense quand il le décide.
-                        </div>
-                    </div>
-                </div>
             </div>
-
             <!-- COLONNE CONTEXTE -->
             <div class="rolls-sidebar">
 
                 <!-- Qi partagé -->
                 <div class="ctx-panel qi-panel" id="qi-panel" style="display:none;">
-                    <div class="ctx-panel-title"
-                        style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <div class="ctx-panel-title" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                         <span>☯ Qi partagé</span>
                         <button class="qi-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
                     </div>
@@ -4394,24 +4438,20 @@
                 </div>
                 <div id="dice-display-area"></div>
                 <div class="result-stats">
-                    <div class="stat-item">
-                        <div class="stat-label">Succès Total</div>
+                    <div class="stat-item stat-main" id="stat-successes-item">
+                        <div class="stat-label">Succès</div>
                         <div class="stat-value" id="stat-successes">0</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Faces Neutres</div>
-                        <div class="stat-value" id="stat-neutrals">0</div>
-                    </div>
-                    <div class="stat-item">
+                    <div class="stat-item" id="stat-explosions-item">
                         <div class="stat-label">Éclats</div>
                         <div class="stat-value" id="stat-explosions">0</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Bonus / Malus</div>
+                    <div class="stat-item" id="stat-attribute-bonus-item">
+                        <div class="stat-label">Modificateur</div>
                         <div class="stat-value" id="stat-attribute-bonus">0</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Relances</div>
+                    <div class="stat-item" id="stat-skill-bonus-item">
+                        <div class="stat-label">Chaînes</div>
                         <div class="stat-value" id="stat-skill-bonus">0</div>
                     </div>
                 </div>
@@ -4466,7 +4506,7 @@
         // Faces du d12, pondérées par l'attribut : [Éclat, Succès, Vide, Revers, Revers+]
         // Éclat : +1 et relance · Succès : +1 · Vide : 0 · Revers : −1 · Revers+ : −1 et relance
         const ATTRIBUTE_LEVELS = {
-            1: { name: 'Déficient', faces: [0, 2, 6, 3, 1], color: '#c45c5c' },
+            1: { name: 'Déficient', faces: [0, 1, 4, 4, 3], color: '#c45c5c' },
             2: { name: 'Faible', faces: [0, 3, 6, 2, 1], color: '#d97a4a' },
             3: { name: 'Médiocre', faces: [0, 4, 7, 1, 0], color: '#c9a227' },
             4: { name: 'Commun', faces: [1, 5, 6, 0, 0], color: '#8b9dc3' },
@@ -4483,7 +4523,7 @@
         const MAX_CHAIN = 1;
 
         // La maîtrise permet de relancer les dés stériles : plus on est compétent, plus on insiste
-        const SKILL_REROLLS = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 1, 6: 1, 7: 2, 8: 2 };
+        const SKILL_REROLLS = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0 };
         function getSkillRerolls(lv) { return SKILL_REROLLS[Math.max(1, Math.min(8, lv))] ?? 0; }
 
         // Dés ajoutés par les compétences sous Ordinaire : uniquement Vide / Revers / Revers+
@@ -4772,14 +4812,16 @@
             return WOUND_REFERENCE[idx - 1];
         }
 
-        const WOUND_DC_TABLE = { 1: 1, 2: 3, 3: 5, 4: 7, 5: 9, 6: 11, 7: 13 };
-        const WOUND_STAB_TABLE = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 6, 6: 8, 7: 10 };
+        const WOUND_DC_TABLE = { 1: 2, 2: 5, 3: 7, 4: 10, 5: 13, 6: 15 };
+        const WOUND_STAB_TABLE = { 1: 1, 2: 3, 3: 5, 4: 7, 5: 9, 6: 12 };
 
         function getWoundDC(gravity) {
+            if (gravity >= 7) return gravity * 3;
             return WOUND_DC_TABLE[Math.max(1, gravity)] || WOUND_DC_TABLE[1];
         }
 
         function getStabDC(gravity) {
+            if (gravity >= 7) return 14;
             return WOUND_STAB_TABLE[Math.max(1, gravity)] || WOUND_STAB_TABLE[1];
         }
 
@@ -4926,7 +4968,7 @@
             const puissanceField = document.getElementById(`heal-puissance-${id}`);
             if (!preview || !puissanceField) return;
             const p = parseInt(puissanceField.value) || 0;
-            preview.textContent = `→ −${Math.floor(p / 2) + 1} Gravité`;
+            preview.textContent = `→ −${p + 1} Gravité`;
         }
 
         function applyHeal(id) {
@@ -4969,8 +5011,8 @@
                 }
                 const puissance = parseInt(puissanceInput?.value) || 0;
                 // Médecine + magie : le geste technique (+1) se cumule à l'énergie
-                reduction = Math.floor(puissance / 2) + 1;
-                detail = `⌊${puissance}÷2⌋ + 1 = ${reduction}`;
+                reduction = puissance + 1;
+                detail = `${puissance} + 1 = ${reduction}`;
                 w.gravity = Math.max(0, w.gravity - reduction);
                 if (w.gravity > 0) {
                     w.convalescence = true;
@@ -5657,18 +5699,21 @@
             tabEl.classList.add('active');
             document.getElementById(`roll-${mode}`).classList.add('active');
             if (mode === 'hybrid') updateHybridMagicInfo();
-            if (mode === 'pure') updatePureMagicInfo();
             updateMagicState();
         }
 
         // ========== MISE À JOUR DES SELECTS ==========
+        function isEsoterisme(s) {
+            return (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme';
+        }
+
         function updateRollSelects() {
             // Jet simple
             const simpleSkillSelect = document.getElementById('simple-skill-select');
             if (simpleSkillSelect) {
                 const currentSimpleValue = simpleSkillSelect.value;
                 simpleSkillSelect.innerHTML = '<option value="">— Sélectionner —</option>';
-                appState.skills.forEach(s => {
+                appState.skills.filter(s => !isEsoterisme(s)).forEach(s => {
                     const opt = document.createElement('option');
                     opt.value = s.id;
                     opt.textContent = `${s.name} (${s.level})`;
@@ -5683,8 +5728,8 @@
             const hybridSkillSelect = document.getElementById('hybrid-skill-select');
             if (hybridSkillSelect) {
                 const currentValue = hybridSkillSelect.value;
-                hybridSkillSelect.innerHTML = '<option value="">— Sélectionner —</option>';
-                appState.skills.forEach(s => {
+                hybridSkillSelect.innerHTML = '<option value="">— Aucune : magie pure —</option>';
+                appState.skills.filter(s => !isEsoterisme(s)).forEach(s => {
                     const opt = document.createElement('option');
                     opt.value = s.id;
                     opt.textContent = `${s.name} (${s.level})`;
@@ -5730,7 +5775,8 @@
             const hybridSkill = document.getElementById('hybrid-skill-select');
             const hybridBtn = document.getElementById('perform-hybrid-roll-btn');
             if (hybridBtn) {
-                hybridBtn.disabled = !hybridAttr?.value || !hybridSkill?.value;
+                // La magie peut être lancée seule : seule la présence d'Ésotérisme compte
+                hybridBtn.disabled = getEsoterismeLevel() <= 0;
             }
             renderRollStats('hybrid');
         }
@@ -5873,11 +5919,11 @@
 
         // ========== SYSTÈME DE FACES ==========
         const FACE_INFO = {
-            eclat: { label: 'Éclat', sym: '✦', value: 1, explodes: true, color: '#D4AF37' },
-            succes: { label: 'Succès', sym: '●', value: 1, explodes: false, color: '#1D9E75' },
-            vide: { label: 'Vide', sym: '○', value: 0, explodes: false, color: '#8b9dc3' },
-            revers: { label: 'Revers', sym: '▼', value: -1, explodes: false, color: '#c45c5c' },
-            reversP: { label: 'Revers+', sym: '▼▼', value: -1, explodes: true, color: '#A32D2D' },
+            eclat:   { label: 'Éclat',   sym: '✦', value: 1,  explodes: true,  color: '#D4AF37' },
+            succes:  { label: 'Succès',  sym: '●', value: 1,  explodes: false, color: '#1D9E75' },
+            vide:    { label: 'Vide',    sym: '○', value: 0,  explodes: false, color: '#8b9dc3' },
+            revers:  { label: 'Revers',  sym: '▼', value: -1, explodes: false, color: '#c45c5c' },
+            reversP: { label: 'Revers+', sym: '▼▼', value: -1, explodes: true,  color: '#A32D2D' },
         };
         const FACE_ORDER = ['eclat', 'succes', 'vide', 'revers', 'reversP'];
 
@@ -5920,10 +5966,13 @@
             }
         }
 
-        // La formation neutralise le risque : les Revers du profil deviennent des Vide
+        // La formation fait deux choses : elle supprime le risque, et elle transforme
+        // la moitié des hésitations en gestes sûrs (Vide -> Succès)
         function trainedFaces(counts) {
             const [e, s, v, r, x] = counts;
-            return [e, s, v + r + x, 0, 0];
+            const vide = v + r + x;
+            const gained = Math.ceil(vide / 2);
+            return [e, s + gained, vide - gained, 0, 0];
         }
 
         // Jet complet : socle pondéré par l'attribut + dés de compétence
@@ -6075,7 +6124,16 @@
                 perturb,
                 allowFollowUpMagic: true
             });
-            if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), { successes, bonus, eclats: counts.eclats, revers: counts.revers });
+            if (!isPrivateRoll()) sendDiscordRoll(hasSkill ? skill.name : 'Magie', hasSkill ? skill.baseName : null, total, hasSkill ? capitalize(attrName) : `Ésotérisme ${esotLvl}`, { successes, bonus, eclats: counts.eclats, revers: counts.revers });
+        }
+
+        // Affiche une stat-value ; masque la carte entière si la valeur est 0/absente,
+        // sauf pour les stats marquées always (toujours affichées, ex. Succès total)
+        function setStat(id, value, always) {
+            const item = document.getElementById(`${id}-item`);
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+            if (item) item.classList.toggle('hidden', !always && !value);
         }
 
         function displaySimpleResult(data) {
@@ -6100,11 +6158,10 @@
             data.dice.forEach((d, i) => diceContainer.appendChild(renderFaceDie(d, i * 0.08)));
 
             // Stats
-            document.getElementById('stat-successes').textContent = data.successes;
-            document.getElementById('stat-neutrals').textContent = data.revers || 0;
-            document.getElementById('stat-explosions').textContent = data.eclats || 0;
-            document.getElementById('stat-attribute-bonus').textContent = data.bonus || 0;
-            document.getElementById('stat-skill-bonus').textContent = data.explosions || 0;
+            setStat('stat-successes', data.successes, true);
+            setStat('stat-explosions', data.eclats || 0);
+            setStat('stat-attribute-bonus', data.bonus || 0);
+            setStat('stat-skill-bonus', data.explosions || 0);
 
             // Option : enchaîner un jet de magie (ex. amplifier l'impact après avoir touché)
             const magArea = document.getElementById('magnitude-result-area');
@@ -6212,45 +6269,79 @@
 
         // Composition du d12 magique par niveau d'Ésotérisme
         // [Transcendance, Résonance, Flux, Succès, Vide, Rupture, Fracture]
+        // Composition du d12 magique. [Résonance, Succès, Vide, Rupture]
         const MAGIC_FACE_COUNTS = {
-            1: [0, 1, 0, 3, 1, 4, 3],
-            2: [0, 2, 0, 4, 0, 4, 2],
-            3: [0, 2, 2, 4, 0, 3, 1],
-            4: [0, 3, 3, 4, 1, 1, 0],
-            5: [0, 5, 2, 3, 1, 1, 0],
-            6: [0, 5, 4, 2, 1, 0, 0],
-            7: [1, 4, 3, 3, 1, 0, 0],
-            8: [2, 4, 3, 2, 1, 0, 0],
-            9: [2, 5, 3, 1, 1, 0, 0],
-            10: [3, 5, 2, 1, 1, 0, 0],
+            1: [1, 2, 5, 4], 2: [1, 3, 4, 4], 3: [1, 4, 4, 3], 4: [1, 5, 3, 3],
+            5: [2, 4, 3, 3], 6: [2, 5, 3, 2], 7: [3, 4, 3, 2], 8: [3, 5, 2, 2],
         };
 
-        // Construit le d12 : valeurs basses = faces défavorables, valeurs hautes = favorables
-        function getFaceDistribution(level) {
-            const lvl = Math.min(10, Math.max(1, level || 1));
-            const [tr, res, flux, succ, vide, rupt, frac] = MAGIC_FACE_COUNTS[lvl];
+        // Sous émotion, chaque face monte d'un cran :
+        // Résonance -> Transcendance · Succès -> Résonance · Vide -> moitié Succès moitié Rupture · Rupture -> Fracture
+        // [Transcendance, Résonance, Succès, Rupture, Fracture]
+        function emotionFaces(level) {
+            const [r, s, v, R] = MAGIC_FACE_COUNTS[Math.min(8, Math.max(1, level))];
+            return [r, s, Math.ceil(v / 2), Math.floor(v / 2), R];
+        }
+
+        // Nombre de dés magiques par niveau d'Ésotérisme
+        const MAGIC_DICE = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8 };
+
+        // Tribut de base cédé au MJ : plus tu forces ton max, plus tu es risqué —
+        // rester sous ton plafond montre de la technique et te rend discret.
+        function baseMjDice(numDice, maxDice) {
+            const cap = Math.max(1, maxDice || numDice);
+            const ratio = numDice / cap;
+            return Math.max(1, Math.ceil((numDice / 2) * ratio));
+        }
+
+        // Effets secondaires tirés au d12. Répartition inégale : l'effet doux domine,
+        // l'effet extrême est rare (1 face sur 12).
+        const RESONANCE_EFFECTS = [
+            { key: 'stabilite', label: 'Stabilité', desc: 'retire des dés de Perturbation au MJ', min: 1, max: 5 },
+            { key: 'fluidite', label: 'Fluidité', desc: 'réduit le coût en énergie', min: 6, max: 9 },
+            { key: 'amplification', label: 'Amplification', desc: 'Puissance supplémentaire', min: 10, max: 11 },
+            { key: 'cascade', label: 'Cascade', desc: 'un dé de plus, le suivant reste sans effet', min: 12, max: 12 },
+        ];
+        const RUPTURE_EFFECTS = [
+            { key: 'resistance', label: 'Résistance', desc: 'augmente le coût en énergie', min: 1, max: 5 },
+            { key: 'fuite', label: 'Fuite', desc: 'dés de Perturbation supplémentaires au MJ', min: 6, max: 9 },
+            { key: 'dissipation', label: 'Dissipation', desc: 'Puissance perdue', min: 10, max: 11 },
+            { key: 'contrecoup', label: 'Contrecoup', desc: 'coûte de l\'Élan', min: 12, max: 12 },
+        ];
+
+        function rollD12Effect(list) {
+            const d12 = Math.floor(Math.random() * 12) + 1;
+            const hit = list.find(e => d12 >= e.min && d12 <= e.max);
+            return { ...hit, d12 };
+        }
+
+        function getFaceDistribution(level, emotion) {
+            const lvl = Math.min(8, Math.max(1, level || 1));
+            if (emotion) {
+                const [tr, res, succ, rupt, frac] = emotionFaces(lvl);
+                return [
+                    ...Array(frac).fill('fracture'),
+                    ...Array(rupt).fill('rupture'),
+                    ...Array(succ).fill('succès'),
+                    ...Array(res).fill('résonance'),
+                    ...Array(tr).fill('transcendance'),
+                ];
+            }
+            const [res, succ, vide, rupt] = MAGIC_FACE_COUNTS[lvl];
             return [
-                ...Array(frac).fill('fracture'),
                 ...Array(rupt).fill('rupture'),
                 ...Array(vide).fill('vide'),
                 ...Array(succ).fill('succès'),
-                ...Array(flux).fill('flux'),
                 ...Array(res).fill('résonance'),
-                ...Array(tr).fill('transcendance'),
             ];
         }
 
-        function rollMagicDie(level) {
-            const dist = getFaceDistribution(level);
+        function rollMagicDie(level, emotion) {
+            const dist = getFaceDistribution(level, emotion);
             const idx = Math.floor(Math.random() * 12);
             return { value: idx + 1, type: dist[idx], isBonus: false };
         }
 
-        function rollResonanceDie() {
-            const dist = [...Array(4).fill('vide'), ...Array(8).fill('succès')];
-            const idx = Math.floor(Math.random() * 12);
-            return { value: idx + 1, type: dist[idx], isBonus: true };
-        }
 
         function getEsoterismeLevel() {
             const s = appState.skills.find(s => (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme');
@@ -6259,8 +6350,8 @@
 
         // Max de dés injectables dans un seul jet
         function getEsoterismeMaxDice() {
-            const s = appState.skills.find(s => (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme');
-            return s ? getSkillLevel(s.level).dice : 0;
+            const lvl = getEsoterismeLevel();
+            return lvl > 0 ? (MAGIC_DICE[Math.min(8, lvl)] || 0) : 0;
         }
 
         // Réserve d'énergie magique disponible par jour, selon le niveau d'Ésotérisme
@@ -6291,30 +6382,12 @@
             return getReserveMaxBase();
         }
 
-        // Usure : chaque tranche de 5 dés dépensés abaisse d'un cran le niveau effectif
-        const USURE_TRANCHE = 5;
-
-        function getUsure() {
-            return Math.floor((appState.magic.reserveUsed || 0) / USURE_TRANCHE);
-        }
-
-        // Niveau effectif du dé magique : niveau d'Ésotérisme diminué par l'usure
+        // Le niveau magique ne se dégrade plus : seule la réserve limite l'usage
         function getEffectiveMagicLevel() {
-            const lvl = getEsoterismeLevel();
-            if (lvl <= 0) return 0;
-            return Math.max(1, lvl - getUsure());
+            return getEsoterismeLevel();
         }
 
         // Coût en réserve d'une face donnée
-        const FACE_COST = {
-            'transcendance': -1,
-            'résonance': 0,
-            'flux': 0,
-            'succès': 1,
-            'vide': 1,
-            'fracture': 1,
-            'rupture': 1,
-        };
 
         // ===== Réserve de Perturbation du MJ =====
         function getMjDice() {
@@ -6439,7 +6512,6 @@
         function updateMagicState() {
             const esotLvl = getEsoterismeLevel();
             const effLvl = getEffectiveMagicLevel();
-            const usure = getUsure();
             const col = getMagicColor(effLvl);
             const maxDice = getEsoterismeMaxDice();
 
@@ -6447,9 +6519,7 @@
             const scoreEl = document.getElementById('magic-score-val');
 
             if (etatEl && esotLvl > 0) {
-                etatEl.textContent = usure > 0
-                    ? `Ésotérisme ${esotLvl} → ${effLvl} (usure ${usure})`
-                    : `Ésotérisme ${esotLvl} · ${maxDice} dés`;
+                etatEl.textContent = `Ésotérisme ${esotLvl} · ${maxDice} dés`;
                 etatEl.style.color = col.color;
                 etatEl.style.background = col.bg;
                 etatEl.style.border = `1px solid ${col.border}`;
@@ -6459,7 +6529,7 @@
                 etatEl.style.background = 'transparent';
                 etatEl.style.border = 'none';
             }
-            if (scoreEl) scoreEl.textContent = esotLvl > 0 ? describeFaces(effLvl) : '—';
+            if (scoreEl) scoreEl.textContent = esotLvl > 0 ? describeFaces(effLvl, isEmotionOn()) : '—';
 
             // Réserve d'énergie
             const resMax = getReserveMax();
@@ -6493,12 +6563,10 @@
             const rollStatus = document.getElementById('roll-pool-status');
             const rollDetails = document.getElementById('roll-pool-details');
             // Visible uniquement sur les onglets magiques
-            const magicMode = (currentRollMode === 'hybrid' || currentRollMode === 'pure');
+            const magicMode = (currentRollMode === 'hybrid');
             if (rollPool) rollPool.style.display = (esotLvl > 0 && magicMode) ? 'block' : 'none';
             if (rollStatus && esotLvl > 0) {
-                rollStatus.textContent = usure > 0
-                    ? `Ésotérisme ${esotLvl} → ${effLvl} · ${maxDice} dés max`
-                    : `Ésotérisme ${esotLvl} · ${maxDice} dés max`;
+                rollStatus.textContent = `Ésotérisme ${esotLvl} · ${maxDice} dés max`;
                 rollStatus.style.color = col.color;
             }
 
@@ -6506,37 +6574,41 @@
             const rLeft = document.getElementById('roll-res-left');
             const rMax = document.getElementById('roll-res-max');
             const rBar = document.getElementById('roll-res-bar');
-            const rUsure = document.getElementById('roll-usure-txt');
             const rMj = document.getElementById('roll-mj-val');
             if (rLeft) rLeft.textContent = resLeft;
             if (rMax) rMax.textContent = resMax;
             if (rBar) rBar.style.width = resMax > 0 ? `${(resLeft / resMax) * 100}%` : '0%';
             if (rMj) rMj.textContent = getMjDice();
-            if (rUsure) {
-                rUsure.textContent = usure > 0
-                    ? `Usure ${usure} : le dé est tombé au niveau ${effLvl}`
-                    : `Prochaine usure dans ${USURE_TRANCHE - ((appState.magic.reserveUsed || 0) % USURE_TRANCHE)} points`;
-            }
+
             if (rollDetails) rollDetails.textContent = esotLvl > 0
-                ? `${describeFaces(effLvl)} · Réserve ${getReserveLeft()}/${getReserveMax()} · MJ ${getMjDice()} dé(s)`
+                ? `${describeFaces(effLvl, isEmotionOn())} · Réserve ${getReserveLeft()}/${getReserveMax()} · MJ ${getMjDice()} dé(s)`
                 : '';
 
             updateHybridMagicInfo();
-            updatePureMagicInfo();
         }
 
         // Résumé lisible de la composition du dé au niveau donné
-        function describeFaces(level) {
-            const lvl = Math.min(10, Math.max(1, level || 1));
-            const [tr, res, flux, succ, vide, rupt, frac] = MAGIC_FACE_COUNTS[lvl];
+        function isEmotionOn() {
+            return document.getElementById('hybrid-emotion')?.checked || false;
+        }
+
+        function describeFaces(level, emotion) {
+            const lvl = Math.min(8, Math.max(1, level || 1));
             const parts = [];
-            if (tr) parts.push(`☆${tr}`);
-            if (res) parts.push(`✧${res}`);
-            if (flux) parts.push(`≈${flux}`);
-            if (succ) parts.push(`✦${succ}`);
-            if (vide) parts.push(`○${vide}`);
-            if (rupt) parts.push(`✗${rupt}`);
-            if (frac) parts.push(`✗✗${frac}`);
+            if (emotion) {
+                const [tr, res, succ, rupt, frac] = emotionFaces(lvl);
+                if (tr) parts.push(`☆${tr}`);
+                if (res) parts.push(`✧${res}`);
+                if (succ) parts.push(`✦${succ}`);
+                if (rupt) parts.push(`✗${rupt}`);
+                if (frac) parts.push(`✗✗${frac}`);
+            } else {
+                const [res, succ, vide, rupt] = MAGIC_FACE_COUNTS[lvl];
+                if (res) parts.push(`✧${res}`);
+                if (succ) parts.push(`✦${succ}`);
+                if (vide) parts.push(`○${vide}`);
+                if (rupt) parts.push(`✗${rupt}`);
+            }
             return parts.join(' ');
         }
 
@@ -6551,8 +6623,8 @@
             const bonusD = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
             const left = getReserveLeft();
             infoEl.innerHTML = `
-                <span style="color:${col.color};font-weight:600;">Ésotérisme ${esotLvl}${effLvl < esotLvl ? ` → <strong>${effLvl}</strong> (usure)` : ''}</span> — max ${nbDice} dés/jet · Réserve ${left}/${getReserveMax()}<br>
-                ${describeFaces(effLvl)}<br>
+                <span style="color:${col.color};font-weight:600;">Ésotérisme ${esotLvl}</span> — ${nbDice} dés/jet · Réserve ${left}/${getReserveMax()}<br>
+                ${describeFaces(effLvl, isEmotionOn())}<br>
                 <span style="font-size:0.92em;color:var(--silver-mist);">La Puissance obtenue est indépendante du jet de compétence.</span>
                 ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
                 ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
@@ -6560,81 +6632,68 @@
             `;
         }
 
-        function updatePureMagicInfo() {
-            const infoEl = document.getElementById('pure-magic-info');
-            if (!infoEl) return;
-            const nbDice = getEsoterismeMaxDice();
-            const esotLvl = getEsoterismeLevel();
-            const effLvl = getEffectiveMagicLevel();
-            const col = getMagicColor(effLvl);
-            const requested = parseInt(document.getElementById('pure-magic-dice')?.value) || 0;
-            const bonusD = parseInt(document.getElementById('pure-bonus-dice')?.value) || 0;
-            const left = getReserveLeft();
-            infoEl.innerHTML = `
-                <span style="color:${col.color};font-weight:600;">Ésotérisme ${esotLvl}${effLvl < esotLvl ? ` → <strong>${effLvl}</strong> (usure)` : ''}</span> — max ${nbDice} dés/jet · Réserve ${left}/${getReserveMax()}<br>
-                ${describeFaces(effLvl)}
-                ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
-                ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
-                ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus (sans coût d'énergie) → ${Math.min(requested, nbDice, left) + bonusD} dés lancés</span>` : ''}
-            `;
-        }
 
         // Moment d'émotion : la magie devient plus forte mais plus risquée
         // Succès -> Résonance (toujours) · Vide -> Rupture (niv. 6+) ou Fracture (niv. 1-5)
-        function applyEmotion(type, level) {
-            if (type === 'succès') return 'résonance';
-            if (type === 'vide') return level >= 6 ? 'rupture' : 'fracture';
-            return type;
-        }
 
         // Résolution des dés magiques
         // Retourne : résultats, succès (Puissance), Puissance Incontrôlée, dés de Perturbation cédés au MJ
         // paidDice : nombre de dés qui consomment la réserve (les dés bonus sont gratuits)
+        // Résolution complète d'un jet magique.
+        // Puissance : Succès +1 · Résonance +2 · Transcendance +3
+        // Chaque Résonance, Transcendance, Rupture et Fracture tire un d8 d'effet secondaire.
+        // Transcendance et Fracture doublent l'effet obtenu.
         function resolveMagicDice(level, count, emotion, paidDice) {
-            const billable = (paidDice === undefined) ? count : paidDice;
             const results = [];
-            let successes = 0, ruptures = 0, fractures = 0, energyCost = 0, mjGain = 0;
+            let basePower = 0;               // Puissance des dés seuls, avant modificateurs
+            let powerMod = 0;                // Amplification / Dissipation cumulées
+            let ruptures = 0, fractures = 0, elanLoss = 0;
+            let energyCost = count;                 // 1 point par dé engagé
+            const maxDiceForLevel = getEsoterismeMaxDice();
+            let mjGain = baseMjDice(count, maxDiceForLevel);  // tribut selon le ratio d'engagement
+            const effects = [];
 
-            const cascade = (n) => {
-                for (let i = 0; i < n; i++) {
-                    const bonus = rollResonanceDie();
-                    results.push(bonus);
-                    if (bonus.type === 'succès') successes++;
-                }
-            };
+            let queue = count;
+            let blockNext = false;
 
-            for (let i = 0; i < count; i++) {
-                const die = rollMagicDie(level);
-                if (emotion) die.type = applyEmotion(die.type, level);
+            while (queue > 0) {
+                queue--;
+                const die = rollMagicDie(level, emotion);
                 results.push(die);
-                if (i < billable) energyCost += (FACE_COST[die.type] !== undefined ? FACE_COST[die.type] : 1);
-                switch (die.type) {
-                    case 'succès':
-                        successes++;
-                        break;
-                    case 'flux':
-                        successes++;
-                        break;
-                    case 'résonance':
-                        successes++;
-                        cascade(1);
-                        break;
-                    case 'transcendance':
-                        successes += 2;
-                        cascade(2);
-                        break;
-                    case 'rupture':
-                        ruptures++;
-                        mjGain += 1;
-                        break;
-                    case 'fracture':
-                        fractures++;
-                        mjGain += 2;
-                        break;
-                    // vide : aucun effet
+                const boost = (die.type === 'transcendance' || die.type === 'fracture') ? 2 : 1;
+
+                if (die.type === 'succès') { basePower++; continue; }
+                if (die.type === 'vide') { continue; }
+
+                if (die.type === 'résonance' || die.type === 'transcendance') {
+                    basePower += (die.type === 'transcendance') ? 3 : 2;
+                    if (blockNext) { blockNext = false; die.effectBlocked = true; continue; }
+                    const e = rollD12Effect(RESONANCE_EFFECTS);
+                    die.effect = e; die.boost = boost;
+                    effects.push({ ...e, boost, from: die.type });
+                    if (e.key === 'stabilite') mjGain -= boost;
+                    else if (e.key === 'fluidite') energyCost -= boost;
+                    else if (e.key === 'cascade') { queue += boost; blockNext = true; }
+                    else if (e.key === 'amplification') powerMod += boost;
+                    continue;
+                }
+
+                if (die.type === 'rupture' || die.type === 'fracture') {
+                    if (die.type === 'fracture') fractures++; else ruptures++;
+                    const e = rollD12Effect(RUPTURE_EFFECTS);
+                    die.effect = e; die.boost = boost;
+                    effects.push({ ...e, boost, from: die.type });
+                    if (e.key === 'resistance') energyCost += boost;
+                    else if (e.key === 'contrecoup') elanLoss += boost;
+                    else if (e.key === 'fuite') mjGain += boost;
+                    else if (e.key === 'dissipation') powerMod -= boost;
                 }
             }
-            return { results, successes, ruptures, fractures, energyCost, mjGain };
+
+            const successes = Math.max(0, basePower + powerMod);
+            energyCost = Math.max(0, energyCost);
+            mjGain = Math.max(0, mjGain);
+            return { results, successes, basePower, powerMod, ruptures, fractures, energyCost, mjGain, elanLoss, effects };
         }
 
         function isPrivateRoll() {
@@ -6712,24 +6771,23 @@
             const labels = {
                 'succès': 'Succ.',
                 'vide': 'Vide',
-                'flux': 'Flux',
                 'résonance': 'Rés.',
                 'transcendance': 'Trans.',
                 'fracture': 'Fract.',
                 'rupture': 'Rupt.',
             };
             const el = document.createElement('div');
-            el.className = 'die';
+            el.className = 'die magic-die';
             el.style.animationDelay = `${delay}s`;
             el.style.background = fc.bg;
             el.style.color = fc.text;
             el.style.border = `1.5px ${die.isBonus ? 'dashed' : 'solid'} ${fc.border}`;
-            el.style.flexDirection = 'column';
-            el.style.gap = '1px';
-            el.style.height = '52px';
-            el.style.fontSize = '13px';
-            el.innerHTML = `<span style="font-weight:700;line-height:1.1;">${labels[die.type] || die.type}</span><span style="font-size:0.75em;opacity:0.65;line-height:1;">${die.value}</span>`;
+            const effectTag = die.effect
+                ? `<span class="md-effect" style="opacity:${die.effectBlocked ? 0.35 : 1}">${die.effect.label}${die.boost > 1 ? ' ×2' : ''}${die.effectBlocked ? ' (bloqué)' : ''}</span>`
+                : '';
+            el.innerHTML = `<span class="md-label">${labels[die.type] || die.type}</span><span class="md-value">${die.value}</span>${effectTag}`;
             if (die.isBonus) el.title = 'Cascade — dé bonus';
+            else if (die.effect) el.title = `d12 ${die.effect.d12} · ${die.effect.label} — ${die.effect.desc}`;
             return el;
         }
 
@@ -6750,42 +6808,56 @@
             const skillId = document.getElementById('hybrid-skill-select').value;
             const bonus = parseInt(document.getElementById('hybrid-bonus').value) || 0;
             const emotion = document.getElementById('hybrid-emotion')?.checked || false;
-            const skill = appState.skills.find(s => s.id === skillId);
-            if (!skill) return;
+            const skill = appState.skills.find(s => s.id === skillId);   // facultatif
+            const hasSkill = !!(skill && attrName);
 
             const esotLvl = getEsoterismeLevel();
+            if (esotLvl <= 0) { showNotification('⚠ Aucun niveau d\'Ésotérisme'); return; }
             const requestedMagic = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
             let actualMagic = clampMagicDice(requestedMagic);
 
-            const attrValue = appState.attributes[attrName];
-            const attrLevel = getAttributeLevel(attrValue);
-            const skillLevel = getSkillLevel(skill.level);
-            const skillDice = rollSkillCheck(attrValue, skill.level);
-            const skillCounts = countSuccesses(skillDice, skill.level);
+            const attrValue = hasSkill ? appState.attributes[attrName] : null;
+            const attrLevel = hasSkill ? getAttributeLevel(attrValue) : null;
+            const skillLevel = hasSkill ? getSkillLevel(skill.level) : null;
+            const skillDice = hasSkill ? rollSkillCheck(attrValue, skill.level) : [];
+            const skillCounts = hasSkill ? countSuccesses(skillDice, skill.level)
+                                         : { successes: 0, eclats: 0, revers: 0, explosions: 0 };
 
             const hybridBonus = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
             const totalMagicDice = actualMagic + hybridBonus;
             const effLvl = getEffectiveMagicLevel();
-            const { results: magicResults, successes: magicSuccesses, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, totalMagicDice, emotion, actualMagic);
-            if (totalMagicDice > 0) { spendReserve(energyCost); if (mjGain > 0) addMjDice(mjGain); }
+            const { results: magicResults, successes: magicSuccesses, basePower, powerMod, ruptures, fractures,
+                    energyCost, mjGain, elanLoss, effects } = resolveMagicDice(effLvl, totalMagicDice, emotion, actualMagic);
+            if (totalMagicDice > 0) {
+                spendReserve(energyCost);
+                if (mjGain > 0) addMjDice(mjGain);
+                if (elanLoss > 0) {
+                    appState.counters.health.current = Math.max(0, appState.counters.health.current - elanLoss);
+                    updateCounterDisplay('health');
+                    showNotification(`⚡ Contrecoup : −${elanLoss} Élan`);
+                }
+            }
             lastMagicRoll = totalMagicDice > 0 ? { puissance: magicSuccesses, dice: totalMagicDice } : null;
             actualMagic = totalMagicDice;
 
             // La magie ne s'ajoute PAS au total du jet de compétence
-            const perturb = consumePerturbationForRoll();
+            const perturb = hasSkill ? consumePerturbationForRoll() : null;
             const netSkillSuccesses = skillCounts.successes - (perturb ? perturb.successLoss : 0);
-            const total = netSkillSuccesses + bonus;
+            const total = hasSkill ? netSkillSuccesses + bonus : 0;
 
             displayHybridResult({
-                skillName: skill.name, attrName: capitalize(attrName),
+                hasSkill,
+                skillName: hasSkill ? skill.name : null,
+                attrName: hasSkill ? capitalize(attrName) : null,
                 skillDice, magicResults, esotLvl, emotion,
-                facesInfo: facesSummary(attrLevel.faces),
+                basePower, powerMod, energyCostBase: totalMagicDice,
+                facesInfo: hasSkill ? facesSummary(attrLevel.faces) : null,
                 skillSuccesses: netSkillSuccesses, magicSuccesses, perturb,
                 eclats: skillCounts.eclats, revers: skillCounts.revers,
-                bonus, total, ruptures, fractures, mjGain, energyCost, actualMagic
+                bonus, total, ruptures, fractures, mjGain, energyCost, elanLoss, effects, actualMagic
             });
 
-            if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), {
+            if (!isPrivateRoll()) sendDiscordRoll(hasSkill ? skill.name : 'Magie', hasSkill ? skill.baseName : null, total, hasSkill ? capitalize(attrName) : `Ésotérisme ${esotLvl}`, {
                 successes: netSkillSuccesses,
                 bonus,
                 magic: {
@@ -6797,18 +6869,21 @@
 
         function displayHybridResult(data) {
             const info = getMagicColor(data.esotLvl);
-            document.getElementById('result-title').textContent = '🎲✨ Jet + Magie';
-            document.getElementById('result-subtitle').textContent = `${data.skillName} (${data.attrName}) + ${data.actualMagic} dé(s) magiques · Ésotérisme ${data.esotLvl}${data.emotion ? ' · 🔥 Émotion' : ''}`;
+            document.getElementById('result-title').textContent = data.hasSkill ? '🎲✨ Jet + Magie' : '✨ Magie pure';
+            document.getElementById('result-subtitle').textContent = (data.hasSkill ? `${data.skillName} (${data.attrName}) + ` : '')
+                + `${data.actualMagic} dé(s) magiques · Ésotérisme ${data.esotLvl}${data.emotion ? ' · 🔥 Émotion' : ''}`;
 
             const diceArea = document.getElementById('dice-display-area');
             diceArea.innerHTML = '';
 
-            const skillSection = document.createElement('div');
-            skillSection.className = 'dice-section';
-            skillSection.innerHTML = `<div class="dice-section-label skill">⚔ Compétence</div>${data.facesInfo ? `<div class="faces-summary">${data.facesInfo}</div>` : ''}<div class="dice-container" id="hs-dice"></div>${FACE_LEGEND}`;
-            diceArea.appendChild(skillSection);
-            const hsCont = skillSection.querySelector('#hs-dice');
-            data.skillDice.forEach((d, i) => hsCont.appendChild(renderFaceDie(d, i * 0.08)));
+            if (data.hasSkill) {
+                const skillSection = document.createElement('div');
+                skillSection.className = 'dice-section';
+                skillSection.innerHTML = `<div class="dice-section-label skill">⚔ Compétence</div>${data.facesInfo ? `<div class="faces-summary">${data.facesInfo}</div>` : ''}<div class="dice-container" id="hs-dice"></div>${FACE_LEGEND}`;
+                diceArea.appendChild(skillSection);
+                const hsCont = skillSection.querySelector('#hs-dice');
+                data.skillDice.forEach((d, i) => hsCont.appendChild(renderFaceDie(d, i * 0.08)));
+            }
 
             if (data.actualMagic > 0) {
                 const magicSection = document.createElement('div');
@@ -6820,19 +6895,44 @@
                 data.magicResults.forEach((d, i) => hmCont.appendChild(renderMagicDie(d, (data.skillDice.length + i) * 0.08)));
             }
 
-            const vides = data.magicResults.filter(d => d.type === 'vide').length;
-            document.getElementById('stat-successes').textContent = data.skillSuccesses;
-            document.getElementById('stat-neutrals').textContent = vides > 0 ? `${vides} vide(s)` : '—';
-            document.getElementById('stat-explosions').textContent = data.skillDice.filter(d => d.type === 'eclat').length;
-            document.getElementById('stat-attribute-bonus').textContent = data.attrBonus;
-            document.getElementById('stat-skill-bonus').textContent = data.skillBonus || 0;
+            const eclatsHybrid = data.skillDice.filter(d => d.type === 'eclat').length;
+            setStat('stat-successes', data.skillSuccesses, true);
+            setStat('stat-explosions', eclatsHybrid);
+            setStat('stat-attribute-bonus', data.bonus || 0);
+            setStat('stat-skill-bonus', 0);
 
             let mag = `<div class="magnitude-result">`;
             if (data.actualMagic > 0) {
                 mag += `<div class="magnitude-label">✨ Puissance du sort : <strong>${data.magicSuccesses}</strong></div>`;
-                mag += `<div style="font-size:0.8em;color:var(--silver-mist);margin-bottom:4px;">Indépendante du Résultat Final — s'applique à l'effet (Gravité, portée, ampleur…)</div>`;
+                mag += `<div style="font-size:0.76em;color:var(--silver-mist);margin-bottom:8px;">Détermine l'ampleur de l'effet magique — Gravité soignée, portée, durée, taille de la zone…</div>`;
+
+                // Récapitulatif : base des dés + chaque modificateur appliqué
+                mag += `<div class="power-recap">`;
+                mag += `<div class="pr-row pr-base"><span>Puissance de base (dés)</span><strong>${data.basePower}</strong></div>`;
+                if (data.effects && data.effects.length) {
+                    data.effects.forEach(e => {
+                        let delta = null;
+                        if (e.key === 'amplification') delta = `+${e.boost}`;
+                        else if (e.key === 'dissipation') delta = `−${e.boost}`;
+                        if (delta === null) return;
+                        mag += `<div class="pr-row ${e.key === 'amplification' ? 'pr-plus' : 'pr-minus'}"
+                            title="d12 ${e.d12} · ${e.desc}"><span>${e.label}${e.boost > 1 ? ' (×2, Transcendance/Fracture)' : ''}</span><strong>${delta}</strong></div>`;
+                    });
+                }
+                mag += `<div class="pr-row pr-total"><span>Puissance finale</span><strong>${data.magicSuccesses}</strong></div>`;
+                mag += `</div>`;
+
+                if (data.effects && data.effects.length) {
+                    mag += `<div class="d8-effects">` + data.effects.map(e =>
+                        `<span class="d8-eff ${e.from === 'rupture' || e.from === 'fracture' ? 'bad' : 'good'}"
+                            title="${e.desc}">d12 ${e.d12} · ${e.label}${e.boost > 1 ? ' ×2' : ''}</span>`
+                    ).join('') + `</div>`;
+                }
+
                 let effets = [];
-                if (data.mjGain > 0) effets.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
+                if (data.mjGain > 0) effets.push(`⚠ ${data.mjGain} dé(s) de Perturbation au MJ`);
+                if (data.energyCost !== undefined) effets.push(`⚡ ${data.energyCost} énergie${data.energyCostBase && data.energyCost !== data.energyCostBase ? ` (base ${data.energyCostBase})` : ''}`);
+                if (data.elanLoss > 0) effets.push(`💔 −${data.elanLoss} Élan`);
                 if (effets.length) {
                     mag += `<div class="magnitude-status failure">${effets.join(' · ')}</div>`;
                 } else {
@@ -6847,65 +6947,7 @@
         }
 
         // ========== MAGIE PURE ==========
-        function performPureRoll() {
-            const emotion = document.getElementById('pure-emotion')?.checked || false;
-            const esotLvl = getEsoterismeLevel();
-            const requestedDice = parseInt(document.getElementById('pure-magic-dice')?.value) || 1;
-            const pureBonus = parseInt(document.getElementById('pure-bonus-dice')?.value) || 0;
-            const paidDice = clampMagicDice(requestedDice);
-            const actualDice = paidDice + pureBonus;
-            if (actualDice <= 0) { showNotification('⚠ Réserve magique épuisée'); return; }
 
-            const effLvl = getEffectiveMagicLevel();
-            const { results, successes, ruptures, fractures, energyCost, mjGain } = resolveMagicDice(effLvl, actualDice, emotion, paidDice);
-            spendReserve(energyCost);
-            if (mjGain > 0) addMjDice(mjGain);
-            lastMagicRoll = { puissance: successes, dice: actualDice };
-
-            displayPureResult({ results, successes, ruptures, fractures, mjGain, energyCost, actualDice, esotLvl, emotion });
-
-            if (!isPrivateRoll()) sendDiscordRoll('Pouvoir', null, successes, `Ésotérisme niv.${esotLvl}`, {
-                successes,
-                magic: {
-                    level: esotLvl, results, isPure: true, puissance: successes, emotion,
-                    ruptures, fractures, mjGain
-                }
-            });
-        }
-
-        function displayPureResult(data) {
-            const info = getMagicColor(data.esotLvl);
-            document.getElementById('result-title').textContent = '✨ Magie Pure';
-            document.getElementById('result-subtitle').textContent = `${data.actualDice} dé(s) · Ésotérisme ${data.esotLvl}${data.emotion ? ' · 🔥 Émotion' : ''}`;
-
-            const diceArea = document.getElementById('dice-display-area');
-            diceArea.innerHTML = '';
-            const section = document.createElement('div');
-            section.className = 'dice-section';
-            const emotionTag = data.emotion ? ` · <span style="color:#8a6d00;">🔥 Émotion</span>` : '';
-            section.innerHTML = `<div class="dice-section-label power" style="color:${info.color}">✨ Ésotérisme ${data.esotLvl}${emotionTag}</div><div class="dice-container" id="pm-dice"></div>${MAGIC_DIE_LEGEND}`;
-            diceArea.appendChild(section);
-            const cont = section.querySelector('#pm-dice');
-            data.results.forEach((d, i) => cont.appendChild(renderMagicDie(d, i * 0.08)));
-
-            const videsP = data.results.filter(d => d.type === 'vide').length;
-            document.getElementById('stat-successes').textContent = data.successes;
-            document.getElementById('stat-neutrals').textContent = videsP > 0 ? `${videsP} vide(s)` : '—';
-            document.getElementById('stat-explosions').textContent = data.results.filter(d => d.type === 'résonance' || d.type === 'transcendance').length;
-            document.getElementById('stat-attribute-bonus').textContent = '—';
-            document.getElementById('stat-skill-bonus').textContent = '—';
-
-            let mag = `<div class="magnitude-result">
-                <div class="magnitude-label">✨ Puissance : <strong>${data.successes}</strong></div>`;
-            let effetsP = [];
-            if (data.mjGain > 0) effetsP.push(`⚠ +${data.mjGain} dé(s) de Perturbation au MJ`);
-            if (effetsP.length) mag += `<div class="magnitude-status failure" style="margin-top:4px;">${effetsP.join(' · ')}</div>`;
-            mag += `</div>`;
-            document.getElementById('magnitude-result-area').innerHTML = mag + sustainButtonsHtml();
-
-            document.getElementById('result-total').textContent = data.successes;
-            document.getElementById('result-overlay').classList.add('active');
-        }
         function closeResult() {
             document.getElementById('result-overlay').classList.remove('active');
         }
@@ -7093,10 +7135,8 @@
                 'Accept': 'application/vnd.github+json',
                 'X-GitHub-Api-Version': '2022-11-28'
             };
-            const payload = {
-                qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
-                by: (appState.profile && appState.profile.name) || ''
-            };
+            const payload = { qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
+                              by: (appState.profile && appState.profile.name) || '' };
             const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
             try {
                 const res = await fetch(qiApi(), {
@@ -7407,7 +7447,7 @@
             const attrLabel = attrName ? ` [${attrName}]` : '';
 
             const FACE_ICONS = {
-                'succès': '✦', 'vide': '○', 'flux': '≈', 'résonance': '✧', 'transcendance': '☆',
+                'succès': '✦', 'vide': '○', 'résonance': '✧', 'transcendance': '☆',
                 'rupture': '✗', 'fracture': '✗✗'
             };
 
@@ -7448,7 +7488,7 @@
                 if (m.results && m.results.length > 0) {
                     const counts = {};
                     m.results.forEach(d => { counts[d.type] = (counts[d.type] || 0) + 1; });
-                    const faceOrder = ['transcendance', 'résonance', 'flux', 'succès', 'vide', 'rupture', 'fracture'];
+                    const faceOrder = ['transcendance', 'résonance', 'succès', 'vide', 'rupture', 'fracture'];
                     const faceParts = faceOrder
                         .filter(t => counts[t])
                         .map(t => `${FACE_ICONS[t]} ${counts[t]}× ${t.charAt(0).toUpperCase() + t.slice(1)}`);
