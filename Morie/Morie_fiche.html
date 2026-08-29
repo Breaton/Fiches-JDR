@@ -6214,8 +6214,9 @@
             const bonusDice = parseInt(document.getElementById('followup-bonus-dice')?.value) || 0;
             const out = resolveMagicAction({ requested, emotion, source: 'followup', extraDice: bonusDice });
             if (!out) return;
-            const { results, successes, ruptures, fractures, mjGain } = out;
+            const { results, successes, ruptures, fractures, mjGain, elanLoss } = out;
             const count = out.dice;
+            applyMagicElanLoss(elanLoss);
 
             const resEl = document.getElementById('followup-magic-result');
             if (resEl) {
@@ -6469,6 +6470,34 @@
 
         function getReserveLeft() {
             return Math.max(0, getReserveMax() - (appState.magic.reserveUsed || 0));
+        }
+
+        // Le Contrecoup magique n'édite jamais directement l'Élan : il crée ou aggrave
+        // une blessure dédiée, qui suit alors les règles normales de soin/stabilisation
+        // et n'est pas effacée au prochain recalcul depuis les blessures.
+        const MAGIC_WOUND_ID = 'wound_magic_backlash';
+
+        function applyMagicElanLoss(elanLoss) {
+            if (!elanLoss || elanLoss <= 0) return;
+            let w = appState.wounds.find(x => x.id === MAGIC_WOUND_ID);
+            if (w) {
+                w.gravity = (w.gravity || 0) + elanLoss;
+                w.stabilized = false; // une aggravation redevient instable
+            } else {
+                appState.wounds.push({
+                    id: MAGIC_WOUND_ID,
+                    name: 'Contrecoup magique',
+                    type: 'Magique',
+                    gravity: elanLoss,
+                    stabilized: false,
+                    convalescence: false,
+                    convalescenceLabel: ''
+                });
+                w = appState.wounds[appState.wounds.length - 1];
+            }
+            renderWounds();
+            recalcHealthFromWounds();
+            showNotification(`⚡ Contrecoup : blessure magique → Gravité ${w.gravity}`);
         }
 
         function spendReserve(n) {
@@ -6827,6 +6856,7 @@
                                          : { successes: 0, eclats: 0, revers: 0, explosions: 0 };
 
             const hybridBonus = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
+            const paidMagicDice = actualMagic;   // conservé avant réassignation, pour comparaison à l'affichage
             const totalMagicDice = actualMagic + hybridBonus;
             const effLvl = getEffectiveMagicLevel();
             const { results: magicResults, successes: magicSuccesses, basePower, powerMod, ruptures, fractures,
@@ -6834,11 +6864,7 @@
             if (totalMagicDice > 0) {
                 spendReserve(energyCost);
                 if (mjGain > 0) addMjDice(mjGain);
-                if (elanLoss > 0) {
-                    appState.counters.health.current = Math.max(0, appState.counters.health.current - elanLoss);
-                    updateCounterDisplay('health');
-                    showNotification(`⚡ Contrecoup : −${elanLoss} Élan`);
-                }
+                applyMagicElanLoss(elanLoss);
             }
             lastMagicRoll = totalMagicDice > 0 ? { puissance: magicSuccesses, dice: totalMagicDice } : null;
             actualMagic = totalMagicDice;
@@ -6853,7 +6879,7 @@
                 skillName: hasSkill ? skill.name : null,
                 attrName: hasSkill ? capitalize(attrName) : null,
                 skillDice, magicResults, esotLvl, emotion,
-                basePower, powerMod, energyCostBase: totalMagicDice,
+                basePower, powerMod, energyCostBase: paidMagicDice,
                 facesInfo: hasSkill ? facesSummary(attrLevel.faces) : null,
                 skillSuccesses: netSkillSuccesses, magicSuccesses, perturb,
                 eclats: skillCounts.eclats, revers: skillCounts.revers,
