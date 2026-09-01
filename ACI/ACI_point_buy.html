@@ -356,12 +356,10 @@
 
                 <div class="set-title">Habilitation — coût cumulé depuis Non habilité (0)</div>
                 <div class="set-item"><label>Latent (1)</label><input type="number" id="s_h1" value="2" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Instable (2)</label><input type="number" id="s_h2" value="4" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Contrôlé (3)</label><input type="number" id="s_h3" value="7" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_h4" value="11" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Confirmé (5)</label><input type="number" id="s_h5" value="16" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Spécialiste (6)</label><input type="number" id="s_h6" value="22" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Référent (7)</label><input type="number" id="s_h7" value="29" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Instable (2)</label><input type="number" id="s_h2" value="5" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Contrôlé (3)</label><input type="number" id="s_h3" value="9" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_h4" value="14" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Référent (5)</label><input type="number" id="s_h5" value="20" onchange="updateSettings()"></div>
 
                 <div class="set-title">Plafonds — attributs</div>
                 <div class="set-item"><label>Exceptionnel (7)</label><input type="number" id="s_ma7" value="1" min="0" max="8" onchange="updateSettings()"></div>
@@ -374,9 +372,9 @@
                 <div class="set-item"><label>Excellent (5)</label><input type="number" id="s_mc5" value="3" min="0" max="22" onchange="updateSettings()"></div>
 
                 <div class="set-title">Plafonds — habilitation (par liste)</div>
-                <div class="set-item"><label>Référent (7)</label><input type="number" id="s_mh7" value="1" min="0" max="10" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Spécialiste (6)</label><input type="number" id="s_mh6" value="1" min="0" max="10" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Confirmé (5)</label><input type="number" id="s_mh5" value="2" min="0" max="10" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Référent (5)</label><input type="number" id="s_mh5" value="1" min="0" max="10" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_mh4" value="1" min="0" max="10" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Contrôlé (3)</label><input type="number" id="s_mh3" value="2" min="0" max="10" onchange="updateSettings()"></div>
             </div>
         </div>
 
@@ -458,7 +456,10 @@
         </div>
 
         <p class="hint" style="text-align:center;margin:24px 0 8px;">
-            L'export produit un dossier <code>.json</code> lisible par la fiche ACI. Une fiche importée
+            Les échelons d'habilitation vont de 0 à 5. La <strong>Magnitude maximum</strong> d'un pouvoir
+            est la somme des échelons de son Vecteur et de son Domaine, soit 10 au sommet : c'est le nombre
+            de dés de Puissance qu'il peut engager, à 1 Charge le dé.
+            L'export produit un dossier <code>.json</code> lisible par la fiche ACI ; une fiche importée
             est mise à jour sans perdre incidents, matériel ni notes.
         </p>
     </div>
@@ -482,17 +483,17 @@
             5: { name: 'Excellent', add: 3, color: '#3fb27f' }, 6: { name: 'Expert', add: 4, color: '#3f9fe0' },
             7: { name: 'Maître', add: 5, color: '#8b7ae0' }, 8: { name: 'Absolue', add: 7, color: '#6fc0f5' }
         };
+        // Échelons d'habilitation : 0 à 5, soit une Magnitude maximum de 10 pour un couple au sommet
+        const MAX_CLEARANCE = 5;
         const CLEARANCE_LEVELS = {
             0: { name: 'Non habilité', color: '#45566a' }, 1: { name: 'Latent', color: '#e08a4a' },
             2: { name: 'Instable', color: '#d9a441' }, 3: { name: 'Contrôlé', color: '#9fb0c4' },
-            4: { name: 'Certifié', color: '#3fb27f' }, 5: { name: 'Confirmé', color: '#33bfae' },
-            6: { name: 'Spécialiste', color: '#3f9fe0' }, 7: { name: 'Référent', color: '#8b7ae0' },
-            8: { name: 'Exceptionnel', color: '#6fc0f5' }
+            4: { name: 'Certifié', color: '#3fb27f' }, 5: { name: 'Référent', color: '#6fc0f5' }
         };
         const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
         const CHARGE_TABLE = { 1: 3, 2: 6, 3: 10, 4: 14, 5: 18, 6: 22, 7: 28, 8: 35 };
         const VITESSE_TABLE = { 1: 10, 2: 15, 3: 20, 4: 30, 5: 35, 6: 40, 7: 50, 8: 60 };
-        const SOCLE_DICE = 3, MAX_HAB_DICE = 7;
+        const SOCLE_DICE = 3;
 
         const ATTRIBUTES = [
             { id: 'puissance', name: 'Puissance', alt: 'Force brute · masse · contrainte physique' },
@@ -587,10 +588,10 @@
             budget: 80,
             attrCosts: [0, -5, -3, -2, 0, 5, 9, 12],        // index = valeur, socle 4
             compCosts: [0, -3, -1, 0, 3, 5, 8, 12],         // index = valeur, socle 3
-            habCosts: [0, 2, 4, 7, 11, 16, 22, 29, 37],     // index = échelon, socle 0
+            habCosts: [0, 2, 5, 9, 14, 20],                 // index = échelon, socle 0
             maxAttr: { 7: 1, 6: 2, 5: 3 },
             maxComp: { 7: 1, 6: 2, 5: 3 },
-            maxHab: { 7: 1, 6: 1, 5: 2 }
+            maxHab: { 5: 1, 4: 1, 3: 2 }
         };
 
         const attrValues = {}, compValues = {}, vecValues = {}, domValues = {};
@@ -712,13 +713,13 @@
 
         function renderHab(list, values, containerId, capsId, kind) {
             document.getElementById(capsId).innerHTML = capsHtml(list, values, config.maxHab,
-                { 5: 'Confirmé', 6: 'Spécialiste', 7: 'Référent' });
+                { 3: 'Contrôlé', 4: 'Certifié', 5: 'Référent' });
             document.getElementById(containerId).innerHTML = list.map(x => {
                 const v = values[x.id], lv = CLEARANCE_LEVELS[v], cost = habCost(v);
-                const up = canRaise(list, values, x.id, 8, config.maxHab, habCost);
+                const up = canRaise(list, values, x.id, MAX_CLEARANCE, config.maxHab, habCost);
                 return `<div class="row ${kind}">
                     <div><div class="r-name">${x.glyph} ${x.name}</div><div class="r-alt">${x.alt}</div></div>
-                    <div class="pips">${pips(v, 8)}</div>
+                    <div class="pips">${pips(v, MAX_CLEARANCE)}</div>
                     <div class="r-lvl" style="color:${lv.color}">${lv.name}</div>
                     <div class="r-cost"><b>${cost}</b> pts</div>
                     <div class="step">
@@ -743,10 +744,12 @@
             l.classList.toggle('over', over);
         }
 
+        // Le couple le mieux habilité fixe la Magnitude maximum, c'est-à-dire
+        // le nombre de dés de Puissance qu'un pouvoir peut engager.
         function bestPair() {
             const v = Math.max(...VECTORS.map(x => vecValues[x.id]));
             const d = Math.max(...DOMAINS.map(x => domValues[x.id]));
-            return { v, d, dice: Math.min(MAX_HAB_DICE, v + d) };
+            return { v, d, dice: v + d };
         }
 
         function renderDerived() {
@@ -759,7 +762,7 @@
                 <div class="d-tile"><div class="d-l">Élan</div><div class="d-v" style="color:var(--bad)">${elan}</div></div>
                 <div class="d-tile"><div class="d-l">Charge</div><div class="d-v" style="color:var(--charge)">${charge}</div></div>
                 <div class="d-tile"><div class="d-l">Déplacement</div><div class="d-v" style="color:var(--aci-bright)">${vitesse}<span style="font-size:.5em"> ft</span></div></div>
-                <div class="d-tile"><div class="d-l">Meilleur pouvoir</div><div class="d-v" style="color:var(--vector)">${SOCLE_DICE}+${bp.dice}<span style="font-size:.5em"> dés</span></div></div>
+                <div class="d-tile"><div class="d-l">Magnitude max</div><div class="d-v" style="color:var(--vector)">${bp.dice}<span style="font-size:.5em"> dés</span></div></div>
                 <div class="d-tile"><div class="d-l">Corpus d'érudition</div><div class="d-v" style="color:var(--ink-2)">${Math.max(0, erud - 2)}</div></div>`;
         }
 
@@ -816,7 +819,7 @@
         function chHab(kind, id, d) {
             const list = kind === 'v' ? VECTORS : DOMAINS;
             const values = kind === 'v' ? vecValues : domValues;
-            if (d > 0) { const c = canRaise(list, values, id, 8, config.maxHab, habCost); if (!c.ok) return; values[id] = c.next; }
+            if (d > 0) { const c = canRaise(list, values, id, MAX_CLEARANCE, config.maxHab, habCost); if (!c.ok) return; values[id] = c.next; }
             else lower(list, values, id, 0, config.maxHab);
             render();
         }
@@ -833,10 +836,10 @@
             config.budget = num('s_budget') || 80;
             config.attrCosts = [0, num('s_a1'), num('s_a2'), num('s_a3'), 0, num('s_a5'), num('s_a6'), num('s_a7')];
             config.compCosts = [0, num('s_c1'), num('s_c2'), 0, num('s_c4'), num('s_c5'), num('s_c6'), num('s_c7')];
-            config.habCosts = [0, num('s_h1'), num('s_h2'), num('s_h3'), num('s_h4'), num('s_h5'), num('s_h6'), num('s_h7'), num('s_h7') + 8];
+            config.habCosts = [0, num('s_h1'), num('s_h2'), num('s_h3'), num('s_h4'), num('s_h5')];
             config.maxAttr = { 7: num('s_ma7'), 6: num('s_ma6'), 5: num('s_ma5') };
             config.maxComp = { 7: num('s_mc7'), 6: num('s_mc6'), 5: num('s_mc5') };
-            config.maxHab = { 7: num('s_mh7'), 6: num('s_mh6'), 5: num('s_mh5') };
+            config.maxHab = { 5: num('s_mh5'), 4: num('s_mh4'), 3: num('s_mh3') };
             render();
         }
 
@@ -1021,10 +1024,10 @@
                 });
             }
             if (Array.isArray(data.vectors)) data.vectors.forEach(v => {
-                if (v && v.id in vecValues) vecValues[v.id] = Math.max(0, Math.min(8, Number(v.level) || 0));
+                if (v && v.id in vecValues) vecValues[v.id] = Math.max(0, Math.min(MAX_CLEARANCE, Number(v.level) || 0));
             });
             if (Array.isArray(data.domains)) data.domains.forEach(d => {
-                if (d && d.id in domValues) domValues[d.id] = Math.max(0, Math.min(8, Number(d.level) || 0));
+                if (d && d.id in domValues) domValues[d.id] = Math.max(0, Math.min(MAX_CLEARANCE, Number(d.level) || 0));
             });
 
             const relaxed = relaxLimits();
