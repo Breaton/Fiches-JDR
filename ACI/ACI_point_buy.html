@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACI — Constitution de dossier</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --void: #070a0e;
+            --hull: #0d1219;
+            --panel: #121a24;
+            --panel-2: #17212d;
+            --panel-3: #1d2937;
+            --line: #24354a;
+            --line-soft: #1b2836;
+
+            --ink: #dde6f0;
+            --ink-2: #9fb0c4;
+            --ink-3: #6a7d92;
+            --ink-4: #45566a;
+
+            --aci: #3f9fe0;
+            --aci-bright: #6fc0f5;
+            --aci-deep: #1c5d8c;
+            --aci-wash: rgba(63, 159, 224, 0.10);
+
+            --vector: #8b7ae0;
+            --vector-wash: rgba(139, 122, 224, 0.12);
+            --domain: #d9a441;
+            --domain-wash: rgba(217, 164, 65, 0.12);
+
+            --ok: #3fb27f;
+            --warn: #e0a23c;
+            --bad: #e05c52;
+            --charge: #33bfae;
+
+            --font-head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+            --font-body: 'Inter', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--void);
+            color: var(--ink);
+            min-height: 100vh;
+            padding: 20px;
+            font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+        }
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background:
+                radial-gradient(ellipse at 15% 0%, rgba(63, 159, 224, 0.07) 0%, transparent 55%),
+                radial-gradient(ellipse at 85% 100%, rgba(139, 122, 224, 0.05) 0%, transparent 55%);
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background: repeating-linear-gradient(0deg, rgba(255,255,255,0.014) 0px, rgba(255,255,255,0.014) 1px, transparent 1px, transparent 3px);
+        }
+
+        .wrapper { position: relative; z-index: 1; max-width: 1500px; margin: 0 auto; }
+
+        /* ===== EN-TÊTE ===== */
+        .head {
+            background: linear-gradient(180deg, #101822 0%, #0c131b 100%);
+            border: 1px solid var(--line); border-radius: 4px 4px 0 0;
+            padding: 14px 20px;
+            display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+        }
+        .mark {
+            width: 42px; height: 42px; flex: 0 0 42px;
+            border: 1px solid var(--aci); border-radius: 3px;
+            display: flex; align-items: center; justify-content: center; background: var(--aci-wash);
+        }
+        .mark svg { width: 26px; height: 26px; }
+        .head-id { flex: 1; min-width: 200px; }
+        .head-name {
+            font-family: var(--font-head); font-size: 1.32em; font-weight: 700;
+            letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.1;
+        }
+        .head-name span { color: var(--aci); }
+        .head-sub {
+            font-family: var(--font-mono); font-size: 0.68em; letter-spacing: 0.16em;
+            color: var(--ink-3); text-transform: uppercase; margin-top: 3px;
+        }
+        .back {
+            font-family: var(--font-mono); font-size: 0.7em; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--ink-3); text-decoration: none;
+            border: 1px solid var(--line); border-radius: 2px; padding: 7px 12px;
+        }
+        .back:hover { border-color: var(--aci); color: var(--aci-bright); }
+
+        /* ===== BARRE DE BUDGET ===== */
+        .budget {
+            position: sticky; top: 0; z-index: 300;
+            background: var(--panel); border: 1px solid var(--line); border-top: none;
+            padding: 11px 20px; margin-bottom: 18px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+            box-shadow: 0 8px 24px rgba(0,0,0,.5);
+        }
+        .budget-label {
+            font-family: var(--font-mono); font-size: 0.66em; letter-spacing: 0.16em;
+            text-transform: uppercase; color: var(--ink-4); white-space: nowrap;
+        }
+        .budget-track {
+            flex: 1; min-width: 140px; height: 7px; background: var(--panel-3);
+            border: 1px solid var(--line-soft); border-radius: 2px; overflow: hidden;
+        }
+        .budget-fill {
+            height: 100%; background: linear-gradient(90deg, var(--aci-deep), var(--aci-bright));
+            transition: width .3s ease;
+        }
+        .budget-fill.over { background: linear-gradient(90deg, #8a2f28, var(--bad)); }
+        .budget-num { font-family: var(--font-mono); font-size: 1.05em; font-weight: 700; white-space: nowrap; }
+        .budget-num .spent { color: var(--aci-bright); }
+        .budget-num.over .spent { color: var(--bad); }
+        .budget-num .sep, .budget-num .total { color: var(--ink-4); }
+        .budget-left { font-family: var(--font-mono); font-size: 0.72em; color: var(--ink-3); white-space: nowrap; }
+        .budget-left.over { color: var(--bad); }
+
+        .btn {
+            padding: 7px 12px; background: var(--panel-2); color: var(--ink-2);
+            border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
+            font-family: var(--font-mono); font-size: 0.7em; letter-spacing: 0.08em;
+            text-transform: uppercase; white-space: nowrap;
+        }
+        .btn:hover { border-color: var(--aci); color: var(--aci-bright); }
+        .btn.primary { border-color: var(--aci); color: var(--aci-bright); background: var(--aci-wash); }
+        .btn.danger:hover { border-color: var(--bad); color: var(--bad); }
+
+        .tag-import {
+            display: inline-flex; align-items: center; gap: 7px;
+            padding: 5px 10px; background: var(--aci-wash);
+            border: 1px solid var(--aci); border-radius: 2px;
+            font-family: var(--font-mono); font-size: 0.68em; color: var(--aci-bright);
+        }
+        .tag-import button { background: none; border: none; color: inherit; cursor: pointer; opacity: .6; }
+        .tag-import button:hover { opacity: 1; }
+
+        /* ===== RÉGLAGES ===== */
+        .settings {
+            display: none; background: var(--panel); border: 1px solid var(--line);
+            border-radius: 3px; padding: 16px; margin-bottom: 18px;
+        }
+        .settings.open { display: block; }
+        .settings h3 {
+            font-family: var(--font-head); font-size: 1.05em; font-weight: 600;
+            letter-spacing: 0.13em; text-transform: uppercase; margin-bottom: 12px; color: var(--aci-bright);
+        }
+        .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 9px; }
+        .set-title {
+            grid-column: 1 / -1; font-family: var(--font-mono); font-size: 0.64em;
+            letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4);
+            border-top: 1px solid var(--line); padding-top: 9px; margin-top: 5px;
+        }
+        .set-item { display: flex; align-items: center; gap: 8px; }
+        .set-item label { flex: 1; font-size: 0.82em; color: var(--ink-3); }
+        .set-item input {
+            width: 62px; background: var(--panel-3); border: 1px solid var(--line);
+            border-radius: 2px; color: var(--ink); font-family: var(--font-mono);
+            font-size: 0.82em; padding: 5px; text-align: center;
+        }
+        .set-item input:focus { outline: none; border-color: var(--aci); }
+
+        /* ===== CARTOUCHES ===== */
+        .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+        @media (max-width: 1080px) { .cols { grid-template-columns: 1fr; } }
+        .col { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+        .card { background: var(--panel); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+        .card-head {
+            display: flex; align-items: center; gap: 10px;
+            padding: 9px 14px; background: var(--panel-2); border-bottom: 1px solid var(--line);
+        }
+        .card-head .tag { font-family: var(--font-mono); font-size: 0.64em; letter-spacing: 0.14em; color: var(--ink-4); }
+        .card-title {
+            font-family: var(--font-head); font-size: 1.06em; font-weight: 600;
+            letter-spacing: 0.13em; text-transform: uppercase; flex: 1;
+        }
+        .card-head.a-aci { box-shadow: inset 3px 0 0 var(--aci); }
+        .card-head.a-vector { box-shadow: inset 3px 0 0 var(--vector); }
+        .card-head.a-domain { box-shadow: inset 3px 0 0 var(--domain); }
+
+        .caps {
+            display: flex; gap: 14px; flex-wrap: wrap;
+            padding: 7px 14px; background: var(--hull); border-bottom: 1px solid var(--line-soft);
+            font-family: var(--font-mono); font-size: 0.68em; color: var(--ink-4);
+        }
+        .caps .n { color: var(--ok); font-weight: 700; }
+        .caps .n.full { color: var(--bad); }
+
+        /* ===== LIGNES ===== */
+        .row {
+            display: grid; grid-template-columns: 1fr auto 96px 54px auto;
+            align-items: center; gap: 10px;
+            padding: 6px 14px; border-bottom: 1px solid rgba(36,53,74,.4);
+        }
+        .row:last-child { border-bottom: none; }
+        .row:hover { background: rgba(255,255,255,.018); }
+        .r-name { font-size: 0.9em; }
+        .r-alt { font-size: 0.72em; color: var(--ink-4); margin-top: 1px; line-height: 1.3; }
+        .r-lvl { font-family: var(--font-mono); font-size: 0.72em; font-weight: 700; text-align: right; }
+        .r-cost { font-family: var(--font-mono); font-size: 0.72em; color: var(--ink-4); text-align: right; }
+        .r-cost b { color: var(--aci); font-weight: 700; }
+        .r-cost b.free { color: var(--ok); }
+
+        .pips { display: flex; gap: 3px; }
+        .pip {
+            width: 7px; height: 7px; border-radius: 50%;
+            border: 1px solid var(--line); background: transparent;
+        }
+        .pip.on { background: var(--aci); border-color: var(--aci); box-shadow: 0 0 5px rgba(63,159,224,.5); }
+        .v .pip.on { background: var(--vector); border-color: var(--vector); box-shadow: 0 0 5px rgba(139,122,224,.5); }
+        .d .pip.on { background: var(--domain); border-color: var(--domain); box-shadow: 0 0 5px rgba(217,164,65,.5); }
+
+        .step { display: flex; gap: 4px; }
+        .step button {
+            width: 23px; height: 23px; background: var(--panel-3);
+            border: 1px solid var(--line); border-radius: 2px; color: var(--ink-2);
+            cursor: pointer; font-size: 0.9em; line-height: 1;
+        }
+        .step button:hover:not(:disabled) { border-color: var(--aci); color: var(--aci-bright); }
+        .step button:disabled { opacity: .28; cursor: not-allowed; }
+        .val {
+            font-family: var(--font-mono); font-size: 0.9em; font-weight: 700;
+            color: var(--aci-bright); width: 20px; text-align: center;
+        }
+
+        /* ===== IDENTITÉ ===== */
+        .field { display: flex; flex-direction: column; gap: 3px; }
+        .field label {
+            font-family: var(--font-mono); font-size: 0.62em; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--ink-4);
+        }
+        .field input, .field select {
+            background: var(--panel-3); border: 1px solid var(--line); border-radius: 2px;
+            color: var(--ink); padding: 7px 9px; font-family: var(--font-body);
+            font-size: 0.92em; width: 100%;
+        }
+        .field input:focus, .field select:focus { outline: none; border-color: var(--aci); }
+        .id-grid { display: grid; grid-template-columns: 1.4fr 1.4fr 1fr 1.2fr 1fr 76px; gap: 9px; }
+        @media (max-width: 1080px) { .id-grid { grid-template-columns: 1fr 1fr; } }
+        .code-line {
+            margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line);
+            display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+        }
+        .code-l { font-family: var(--font-mono); font-size: 0.62em; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4); }
+        .code-v { font-family: var(--font-mono); font-size: 1.25em; font-weight: 700; color: var(--aci-bright); }
+
+        /* ===== RÉSUMÉ ===== */
+        .sum { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px; }
+        .sum-item {
+            display: flex; justify-content: space-between; align-items: baseline;
+            font-size: 0.85em; padding: 3px 0;
+        }
+        .sum-item .sn { color: var(--ink-3); }
+        .sum-item .sv { font-family: var(--font-mono); font-weight: 700; }
+        .sum-item .sl { color: var(--ink-4); font-size: 0.8em; margin-left: 5px; }
+        .sum-title {
+            font-family: var(--font-mono); font-size: 0.64em; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--aci); margin: 14px 0 7px;
+        }
+        .sum-title:first-child { margin-top: 0; }
+        .derived {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;
+        }
+        .derived .d-tile {
+            flex: 1; min-width: 110px; padding: 9px 11px;
+            background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 2px;
+        }
+        .d-l { font-family: var(--font-mono); font-size: 0.6em; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-4); }
+        .d-v { font-family: var(--font-mono); font-size: 1.4em; font-weight: 700; margin-top: 3px; }
+
+        .hint { font-size: 0.79em; color: var(--ink-3); line-height: 1.55; }
+        .hint strong { color: var(--ink-2); }
+        .card-body { padding: 14px; }
+
+        .toast {
+            position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(80px);
+            background: var(--panel-2); border: 1px solid var(--aci); border-radius: 2px;
+            padding: 10px 18px; color: var(--ink);
+            font-family: var(--font-mono); font-size: 0.76em;
+            z-index: 1200; opacity: 0; transition: all .25s; pointer-events: none;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--hull); }
+        ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--aci-deep); }
+        select option { background: var(--panel-3); color: var(--ink); }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <header class="head">
+            <div class="mark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#3f9fe0" stroke-width="1.4">
+                    <path d="M12 2 L21 6 V12 C21 17 17 21 12 22 C7 21 3 17 3 12 V6 Z" />
+                    <path d="M12 7.5 V16.5 M8 12 H16" stroke-width="1.2" />
+                </svg>
+            </div>
+            <div class="head-id">
+                <div class="head-name">Constitution de <span>dossier</span></div>
+                <div class="head-sub">ACI · Direction des Effectifs Habilités · Formulaire d'enregistrement</div>
+            </div>
+            <a class="back" href="../index.html">← Retour au hub</a>
+        </header>
+
+        <div class="budget">
+            <span class="budget-label">Dotation</span>
+            <div class="budget-track"><div class="budget-fill" id="bFill"></div></div>
+            <div class="budget-num" id="bNum">
+                <span class="spent" id="bSpent">0</span><span class="sep"> / </span><span class="total" id="bTotal">80</span>
+            </div>
+            <div class="budget-left" id="bLeft">80 restants</div>
+            <button class="btn primary" id="exportBtn" onclick="exportToFiche()">↓ Exporter vers la fiche</button>
+            <button class="btn" onclick="importFromFiche()">↑ Importer une fiche</button>
+            <span id="importTag"></span>
+            <button class="btn" onclick="document.getElementById('settings').classList.toggle('open')">⚙ Paramètres</button>
+            <button class="btn danger" onclick="resetAll()">↺ Réinitialiser</button>
+        </div>
+
+        <div class="settings" id="settings">
+            <h3>Coûts et plafonds</h3>
+            <div class="set-grid">
+                <div class="set-title">Dotation</div>
+                <div class="set-item"><label>Points disponibles</label><input type="number" id="s_budget" value="80" min="10" max="400" onchange="updateSettings()"></div>
+
+                <div class="set-title">Attributs — coût cumulé depuis Commun (4)</div>
+                <div class="set-item"><label>Déficient (1)</label><input type="number" id="s_a1" value="-5" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Faible (2)</label><input type="number" id="s_a2" value="-3" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Médiocre (3)</label><input type="number" id="s_a3" value="-2" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Élevé (5)</label><input type="number" id="s_a5" value="5" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Supérieur (6)</label><input type="number" id="s_a6" value="9" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Exceptionnel (7)</label><input type="number" id="s_a7" value="12" onchange="updateSettings()"></div>
+
+                <div class="set-title">Aptitudes — coût cumulé depuis Ordinaire (3)</div>
+                <div class="set-item"><label>Inapte (1)</label><input type="number" id="s_c1" value="-3" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Maladroit (2)</label><input type="number" id="s_c2" value="-1" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Qualifié (4)</label><input type="number" id="s_c4" value="3" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Excellent (5)</label><input type="number" id="s_c5" value="5" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Expert (6)</label><input type="number" id="s_c6" value="8" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Maître (7)</label><input type="number" id="s_c7" value="12" onchange="updateSettings()"></div>
+
+                <div class="set-title">Habilitation — coût cumulé depuis Non habilité (0)</div>
+                <div class="set-item"><label>Latent (1)</label><input type="number" id="s_h1" value="2" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Instable (2)</label><input type="number" id="s_h2" value="4" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Contrôlé (3)</label><input type="number" id="s_h3" value="7" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_h4" value="11" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Confirmé (5)</label><input type="number" id="s_h5" value="16" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Spécialiste (6)</label><input type="number" id="s_h6" value="22" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Référent (7)</label><input type="number" id="s_h7" value="29" onchange="updateSettings()"></div>
+
+                <div class="set-title">Plafonds — attributs</div>
+                <div class="set-item"><label>Exceptionnel (7)</label><input type="number" id="s_ma7" value="1" min="0" max="8" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Supérieur (6)</label><input type="number" id="s_ma6" value="2" min="0" max="8" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Élevé (5)</label><input type="number" id="s_ma5" value="3" min="0" max="8" onchange="updateSettings()"></div>
+
+                <div class="set-title">Plafonds — aptitudes</div>
+                <div class="set-item"><label>Maître (7)</label><input type="number" id="s_mc7" value="1" min="0" max="22" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Expert (6)</label><input type="number" id="s_mc6" value="2" min="0" max="22" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Excellent (5)</label><input type="number" id="s_mc5" value="3" min="0" max="22" onchange="updateSettings()"></div>
+
+                <div class="set-title">Plafonds — habilitation (par liste)</div>
+                <div class="set-item"><label>Référent (7)</label><input type="number" id="s_mh7" value="1" min="0" max="10" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Spécialiste (6)</label><input type="number" id="s_mh6" value="1" min="0" max="10" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Confirmé (5)</label><input type="number" id="s_mh5" value="2" min="0" max="10" onchange="updateSettings()"></div>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom:18px;">
+            <div class="card-head a-aci">
+                <span class="tag">§1</span>
+                <span class="card-title">Identification et classification</span>
+            </div>
+            <div class="card-body">
+                <div class="id-grid">
+                    <div class="field"><label>Nom de code</label><input type="text" id="f-codename" placeholder="—" oninput="renderCode()"></div>
+                    <div class="field"><label>État civil</label><input type="text" id="f-civil" placeholder="—" oninput="renderCode()"></div>
+                    <div class="field"><label>Classe</label><select id="f-class" onchange="renderCode()"></select></div>
+                    <div class="field"><label>Catégorie</label><select id="f-category" onchange="renderCode()"></select></div>
+                    <div class="field"><label>Danger</label><select id="f-danger" onchange="renderCode()"></select></div>
+                    <div class="field"><label>N° dossier</label><input type="text" id="f-number" maxlength="3" placeholder="auto" oninput="renderCode()"></div>
+                </div>
+                <div class="code-line">
+                    <span class="code-l">Code de classification</span>
+                    <span class="code-v" id="codeOut">—</span>
+                    <span class="hint" id="codeDesc" style="margin-left:auto;text-align:right;"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="cols">
+            <div class="col">
+                <div class="card">
+                    <div class="card-head a-aci">
+                        <span class="tag">§2</span>
+                        <span class="card-title">Attributs</span>
+                        <span class="tag">socle Commun</span>
+                    </div>
+                    <div class="caps" id="attrCaps"></div>
+                    <div id="attrList"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head a-vector">
+                        <span class="tag">§4</span>
+                        <span class="card-title">Vecteurs d'effet</span>
+                    </div>
+                    <div class="caps" id="vecCaps"></div>
+                    <div id="vecList"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head a-domain">
+                        <span class="tag">§5</span>
+                        <span class="card-title">Domaines d'application</span>
+                    </div>
+                    <div class="caps" id="domCaps"></div>
+                    <div id="domList"></div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <div class="card-head a-aci">
+                        <span class="tag">§3</span>
+                        <span class="card-title">Aptitudes</span>
+                        <span class="tag">socle Ordinaire</span>
+                    </div>
+                    <div class="caps" id="compCaps"></div>
+                    <div id="compList"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head a-aci">
+                        <span class="tag">§6</span>
+                        <span class="card-title">Bilan du dossier</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="derived" id="derived"></div>
+                        <div id="summary"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="hint" style="text-align:center;margin:24px 0 8px;">
+            L'export produit un dossier <code>.json</code> lisible par la fiche ACI. Une fiche importée
+            est mise à jour sans perdre incidents, matériel ni notes.
+        </p>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        /* ==========================================================
+           RÉFÉRENTIELS — identiques à la fiche ACI
+           ========================================================== */
+
+        const ATTR_LEVELS = {
+            1: { name: 'Déficient', color: '#e05c52' }, 2: { name: 'Faible', color: '#e08a4a' },
+            3: { name: 'Médiocre', color: '#d9a441' }, 4: { name: 'Commun', color: '#9fb0c4' },
+            5: { name: 'Élevé', color: '#3fb27f' }, 6: { name: 'Supérieur', color: '#3f9fe0' },
+            7: { name: 'Exceptionnel', color: '#8b7ae0' }, 8: { name: 'Prodigieux', color: '#6fc0f5' }
+        };
+        const SKILL_LEVELS = {
+            1: { name: 'Inapte', add: -1, color: '#e05c52' }, 2: { name: 'Maladroit', add: -1, color: '#e08a4a' },
+            3: { name: 'Ordinaire', add: 1, color: '#d9a441' }, 4: { name: 'Qualifié', add: 2, color: '#9fb0c4' },
+            5: { name: 'Excellent', add: 3, color: '#3fb27f' }, 6: { name: 'Expert', add: 4, color: '#3f9fe0' },
+            7: { name: 'Maître', add: 5, color: '#8b7ae0' }, 8: { name: 'Absolue', add: 7, color: '#6fc0f5' }
+        };
+        const CLEARANCE_LEVELS = {
+            0: { name: 'Non habilité', color: '#45566a' }, 1: { name: 'Latent', color: '#e08a4a' },
+            2: { name: 'Instable', color: '#d9a441' }, 3: { name: 'Contrôlé', color: '#9fb0c4' },
+            4: { name: 'Certifié', color: '#3fb27f' }, 5: { name: 'Confirmé', color: '#33bfae' },
+            6: { name: 'Spécialiste', color: '#3f9fe0' }, 7: { name: 'Référent', color: '#8b7ae0' },
+            8: { name: 'Exceptionnel', color: '#6fc0f5' }
+        };
+        const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
+        const CHARGE_TABLE = { 1: 3, 2: 6, 3: 10, 4: 14, 5: 18, 6: 22, 7: 28, 8: 35 };
+        const VITESSE_TABLE = { 1: 10, 2: 15, 3: 20, 4: 30, 5: 35, 6: 40, 7: 50, 8: 60 };
+        const SOCLE_DICE = 3, MAX_HAB_DICE = 7;
+
+        const ATTRIBUTES = [
+            { id: 'puissance', name: 'Puissance', alt: 'Force brute · masse · contrainte physique' },
+            { id: 'vivacite', name: 'Vivacité', alt: 'Réflexes · esquive · initiative' },
+            { id: 'precision', name: 'Précision', alt: 'Justesse du geste · visée · finesse' },
+            { id: 'endurance', name: 'Endurance', alt: 'Encaisser · tenir dans la durée' },
+            { id: 'intelligence', name: 'Intelligence', alt: 'Analyse · déduction · planification' },
+            { id: 'intuition', name: 'Intuition', alt: 'Perception · pressentiment · lecture' },
+            { id: 'volonte', name: 'Volonté', alt: 'Sang-froid · détermination · réserve de Charge' },
+            { id: 'presence', name: 'Présence', alt: 'Aura · autorité · magnétisme' }
+        ];
+
+        const COMPETENCES = [
+            { id: 'art', name: 'Art', attr: 'presence', alt: 'Création · performance · artisanat' },
+            { id: 'athletisme', name: 'Athlétisme', attr: 'puissance', alt: 'Course · escalade · effort global' },
+            { id: 'autorite', name: 'Autorité', attr: 'presence', alt: 'Commandement · intimidation' },
+            { id: 'combat', name: 'Combat', attr: 'puissance', alt: 'Corps à corps · armes de mêlée' },
+            { id: 'conduite', name: 'Conduite', attr: 'vivacite', alt: 'Véhicules terrestres · poursuites' },
+            { id: 'discretion', name: 'Discrétion', attr: 'vivacite', alt: 'Furtivité · infiltration' },
+            { id: 'dressage', name: 'Dressage', attr: 'presence', alt: 'Animaux · apprivoisement' },
+            { id: 'eloquence', name: 'Éloquence', attr: 'presence', alt: 'Négociation · persuasion' },
+            { id: 'erudition', name: 'Érudition', attr: 'intelligence', alt: 'Corpus de savoir · spécialités' },
+            { id: 'escamotage', name: 'Escamotage', attr: 'precision', alt: 'Larcin · crochetage · dextérité' },
+            { id: 'informatique', name: 'Informatique', attr: 'intelligence', alt: 'Réseaux · données · sécurité' },
+            { id: 'ingenierie', name: 'Ingénierie', attr: 'intelligence', alt: 'Machines · construction · sabotage' },
+            { id: 'science', name: 'Science', attr: 'intelligence', alt: 'Laboratoire · analyse · théorie' },
+            { id: 'medecine', name: 'Médecine', attr: 'intelligence', alt: 'Diagnostic · soins · chirurgie' },
+            { id: 'pilotage', name: 'Pilotage', attr: 'precision', alt: 'Aéronefs · drones · engins' },
+            { id: 'recherche', name: 'Recherche', attr: 'intelligence', alt: 'Enquête · pistage · recoupement' },
+            { id: 'resilience', name: 'Résilience', attr: 'endurance', alt: 'Douleur · fatigue · pression' },
+            { id: 'sagacite', name: 'Sagacité', attr: 'intuition', alt: 'Empathie · mensonge · intention' },
+            { id: 'strategie', name: 'Stratégie', attr: 'intelligence', alt: 'Tactique · coordination' },
+            { id: 'tir', name: 'Tir', attr: 'precision', alt: 'Armes à distance · projectiles' },
+            { id: 'tromperie', name: 'Tromperie', attr: 'presence', alt: 'Bluff · comédie · manipulation' },
+            { id: 'vigilance', name: 'Vigilance', attr: 'intuition', alt: 'Alerte · détail · danger' }
+        ];
+
+        const VECTORS = [
+            { id: 'projeter', name: 'Projeter', glyph: '➤', alt: 'Rayons, souffles, décharges, projectiles' },
+            { id: 'mouvoir', name: 'Mouvoir', glyph: '↭', alt: 'Déplacer, propulser, voler, accélérer' },
+            { id: 'faconner', name: 'Façonner', glyph: '◈', alt: 'Créer, matérialiser, bâtir' },
+            { id: 'dissiper', name: 'Dissiper', glyph: '✕', alt: 'Détruire, annuler, neutraliser' },
+            { id: 'amplifier', name: 'Amplifier', glyph: '▲', alt: 'Renforcer, exalter, dépasser' },
+            { id: 'proteger', name: 'Protéger', glyph: '⛨', alt: 'Bloquer, absorber, endiguer' },
+            { id: 'restaurer', name: 'Restaurer', glyph: '✚', alt: 'Soigner, réparer, régénérer' },
+            { id: 'alterer', name: 'Altérer', glyph: '⟳', alt: 'Transformer, muter, dissimuler' },
+            { id: 'percevoir', name: 'Percevoir', glyph: '◉', alt: 'Détecter, sonder, pressentir' },
+            { id: 'assujettir', name: 'Assujettir', glyph: '⛓', alt: 'Lier, entraver, commander' }
+        ];
+
+        const DOMAINS = [
+            { id: 'corps', name: 'Corps', glyph: '⚕', alt: 'Chair, anatomie, sens, physiologie' },
+            { id: 'esprit', name: 'Esprit', glyph: '❂', alt: 'Pensée, émotion, mémoire, volonté' },
+            { id: 'matiere', name: 'Matière', glyph: '▣', alt: 'Objets inertes, structures, matériaux' },
+            { id: 'energie', name: 'Énergie', glyph: '⚡', alt: 'Chaleur, électricité, lumière, son' },
+            { id: 'cinetique', name: 'Cinétique', glyph: '⇉', alt: 'Vitesse, inertie, gravité, forces' },
+            { id: 'espace', name: 'Espace', glyph: '⬡', alt: 'Distance, portails, dimensions' },
+            { id: 'temps', name: 'Temps', glyph: '◷', alt: 'Durée, tempo, causalité' },
+            { id: 'vivant', name: 'Vivant', glyph: '❦', alt: 'Faune, flore, biosphère' },
+            { id: 'machines', name: 'Machines', glyph: '⚙', alt: 'Électronique, réseaux, véhicules' },
+            { id: 'milieu', name: 'Milieu', glyph: '≋', alt: 'Air, eau, terrain, météo' }
+        ];
+
+        const CLASSES = [
+            { id: 'epsilon', sym: 'ε', name: 'Classe Epsilon', color: '#6a7d92' },
+            { id: 'delta', sym: 'δ', name: 'Classe Delta', color: '#9fb0c4' },
+            { id: 'gamma', sym: 'γ', name: 'Classe Gamma', color: '#3fb27f' },
+            { id: 'beta', sym: 'β', name: 'Classe Beta', color: '#3f9fe0' },
+            { id: 'alpha', sym: 'α', name: 'Classe Alpha', color: '#8b7ae0' },
+            { id: 'omega', sym: 'Ω', name: 'Classe Omega', color: '#d9a441' }
+        ];
+        const CATEGORIES = [
+            { id: 'physique', code: 'PHY', name: 'Physique' },
+            { id: 'mentale', code: 'MEN', name: 'Mentale' },
+            { id: 'deplacement', code: 'DEP', name: 'Déplacement' },
+            { id: 'utilitaire', code: 'UTI', name: 'Utilitaire' },
+            { id: 'energetique', code: 'ENE', name: 'Élémentaire / Énergétique' },
+            { id: 'transformation', code: 'TRA', name: 'Transformation' },
+            { id: 'sensoriel', code: 'SEN', name: 'Sensoriel' }
+        ];
+        const DANGER_LEVELS = {
+            1: { name: 'Contrôlé', color: '#3fb27f' }, 2: { name: 'Stable', color: '#33bfae' },
+            3: { name: 'Instable', color: '#d9a441' }, 4: { name: 'Volatile', color: '#e08a4a' },
+            5: { name: 'Incontrôlable', color: '#e05c52' }
+        };
+
+        /* ==========================================================
+           ÉTAT
+           ========================================================== */
+
+        let config = {
+            budget: 80,
+            attrCosts: [0, -5, -3, -2, 0, 5, 9, 12],        // index = valeur, socle 4
+            compCosts: [0, -3, -1, 0, 3, 5, 8, 12],         // index = valeur, socle 3
+            habCosts: [0, 2, 4, 7, 11, 16, 22, 29, 37],     // index = échelon, socle 0
+            maxAttr: { 7: 1, 6: 2, 5: 3 },
+            maxComp: { 7: 1, 6: 2, 5: 3 },
+            maxHab: { 7: 1, 6: 1, 5: 2 }
+        };
+
+        const attrValues = {}, compValues = {}, vecValues = {}, domValues = {};
+        ATTRIBUTES.forEach(a => attrValues[a.id] = 4);
+        COMPETENCES.forEach(c => compValues[c.id] = 3);
+        VECTORS.forEach(v => vecValues[v.id] = 0);
+        DOMAINS.forEach(d => domValues[d.id] = 0);
+
+        let importedFiche = null;
+
+        /* ==========================================================
+           COÛTS ET PLAFONDS
+           ========================================================== */
+
+        const attrCost = v => config.attrCosts[v] || 0;
+        const compCost = v => config.compCosts[v] || 0;
+        const habCost = v => config.habCosts[v] || 0;
+
+        function totalSpent() {
+            let t = 0;
+            ATTRIBUTES.forEach(a => t += attrCost(attrValues[a.id]));
+            COMPETENCES.forEach(c => t += compCost(compValues[c.id]));
+            VECTORS.forEach(v => t += habCost(vecValues[v.id]));
+            DOMAINS.forEach(d => t += habCost(domValues[d.id]));
+            return t;
+        }
+
+        const countAt = (list, values, lv) => list.filter(x => values[x.id] === lv).length;
+
+        // Un palier saturé ne bloque pas : on saute au prochain niveau libre
+        function nextFree(list, values, cur, max, caps) {
+            for (let lv = cur + 1; lv <= max; lv++) {
+                const lim = caps[lv];
+                if (lim === undefined || countAt(list, values, lv) < lim) return lv;
+            }
+            return null;
+        }
+
+        function canRaise(list, values, id, max, caps, costFn) {
+            const cur = values[id];
+            if (cur >= max) return { ok: false, reason: 'Maximum atteint' };
+            const next = nextFree(list, values, cur, max, caps);
+            if (next === null) return { ok: false, reason: 'Tous les paliers supérieurs sont saturés' };
+            const cost = costFn(next) - costFn(cur);
+            if (totalSpent() + cost > config.budget) return { ok: false, reason: 'Dotation insuffisante' };
+            return { ok: true, cost, next, skipped: next > cur + 1 };
+        }
+
+        function lower(list, values, id, min, caps) {
+            const cur = values[id];
+            if (cur <= min) return;
+            let target = cur - 1;
+            while (target > min) {
+                const lim = caps[target];
+                if (lim === undefined || countAt(list, values, target) < lim) break;
+                target--;
+            }
+            values[id] = target;
+        }
+
+        /* ==========================================================
+           RENDU
+           ========================================================== */
+
+        function pips(n, total) {
+            let h = '';
+            for (let i = 1; i <= total; i++) h += `<div class="pip${i <= n ? ' on' : ''}"></div>`;
+            return h;
+        }
+
+        function capsHtml(list, values, caps, labels) {
+            return Object.keys(caps).sort((a, b) => b - a).map(lv => {
+                const n = countAt(list, values, +lv), max = caps[lv];
+                return `<span>${labels[lv]} <span class="n${n >= max ? ' full' : ''}">${n}/${max}</span></span>`;
+            }).join('');
+        }
+
+        function renderAttrs() {
+            document.getElementById('attrCaps').innerHTML = capsHtml(ATTRIBUTES, attrValues, config.maxAttr,
+                { 5: 'Élevé', 6: 'Supérieur', 7: 'Exceptionnel' });
+            document.getElementById('attrList').innerHTML = ATTRIBUTES.map(a => {
+                const v = attrValues[a.id], lv = ATTR_LEVELS[v], c = attrCost(v);
+                const up = canRaise(ATTRIBUTES, attrValues, a.id, 7, config.maxAttr, attrCost);
+                return `<div class="row">
+                    <div><div class="r-name">${a.name}</div><div class="r-alt">${a.alt}</div></div>
+                    <div class="pips">${pips(v, 8)}</div>
+                    <div class="r-lvl" style="color:${lv.color}">${lv.name}</div>
+                    <div class="r-cost">${c < 0 ? `<b class="free">${c}</b>` : `<b>${c}</b>`} pts</div>
+                    <div class="step">
+                        <button onclick="chAttr('${a.id}',-1)" ${v <= 1 ? 'disabled' : ''}>−</button>
+                        <span class="val">${v}</span>
+                        <button onclick="chAttr('${a.id}',1)" ${up.ok ? '' : 'disabled'}
+                            title="${up.ok ? (up.skipped ? 'Palier saturé : monte directement au niveau ' + up.next : '') : up.reason}">${up.ok && up.skipped ? '⇈' : '+'}</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderComps() {
+            document.getElementById('compCaps').innerHTML = capsHtml(COMPETENCES, compValues, config.maxComp,
+                { 5: 'Excellent', 6: 'Expert', 7: 'Maître' });
+            document.getElementById('compList').innerHTML = COMPETENCES.map(c => {
+                const v = compValues[c.id], lv = SKILL_LEVELS[v], cost = compCost(v);
+                const up = canRaise(COMPETENCES, compValues, c.id, 7, config.maxComp, compCost);
+                return `<div class="row">
+                    <div><div class="r-name">${c.name}</div><div class="r-alt">${c.alt}</div></div>
+                    <div class="pips">${pips(v, 8)}</div>
+                    <div class="r-lvl" style="color:${lv.color}">${lv.name}</div>
+                    <div class="r-cost">${cost < 0 ? `<b class="free">${cost}</b>` : `<b>${cost}</b>`} pts</div>
+                    <div class="step">
+                        <button onclick="chComp('${c.id}',-1)" ${v <= 1 ? 'disabled' : ''}>−</button>
+                        <span class="val">${v}</span>
+                        <button onclick="chComp('${c.id}',1)" ${up.ok ? '' : 'disabled'}
+                            title="${up.ok ? (up.skipped ? 'Palier saturé : monte directement au niveau ' + up.next : '') : up.reason}">${up.ok && up.skipped ? '⇈' : '+'}</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderHab(list, values, containerId, capsId, kind) {
+            document.getElementById(capsId).innerHTML = capsHtml(list, values, config.maxHab,
+                { 5: 'Confirmé', 6: 'Spécialiste', 7: 'Référent' });
+            document.getElementById(containerId).innerHTML = list.map(x => {
+                const v = values[x.id], lv = CLEARANCE_LEVELS[v], cost = habCost(v);
+                const up = canRaise(list, values, x.id, 8, config.maxHab, habCost);
+                return `<div class="row ${kind}">
+                    <div><div class="r-name">${x.glyph} ${x.name}</div><div class="r-alt">${x.alt}</div></div>
+                    <div class="pips">${pips(v, 8)}</div>
+                    <div class="r-lvl" style="color:${lv.color}">${lv.name}</div>
+                    <div class="r-cost"><b>${cost}</b> pts</div>
+                    <div class="step">
+                        <button onclick="chHab('${kind}','${x.id}',-1)" ${v <= 0 ? 'disabled' : ''}>−</button>
+                        <span class="val">${v}</span>
+                        <button onclick="chHab('${kind}','${x.id}',1)" ${up.ok ? '' : 'disabled'}
+                            title="${up.ok ? (up.skipped ? 'Palier saturé : monte directement au niveau ' + up.next : '') : up.reason}">${up.ok && up.skipped ? '⇈' : '+'}</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderBudget() {
+            const spent = totalSpent(), over = spent > config.budget, left = config.budget - spent;
+            document.getElementById('bFill').style.width = Math.min((spent / config.budget) * 100, 100) + '%';
+            document.getElementById('bFill').classList.toggle('over', over);
+            document.getElementById('bSpent').textContent = spent;
+            document.getElementById('bTotal').textContent = config.budget;
+            document.getElementById('bNum').classList.toggle('over', over);
+            const l = document.getElementById('bLeft');
+            l.textContent = over ? Math.abs(left) + ' de trop' : left + ' restants';
+            l.classList.toggle('over', over);
+        }
+
+        function bestPair() {
+            const v = Math.max(...VECTORS.map(x => vecValues[x.id]));
+            const d = Math.max(...DOMAINS.map(x => domValues[x.id]));
+            return { v, d, dice: Math.min(MAX_HAB_DICE, v + d) };
+        }
+
+        function renderDerived() {
+            const elan = (ELAN_CONTRIB[attrValues.endurance] || 5) + (ELAN_CONTRIB[attrValues.volonte] || 5);
+            const charge = CHARGE_TABLE[attrValues.volonte] || 0;
+            const vitesse = VITESSE_TABLE[attrValues.vivacite] || 30;
+            const bp = bestPair();
+            const erud = compValues.erudition;
+            document.getElementById('derived').innerHTML = `
+                <div class="d-tile"><div class="d-l">Élan</div><div class="d-v" style="color:var(--bad)">${elan}</div></div>
+                <div class="d-tile"><div class="d-l">Charge</div><div class="d-v" style="color:var(--charge)">${charge}</div></div>
+                <div class="d-tile"><div class="d-l">Déplacement</div><div class="d-v" style="color:var(--aci-bright)">${vitesse}<span style="font-size:.5em"> ft</span></div></div>
+                <div class="d-tile"><div class="d-l">Meilleur pouvoir</div><div class="d-v" style="color:var(--vector)">${SOCLE_DICE}+${bp.dice}<span style="font-size:.5em"> dés</span></div></div>
+                <div class="d-tile"><div class="d-l">Corpus d'érudition</div><div class="d-v" style="color:var(--ink-2)">${Math.max(0, erud - 2)}</div></div>`;
+        }
+
+        function renderSummary() {
+            const el = document.getElementById('summary');
+            const parts = [];
+            const line = (n, v, lab, col) =>
+                `<div class="sum-item"><span class="sn">${n}</span><span><span class="sv" style="color:${col}">${v}</span><span class="sl">${lab}</span></span></div>`;
+
+            const attrs = ATTRIBUTES.filter(a => attrValues[a.id] !== 4)
+                .sort((a, b) => attrValues[b.id] - attrValues[a.id]);
+            if (attrs.length) parts.push('<div class="sum-title">Attributs écartés du socle</div><div class="sum">' +
+                attrs.map(a => line(a.name, attrValues[a.id], ATTR_LEVELS[attrValues[a.id]].name, ATTR_LEVELS[attrValues[a.id]].color)).join('') + '</div>');
+
+            const comps = COMPETENCES.filter(c => compValues[c.id] !== 3)
+                .sort((a, b) => compValues[b.id] - compValues[a.id]);
+            if (comps.length) parts.push('<div class="sum-title">Aptitudes écartées du socle</div><div class="sum">' +
+                comps.map(c => line(c.name, compValues[c.id], SKILL_LEVELS[compValues[c.id]].name, SKILL_LEVELS[compValues[c.id]].color)).join('') + '</div>');
+
+            const vecs = VECTORS.filter(v => vecValues[v.id] > 0).sort((a, b) => vecValues[b.id] - vecValues[a.id]);
+            const doms = DOMAINS.filter(d => domValues[d.id] > 0).sort((a, b) => domValues[b.id] - domValues[a.id]);
+            if (vecs.length) parts.push('<div class="sum-title">Vecteurs habilités</div><div class="sum">' +
+                vecs.map(v => line(v.glyph + ' ' + v.name, vecValues[v.id], CLEARANCE_LEVELS[vecValues[v.id]].name, 'var(--vector)')).join('') + '</div>');
+            if (doms.length) parts.push('<div class="sum-title">Domaines habilités</div><div class="sum">' +
+                doms.map(d => line(d.glyph + ' ' + d.name, domValues[d.id], CLEARANCE_LEVELS[domValues[d.id]].name, 'var(--domain)')).join('') + '</div>');
+
+            if (!vecs.length && !doms.length) parts.push('<div class="hint" style="margin-top:10px;color:var(--warn)">Aucune habilitation : l\'agent ne peut activer aucun pouvoir. Il faut au moins un vecteur et un domaine.</div>');
+            else if (!vecs.length || !doms.length) parts.push('<div class="hint" style="margin-top:10px;color:var(--warn)">Il manque ' + (vecs.length ? 'un domaine' : 'un vecteur') + ' : un pouvoir se décrit toujours par un couple vecteur × domaine.</div>');
+
+            el.innerHTML = parts.join('') || '<div class="hint">Rien d\'investi pour l\'instant.</div>';
+        }
+
+        function render() {
+            renderBudget(); renderAttrs(); renderComps();
+            renderHab(VECTORS, vecValues, 'vecList', 'vecCaps', 'v');
+            renderHab(DOMAINS, domValues, 'domList', 'domCaps', 'd');
+            renderDerived(); renderSummary(); renderCode();
+        }
+
+        /* ==========================================================
+           ACTIONS
+           ========================================================== */
+
+        function chAttr(id, d) {
+            if (d > 0) { const c = canRaise(ATTRIBUTES, attrValues, id, 7, config.maxAttr, attrCost); if (!c.ok) return; attrValues[id] = c.next; }
+            else lower(ATTRIBUTES, attrValues, id, 1, config.maxAttr);
+            render();
+        }
+        function chComp(id, d) {
+            if (d > 0) { const c = canRaise(COMPETENCES, compValues, id, 7, config.maxComp, compCost); if (!c.ok) return; compValues[id] = c.next; }
+            else lower(COMPETENCES, compValues, id, 1, config.maxComp);
+            render();
+        }
+        function chHab(kind, id, d) {
+            const list = kind === 'v' ? VECTORS : DOMAINS;
+            const values = kind === 'v' ? vecValues : domValues;
+            if (d > 0) { const c = canRaise(list, values, id, 8, config.maxHab, habCost); if (!c.ok) return; values[id] = c.next; }
+            else lower(list, values, id, 0, config.maxHab);
+            render();
+        }
+        function resetAll() {
+            ATTRIBUTES.forEach(a => attrValues[a.id] = 4);
+            COMPETENCES.forEach(c => compValues[c.id] = 3);
+            VECTORS.forEach(v => vecValues[v.id] = 0);
+            DOMAINS.forEach(d => domValues[d.id] = 0);
+            render();
+        }
+
+        const num = id => parseInt(document.getElementById(id).value) || 0;
+        function updateSettings() {
+            config.budget = num('s_budget') || 80;
+            config.attrCosts = [0, num('s_a1'), num('s_a2'), num('s_a3'), 0, num('s_a5'), num('s_a6'), num('s_a7')];
+            config.compCosts = [0, num('s_c1'), num('s_c2'), 0, num('s_c4'), num('s_c5'), num('s_c6'), num('s_c7')];
+            config.habCosts = [0, num('s_h1'), num('s_h2'), num('s_h3'), num('s_h4'), num('s_h5'), num('s_h6'), num('s_h7'), num('s_h7') + 8];
+            config.maxAttr = { 7: num('s_ma7'), 6: num('s_ma6'), 5: num('s_ma5') };
+            config.maxComp = { 7: num('s_mc7'), 6: num('s_mc6'), 5: num('s_mc5') };
+            config.maxHab = { 7: num('s_mh7'), 6: num('s_mh6'), 5: num('s_mh5') };
+            render();
+        }
+
+        function toast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 2600);
+        }
+
+        /* ==========================================================
+           CLASSIFICATION
+           ========================================================== */
+
+        function buildClassifSelects() {
+            document.getElementById('f-class').innerHTML =
+                CLASSES.map(c => `<option value="${c.id}"${c.id === 'gamma' ? ' selected' : ''}>${c.sym} · ${c.name}</option>`).join('');
+            document.getElementById('f-category').innerHTML =
+                CATEGORIES.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            document.getElementById('f-danger').innerHTML =
+                Object.entries(DANGER_LEVELS).map(([k, v]) => `<option value="${k}"${k === '2' ? ' selected' : ''}>${k} · ${v.name}</option>`).join('');
+        }
+
+        function nameInitials(name) {
+            const parts = String(name || '').trim().split(/[\s'’-]+/).filter(Boolean);
+            if (!parts.length) return '??';
+            const letters = parts.map(x => x[0].toUpperCase());
+            if (letters.length === 1) return letters[0] + (parts[0][1] || 'X').toUpperCase();
+            return letters[0] + letters[letters.length - 1];
+        }
+        function autoNumber(name) {
+            const src = String(name || '').toUpperCase();
+            if (!src.trim()) return '000';
+            let h = 7;
+            for (let i = 0; i < src.length; i++) h = (h * 31 + src.charCodeAt(i)) >>> 0;
+            return String(h % 1000).padStart(3, '0');
+        }
+        const identityName = () =>
+            document.getElementById('f-civil').value || document.getElementById('f-codename').value || '';
+
+        function classifNumber() {
+            const manual = document.getElementById('f-number').value.replace(/\D/g, '');
+            return manual ? manual.padStart(3, '0').slice(-3) : autoNumber(identityName());
+        }
+        function buildCode() {
+            const cl = CLASSES.find(c => c.id === document.getElementById('f-class').value) || CLASSES[2];
+            const cat = CATEGORIES.find(c => c.id === document.getElementById('f-category').value) || CATEGORIES[0];
+            const d = parseInt(document.getElementById('f-danger').value) || 1;
+            return `${cl.sym}-${cat.code}-${classifNumber()}-${nameInitials(identityName())}-${d}`;
+        }
+        function renderCode() {
+            const cl = CLASSES.find(c => c.id === document.getElementById('f-class').value) || CLASSES[2];
+            const cat = CATEGORIES.find(c => c.id === document.getElementById('f-category').value) || CATEGORIES[0];
+            const d = parseInt(document.getElementById('f-danger').value) || 1;
+            const out = document.getElementById('codeOut');
+            out.textContent = buildCode();
+            out.style.color = cl.color;
+            document.getElementById('f-number').placeholder = autoNumber(identityName());
+            document.getElementById('codeDesc').innerHTML =
+                `<span style="color:${cl.color}">${cl.name}</span> · ${cat.name} · <span style="color:${DANGER_LEVELS[d].color}">danger ${d} ${DANGER_LEVELS[d].name}</span>`;
+        }
+
+        /* ==========================================================
+           EXPORT VERS LA FICHE
+           ========================================================== */
+
+        function buildFileBlock() {
+            return {
+                codename: document.getElementById('f-codename').value,
+                civil: document.getElementById('f-civil').value,
+                unit: '', officer: '', image: null,
+                clazz: document.getElementById('f-class').value,
+                category: document.getElementById('f-category').value,
+                danger: parseInt(document.getElementById('f-danger').value) || 2,
+                number: document.getElementById('f-number').value.replace(/\D/g, '').slice(0, 3),
+                status: 'Actif'
+            };
+        }
+
+        function exportToFiche() {
+            const attributes = {};
+            ATTRIBUTES.forEach(a => attributes[a.id] = attrValues[a.id]);
+
+            // Les compétences ajoutées à la main sur une fiche importée sont conservées telles quelles
+            let skills;
+            if (importedFiche && Array.isArray(importedFiche.skills)) {
+                skills = importedFiche.skills.map(s => {
+                    const hit = COMPETENCES.find(c => c.name === s.name);
+                    return hit ? { ...s, level: compValues[hit.id] } : { ...s };
+                });
+                COMPETENCES.forEach((c, i) => {
+                    if (!skills.some(s => s.name === c.name))
+                        skills.push({ id: 'sk' + i, name: c.name, attr: c.attr, level: compValues[c.id] });
+                });
+            } else {
+                skills = COMPETENCES.map((c, i) => ({ id: 'sk' + i, name: c.name, attr: c.attr, level: compValues[c.id] }));
+            }
+
+            const vectors = VECTORS.map(v => ({ id: v.id, name: v.name, level: vecValues[v.id] }));
+            const domains = DOMAINS.map(d => ({ id: d.id, name: d.name, level: domValues[d.id] }));
+
+            let state;
+            const file = buildFileBlock();
+            if (importedFiche) {
+                state = { ...importedFiche, file: { ...importedFiche.file, ...file, image: importedFiche.file?.image ?? null }, attributes, skills, vectors, domains };
+            } else {
+                state = {
+                    file, attributes, skills, vectors, domains,
+                    specialties: [], wounds: [], gear: [],
+                    charge: { used: 0, overrideMax: null },
+                    focalisation: { current: 1, max: 1 },
+                    vitesseBonus: 0, sustained: [], buffs: [], notes: ''
+                };
+            }
+            state.system = 'ACI';
+
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            const nm = (file.codename || file.civil || 'agent').toLowerCase()
+                .normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+            a.download = 'ACI_' + (nm || 'agent') + '.json';
+            a.click();
+            URL.revokeObjectURL(a.href);
+            toast(importedFiche ? 'Dossier mis à jour' : 'Dossier exporté');
+        }
+
+        /* ==========================================================
+           IMPORT D'UNE FICHE
+           ========================================================== */
+
+        function renderImportTag() {
+            const el = document.getElementById('importTag');
+            const btn = document.getElementById('exportBtn');
+            if (!importedFiche) { el.innerHTML = ''; btn.textContent = '↓ Exporter vers la fiche'; return; }
+            const nm = importedFiche.file?.codename || importedFiche.file?.civil || 'dossier sans nom';
+            el.innerHTML = `<span class="tag-import">Mise à jour de <strong>${nm}</strong>
+                <button onclick="clearImport()" title="Repartir d'un dossier vierge">✕</button></span>`;
+            btn.textContent = '↓ Mettre à jour le dossier';
+        }
+        function clearImport() { importedFiche = null; renderImportTag(); }
+
+        function importFromFiche() {
+            const input = document.createElement('input');
+            input.type = 'file'; input.accept = '.json,application/json';
+            input.onchange = e => {
+                const f = e.target.files[0];
+                if (!f) return;
+                const r = new FileReader();
+                r.onload = ev => {
+                    try { loadFicheJSON(JSON.parse(ev.target.result)); }
+                    catch (err) { alert('Fichier illisible : ' + err.message); }
+                };
+                r.readAsText(f);
+            };
+            input.click();
+        }
+
+        function loadFicheJSON(data) {
+            importedFiche = JSON.parse(JSON.stringify(data));
+
+            if (data.file) {
+                document.getElementById('f-codename').value = data.file.codename || '';
+                document.getElementById('f-civil').value = data.file.civil || '';
+                if (data.file.clazz) document.getElementById('f-class').value = data.file.clazz;
+                if (data.file.category) document.getElementById('f-category').value = data.file.category;
+                if (data.file.danger) document.getElementById('f-danger').value = data.file.danger;
+                document.getElementById('f-number').value = data.file.number || '';
+            }
+
+            if (data.attributes) Object.entries(data.attributes).forEach(([k, v]) => {
+                if (k in attrValues) attrValues[k] = Math.max(1, Math.min(7, Number(v) || 4));
+            });
+
+            const ignored = [];
+            if (Array.isArray(data.skills)) {
+                COMPETENCES.forEach(c => compValues[c.id] = 3);
+                data.skills.forEach(s => {
+                    if (!s || !s.name) return;
+                    const hit = COMPETENCES.find(c => c.name === s.name);
+                    if (!hit) { ignored.push(s.name); return; }
+                    compValues[hit.id] = Math.max(1, Math.min(7, Number(s.level) || 3));
+                });
+            }
+            if (Array.isArray(data.vectors)) data.vectors.forEach(v => {
+                if (v && v.id in vecValues) vecValues[v.id] = Math.max(0, Math.min(8, Number(v.level) || 0));
+            });
+            if (Array.isArray(data.domains)) data.domains.forEach(d => {
+                if (d && d.id in domValues) domValues[d.id] = Math.max(0, Math.min(8, Number(d.level) || 0));
+            });
+
+            const relaxed = relaxLimits();
+            render();
+            renderImportTag();
+
+            let msg = '✓ Dossier importé. L\'export mettra à jour cette fiche en conservant incidents, matériel et notes.';
+            if (ignored.length) msg += '\n\nAptitudes ignorées : ' + ignored.join(', ');
+            if (relaxed) msg += '\n\nCe dossier dépasse certains plafonds actuels ; ils ont été élargis pour le conserver tel quel.';
+            const over = totalSpent() - config.budget;
+            if (over > 0) msg += `\n\nDotation dépassée de ${over} points.`;
+            alert(msg);
+        }
+
+        // Un dossier antérieur peut dépasser les plafonds : on les élargit plutôt que de le tronquer
+        function relaxLimits() {
+            let relaxed = false;
+            const check = (list, values, caps) => Object.keys(caps).forEach(lv => {
+                const n = countAt(list, values, +lv);
+                if (n > caps[lv]) { caps[lv] = n; relaxed = true; }
+            });
+            check(ATTRIBUTES, attrValues, config.maxAttr);
+            check(COMPETENCES, compValues, config.maxComp);
+            check(VECTORS, vecValues, config.maxHab);
+            check(DOMAINS, domValues, config.maxHab);
+            return relaxed;
+        }
+
+        /* ========================== INIT ========================== */
+        buildClassifSelects();
+        render();
+    </script>
+</body>
+
+</html>

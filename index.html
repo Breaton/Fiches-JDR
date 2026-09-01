@@ -25,8 +25,10 @@
       --font-body: 'Nunito Sans', -apple-system, sans-serif;
 
       /* Accents par système */
-      --gdf-gold: #d4a84b;
-      --gdf-purple: #6b4c9a;
+      --aci-blue: #3f9fe0;
+      --aci-bright: #6fc0f5;
+      --aci-vector: #8b7ae0;
+      --aci-domain: #d9a441;
       --sw-blue: #00a8ff;
       --sw-red: #ff3333;
       --alt-orange-dark: #d62900;
@@ -48,8 +50,8 @@
       font-family: var(--font-body);
       background-color: var(--midnight);
       background-image:
-        radial-gradient(ellipse at 15% 25%, rgba(212, 168, 75, 0.07) 0%, transparent 50%),
-        radial-gradient(ellipse at 85% 75%, rgba(107, 76, 154, 0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 15% 25%, rgba(63, 159, 224, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 75%, rgba(139, 122, 224, 0.07) 0%, transparent 50%),
         radial-gradient(ellipse at 50% 50%, rgba(45, 58, 92, 0.5) 0%, transparent 80%);
       min-height: 100vh;
       color: var(--pure-white);
@@ -112,7 +114,7 @@
 
     .site-header h1 em {
       font-style: italic;
-      background: linear-gradient(135deg, var(--gdf-gold), #f5d98a);
+      background: linear-gradient(135deg, var(--aci-blue), var(--aci-bright));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -138,13 +140,13 @@
       content: '';
       flex: 1;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.4), transparent);
+      background: linear-gradient(90deg, transparent, rgba(63, 159, 224, 0.4), transparent);
     }
 
     .divider-gem {
       width: 6px;
       height: 6px;
-      background: var(--gdf-gold);
+      background: var(--aci-blue);
       transform: rotate(45deg);
       opacity: 0.7;
     }
@@ -190,12 +192,12 @@
       width: 100%;
     }
 
-    .system-card.gdf .card-banner {
-      background: linear-gradient(90deg, var(--gdf-purple), var(--gdf-gold));
+    .system-card.aci .card-banner {
+      background: linear-gradient(90deg, var(--aci-blue), var(--aci-vector), var(--aci-domain));
     }
 
-    .system-card.gdf:hover {
-      border-color: rgba(212, 168, 75, 0.35);
+    .system-card.aci:hover {
+      border-color: rgba(63, 159, 224, 0.4);
     }
 
     .system-card.star-wars .card-banner {
@@ -226,8 +228,9 @@
       margin-bottom: 8px;
     }
 
-    .gdf .card-system-label {
-      color: var(--gdf-gold);
+    .aci .card-system-label {
+      color: var(--aci-blue);
+      font-family: 'Courier New', monospace;
     }
 
     .star-wars .card-system-label {
@@ -282,8 +285,8 @@
       transform: translateX(3px);
     }
 
-    .gdf .sheet-link:hover {
-      border-color: rgba(212, 168, 75, 0.25);
+    .aci .sheet-link:hover {
+      border-color: rgba(63, 159, 224, 0.3);
     }
 
     .star-wars .sheet-link:hover {
@@ -305,8 +308,8 @@
       flex-shrink: 0;
     }
 
-    .gdf .sheet-icon {
-      background: rgba(212, 168, 75, 0.15);
+    .aci .sheet-icon {
+      background: rgba(63, 159, 224, 0.16);
     }
 
     .star-wars .sheet-icon {
@@ -432,28 +435,36 @@
     <!-- GRILLE -->
     <div class="systems-grid">
 
-      <!-- GDF -->
-      <div class="system-card gdf">
+      <!-- ACI · SUPER-HÉROS -->
+      <div class="system-card aci">
         <div class="card-banner"></div>
         <div class="card-body">
-          <p class="card-system-label">Système Fantasy</p>
-          <h2 class="card-title">Guerre des futurs</h2>
-          <p class="card-desc">GDF - Système narratif de la Guerre des Futurs, avec registres émotionnels, magie
-            improvisée et constellations.</p>
+          <p class="card-system-label">ACI · Contemporain 2026</p>
+          <h2 class="card-title">Super-héros</h2>
+          <p class="card-desc">Agence de Coordination des Interventions — dossier d'agent habilité :
+            classification officielle, pouvoirs cadrés par vecteurs et domaines, réserve de Charge.</p>
           <div class="sheets-list">
-            <a class="sheet-link" href="GDF/GDF-fiche.html">
-              <div class="sheet-icon">🔮</div>
+            <a class="sheet-link" href="ACI/ACI_fiche.html">
+              <div class="sheet-icon">🛡️</div>
               <div class="sheet-info">
                 <div class="sheet-name">Aller vers la fiche</div>
-                <div class="sheet-meta">Attention au nez d'Andrew</div>
+                <div class="sheet-meta">Tout ce qui dépasse finit dans un dossier</div>
               </div>
               <span class="sheet-arrow">→</span>
             </a>
-            <a class="sheet-link coming-soon">
+            <a class="sheet-link" href="ACI/MJ_ACI.html">
+              <div class="sheet-icon">🎲</div>
+              <div class="sheet-info">
+                <div class="sheet-name">Poste de coordination</div>
+                <div class="sheet-meta">Suivi des agents habilités</div>
+              </div>
+              <span class="sheet-arrow">→</span>
+            </a>
+            <a class="sheet-link" href="ACI/ACI_point_buy.html">
               <div class="sheet-icon">⚙️</div>
               <div class="sheet-info">
                 <div class="sheet-name">Créer un personnage</div>
-                <div class="sheet-meta">Point-buy GDF</div>
+                <div class="sheet-meta">Constitution de dossier ACI</div>
               </div>
               <span class="sheet-arrow">→</span>
             </a>
