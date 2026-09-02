@@ -2962,13 +2962,13 @@
         ];
 
         const CATEGORIES = [
-            { id: 'physique', code: 'PHY', name: 'Physique' },
-            { id: 'mentale', code: 'MEN', name: 'Mentale' },
             { id: 'deplacement', code: 'DEP', name: 'Déplacement' },
-            { id: 'utilitaire', code: 'UTI', name: 'Utilitaire' },
             { id: 'energetique', code: 'ENE', name: 'Élémentaire / Énergétique' },
-            { id: 'transformation', code: 'TRA', name: 'Transformation' },
+            { id: 'mentale', code: 'MEN', name: 'Mentale' },
+            { id: 'physique', code: 'PHY', name: 'Physique' },
             { id: 'sensoriel', code: 'SEN', name: 'Sensoriel' }
+            { id: 'transformation', code: 'TRA', name: 'Transformation' },
+            { id: 'utilitaire', code: 'UTI', name: 'Utilitaire' },
         ];
 
         const DANGER_LEVELS = {
@@ -3030,12 +3030,12 @@
             ['Escamotage', 'precision'],
             ['Informatique', 'intelligence'],
             ['Ingénierie', 'intelligence'],
-            ['Science', 'intelligence'],
             ['Médecine', 'intelligence'],
             ['Pilotage', 'precision'],
             ['Recherche', 'intelligence'],
             ['Résilience', 'endurance'],
             ['Sagacité', 'intuition'],
+            ['Science', 'intelligence'],
             ['Stratégie', 'intelligence'],
             ['Tir', 'precision'],
             ['Tromperie', 'presence'],
@@ -3046,26 +3046,26 @@
            Le niveau d'Érudition ouvre des créneaux de spécialité : le personnage
            déclare les corpus qu'il maîtrise réellement (droit, histoire, etc.). */
         const ERUDITION_FIELDS = [
-            'Droit et procédure',
-            'Institutions et administration',
-            'Histoire',
-            'Géopolitique',
-            'Économie et finance',
+            'Anthropologie',
+            'Archéologie',
             'Criminologie',
-            'Métahumanologie',
-            'Théologie et religions',
-            'Philosophie',
+            'Droit et procédure',
+            'Économie et finance',
+            'Géographie et topographie',
+            'Géopolitique',
+            'Histoire militaire',
+            'Histoire',
+            'Institutions et administration',
             'Linguistique',
             'Littérature et arts',
-            'Archéologie',
-            'Anthropologie',
-            'Sciences politiques',
-            'Histoire militaire',
-            'Renseignement et cryptographie',
             'Médias et culture populaire',
+            'Métahumanologie',
             'Occultisme et folklore',
-            'Géographie et topographie',
+            'Philosophie',
             'Protocole et mondanités'
+            'Renseignement et cryptographie',
+            'Sciences politiques',
+            'Théologie et religions',
         ];
         // Créneaux ouverts : Ordinaire 1, Qualifié 2 … Absolue 6
         function eruditionLevel() {
