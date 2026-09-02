@@ -300,16 +300,20 @@
                     <div class="ref-col"><h3>Domaines d'application</h3><div id="ref-dom"></div></div>
                 </div>
                 <div class="ref-item" style="margin-top:18px;border-top:1px solid var(--line);padding-top:12px;">
-                    <b>Résolution d'un pouvoir</b> <span>— les échelons d'habilitation vont de 0 à 5 et le
-                    couple Vecteur + Domaine fixe la Magnitude maximum, 10 au sommet. La Magnitude déclarée est le nombre de dés lancés ; leurs faces dépendent de
+                    <b>Résolution d'un pouvoir</b> <span>— l'agent choisit un canal unique, l'attribut par
+                    lequel passent tous ses vecteurs et qui donne aux dés leur profil de faces. Les échelons
+                    d'habilitation vont de 0 à 5 et le couple Vecteur + Domaine fixe la Magnitude maximum,
+                    10 au sommet. La Magnitude déclarée est le nombre de dés lancés ; leurs faces dépendent de
                     l'attribut de canal, et leur somme est la Puissance de l'effet. Sur un jet combiné, cette
                     Puissance s'ajoute au total d'aptitude. Coût : 1 Charge par dé engagé.</span>
                 </div>
                 <div class="ref-item">
-                    <b>Surmenage</b> <span>— la réserve de Charge ne descend jamais sous zéro et ne crée
-                    aucune dette. Un incident automatique en tient lieu, dont la gravité suit ce qui reste
-                    en réserve : moitié 1, quart 2, dixième 3, réserve vide 5. Il disparaît de lui-même à la
-                    récupération.</span>
+                    <b>Charge</b> <span>— la dotation dépend de la classe : ε 10 · δ 22 · γ 34 · β 46 ·
+                    α 58 · Ω 70. Un pouvoir coûte 1 Charge par dé engagé.</span>
+                </div>
+                <div class="ref-item">
+                    <b>Réserve à sec</b> <span>— la Charge plafonne à zéro et n'entame jamais l'Élan. Un
+                    agent à sec ne peut plus rien engager avant d'avoir récupéré.</span>
                 </div>
             </div>
         </section>
@@ -341,12 +345,12 @@
         };
         const MAX_CLEARANCE = 5;
         const CLEARANCE_LEVELS = {
-            0: { name: 'Non habilité', color: '#45566a' }, 1: { name: 'Latent', color: '#e08a4a' },
-            2: { name: 'Instable', color: '#d9a441' }, 3: { name: 'Contrôlé', color: '#9fb0c4' },
-            4: { name: 'Certifié', color: '#3fb27f' }, 5: { name: 'Référent', color: '#6fc0f5' }
+            0: { name: 'Non habilité', color: '#45566a' }, 1: { name: 'Éveillé', color: '#9fb0c4' },
+            2: { name: 'Habilité', color: '#3fb27f' }, 3: { name: 'Confirmé', color: '#3f9fe0' },
+            4: { name: 'Certifié', color: '#8b7ae0' }, 5: { name: 'Référent', color: '#6fc0f5' }
         };
         const ELAN_CONTRIB = { 1:1, 2:2, 3:3, 4:5, 5:7, 6:9, 7:12, 8:15 };
-        const CHARGE_TABLE = { 1:3, 2:6, 3:10, 4:14, 5:18, 6:22, 7:28, 8:35 };
+        const CLASS_CHARGE = { epsilon: 10, delta: 22, gamma: 34, beta: 46, alpha: 58, omega: 70 };
         const VITESSE_TABLE = { 1:10, 2:15, 3:20, 4:30, 5:35, 6:40, 7:50, 8:60 };
         const SOCLE_DICE = 3;
 
@@ -408,28 +412,28 @@
             ['Vigilance', "Capter son environnement immédiat et rester en alerte."]
         ];
         const VECTOR_DEFS = [
-            ['Projeter', "Rayons, souffles, décharges, projectiles."],
-            ['Mouvoir', "Déplacer, propulser, retenir, voler, accélérer."],
-            ['Façonner', "Créer, matérialiser, bâtir des structures et des constructs."],
-            ['Dissiper', "Détruire, annuler, neutraliser, désintégrer."],
-            ['Amplifier', "Renforcer, exalter, dépasser les limites naturelles."],
-            ['Protéger', "Bloquer, absorber, endiguer, rendre invulnérable."],
-            ['Restaurer', "Soigner, réparer, purifier, régénérer."],
-            ['Altérer', "Transformer, muter, dissimuler, changer de nature."],
-            ['Percevoir', "Détecter, sonder, lire, pressentir, localiser."],
-            ['Assujettir', "Lier, entraver, commander, prendre le contrôle."]
+            ['Absorber', "Drainer, siphonner, se nourrir de, copier."],
+            ['Altérer', "Changer la nature ou l'état, métamorphose, phase."],
+            ['Amplifier', "Renforcer, exalter, dépasser les limites."],
+            ['Assujettir', "Contraindre, entraver, dominer, paralyser."],
+            ['Dissimuler', "Voiler, effacer, rendre indétectable."],
+            ['Dissiper', "Annuler, rompre, désintégrer, neutraliser."],
+            ['Manifester', "Rayons, souffles, décharges, constructs, matérialisation."],
+            ['Mouvoir', "Déplacer, propulser, repousser, attirer."],
+            ['Percevoir', "Détecter, lire, sonder, prévoir."],
+            ['Restaurer', "Soigner, régénérer, réparer, purifier."]
         ];
         const DOMAIN_DEFS = [
-            ['Corps', "Chair, anatomie, physiologie, sens."],
-            ['Esprit', "Pensée, émotion, mémoire, volonté d'autrui. Sous surveillance."],
-            ['Matière', "Objets inertes, structures, matériaux."],
-            ['Énergie', "Chaleur, électricité, lumière, son, rayonnement."],
-            ['Cinétique', "Vitesse, inertie, gravité, forces, trajectoires."],
-            ['Espace', "Distance, portée, portails, dimensions, position."],
-            ['Temps', "Durée, tempo, causalité. Sous surveillance."],
-            ['Vivant', "Faune, flore, micro-organismes, biosphère."],
-            ['Machines', "Électronique, réseaux, données, véhicules, automates."],
-            ['Milieu', "Air, eau, terrain, météo, environnement immédiat."]
+            ['Corps', "Un organisme comme individu : chair, anatomie, sens."],
+            ['Éléments', "Feu, glace, eau, air, foudre, lumière, ténèbres, son."],
+            ['Espace', "Distance, direction, portails, dimensions."],
+            ['Esprit', "Pensée, émotion, mémoire, volonté."],
+            ['Machines', "Électronique, réseaux, véhicules, systèmes artificiels."],
+            ['Matière', "Inerte manufacturé : objets, structures, matériaux."],
+            ['Nature', "Flore, faune, terrain, météo, biosphère."],
+            ['Pouvoir', "Les capacités métahumaines comme substance : aura, flux."],
+            ['Temps', "Durée, tempo, causalité."],
+            ['Vie', "Vitalité, souffle, santé, vieillissement, principe vital."]
         ];
 
         /* ==========================================================
@@ -470,7 +474,7 @@
             const vectors = (o.vectors || []).filter(v => v && v.name).map(v => ({ name: v.name, level: clampHab(v.level) }));
             const domains = (o.domains || []).filter(d => d && d.name).map(d => ({ name: d.name, level: clampHab(d.level) }));
 
-            const wounds = (o.wounds || []).map(w => ({
+            const wounds = (o.wounds || []).filter(w => w && w.auto !== 'chargeFatigue').map(w => ({
                 name: (w.name || '').toString(), type: (w.type || '').toString(),
                 gravity: parseInt(w.gravity) || 0
             })).filter(w => w.gravity > 0);
@@ -494,6 +498,7 @@
                 chargeOverride: (o.charge && o.charge.overrideMax) || null,
                 focalisation: o.focalisation || { current: 1, max: 1 },
                 vitesseBonus: parseInt(o.vitesseBonus) || 0,
+                canal: o.canal || 'volonte',
                 sustained: o.sustained || [],
                 buffs: o.buffs || [],
                 gear: o.gear || [],
@@ -505,7 +510,7 @@
         const totalGravity = r => r.wounds.reduce((s, w) => s + (w.gravity || 0), 0);
         const elanMax = r => ELAN_CONTRIB[clampAttr(r.attributes.endurance)] + ELAN_CONTRIB[clampAttr(r.attributes.volonte)];
         const elanCur = r => Math.max(0, elanMax(r) - totalGravity(r));
-        const chargeMax = r => r.chargeOverride > 0 ? r.chargeOverride : (CHARGE_TABLE[clampAttr(r.attributes.volonte)] || 0);
+        const chargeMax = r => r.chargeOverride > 0 ? r.chargeOverride : (CLASS_CHARGE[r.clazz] || CLASS_CHARGE.gamma);
         const chargeLeft = r => Math.max(0, chargeMax(r) - (r.chargeUsed || 0));
         const vitesse = r => (VITESSE_TABLE[clampAttr(r.attributes.vivacite)] || 30) + (r.vitesseBonus || 0);
 
@@ -580,7 +585,8 @@
             const trainedV = r.vectors.filter(v => v.level > 0).sort((a, b) => b.level - a.level);
             const trainedD = r.domains.filter(d => d.level > 0).sort((a, b) => b.level - a.level);
             const habHtml = (trainedV.length || trainedD.length)
-                ? `<div><span class="hl">Vecteurs</span> <span class="hv">${trainedV.map(v => `${v.name} <b style="color:${habLevel(v.level).color}">${v.level}</b>`).join(' · ') || '—'}</span></div>
+                ? `<div><span class="hl">Canal</span> <span class="hv">${ATTR_LABEL[r.canal] || 'Volonté'} <b style="color:${attrLevel(r.attributes[r.canal] || 4).color}">${attrLevel(r.attributes[r.canal] || 4).name}</b></span></div>
+                   <div><span class="hl">Vecteurs</span> <span class="hv">${trainedV.map(v => `${v.name} <b style="color:${habLevel(v.level).color}">${v.level}</b>`).join(' · ') || '—'}</span></div>
                    <div><span class="hl hd">Domaines</span> <span class="hv">${trainedD.map(d => `${d.name} <b style="color:${habLevel(d.level).color}">${d.level}</b>`).join(' · ') || '—'}</span></div>`
                 : '<span class="hab-none">Aucune habilitation déclarée</span>';
 

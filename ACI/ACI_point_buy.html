@@ -247,7 +247,7 @@
             font-size: 0.92em; width: 100%;
         }
         .field input:focus, .field select:focus { outline: none; border-color: var(--aci); }
-        .id-grid { display: grid; grid-template-columns: 1.4fr 1.4fr 1fr 1.2fr 1fr 76px; gap: 9px; }
+        .id-grid { display: grid; grid-template-columns: 1.3fr 1.3fr 1fr 1.1fr 1fr 74px 1fr; gap: 9px; }
         @media (max-width: 1080px) { .id-grid { grid-template-columns: 1fr 1fr; } }
         .code-line {
             margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line);
@@ -322,9 +322,9 @@
             <span class="budget-label">Dotation</span>
             <div class="budget-track"><div class="budget-fill" id="bFill"></div></div>
             <div class="budget-num" id="bNum">
-                <span class="spent" id="bSpent">0</span><span class="sep"> / </span><span class="total" id="bTotal">80</span>
+                <span class="spent" id="bSpent">0</span><span class="sep"> / </span><span class="total" id="bTotal">100</span>
             </div>
-            <div class="budget-left" id="bLeft">80 restants</div>
+            <div class="budget-left" id="bLeft">100 restants</div>
             <button class="btn primary" id="exportBtn" onclick="exportToFiche()">↓ Exporter vers la fiche</button>
             <button class="btn" onclick="importFromFiche()">↑ Importer une fiche</button>
             <span id="importTag"></span>
@@ -336,7 +336,7 @@
             <h3>Coûts et plafonds</h3>
             <div class="set-grid">
                 <div class="set-title">Dotation</div>
-                <div class="set-item"><label>Points disponibles</label><input type="number" id="s_budget" value="80" min="10" max="400" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Points disponibles</label><input type="number" id="s_budget" value="100" min="10" max="400" onchange="updateSettings()"></div>
 
                 <div class="set-title">Attributs — coût cumulé depuis Commun (4)</div>
                 <div class="set-item"><label>Déficient (1)</label><input type="number" id="s_a1" value="-5" onchange="updateSettings()"></div>
@@ -355,9 +355,9 @@
                 <div class="set-item"><label>Maître (7)</label><input type="number" id="s_c7" value="12" onchange="updateSettings()"></div>
 
                 <div class="set-title">Habilitation — coût cumulé depuis Non habilité (0)</div>
-                <div class="set-item"><label>Latent (1)</label><input type="number" id="s_h1" value="2" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Instable (2)</label><input type="number" id="s_h2" value="5" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Contrôlé (3)</label><input type="number" id="s_h3" value="9" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Éveillé (1)</label><input type="number" id="s_h1" value="2" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Habilité (2)</label><input type="number" id="s_h2" value="5" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Confirmé (3)</label><input type="number" id="s_h3" value="9" onchange="updateSettings()"></div>
                 <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_h4" value="14" onchange="updateSettings()"></div>
                 <div class="set-item"><label>Référent (5)</label><input type="number" id="s_h5" value="20" onchange="updateSettings()"></div>
 
@@ -371,10 +371,10 @@
                 <div class="set-item"><label>Expert (6)</label><input type="number" id="s_mc6" value="2" min="0" max="22" onchange="updateSettings()"></div>
                 <div class="set-item"><label>Excellent (5)</label><input type="number" id="s_mc5" value="3" min="0" max="22" onchange="updateSettings()"></div>
 
-                <div class="set-title">Plafonds — habilitation (par liste)</div>
-                <div class="set-item"><label>Référent (5)</label><input type="number" id="s_mh5" value="1" min="0" max="10" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_mh4" value="1" min="0" max="10" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Contrôlé (3)</label><input type="number" id="s_mh3" value="2" min="0" max="10" onchange="updateSettings()"></div>
+                <div class="set-title">Plafonds — habilitation (vecteurs et domaines confondus)</div>
+                <div class="set-item"><label>Échelon maximum</label><input type="number" id="s_hmax" value="4" min="1" max="5" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_mh4" value="1" min="0" max="20" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Confirmé (3)</label><input type="number" id="s_mh3" value="2" min="0" max="20" onchange="updateSettings()"></div>
             </div>
         </div>
 
@@ -391,6 +391,7 @@
                     <div class="field"><label>Catégorie</label><select id="f-category" onchange="renderCode()"></select></div>
                     <div class="field"><label>Danger</label><select id="f-danger" onchange="renderCode()"></select></div>
                     <div class="field"><label>N° dossier</label><input type="text" id="f-number" maxlength="3" placeholder="auto" oninput="renderCode()"></div>
+                    <div class="field"><label>Canal</label><select id="f-canal" onchange="render()"></select></div>
                 </div>
                 <div class="code-line">
                     <span class="code-l">Code de classification</span>
@@ -416,6 +417,7 @@
                     <div class="card-head a-vector">
                         <span class="tag">§4</span>
                         <span class="card-title">Vecteurs d'effet</span>
+                        <span class="hint" style="margin-left:auto;">plafonds partagés avec les domaines</span>
                     </div>
                     <div class="caps" id="vecCaps"></div>
                     <div id="vecList"></div>
@@ -425,6 +427,7 @@
                     <div class="card-head a-domain">
                         <span class="tag">§5</span>
                         <span class="card-title">Domaines d'application</span>
+                        <span class="hint" style="margin-left:auto;">plafonds partagés avec les vecteurs</span>
                     </div>
                     <div class="caps" id="domCaps"></div>
                     <div id="domList"></div>
@@ -456,9 +459,13 @@
         </div>
 
         <p class="hint" style="text-align:center;margin:24px 0 8px;">
-            Les échelons d'habilitation vont de 0 à 5. La <strong>Magnitude maximum</strong> d'un pouvoir
+            Les échelons d'habilitation vont de 0 à 5, mais la création s'arrête à <strong>Certifié (4)</strong>,
+            et un seul vecteur <em>ou</em> domaine peut y prétendre : les plafonds se comptent sur les deux
+            listes réunies. La <strong>Magnitude maximum</strong> d'un pouvoir
             est la somme des échelons de son Vecteur et de son Domaine, soit 10 au sommet : c'est le nombre
-            de dés de Puissance qu'il peut engager, à 1 Charge le dé.
+            de dés de Puissance qu'il peut engager, à 1 Charge le dé. La dotation en Charge dépend de la
+            <strong>classe</strong> (ε 10 · δ 22 · γ 34 · β 46 · α 58 · Ω 70) et le <strong>canal</strong>
+            donne à ces dés leur profil de faces.
             L'export produit un dossier <code>.json</code> lisible par la fiche ACI ; une fiche importée
             est mise à jour sans perdre incidents, matériel ni notes.
         </p>
@@ -486,12 +493,12 @@
         // Échelons d'habilitation : 0 à 5, soit une Magnitude maximum de 10 pour un couple au sommet
         const MAX_CLEARANCE = 5;
         const CLEARANCE_LEVELS = {
-            0: { name: 'Non habilité', color: '#45566a' }, 1: { name: 'Latent', color: '#e08a4a' },
-            2: { name: 'Instable', color: '#d9a441' }, 3: { name: 'Contrôlé', color: '#9fb0c4' },
-            4: { name: 'Certifié', color: '#3fb27f' }, 5: { name: 'Référent', color: '#6fc0f5' }
+            0: { name: 'Non habilité', color: '#45566a' }, 1: { name: 'Éveillé', color: '#9fb0c4' },
+            2: { name: 'Habilité', color: '#3fb27f' }, 3: { name: 'Confirmé', color: '#3f9fe0' },
+            4: { name: 'Certifié', color: '#8b7ae0' }, 5: { name: 'Référent', color: '#6fc0f5' }
         };
         const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
-        const CHARGE_TABLE = { 1: 3, 2: 6, 3: 10, 4: 14, 5: 18, 6: 22, 7: 28, 8: 35 };
+        const CLASS_CHARGE = { epsilon: 10, delta: 22, gamma: 34, beta: 46, alpha: 58, omega: 70 };
         const VITESSE_TABLE = { 1: 10, 2: 15, 3: 20, 4: 30, 5: 35, 6: 40, 7: 50, 8: 60 };
         const SOCLE_DICE = 3;
 
@@ -502,7 +509,7 @@
             { id: 'endurance', name: 'Endurance', alt: 'Encaisser · tenir dans la durée' },
             { id: 'intelligence', name: 'Intelligence', alt: 'Analyse · déduction · planification' },
             { id: 'intuition', name: 'Intuition', alt: 'Perception · pressentiment · lecture' },
-            { id: 'volonte', name: 'Volonté', alt: 'Sang-froid · détermination · réserve de Charge' },
+            { id: 'volonte', name: 'Volonté', alt: 'Sang-froid · détermination · ne plus céder' },
             { id: 'presence', name: 'Présence', alt: 'Aura · autorité · magnétisme' }
         ];
 
@@ -532,29 +539,29 @@
         ];
 
         const VECTORS = [
-            { id: 'projeter', name: 'Projeter', glyph: '➤', alt: 'Rayons, souffles, décharges, projectiles' },
-            { id: 'mouvoir', name: 'Mouvoir', glyph: '↭', alt: 'Déplacer, propulser, voler, accélérer' },
-            { id: 'faconner', name: 'Façonner', glyph: '◈', alt: 'Créer, matérialiser, bâtir' },
-            { id: 'dissiper', name: 'Dissiper', glyph: '✕', alt: 'Détruire, annuler, neutraliser' },
-            { id: 'amplifier', name: 'Amplifier', glyph: '▲', alt: 'Renforcer, exalter, dépasser' },
-            { id: 'proteger', name: 'Protéger', glyph: '⛨', alt: 'Bloquer, absorber, endiguer' },
-            { id: 'restaurer', name: 'Restaurer', glyph: '✚', alt: 'Soigner, réparer, régénérer' },
-            { id: 'alterer', name: 'Altérer', glyph: '⟳', alt: 'Transformer, muter, dissimuler' },
-            { id: 'percevoir', name: 'Percevoir', glyph: '◉', alt: 'Détecter, sonder, pressentir' },
-            { id: 'assujettir', name: 'Assujettir', glyph: '⛓', alt: 'Lier, entraver, commander' }
+            { id: 'absorber', name: 'Absorber', glyph: '⤓', alt: 'Drainer, siphonner, se nourrir de, copier' },
+            { id: 'alterer', name: 'Altérer', glyph: '⟳', alt: "Changer la nature ou l'état, métamorphose, phase" },
+            { id: 'amplifier', name: 'Amplifier', glyph: '▲', alt: 'Renforcer, exalter, dépasser les limites' },
+            { id: 'assujettir', name: 'Assujettir', glyph: '⛓', alt: 'Contraindre, entraver, dominer, paralyser' },
+            { id: 'dissimuler', name: 'Dissimuler', glyph: '◌', alt: 'Voiler, effacer, rendre indétectable' },
+            { id: 'dissiper', name: 'Dissiper', glyph: '✕', alt: 'Annuler, rompre, désintégrer, neutraliser' },
+            { id: 'manifester', name: 'Manifester', glyph: '◈', alt: 'Rayons, souffles, décharges, constructs' },
+            { id: 'mouvoir', name: 'Mouvoir', glyph: '↭', alt: 'Déplacer, propulser, repousser, attirer' },
+            { id: 'percevoir', name: 'Percevoir', glyph: '◉', alt: 'Détecter, lire, sonder, prévoir' },
+            { id: 'restaurer', name: 'Restaurer', glyph: '✚', alt: 'Soigner, régénérer, réparer, purifier' }
         ];
 
         const DOMAINS = [
-            { id: 'corps', name: 'Corps', glyph: '⚕', alt: 'Chair, anatomie, sens, physiologie' },
+            { id: 'corps', name: 'Corps', glyph: '⚕', alt: 'Un organisme comme individu : chair, anatomie, sens' },
+            { id: 'elements', name: 'Éléments', glyph: '⚡', alt: 'Feu, glace, eau, air, foudre, lumière, ténèbres, son' },
+            { id: 'espace', name: 'Espace', glyph: '⬡', alt: 'Distance, direction, portails, dimensions' },
             { id: 'esprit', name: 'Esprit', glyph: '❂', alt: 'Pensée, émotion, mémoire, volonté' },
-            { id: 'matiere', name: 'Matière', glyph: '▣', alt: 'Objets inertes, structures, matériaux' },
-            { id: 'energie', name: 'Énergie', glyph: '⚡', alt: 'Chaleur, électricité, lumière, son' },
-            { id: 'cinetique', name: 'Cinétique', glyph: '⇉', alt: 'Vitesse, inertie, gravité, forces' },
-            { id: 'espace', name: 'Espace', glyph: '⬡', alt: 'Distance, portails, dimensions' },
+            { id: 'machines', name: 'Machines', glyph: '⚙', alt: 'Électronique, réseaux, véhicules, systèmes artificiels' },
+            { id: 'matiere', name: 'Matière', glyph: '▣', alt: 'Inerte manufacturé : objets, structures, matériaux' },
+            { id: 'nature', name: 'Nature', glyph: '❦', alt: 'Flore, faune, terrain, météo, biosphère' },
+            { id: 'pouvoir', name: 'Pouvoir', glyph: '✦', alt: 'Les capacités métahumaines comme substance : aura, flux' },
             { id: 'temps', name: 'Temps', glyph: '◷', alt: 'Durée, tempo, causalité' },
-            { id: 'vivant', name: 'Vivant', glyph: '❦', alt: 'Faune, flore, biosphère' },
-            { id: 'machines', name: 'Machines', glyph: '⚙', alt: 'Électronique, réseaux, véhicules' },
-            { id: 'milieu', name: 'Milieu', glyph: '≋', alt: 'Air, eau, terrain, météo' }
+            { id: 'vie', name: 'Vie', glyph: '✺', alt: 'Vitalité, souffle, santé, vieillissement' }
         ];
 
         const CLASSES = [
@@ -585,13 +592,14 @@
            ========================================================== */
 
         let config = {
-            budget: 80,
+            budget: 100,
             attrCosts: [0, -5, -3, -2, 0, 5, 9, 12],        // index = valeur, socle 4
             compCosts: [0, -3, -1, 0, 3, 5, 8, 12],         // index = valeur, socle 3
             habCosts: [0, 2, 5, 9, 14, 20],                 // index = échelon, socle 0
             maxAttr: { 7: 1, 6: 2, 5: 3 },
             maxComp: { 7: 1, 6: 2, 5: 3 },
-            maxHab: { 5: 1, 4: 1, 3: 2 }
+            habMax: 4,                                      // échelon le plus haut ouvert à la création
+            maxHab: { 4: 1, 3: 2 }                          // décomptés sur l'ensemble vecteurs + domaines
         };
 
         const attrValues = {}, compValues = {}, vecValues = {}, domValues = {};
@@ -609,6 +617,16 @@
         const attrCost = v => config.attrCosts[v] || 0;
         const compCost = v => config.compCosts[v] || 0;
         const habCost = v => config.habCosts[v] || 0;
+
+        // Les plafonds d'habilitation se comptent sur un pool unique : un échelon Certifié
+        // pris par un vecteur ferme la place à tous les domaines, et réciproquement.
+        function habPool() {
+            const list = [], values = {};
+            VECTORS.forEach(v => { list.push({ id: 'v:' + v.id }); values['v:' + v.id] = vecValues[v.id]; });
+            DOMAINS.forEach(d => { list.push({ id: 'd:' + d.id }); values['d:' + d.id] = domValues[d.id]; });
+            return { list, values };
+        }
+        const habCeiling = () => Math.max(1, Math.min(MAX_CLEARANCE, config.habMax || 4));
 
         function totalSpent() {
             let t = 0;
@@ -712,11 +730,12 @@
         }
 
         function renderHab(list, values, containerId, capsId, kind) {
-            document.getElementById(capsId).innerHTML = capsHtml(list, values, config.maxHab,
-                { 3: 'Contrôlé', 4: 'Certifié', 5: 'Référent' });
+            const pool = habPool(), ceil = habCeiling();
+            document.getElementById(capsId).innerHTML = capsHtml(pool.list, pool.values, config.maxHab,
+                { 3: 'Confirmé', 4: 'Certifié', 5: 'Référent' });
             document.getElementById(containerId).innerHTML = list.map(x => {
                 const v = values[x.id], lv = CLEARANCE_LEVELS[v], cost = habCost(v);
-                const up = canRaise(list, values, x.id, MAX_CLEARANCE, config.maxHab, habCost);
+                const up = canRaise(pool.list, pool.values, kind + ':' + x.id, ceil, config.maxHab, habCost);
                 return `<div class="row ${kind}">
                     <div><div class="r-name">${x.glyph} ${x.name}</div><div class="r-alt">${x.alt}</div></div>
                     <div class="pips">${pips(v, MAX_CLEARANCE)}</div>
@@ -754,7 +773,7 @@
 
         function renderDerived() {
             const elan = (ELAN_CONTRIB[attrValues.endurance] || 5) + (ELAN_CONTRIB[attrValues.volonte] || 5);
-            const charge = CHARGE_TABLE[attrValues.volonte] || 0;
+            const charge = CLASS_CHARGE[document.getElementById('f-class').value] || CLASS_CHARGE.gamma;
             const vitesse = VITESSE_TABLE[attrValues.vivacite] || 30;
             const bp = bestPair();
             const erud = compValues.erudition;
@@ -817,10 +836,16 @@
             render();
         }
         function chHab(kind, id, d) {
-            const list = kind === 'v' ? VECTORS : DOMAINS;
             const values = kind === 'v' ? vecValues : domValues;
-            if (d > 0) { const c = canRaise(list, values, id, MAX_CLEARANCE, config.maxHab, habCost); if (!c.ok) return; values[id] = c.next; }
-            else lower(list, values, id, 0, config.maxHab);
+            const pool = habPool(), key = kind + ':' + id;
+            if (d > 0) {
+                const c = canRaise(pool.list, pool.values, key, habCeiling(), config.maxHab, habCost);
+                if (!c.ok) return;
+                values[id] = c.next;
+            } else {
+                lower(pool.list, pool.values, key, 0, config.maxHab);
+                values[id] = pool.values[key];
+            }
             render();
         }
         function resetAll() {
@@ -833,13 +858,14 @@
 
         const num = id => parseInt(document.getElementById(id).value) || 0;
         function updateSettings() {
-            config.budget = num('s_budget') || 80;
+            config.budget = num('s_budget') || 100;
             config.attrCosts = [0, num('s_a1'), num('s_a2'), num('s_a3'), 0, num('s_a5'), num('s_a6'), num('s_a7')];
             config.compCosts = [0, num('s_c1'), num('s_c2'), 0, num('s_c4'), num('s_c5'), num('s_c6'), num('s_c7')];
             config.habCosts = [0, num('s_h1'), num('s_h2'), num('s_h3'), num('s_h4'), num('s_h5')];
             config.maxAttr = { 7: num('s_ma7'), 6: num('s_ma6'), 5: num('s_ma5') };
             config.maxComp = { 7: num('s_mc7'), 6: num('s_mc6'), 5: num('s_mc5') };
-            config.maxHab = { 5: num('s_mh5'), 4: num('s_mh4'), 3: num('s_mh3') };
+            config.habMax = Math.max(1, Math.min(MAX_CLEARANCE, num('s_hmax') || 4));
+            config.maxHab = { 4: num('s_mh4'), 3: num('s_mh3') };
             render();
         }
 
@@ -860,6 +886,8 @@
                 CATEGORIES.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
             document.getElementById('f-danger').innerHTML =
                 Object.entries(DANGER_LEVELS).map(([k, v]) => `<option value="${k}"${k === '2' ? ' selected' : ''}>${k} · ${v.name}</option>`).join('');
+            document.getElementById('f-canal').innerHTML =
+                ATTRIBUTES.map(a => `<option value="${a.id}"${a.id === 'volonte' ? ' selected' : ''}>${a.name}</option>`).join('');
         }
 
         function nameInitials(name) {
@@ -918,6 +946,10 @@
             };
         }
 
+        function chosenCanal() {
+            return document.getElementById('f-canal').value || 'volonte';
+        }
+
         function exportToFiche() {
             const attributes = {};
             ATTRIBUTES.forEach(a => attributes[a.id] = attrValues[a.id]);
@@ -943,11 +975,11 @@
             let state;
             const file = buildFileBlock();
             if (importedFiche) {
-                state = { ...importedFiche, file: { ...importedFiche.file, ...file, image: importedFiche.file?.image ?? null }, attributes, skills, vectors, domains };
+                state = { ...importedFiche, file: { ...importedFiche.file, ...file, image: importedFiche.file?.image ?? null }, canal: chosenCanal(), attributes, skills, vectors, domains };
             } else {
                 state = {
                     file, attributes, skills, vectors, domains,
-                    specialties: [], wounds: [], gear: [],
+                    canal: chosenCanal(), specialties: [], wounds: [], gear: [],
                     charge: { used: 0, overrideMax: null },
                     focalisation: { current: 1, max: 1 },
                     vitesseBonus: 0, sustained: [], buffs: [], notes: ''
@@ -1008,6 +1040,7 @@
                 if (data.file.danger) document.getElementById('f-danger').value = data.file.danger;
                 document.getElementById('f-number').value = data.file.number || '';
             }
+            if (data.canal) document.getElementById('f-canal').value = data.canal;
 
             if (data.attributes) Object.entries(data.attributes).forEach(([k, v]) => {
                 if (k in attrValues) attrValues[k] = Math.max(1, Math.min(7, Number(v) || 4));
@@ -1051,8 +1084,10 @@
             });
             check(ATTRIBUTES, attrValues, config.maxAttr);
             check(COMPETENCES, compValues, config.maxComp);
-            check(VECTORS, vecValues, config.maxHab);
-            check(DOMAINS, domValues, config.maxHab);
+            const pool = habPool();
+            check(pool.list, pool.values, config.maxHab);
+            const top = Math.max(0, ...Object.values(pool.values));
+            if (top > habCeiling()) { config.habMax = top; relaxed = true; }
             return relaxed;
         }
 
