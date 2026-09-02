@@ -45,7 +45,11 @@
             --font-mono: 'JetBrains Mono', 'Consolas', monospace;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: var(--font-body);
@@ -56,248 +60,718 @@
             font-size: 14px;
             -webkit-font-smoothing: antialiased;
         }
+
         body::before {
-            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
             background:
                 radial-gradient(ellipse at 15% 0%, rgba(63, 159, 224, 0.07) 0%, transparent 55%),
                 radial-gradient(ellipse at 85% 100%, rgba(139, 122, 224, 0.05) 0%, transparent 55%);
         }
+
         body::after {
-            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-            background: repeating-linear-gradient(0deg, rgba(255,255,255,0.014) 0px, rgba(255,255,255,0.014) 1px, transparent 1px, transparent 3px);
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background: repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.014) 0px, rgba(255, 255, 255, 0.014) 1px, transparent 1px, transparent 3px);
         }
 
-        .wrapper { position: relative; z-index: 1; max-width: 1500px; margin: 0 auto; }
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
 
         /* ===== EN-TÊTE ===== */
         .head {
             background: linear-gradient(180deg, #101822 0%, #0c131b 100%);
-            border: 1px solid var(--line); border-radius: 4px 4px 0 0;
+            border: 1px solid var(--line);
+            border-radius: 4px 4px 0 0;
             padding: 14px 20px;
-            display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
         }
+
         .mark {
-            width: 42px; height: 42px; flex: 0 0 42px;
-            border: 1px solid var(--aci); border-radius: 3px;
-            display: flex; align-items: center; justify-content: center; background: var(--aci-wash);
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
+            border: 1px solid var(--aci);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--aci-wash);
         }
-        .mark svg { width: 26px; height: 26px; }
-        .head-id { flex: 1; min-width: 200px; }
+
+        .mark svg {
+            width: 26px;
+            height: 26px;
+        }
+
+        .head-id {
+            flex: 1;
+            min-width: 200px;
+        }
+
         .head-name {
-            font-family: var(--font-head); font-size: 1.32em; font-weight: 700;
-            letter-spacing: 0.14em; text-transform: uppercase; line-height: 1.1;
+            font-family: var(--font-head);
+            font-size: 1.32em;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            line-height: 1.1;
         }
-        .head-name span { color: var(--aci); }
+
+        .head-name span {
+            color: var(--aci);
+        }
+
         .head-sub {
-            font-family: var(--font-mono); font-size: 0.68em; letter-spacing: 0.16em;
-            color: var(--ink-3); text-transform: uppercase; margin-top: 3px;
+            font-family: var(--font-mono);
+            font-size: 0.68em;
+            letter-spacing: 0.16em;
+            color: var(--ink-3);
+            text-transform: uppercase;
+            margin-top: 3px;
         }
+
         .back {
-            font-family: var(--font-mono); font-size: 0.7em; letter-spacing: 0.1em;
-            text-transform: uppercase; color: var(--ink-3); text-decoration: none;
-            border: 1px solid var(--line); border-radius: 2px; padding: 7px 12px;
+            font-family: var(--font-mono);
+            font-size: 0.7em;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--ink-3);
+            text-decoration: none;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            padding: 7px 12px;
         }
-        .back:hover { border-color: var(--aci); color: var(--aci-bright); }
+
+        .back:hover {
+            border-color: var(--aci);
+            color: var(--aci-bright);
+        }
 
         /* ===== BARRE DE BUDGET ===== */
         .budget {
-            position: sticky; top: 0; z-index: 300;
-            background: var(--panel); border: 1px solid var(--line); border-top: none;
-            padding: 11px 20px; margin-bottom: 18px;
-            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
-            box-shadow: 0 8px 24px rgba(0,0,0,.5);
+            position: sticky;
+            top: 0;
+            z-index: 300;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-top: none;
+            padding: 11px 20px;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
         }
+
         .budget-label {
-            font-family: var(--font-mono); font-size: 0.66em; letter-spacing: 0.16em;
-            text-transform: uppercase; color: var(--ink-4); white-space: nowrap;
+            font-family: var(--font-mono);
+            font-size: 0.66em;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--ink-4);
+            white-space: nowrap;
         }
+
         .budget-track {
-            flex: 1; min-width: 140px; height: 7px; background: var(--panel-3);
-            border: 1px solid var(--line-soft); border-radius: 2px; overflow: hidden;
+            flex: 1;
+            min-width: 140px;
+            height: 7px;
+            background: var(--panel-3);
+            border: 1px solid var(--line-soft);
+            border-radius: 2px;
+            overflow: hidden;
         }
+
         .budget-fill {
-            height: 100%; background: linear-gradient(90deg, var(--aci-deep), var(--aci-bright));
+            height: 100%;
+            background: linear-gradient(90deg, var(--aci-deep), var(--aci-bright));
             transition: width .3s ease;
         }
-        .budget-fill.over { background: linear-gradient(90deg, #8a2f28, var(--bad)); }
-        .budget-num { font-family: var(--font-mono); font-size: 1.05em; font-weight: 700; white-space: nowrap; }
-        .budget-num .spent { color: var(--aci-bright); }
-        .budget-num.over .spent { color: var(--bad); }
-        .budget-num .sep, .budget-num .total { color: var(--ink-4); }
-        .budget-left { font-family: var(--font-mono); font-size: 0.72em; color: var(--ink-3); white-space: nowrap; }
-        .budget-left.over { color: var(--bad); }
+
+        .budget-fill.over {
+            background: linear-gradient(90deg, #8a2f28, var(--bad));
+        }
+
+        .budget-num {
+            font-family: var(--font-mono);
+            font-size: 1.05em;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .budget-num .spent {
+            color: var(--aci-bright);
+        }
+
+        .budget-num.over .spent {
+            color: var(--bad);
+        }
+
+        .budget-num .sep,
+        .budget-num .total {
+            color: var(--ink-4);
+        }
+
+        .budget-left {
+            font-family: var(--font-mono);
+            font-size: 0.72em;
+            color: var(--ink-3);
+            white-space: nowrap;
+        }
+
+        .budget-left.over {
+            color: var(--bad);
+        }
 
         .btn {
-            padding: 7px 12px; background: var(--panel-2); color: var(--ink-2);
-            border: 1px solid var(--line); border-radius: 2px; cursor: pointer;
-            font-family: var(--font-mono); font-size: 0.7em; letter-spacing: 0.08em;
-            text-transform: uppercase; white-space: nowrap;
+            padding: 7px 12px;
+            background: var(--panel-2);
+            color: var(--ink-2);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: var(--font-mono);
+            font-size: 0.7em;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            white-space: nowrap;
         }
-        .btn:hover { border-color: var(--aci); color: var(--aci-bright); }
-        .btn.primary { border-color: var(--aci); color: var(--aci-bright); background: var(--aci-wash); }
-        .btn.danger:hover { border-color: var(--bad); color: var(--bad); }
+
+        .btn:hover {
+            border-color: var(--aci);
+            color: var(--aci-bright);
+        }
+
+        .btn.primary {
+            border-color: var(--aci);
+            color: var(--aci-bright);
+            background: var(--aci-wash);
+        }
+
+        .btn.danger:hover {
+            border-color: var(--bad);
+            color: var(--bad);
+        }
 
         .tag-import {
-            display: inline-flex; align-items: center; gap: 7px;
-            padding: 5px 10px; background: var(--aci-wash);
-            border: 1px solid var(--aci); border-radius: 2px;
-            font-family: var(--font-mono); font-size: 0.68em; color: var(--aci-bright);
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 5px 10px;
+            background: var(--aci-wash);
+            border: 1px solid var(--aci);
+            border-radius: 2px;
+            font-family: var(--font-mono);
+            font-size: 0.68em;
+            color: var(--aci-bright);
         }
-        .tag-import button { background: none; border: none; color: inherit; cursor: pointer; opacity: .6; }
-        .tag-import button:hover { opacity: 1; }
+
+        .tag-import button {
+            background: none;
+            border: none;
+            color: inherit;
+            cursor: pointer;
+            opacity: .6;
+        }
+
+        .tag-import button:hover {
+            opacity: 1;
+        }
 
         /* ===== RÉGLAGES ===== */
         .settings {
-            display: none; background: var(--panel); border: 1px solid var(--line);
-            border-radius: 3px; padding: 16px; margin-bottom: 18px;
+            display: none;
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            padding: 16px;
+            margin-bottom: 18px;
         }
-        .settings.open { display: block; }
+
+        .settings.open {
+            display: block;
+        }
+
         .settings h3 {
-            font-family: var(--font-head); font-size: 1.05em; font-weight: 600;
-            letter-spacing: 0.13em; text-transform: uppercase; margin-bottom: 12px; color: var(--aci-bright);
+            font-family: var(--font-head);
+            font-size: 1.05em;
+            font-weight: 600;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            color: var(--aci-bright);
         }
-        .set-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 9px; }
+
+        .set-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 9px;
+        }
+
         .set-title {
-            grid-column: 1 / -1; font-family: var(--font-mono); font-size: 0.64em;
-            letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4);
-            border-top: 1px solid var(--line); padding-top: 9px; margin-top: 5px;
+            grid-column: 1 / -1;
+            font-family: var(--font-mono);
+            font-size: 0.64em;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink-4);
+            border-top: 1px solid var(--line);
+            padding-top: 9px;
+            margin-top: 5px;
         }
-        .set-item { display: flex; align-items: center; gap: 8px; }
-        .set-item label { flex: 1; font-size: 0.82em; color: var(--ink-3); }
+
+        .set-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .set-item label {
+            flex: 1;
+            font-size: 0.82em;
+            color: var(--ink-3);
+        }
+
         .set-item input {
-            width: 62px; background: var(--panel-3); border: 1px solid var(--line);
-            border-radius: 2px; color: var(--ink); font-family: var(--font-mono);
-            font-size: 0.82em; padding: 5px; text-align: center;
+            width: 62px;
+            background: var(--panel-3);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--ink);
+            font-family: var(--font-mono);
+            font-size: 0.82em;
+            padding: 5px;
+            text-align: center;
         }
-        .set-item input:focus { outline: none; border-color: var(--aci); }
+
+        .set-item input:focus {
+            outline: none;
+            border-color: var(--aci);
+        }
 
         /* ===== CARTOUCHES ===== */
-        .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
-        @media (max-width: 1080px) { .cols { grid-template-columns: 1fr; } }
-        .col { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+        .cols {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            align-items: start;
+        }
 
-        .card { background: var(--panel); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
+        @media (max-width: 1080px) {
+            .cols {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            min-width: 0;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
         .card-head {
-            display: flex; align-items: center; gap: 10px;
-            padding: 9px 14px; background: var(--panel-2); border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 14px;
+            background: var(--panel-2);
+            border-bottom: 1px solid var(--line);
         }
-        .card-head .tag { font-family: var(--font-mono); font-size: 0.64em; letter-spacing: 0.14em; color: var(--ink-4); }
+
+        .card-head .tag {
+            font-family: var(--font-mono);
+            font-size: 0.64em;
+            letter-spacing: 0.14em;
+            color: var(--ink-4);
+        }
+
         .card-title {
-            font-family: var(--font-head); font-size: 1.06em; font-weight: 600;
-            letter-spacing: 0.13em; text-transform: uppercase; flex: 1;
+            font-family: var(--font-head);
+            font-size: 1.06em;
+            font-weight: 600;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+            flex: 1;
         }
-        .card-head.a-aci { box-shadow: inset 3px 0 0 var(--aci); }
-        .card-head.a-vector { box-shadow: inset 3px 0 0 var(--vector); }
-        .card-head.a-domain { box-shadow: inset 3px 0 0 var(--domain); }
+
+        .card-head.a-aci {
+            box-shadow: inset 3px 0 0 var(--aci);
+        }
+
+        .card-head.a-vector {
+            box-shadow: inset 3px 0 0 var(--vector);
+        }
+
+        .card-head.a-domain {
+            box-shadow: inset 3px 0 0 var(--domain);
+        }
 
         .caps {
-            display: flex; gap: 14px; flex-wrap: wrap;
-            padding: 7px 14px; background: var(--hull); border-bottom: 1px solid var(--line-soft);
-            font-family: var(--font-mono); font-size: 0.68em; color: var(--ink-4);
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            padding: 7px 14px;
+            background: var(--hull);
+            border-bottom: 1px solid var(--line-soft);
+            font-family: var(--font-mono);
+            font-size: 0.68em;
+            color: var(--ink-4);
         }
-        .caps .n { color: var(--ok); font-weight: 700; }
-        .caps .n.full { color: var(--bad); }
+
+        .caps .n {
+            color: var(--ok);
+            font-weight: 700;
+        }
+
+        .caps .n.full {
+            color: var(--bad);
+        }
 
         /* ===== LIGNES ===== */
         .row {
-            display: grid; grid-template-columns: 1fr auto 96px 54px auto;
-            align-items: center; gap: 10px;
-            padding: 6px 14px; border-bottom: 1px solid rgba(36,53,74,.4);
+            display: grid;
+            grid-template-columns: 1fr auto 96px 54px auto;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 14px;
+            border-bottom: 1px solid rgba(36, 53, 74, .4);
         }
-        .row:last-child { border-bottom: none; }
-        .row:hover { background: rgba(255,255,255,.018); }
-        .r-name { font-size: 0.9em; }
-        .r-alt { font-size: 0.72em; color: var(--ink-4); margin-top: 1px; line-height: 1.3; }
-        .r-lvl { font-family: var(--font-mono); font-size: 0.72em; font-weight: 700; text-align: right; }
-        .r-cost { font-family: var(--font-mono); font-size: 0.72em; color: var(--ink-4); text-align: right; }
-        .r-cost b { color: var(--aci); font-weight: 700; }
-        .r-cost b.free { color: var(--ok); }
 
-        .pips { display: flex; gap: 3px; }
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .row:hover {
+            background: rgba(255, 255, 255, .018);
+        }
+
+        .r-name {
+            font-size: 0.9em;
+        }
+
+        .r-alt {
+            font-size: 0.72em;
+            color: var(--ink-4);
+            margin-top: 1px;
+            line-height: 1.3;
+        }
+
+        .r-lvl {
+            font-family: var(--font-mono);
+            font-size: 0.72em;
+            font-weight: 700;
+            text-align: right;
+        }
+
+        .r-cost {
+            font-family: var(--font-mono);
+            font-size: 0.72em;
+            color: var(--ink-4);
+            text-align: right;
+        }
+
+        .r-cost b {
+            color: var(--aci);
+            font-weight: 700;
+        }
+
+        .r-cost b.free {
+            color: var(--ok);
+        }
+
+        .pips {
+            display: flex;
+            gap: 3px;
+        }
+
         .pip {
-            width: 7px; height: 7px; border-radius: 50%;
-            border: 1px solid var(--line); background: transparent;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            border: 1px solid var(--line);
+            background: transparent;
         }
-        .pip.on { background: var(--aci); border-color: var(--aci); box-shadow: 0 0 5px rgba(63,159,224,.5); }
-        .v .pip.on { background: var(--vector); border-color: var(--vector); box-shadow: 0 0 5px rgba(139,122,224,.5); }
-        .d .pip.on { background: var(--domain); border-color: var(--domain); box-shadow: 0 0 5px rgba(217,164,65,.5); }
 
-        .step { display: flex; gap: 4px; }
-        .step button {
-            width: 23px; height: 23px; background: var(--panel-3);
-            border: 1px solid var(--line); border-radius: 2px; color: var(--ink-2);
-            cursor: pointer; font-size: 0.9em; line-height: 1;
+        .pip.on {
+            background: var(--aci);
+            border-color: var(--aci);
+            box-shadow: 0 0 5px rgba(63, 159, 224, .5);
         }
-        .step button:hover:not(:disabled) { border-color: var(--aci); color: var(--aci-bright); }
-        .step button:disabled { opacity: .28; cursor: not-allowed; }
+
+        .v .pip.on {
+            background: var(--vector);
+            border-color: var(--vector);
+            box-shadow: 0 0 5px rgba(139, 122, 224, .5);
+        }
+
+        .d .pip.on {
+            background: var(--domain);
+            border-color: var(--domain);
+            box-shadow: 0 0 5px rgba(217, 164, 65, .5);
+        }
+
+        .step {
+            display: flex;
+            gap: 4px;
+        }
+
+        .step button {
+            width: 23px;
+            height: 23px;
+            background: var(--panel-3);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--ink-2);
+            cursor: pointer;
+            font-size: 0.9em;
+            line-height: 1;
+        }
+
+        .step button:hover:not(:disabled) {
+            border-color: var(--aci);
+            color: var(--aci-bright);
+        }
+
+        .step button:disabled {
+            opacity: .28;
+            cursor: not-allowed;
+        }
+
         .val {
-            font-family: var(--font-mono); font-size: 0.9em; font-weight: 700;
-            color: var(--aci-bright); width: 20px; text-align: center;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            font-weight: 700;
+            color: var(--aci-bright);
+            width: 20px;
+            text-align: center;
         }
 
         /* ===== IDENTITÉ ===== */
-        .field { display: flex; flex-direction: column; gap: 3px; }
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
         .field label {
-            font-family: var(--font-mono); font-size: 0.62em; letter-spacing: 0.14em;
-            text-transform: uppercase; color: var(--ink-4);
+            font-family: var(--font-mono);
+            font-size: 0.62em;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink-4);
         }
-        .field input, .field select {
-            background: var(--panel-3); border: 1px solid var(--line); border-radius: 2px;
-            color: var(--ink); padding: 7px 9px; font-family: var(--font-body);
-            font-size: 0.92em; width: 100%;
+
+        .field input,
+        .field select {
+            background: var(--panel-3);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--ink);
+            padding: 7px 9px;
+            font-family: var(--font-body);
+            font-size: 0.92em;
+            width: 100%;
         }
-        .field input:focus, .field select:focus { outline: none; border-color: var(--aci); }
-        .id-grid { display: grid; grid-template-columns: 1.3fr 1.3fr 1fr 1.1fr 1fr 74px 1fr; gap: 9px; }
-        @media (max-width: 1080px) { .id-grid { grid-template-columns: 1fr 1fr; } }
+
+        .field input:focus,
+        .field select:focus {
+            outline: none;
+            border-color: var(--aci);
+        }
+
+        .id-grid {
+            display: grid;
+            grid-template-columns: 1.3fr 1.3fr 1fr 1.1fr 1fr 74px 1fr;
+            gap: 9px;
+        }
+
+        @media (max-width: 1080px) {
+            .id-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
         .code-line {
-            margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line);
-            display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--line);
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+            flex-wrap: wrap;
         }
-        .code-l { font-family: var(--font-mono); font-size: 0.62em; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-4); }
-        .code-v { font-family: var(--font-mono); font-size: 1.25em; font-weight: 700; color: var(--aci-bright); }
+
+        .code-l {
+            font-family: var(--font-mono);
+            font-size: 0.62em;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink-4);
+        }
+
+        .code-v {
+            font-family: var(--font-mono);
+            font-size: 1.25em;
+            font-weight: 700;
+            color: var(--aci-bright);
+        }
 
         /* ===== RÉSUMÉ ===== */
-        .sum { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 4px; }
-        .sum-item {
-            display: flex; justify-content: space-between; align-items: baseline;
-            font-size: 0.85em; padding: 3px 0;
+        .sum {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 4px;
         }
-        .sum-item .sn { color: var(--ink-3); }
-        .sum-item .sv { font-family: var(--font-mono); font-weight: 700; }
-        .sum-item .sl { color: var(--ink-4); font-size: 0.8em; margin-left: 5px; }
-        .sum-title {
-            font-family: var(--font-mono); font-size: 0.64em; letter-spacing: 0.14em;
-            text-transform: uppercase; color: var(--aci); margin: 14px 0 7px;
-        }
-        .sum-title:first-child { margin-top: 0; }
-        .derived {
-            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 4px;
-        }
-        .derived .d-tile {
-            flex: 1; min-width: 110px; padding: 9px 11px;
-            background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 2px;
-        }
-        .d-l { font-family: var(--font-mono); font-size: 0.6em; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-4); }
-        .d-v { font-family: var(--font-mono); font-size: 1.4em; font-weight: 700; margin-top: 3px; }
 
-        .hint { font-size: 0.79em; color: var(--ink-3); line-height: 1.55; }
-        .hint strong { color: var(--ink-2); }
-        .card-body { padding: 14px; }
+        .sum-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 0.85em;
+            padding: 3px 0;
+        }
+
+        .sum-item .sn {
+            color: var(--ink-3);
+        }
+
+        .sum-item .sv {
+            font-family: var(--font-mono);
+            font-weight: 700;
+        }
+
+        .sum-item .sl {
+            color: var(--ink-4);
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+
+        .sum-title {
+            font-family: var(--font-mono);
+            font-size: 0.64em;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--aci);
+            margin: 14px 0 7px;
+        }
+
+        .sum-title:first-child {
+            margin-top: 0;
+        }
+
+        .derived {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .derived .d-tile {
+            flex: 1;
+            min-width: 110px;
+            padding: 9px 11px;
+            background: var(--panel-2);
+            border: 1px solid var(--line-soft);
+            border-radius: 2px;
+        }
+
+        .d-l {
+            font-family: var(--font-mono);
+            font-size: 0.6em;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-4);
+        }
+
+        .d-v {
+            font-family: var(--font-mono);
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+
+        .hint {
+            font-size: 0.79em;
+            color: var(--ink-3);
+            line-height: 1.55;
+        }
+
+        .hint strong {
+            color: var(--ink-2);
+        }
+
+        .card-body {
+            padding: 14px;
+        }
 
         .toast {
-            position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(80px);
-            background: var(--panel-2); border: 1px solid var(--aci); border-radius: 2px;
-            padding: 10px 18px; color: var(--ink);
-            font-family: var(--font-mono); font-size: 0.76em;
-            z-index: 1200; opacity: 0; transition: all .25s; pointer-events: none;
+            position: fixed;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: var(--panel-2);
+            border: 1px solid var(--aci);
+            border-radius: 2px;
+            padding: 10px 18px;
+            color: var(--ink);
+            font-family: var(--font-mono);
+            font-size: 0.76em;
+            z-index: 1200;
+            opacity: 0;
+            transition: all .25s;
+            pointer-events: none;
         }
-        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--hull); }
-        ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--aci-deep); }
-        select option { background: var(--panel-3); color: var(--ink); }
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--hull);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--line);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--aci-deep);
+        }
+
+        select option {
+            background: var(--panel-3);
+            color: var(--ink);
+        }
     </style>
 </head>
 
@@ -320,15 +794,19 @@
 
         <div class="budget">
             <span class="budget-label">Dotation</span>
-            <div class="budget-track"><div class="budget-fill" id="bFill"></div></div>
+            <div class="budget-track">
+                <div class="budget-fill" id="bFill"></div>
+            </div>
             <div class="budget-num" id="bNum">
-                <span class="spent" id="bSpent">0</span><span class="sep"> / </span><span class="total" id="bTotal">100</span>
+                <span class="spent" id="bSpent">0</span><span class="sep"> / </span><span class="total"
+                    id="bTotal">100</span>
             </div>
             <div class="budget-left" id="bLeft">100 restants</div>
             <button class="btn primary" id="exportBtn" onclick="exportToFiche()">↓ Exporter vers la fiche</button>
             <button class="btn" onclick="importFromFiche()">↑ Importer une fiche</button>
             <span id="importTag"></span>
-            <button class="btn" onclick="document.getElementById('settings').classList.toggle('open')">⚙ Paramètres</button>
+            <button class="btn" onclick="document.getElementById('settings').classList.toggle('open')">⚙
+                Paramètres</button>
             <button class="btn danger" onclick="resetAll()">↺ Réinitialiser</button>
         </div>
 
@@ -336,45 +814,72 @@
             <h3>Coûts et plafonds</h3>
             <div class="set-grid">
                 <div class="set-title">Dotation</div>
-                <div class="set-item"><label>Points disponibles</label><input type="number" id="s_budget" value="100" min="10" max="400" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Points disponibles</label><input type="number" id="s_budget" value="100"
+                        min="10" max="400" onchange="updateSettings()"></div>
 
                 <div class="set-title">Attributs — coût cumulé depuis Commun (4)</div>
-                <div class="set-item"><label>Déficient (1)</label><input type="number" id="s_a1" value="-5" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Faible (2)</label><input type="number" id="s_a2" value="-3" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Médiocre (3)</label><input type="number" id="s_a3" value="-2" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Élevé (5)</label><input type="number" id="s_a5" value="5" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Supérieur (6)</label><input type="number" id="s_a6" value="9" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Exceptionnel (7)</label><input type="number" id="s_a7" value="12" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Déficient (1)</label><input type="number" id="s_a1" value="-5"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Faible (2)</label><input type="number" id="s_a2" value="-3"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Médiocre (3)</label><input type="number" id="s_a3" value="-2"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Élevé (5)</label><input type="number" id="s_a5" value="5"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Supérieur (6)</label><input type="number" id="s_a6" value="9"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Exceptionnel (7)</label><input type="number" id="s_a7" value="12"
+                        onchange="updateSettings()"></div>
 
                 <div class="set-title">Aptitudes — coût cumulé depuis Ordinaire (3)</div>
-                <div class="set-item"><label>Inapte (1)</label><input type="number" id="s_c1" value="-3" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Maladroit (2)</label><input type="number" id="s_c2" value="-1" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Qualifié (4)</label><input type="number" id="s_c4" value="3" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Excellent (5)</label><input type="number" id="s_c5" value="5" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Expert (6)</label><input type="number" id="s_c6" value="8" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Maître (7)</label><input type="number" id="s_c7" value="12" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Inapte (1)</label><input type="number" id="s_c1" value="-3"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Maladroit (2)</label><input type="number" id="s_c2" value="-1"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Qualifié (4)</label><input type="number" id="s_c4" value="3"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Excellent (5)</label><input type="number" id="s_c5" value="5"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Expert (6)</label><input type="number" id="s_c6" value="8"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Maître (7)</label><input type="number" id="s_c7" value="12"
+                        onchange="updateSettings()"></div>
 
                 <div class="set-title">Habilitation — coût cumulé depuis Non habilité (0)</div>
-                <div class="set-item"><label>Éveillé (1)</label><input type="number" id="s_h1" value="2" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Habilité (2)</label><input type="number" id="s_h2" value="5" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Confirmé (3)</label><input type="number" id="s_h3" value="9" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_h4" value="14" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Référent (5)</label><input type="number" id="s_h5" value="20" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Éveillé (1)</label><input type="number" id="s_h1" value="2"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Habilité (2)</label><input type="number" id="s_h2" value="5"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Confirmé (3)</label><input type="number" id="s_h3" value="9"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_h4" value="14"
+                        onchange="updateSettings()"></div>
+                <div class="set-item"><label>Référent (5)</label><input type="number" id="s_h5" value="20"
+                        onchange="updateSettings()"></div>
 
                 <div class="set-title">Plafonds — attributs</div>
-                <div class="set-item"><label>Exceptionnel (7)</label><input type="number" id="s_ma7" value="1" min="0" max="8" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Supérieur (6)</label><input type="number" id="s_ma6" value="2" min="0" max="8" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Élevé (5)</label><input type="number" id="s_ma5" value="3" min="0" max="8" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Exceptionnel (7)</label><input type="number" id="s_ma7" value="1" min="0"
+                        max="8" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Supérieur (6)</label><input type="number" id="s_ma6" value="2" min="0"
+                        max="8" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Élevé (5)</label><input type="number" id="s_ma5" value="3" min="0" max="8"
+                        onchange="updateSettings()"></div>
 
                 <div class="set-title">Plafonds — aptitudes</div>
-                <div class="set-item"><label>Maître (7)</label><input type="number" id="s_mc7" value="1" min="0" max="22" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Expert (6)</label><input type="number" id="s_mc6" value="2" min="0" max="22" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Excellent (5)</label><input type="number" id="s_mc5" value="3" min="0" max="22" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Maître (7)</label><input type="number" id="s_mc7" value="1" min="0"
+                        max="22" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Expert (6)</label><input type="number" id="s_mc6" value="2" min="0"
+                        max="22" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Excellent (5)</label><input type="number" id="s_mc5" value="3" min="0"
+                        max="22" onchange="updateSettings()"></div>
 
                 <div class="set-title">Plafonds — habilitation (vecteurs et domaines confondus)</div>
-                <div class="set-item"><label>Échelon maximum</label><input type="number" id="s_hmax" value="4" min="1" max="5" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_mh4" value="1" min="0" max="20" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Confirmé (3)</label><input type="number" id="s_mh3" value="2" min="0" max="20" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Échelon maximum</label><input type="number" id="s_hmax" value="4" min="1"
+                        max="5" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Certifié (4)</label><input type="number" id="s_mh4" value="1" min="0"
+                        max="20" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Confirmé (3)</label><input type="number" id="s_mh3" value="2" min="0"
+                        max="20" onchange="updateSettings()"></div>
             </div>
         </div>
 
@@ -385,12 +890,17 @@
             </div>
             <div class="card-body">
                 <div class="id-grid">
-                    <div class="field"><label>Nom de code</label><input type="text" id="f-codename" placeholder="—" oninput="renderCode()"></div>
-                    <div class="field"><label>État civil</label><input type="text" id="f-civil" placeholder="—" oninput="renderCode()"></div>
+                    <div class="field"><label>Nom de code</label><input type="text" id="f-codename" placeholder="—"
+                            oninput="renderCode()"></div>
+                    <div class="field"><label>État civil</label><input type="text" id="f-civil" placeholder="—"
+                            oninput="renderCode()"></div>
                     <div class="field"><label>Classe</label><select id="f-class" onchange="renderCode()"></select></div>
-                    <div class="field"><label>Catégorie</label><select id="f-category" onchange="renderCode()"></select></div>
-                    <div class="field"><label>Danger</label><select id="f-danger" onchange="renderCode()"></select></div>
-                    <div class="field"><label>N° dossier</label><input type="text" id="f-number" maxlength="3" placeholder="auto" oninput="renderCode()"></div>
+                    <div class="field"><label>Catégorie</label><select id="f-category" onchange="renderCode()"></select>
+                    </div>
+                    <div class="field"><label>Danger</label><select id="f-danger" onchange="renderCode()"></select>
+                    </div>
+                    <div class="field"><label>N° dossier</label><input type="text" id="f-number" maxlength="3"
+                            placeholder="auto" oninput="renderCode()"></div>
                     <div class="field"><label>Canal</label><select id="f-canal" onchange="render()"></select></div>
                 </div>
                 <div class="code-line">
@@ -526,12 +1036,12 @@
             { id: 'escamotage', name: 'Escamotage', attr: 'precision', alt: 'Larcin · crochetage · dextérité' },
             { id: 'informatique', name: 'Informatique', attr: 'intelligence', alt: 'Réseaux · données · sécurité' },
             { id: 'ingenierie', name: 'Ingénierie', attr: 'intelligence', alt: 'Machines · construction · sabotage' },
-            { id: 'science', name: 'Science', attr: 'intelligence', alt: 'Laboratoire · analyse · théorie' },
             { id: 'medecine', name: 'Médecine', attr: 'intelligence', alt: 'Diagnostic · soins · chirurgie' },
             { id: 'pilotage', name: 'Pilotage', attr: 'precision', alt: 'Aéronefs · drones · engins' },
             { id: 'recherche', name: 'Recherche', attr: 'intelligence', alt: 'Enquête · pistage · recoupement' },
             { id: 'resilience', name: 'Résilience', attr: 'endurance', alt: 'Douleur · fatigue · pression' },
             { id: 'sagacite', name: 'Sagacité', attr: 'intuition', alt: 'Empathie · mensonge · intention' },
+            { id: 'science', name: 'Science', attr: 'intelligence', alt: 'Laboratoire · analyse · théorie' },
             { id: 'strategie', name: 'Stratégie', attr: 'intelligence', alt: 'Tactique · coordination' },
             { id: 'tir', name: 'Tir', attr: 'precision', alt: 'Armes à distance · projectiles' },
             { id: 'tromperie', name: 'Tromperie', attr: 'presence', alt: 'Bluff · comédie · manipulation' },
@@ -573,13 +1083,13 @@
             { id: 'omega', sym: 'Ω', name: 'Classe Omega', color: '#d9a441' }
         ];
         const CATEGORIES = [
-            { id: 'physique', code: 'PHY', name: 'Physique' },
-            { id: 'mentale', code: 'MEN', name: 'Mentale' },
             { id: 'deplacement', code: 'DEP', name: 'Déplacement' },
-            { id: 'utilitaire', code: 'UTI', name: 'Utilitaire' },
             { id: 'energetique', code: 'ENE', name: 'Élémentaire / Énergétique' },
-            { id: 'transformation', code: 'TRA', name: 'Transformation' },
+            { id: 'mentale', code: 'MEN', name: 'Mentale' },
+            { id: 'physique', code: 'PHY', name: 'Physique' },
             { id: 'sensoriel', code: 'SEN', name: 'Sensoriel' }
+            { id: 'transformation', code: 'TRA', name: 'Transformation' },
+            { id: 'utilitaire', code: 'UTI', name: 'Utilitaire' },
         ];
         const DANGER_LEVELS = {
             1: { name: 'Contrôlé', color: '#3fb27f' }, 2: { name: 'Stable', color: '#33bfae' },
