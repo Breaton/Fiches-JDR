@@ -683,8 +683,14 @@
 
         .classif-grid {
             display: grid;
-            grid-template-columns: 1.1fr 1.4fr 1.1fr 78px;
+            grid-template-columns: 1fr 1.25fr 1.25fr 1fr 74px;
             gap: 8px;
+        }
+
+        @media (max-width: 1080px) {
+            .classif-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         .danger-chip {
@@ -1183,6 +1189,18 @@
         .skill-del:hover {
             border-color: var(--bad);
             color: var(--bad);
+        }
+
+        .skill-lock {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--ink-4);
+            opacity: .45;
+            font-size: 0.72em;
+            cursor: default;
         }
 
         /* ============ SPÉCIALITÉS D'ÉRUDITION ============ */
@@ -2347,6 +2365,10 @@
                                 <select id="f-category" onchange="saveField()"></select>
                             </div>
                             <div class="field">
+                                <label>Catégorie secondaire</label>
+                                <select id="f-category2" onchange="saveField()"></select>
+                            </div>
+                            <div class="field">
                                 <label>Danger</label>
                                 <select id="f-danger" onchange="saveField()"></select>
                             </div>
@@ -2463,7 +2485,8 @@
                     <div class="hint" style="margin-top:11px;">
                         Cliquez sur le code d'attribut (à droite du nom) pour changer l'attribut de référence
                         d'une aptitude. Le niveau d'<strong>Érudition</strong> ouvre des créneaux de spécialité
-                        ci-dessous.
+                        ci-dessous. Les <strong>aptitudes du référentiel</strong> sont permanentes : seules celles
+                        inscrites ici peuvent être retirées, par la croix en fin de ligne.
                     </div>
                 </div>
             </div>
@@ -3081,7 +3104,7 @@
         const appState = {
             file: {
                 codename: '', civil: '', unit: '', officer: '', image: null,
-                clazz: 'gamma', category: 'physique', danger: 2, number: '', status: 'Actif'
+                clazz: 'gamma', category: 'physique', category2: '', danger: 2, number: '', status: 'Actif'
             },
             attributes: { puissance: 4, vivacite: 4, precision: 4, endurance: 4, intelligence: 4, intuition: 4, volonte: 4, presence: 4 },
             skills: [],
@@ -3101,7 +3124,7 @@
 
         function initData() {
             appState.skills = DEFAULT_SKILLS.map(([name, attr], i) => ({
-                id: 'sk' + i, name, attr, level: 3
+                id: 'sk' + i, name, attr, level: 3, custom: false
             }));
             // Aucune habilitation par défaut : c'est le profil de vecteurs et de domaines
             // ouverts qui définit ce que fait le pouvoir du personnage.
@@ -3406,16 +3429,32 @@
             return manual ? manual.padStart(3, '0').slice(-3) : autoNumber(identityName());
         }
 
+        // Une catégorie secondaire est facultative : elle s'accole à la principale
+        // dans le code, séparée par une barre (α-PHY/ENE-077-EM-2).
+        function getCategories() {
+            const cat = CATEGORIES.find(c => c.id === appState.file.category) || CATEGORIES[0];
+            const cat2 = CATEGORIES.find(c => c.id === appState.file.category2 && c.id !== cat.id) || null;
+            return { cat, cat2 };
+        }
+
+        function categoryCode() {
+            const { cat, cat2 } = getCategories();
+            return cat2 ? `${cat.code}/${cat2.code}` : cat.code;
+        }
+
+        function categoryLabel() {
+            const { cat, cat2 } = getCategories();
+            return cat2 ? `${cat.name} + ${cat2.name}` : cat.name;
+        }
+
         function buildClassifCode() {
             const cl = CLASSES.find(c => c.id === appState.file.clazz) || CLASSES[2];
-            const cat = CATEGORIES.find(c => c.id === appState.file.category) || CATEGORIES[0];
             const d = Math.min(5, Math.max(1, parseInt(appState.file.danger) || 1));
-            return `${cl.sym}-${cat.code}-${getClassifNumber()}-${nameInitials(identityName())}-${d}`;
+            return `${cl.sym}-${categoryCode()}-${getClassifNumber()}-${nameInitials(identityName())}-${d}`;
         }
 
         function renderClassification() {
             const cl = CLASSES.find(c => c.id === appState.file.clazz) || CLASSES[2];
-            const cat = CATEGORIES.find(c => c.id === appState.file.category) || CATEGORIES[0];
             const d = Math.min(5, Math.max(1, parseInt(appState.file.danger) || 1));
             const dg = DANGER_LEVELS[d];
             const code = buildClassifCode();
@@ -3428,7 +3467,7 @@
 
             const sum = document.getElementById('classif-summary');
             if (sum) {
-                sum.innerHTML = `<span style="color:${cl.color}">${cl.name}</span> · ${cat.name} · `
+                sum.innerHTML = `<span style="color:${cl.color}">${cl.name}</span> · ${categoryLabel()} · `
                     + `<span style="color:${dg.color}">danger ${d} ${dg.name}</span>`;
             }
 
@@ -3459,7 +3498,9 @@
                             <button onclick="modSkill('${sk.id}',1)">+</button>
                         </span>
                     </span>
-                    <button class="skill-del" onclick="delSkill('${sk.id}')" title="Retirer">✕</button>`;
+                    ${sk.custom
+                        ? `<button class="skill-del" onclick="delSkill('${sk.id}')" title="Retirer">✕</button>`
+                        : `<span class="skill-lock" title="Aptitude du référentiel ACI : elle ne peut pas être retirée"></span>`}`;
                 grid.appendChild(el);
             });
         }
@@ -3480,6 +3521,11 @@
         }
 
         function delSkill(id) {
+            const sk = appState.skills.find(s => s.id === id);
+            if (!sk) return;
+            // Le référentiel d'aptitudes de l'Agence est fixe : seules les aptitudes
+            // inscrites par le joueur peuvent être retirées.
+            if (!sk.custom) { toast('Aptitude du référentiel : suppression impossible'); return; }
             appState.skills = appState.skills.filter(s => s.id !== id);
             renderSkills(); renderPassives(); renderSpecialties(); renderGauges(); refreshRollUI();
         }
@@ -3488,7 +3534,7 @@
             const input = document.getElementById('skill-new');
             const name = input.value.trim();
             if (!name) return;
-            appState.skills.push({ id: 'sk' + Date.now(), name, attr: 'intelligence', level: 3 });
+            appState.skills.push({ id: 'sk' + Date.now(), name, attr: 'intelligence', level: 3, custom: true });
             input.value = '';
             renderSkills(); renderPassives(); renderSpecialties(); refreshRollUI();
         }
@@ -4189,6 +4235,9 @@
             f.officer = document.getElementById('f-officer').value;
             f.clazz = document.getElementById('f-class').value;
             f.category = document.getElementById('f-category').value;
+            f.category2 = document.getElementById('f-category2').value;
+            if (f.category2 === f.category) f.category2 = '';
+            document.getElementById('f-category2').value = f.category2;
             f.danger = parseInt(document.getElementById('f-danger').value) || 1;
             f.number = document.getElementById('f-number').value.replace(/\D/g, '').slice(0, 3);
             document.getElementById('f-number').value = f.number;
@@ -4203,6 +4252,9 @@
             cs.innerHTML = CLASSES.map(c => `<option value="${c.id}">${c.sym} · ${c.name}</option>`).join('');
             const cat = document.getElementById('f-category');
             cat.innerHTML = CATEGORIES.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            const cat2 = document.getElementById('f-category2');
+            cat2.innerHTML = '<option value="">Aucune</option>'
+                + CATEGORIES.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
             const dg = document.getElementById('f-danger');
             dg.innerHTML = Object.entries(DANGER_LEVELS).map(([k, v]) => `<option value="${k}">${k} · ${v.name}</option>`).join('');
         }
@@ -4217,6 +4269,7 @@
             document.getElementById('f-officer').value = f.officer || '';
             document.getElementById('f-class').value = f.clazz || 'gamma';
             document.getElementById('f-category').value = f.category || 'physique';
+            document.getElementById('f-category2').value = f.category2 || '';
             document.getElementById('f-danger').value = f.danger || 2;
             document.getElementById('f-number').value = f.number || '';
             document.getElementById('notes').value = appState.notes || '';
@@ -4279,9 +4332,16 @@
             }
             if (!f.clazz) f.clazz = 'gamma';
             if (!f.category) f.category = 'physique';
+            if (!CATEGORIES.some(c => c.id === f.category2) || f.category2 === f.category) f.category2 = '';
             if (!f.danger) f.danger = 2;
             if (f.number == null) f.number = '';
             delete f.ref; delete f.webhook;
+            // Dossiers antérieurs : l'appartenance au référentiel se déduit du nom.
+            const baseNames = new Set(DEFAULT_SKILLS.map(([n]) => n));
+            if (Array.isArray(appState.skills))
+                appState.skills.forEach(sk => {
+                    if (sk && typeof sk.custom !== 'boolean') sk.custom = !baseNames.has(sk.name);
+                });
             if (!Array.isArray(appState.specialties)) appState.specialties = [];
             if (!ATTRIBUTES.some(a => a.id === appState.canal)) appState.canal = 'volonte';
             // Le surmenage automatique a été retiré : on nettoie les dossiers qui en portent un

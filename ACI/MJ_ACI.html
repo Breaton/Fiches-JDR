@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACI — Poste de coordination</title>
+    <title>ACI - Poste de coordination</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -300,7 +300,7 @@
                     <div class="ref-col"><h3>Domaines d'application</h3><div id="ref-dom"></div></div>
                 </div>
                 <div class="ref-item" style="margin-top:18px;border-top:1px solid var(--line);padding-top:12px;">
-                    <b>Résolution d'un pouvoir</b> <span>— l'agent choisit un canal unique, l'attribut par
+                    <b>Résolution d'un pouvoir</b> <span>- l'agent choisit un canal unique, l'attribut par
                     lequel passent tous ses vecteurs et qui donne aux dés leur profil de faces. Les échelons
                     d'habilitation vont de 0 à 5 et le couple Vecteur + Domaine fixe la Magnitude maximum,
                     10 au sommet. La Magnitude déclarée est le nombre de dés lancés ; leurs faces dépendent de
@@ -308,11 +308,11 @@
                     Puissance s'ajoute au total d'aptitude. Coût : 1 Charge par dé engagé.</span>
                 </div>
                 <div class="ref-item">
-                    <b>Charge</b> <span>— la dotation dépend de la classe : ε 10 · δ 22 · γ 34 · β 46 ·
+                    <b>Charge</b> <span>- la dotation dépend de la classe : ε 10 · δ 22 · γ 34 · β 46 ·
                     α 58 · Ω 70. Un pouvoir coûte 1 Charge par dé engagé.</span>
                 </div>
                 <div class="ref-item">
-                    <b>Réserve à sec</b> <span>— la Charge plafonne à zéro et n'entame jamais l'Élan. Un
+                    <b>Réserve à sec</b> <span>- la Charge plafonne à zéro et n'entame jamais l'Élan. Un
                     agent à sec ne peut plus rien engager avant d'avoir récupéré.</span>
                 </div>
             </div>
@@ -325,7 +325,7 @@
 
     <script>
         /* ==========================================================
-           RÉFÉRENTIELS — alignés sur la fiche ACI
+           RÉFÉRENTIELS - alignés sur la fiche ACI
            ========================================================== */
         const ATTRIBUTE_LEVELS = {
             1: { name: 'Déficient', faces: [0,1,4,4,3], color: '#e05c52' },
@@ -431,7 +431,7 @@
             ['Machines', "Électronique, réseaux, véhicules, systèmes artificiels."],
             ['Matière', "Inerte manufacturé : objets, structures, matériaux."],
             ['Nature', "Flore, faune, terrain, météo, biosphère."],
-            ['Pouvoir', "Les capacités métahumaines comme substance : aura, flux."],
+            ['Pouvoir', "Les capacités provenant de super pouvoirs."],
             ['Temps', "Durée, tempo, causalité."],
             ['Vie', "Vitalité, souffle, santé, vieillissement, principe vital."]
         ];
@@ -489,6 +489,7 @@
                 image: f.image || null,
                 clazz: f.clazz || 'gamma',
                 category: f.category || 'physique',
+                category2: CATEGORIES[f.category2] && f.category2 !== f.category ? f.category2 : '',
                 danger: Math.min(5, Math.max(1, parseInt(f.danger) || 2)),
                 number: (f.number || '').toString(),
                 status: f.status || 'Actif',
@@ -530,9 +531,19 @@
 
         function classifCode(r) {
             const cl = CLASSES[r.clazz] || CLASSES.gamma;
-            const cat = CATEGORIES[r.category] || CATEGORIES.physique;
             const num = (r.number || autoNumber(r.civil || r.name)).toString().padStart(3, '0').slice(-3);
-            return `${cl.sym}-${cat.code}-${num}-${initials(r.civil || r.name)}-${r.danger}`;
+            return `${cl.sym}-${categoryCode(r)}-${num}-${initials(r.civil || r.name)}-${r.danger}`;
+        }
+        // Un agent peut relever de deux catégories : la seconde s'accole à la première
+        function categoryCode(r) {
+            const cat = CATEGORIES[r.category] || CATEGORIES.physique;
+            const cat2 = r.category2 && r.category2 !== r.category ? CATEGORIES[r.category2] : null;
+            return cat2 ? `${cat.code}/${cat2.code}` : cat.code;
+        }
+        function categoryLabel(r) {
+            const cat = CATEGORIES[r.category] || CATEGORIES.physique;
+            const cat2 = r.category2 && r.category2 !== r.category ? CATEGORIES[r.category2] : null;
+            return cat2 ? `${cat.name} + ${cat2.name}` : cat.name;
         }
         function initials(name) {
             const p = String(name || '').trim().split(/[\s'’-]+/).filter(Boolean);
@@ -586,8 +597,8 @@
             const trainedD = r.domains.filter(d => d.level > 0).sort((a, b) => b.level - a.level);
             const habHtml = (trainedV.length || trainedD.length)
                 ? `<div><span class="hl">Canal</span> <span class="hv">${ATTR_LABEL[r.canal] || 'Volonté'} <b style="color:${attrLevel(r.attributes[r.canal] || 4).color}">${attrLevel(r.attributes[r.canal] || 4).name}</b></span></div>
-                   <div><span class="hl">Vecteurs</span> <span class="hv">${trainedV.map(v => `${v.name} <b style="color:${habLevel(v.level).color}">${v.level}</b>`).join(' · ') || '—'}</span></div>
-                   <div><span class="hl hd">Domaines</span> <span class="hv">${trainedD.map(d => `${d.name} <b style="color:${habLevel(d.level).color}">${d.level}</b>`).join(' · ') || '—'}</span></div>`
+                   <div><span class="hl">Vecteurs</span> <span class="hv">${trainedV.map(v => `${v.name} <b style="color:${habLevel(v.level).color}">${v.level}</b>`).join(' · ') || '-'}</span></div>
+                   <div><span class="hl hd">Domaines</span> <span class="hv">${trainedD.map(d => `${d.name} <b style="color:${habLevel(d.level).color}">${d.level}</b>`).join(' · ') || '-'}</span></div>`
                 : '<span class="hab-none">Aucune habilitation déclarée</span>';
 
             const skillsSorted = r.skills.slice().sort((a, b) => b.level - a.level || a.name.localeCompare(b.name));
@@ -625,7 +636,7 @@
                     <div class="agent-id">
                         <div class="agent-name">${r.name}</div>
                         <div class="agent-code" style="color:${cl.color}">${classifCode(r)}</div>
-                        <div class="agent-meta">${r.status}${r.unit ? ' · ' + r.unit : ''} · <span style="color:${dg.color}">danger ${r.danger} ${dg.name}</span> · ${stamp(r.updatedAt)}</div>
+                        <div class="agent-meta">${r.status}${r.unit ? ' · ' + r.unit : ''} · ${categoryLabel(r)} · <span style="color:${dg.color}">danger ${r.danger} ${dg.name}</span> · ${stamp(r.updatedAt)}</div>
                     </div>
                     <button class="agent-x" onclick="removeRecord('${key}')" title="Retirer du suivi">✕</button>
                 </div>
@@ -686,7 +697,7 @@
 
         function renderReference() {
             const fill = (id, defs) => document.getElementById(id).innerHTML =
-                defs.map(([n, d]) => `<div class="ref-item"><b>${n}</b> <span>— ${d}</span></div>`).join('');
+                defs.map(([n, d]) => `<div class="ref-item"><b>${n}</b> <span>- ${d}</span></div>`).join('');
             fill('ref-attr', ATTR_DEFS); fill('ref-skill', SKILL_DEFS);
             fill('ref-vec', VECTOR_DEFS); fill('ref-dom', DOMAIN_DEFS);
         }
@@ -752,7 +763,7 @@
                 const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                 if (files.length && ok === 0) {
                     setStatus(`${files.length} fichier(s), 0 lisible · ${now}`);
-                    if (manual) toast(files.length + ' fichier(s) illisible(s) — voir la console', true);
+                    if (manual) toast(files.length + ' fichier(s) illisible(s) - voir la console', true);
                 } else {
                     setStatus(`${ok} dossier(s) · ${now}`);
                     if (manual) toast(ok + ' dossier(s) synchronisé(s)');
