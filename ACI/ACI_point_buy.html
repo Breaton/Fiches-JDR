@@ -322,9 +322,9 @@
             <span class="budget-label">Dotation</span>
             <div class="budget-track"><div class="budget-fill" id="bFill"></div></div>
             <div class="budget-num" id="bNum">
-                <span class="spent" id="bSpent">0</span><span class="sep"> / </span><span class="total" id="bTotal">100</span>
+                <span class="spent" id="bSpent">0</span><span class="sep"> / </span><span class="total" id="bTotal">125</span>
             </div>
-            <div class="budget-left" id="bLeft">100 restants</div>
+            <div class="budget-left" id="bLeft">125 restants</div>
             <button class="btn primary" id="exportBtn" onclick="exportToFiche()">↓ Exporter vers la fiche</button>
             <button class="btn" onclick="importFromFiche()">↑ Importer une fiche</button>
             <span id="importTag"></span>
@@ -336,7 +336,7 @@
             <h3>Coûts et plafonds</h3>
             <div class="set-grid">
                 <div class="set-title">Dotation</div>
-                <div class="set-item"><label>Points disponibles</label><input type="number" id="s_budget" value="100" min="10" max="400" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Points disponibles</label><input type="number" id="s_budget" value="125" min="10" max="400" onchange="updateSettings()"></div>
 
                 <div class="set-title">Attributs - coût cumulé depuis Commun (4)</div>
                 <div class="set-item"><label>Déficient (1)</label><input type="number" id="s_a1" value="-5" onchange="updateSettings()"></div>
@@ -352,7 +352,6 @@
                 <div class="set-item"><label>Qualifié (4)</label><input type="number" id="s_c4" value="3" onchange="updateSettings()"></div>
                 <div class="set-item"><label>Excellent (5)</label><input type="number" id="s_c5" value="5" onchange="updateSettings()"></div>
                 <div class="set-item"><label>Expert (6)</label><input type="number" id="s_c6" value="8" onchange="updateSettings()"></div>
-                <div class="set-item"><label>Maître (7)</label><input type="number" id="s_c7" value="12" onchange="updateSettings()"></div>
 
                 <div class="set-title">Habilitation - coût cumulé depuis Non habilité (0)</div>
                 <div class="set-item"><label>Éveillé (1)</label><input type="number" id="s_h1" value="2" onchange="updateSettings()"></div>
@@ -367,7 +366,7 @@
                 <div class="set-item"><label>Élevé (5)</label><input type="number" id="s_ma5" value="3" min="0" max="8" onchange="updateSettings()"></div>
 
                 <div class="set-title">Plafonds - aptitudes</div>
-                <div class="set-item"><label>Maître (7)</label><input type="number" id="s_mc7" value="1" min="0" max="22" onchange="updateSettings()"></div>
+                <div class="set-item"><label>Échelon maximum</label><input type="number" id="s_cmax" value="6" min="3" max="7" onchange="updateSettings()"></div>
                 <div class="set-item"><label>Expert (6)</label><input type="number" id="s_mc6" value="2" min="0" max="22" onchange="updateSettings()"></div>
                 <div class="set-item"><label>Excellent (5)</label><input type="number" id="s_mc5" value="3" min="0" max="22" onchange="updateSettings()"></div>
 
@@ -460,7 +459,9 @@
         </div>
 
         <p class="hint" style="text-align:center;margin:24px 0 8px;">
-            Les échelons d'habilitation vont de 0 à 5, mais la création s'arrête à <strong>Certifié (4)</strong>,
+            Les aptitudes plafonnent à <strong>Expert (6)</strong> : <strong>Maître</strong> et au-delà se
+            gagnent en jeu, pas à l'achat. Les échelons d'habilitation vont de 0 à 5, mais la création
+            s'arrête à <strong>Certifié (4)</strong>,
             et un seul vecteur <em>ou</em> domaine peut y prétendre : les plafonds se comptent sur les deux
             listes réunies. La <strong>Magnitude maximum</strong> d'un pouvoir
             est la somme des échelons de son Vecteur et de son Domaine, soit 10 au sommet : c'est le nombre
@@ -593,12 +594,13 @@
            ========================================================== */
 
         let config = {
-            budget: 100,
+            budget: 125,
             attrCosts: [0, -5, -3, -2, 0, 5, 9, 12],        // index = valeur, socle 4
-            compCosts: [0, -3, -1, 0, 3, 5, 8, 12],         // index = valeur, socle 3
+            compCosts: [0, -3, -1, 0, 3, 5, 8, 12],         // index = valeur, socle 3 (l'échelon 7 n'est pas ouvert)
             habCosts: [0, 2, 5, 9, 14, 20],                 // index = échelon, socle 0
             maxAttr: { 7: 1, 6: 2, 5: 3 },
-            maxComp: { 7: 1, 6: 2, 5: 3 },
+            compMax: 6,                                     // Maître (7) reste une progression de jeu, pas un achat
+            maxComp: { 6: 2, 5: 3 },
             habMax: 4,                                      // échelon le plus haut ouvert à la création
             maxHab: { 4: 1, 3: 2 }                          // décomptés sur l'ensemble vecteurs + domaines
         };
@@ -617,6 +619,7 @@
 
         const attrCost = v => config.attrCosts[v] || 0;
         const compCost = v => config.compCosts[v] || 0;
+        const compCeiling = () => Math.max(3, Math.min(7, config.compMax || 6));
         const habCost = v => config.habCosts[v] || 0;
 
         // Les plafonds d'habilitation se comptent sur un pool unique : un échelon Certifié
@@ -711,10 +714,11 @@
 
         function renderComps() {
             document.getElementById('compCaps').innerHTML = capsHtml(COMPETENCES, compValues, config.maxComp,
-                { 5: 'Excellent', 6: 'Expert', 7: 'Maître' });
+                { 5: 'Excellent', 6: 'Expert' });
+            const compTop = compCeiling();
             document.getElementById('compList').innerHTML = COMPETENCES.map(c => {
                 const v = compValues[c.id], lv = SKILL_LEVELS[v], cost = compCost(v);
-                const up = canRaise(COMPETENCES, compValues, c.id, 7, config.maxComp, compCost);
+                const up = canRaise(COMPETENCES, compValues, c.id, compTop, config.maxComp, compCost);
                 return `<div class="row">
                     <div><div class="r-name">${c.name}</div><div class="r-alt">${c.alt}</div></div>
                     <div class="pips">${pips(v, 8)}</div>
@@ -832,7 +836,7 @@
             render();
         }
         function chComp(id, d) {
-            if (d > 0) { const c = canRaise(COMPETENCES, compValues, id, 7, config.maxComp, compCost); if (!c.ok) return; compValues[id] = c.next; }
+            if (d > 0) { const c = canRaise(COMPETENCES, compValues, id, compCeiling(), config.maxComp, compCost); if (!c.ok) return; compValues[id] = c.next; }
             else lower(COMPETENCES, compValues, id, 1, config.maxComp);
             render();
         }
@@ -859,12 +863,13 @@
 
         const num = id => parseInt(document.getElementById(id).value) || 0;
         function updateSettings() {
-            config.budget = num('s_budget') || 100;
+            config.budget = num('s_budget') || 125;
             config.attrCosts = [0, num('s_a1'), num('s_a2'), num('s_a3'), 0, num('s_a5'), num('s_a6'), num('s_a7')];
-            config.compCosts = [0, num('s_c1'), num('s_c2'), 0, num('s_c4'), num('s_c5'), num('s_c6'), num('s_c7')];
+            config.compCosts = [0, num('s_c1'), num('s_c2'), 0, num('s_c4'), num('s_c5'), num('s_c6'), config.compCosts[7]];
             config.habCosts = [0, num('s_h1'), num('s_h2'), num('s_h3'), num('s_h4'), num('s_h5')];
             config.maxAttr = { 7: num('s_ma7'), 6: num('s_ma6'), 5: num('s_ma5') };
-            config.maxComp = { 7: num('s_mc7'), 6: num('s_mc6'), 5: num('s_mc5') };
+            config.compMax = Math.max(3, Math.min(7, num('s_cmax') || 6));
+            config.maxComp = { 6: num('s_mc6'), 5: num('s_mc5') };
             config.habMax = Math.max(1, Math.min(MAX_CLEARANCE, num('s_hmax') || 4));
             config.maxHab = { 4: num('s_mh4'), 3: num('s_mh3') };
             render();
@@ -1099,6 +1104,8 @@
             });
             check(ATTRIBUTES, attrValues, config.maxAttr);
             check(COMPETENCES, compValues, config.maxComp);
+            const topComp = Math.max(0, ...Object.values(compValues));
+            if (topComp > compCeiling()) { config.compMax = topComp; relaxed = true; }
             const pool = habPool();
             check(pool.list, pool.values, config.maxHab);
             const top = Math.max(0, ...Object.values(pool.values));
