@@ -174,6 +174,31 @@
         /* ===== CARTOUCHES ===== */
         .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
         @media (max-width: 1080px) { .cols { grid-template-columns: 1fr; } }
+
+        /* Bande des habilitations : vecteurs, domaines, aide de lecture */
+        .cols3 { display: grid; grid-template-columns: 1fr 1fr 1.1fr; gap: 18px; align-items: start; margin-top: 18px; }
+        @media (max-width: 1320px) { .cols3 { grid-template-columns: 1fr 1fr; } .cols3 .col-lecture { grid-column: 1 / -1; } }
+        @media (max-width: 1080px) { .cols3 { grid-template-columns: 1fr; } }
+
+        .lex { display: flex; flex-direction: column; gap: 10px; padding: 12px; }
+        .lex-block {
+            padding: 9px 11px; background: var(--panel-2);
+            border: 1px solid var(--line-soft); border-left: 2px solid var(--aci); border-radius: 2px;
+        }
+        .lex-block.v { border-left-color: var(--vector); }
+        .lex-block.d { border-left-color: var(--domain); }
+        .lex-title {
+            font-family: var(--font-mono); font-size: 0.64em; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--ink-3); margin-bottom: 5px;
+        }
+        .lex-block p { font-size: 0.79em; color: var(--ink-2); line-height: 1.55; }
+        .lex-block p + p { margin-top: 6px; }
+        .lex-ex {
+            display: block; font-family: var(--font-mono); font-size: 0.92em;
+            color: var(--aci-bright); margin-bottom: 2px;
+        }
+        .lex-block.v .lex-ex { color: var(--vector); }
+        .lex-block.d .lex-ex { color: var(--domain); }
         .col { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
 
         .card { background: var(--panel); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
@@ -414,45 +439,98 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-head a-vector">
-                        <span class="tag">§4</span>
-                        <span class="card-title">Vecteurs d'effet</span>
-                        <span class="hint" style="margin-left:auto;">plafonds partagés avec les domaines</span>
+                    <div class="card-head a-aci">
+                        <span class="tag">§3</span>
+                        <span class="card-title">Bilan du dossier</span>
                     </div>
-                    <div class="caps" id="vecCaps"></div>
-                    <div id="vecList"></div>
-                </div>
-
-                <div class="card">
-                    <div class="card-head a-domain">
-                        <span class="tag">§5</span>
-                        <span class="card-title">Domaines d'application</span>
-                        <span class="hint" style="margin-left:auto;">plafonds partagés avec les vecteurs</span>
+                    <div class="card-body">
+                        <div class="derived" id="derived"></div>
+                        <div id="summary"></div>
                     </div>
-                    <div class="caps" id="domCaps"></div>
-                    <div id="domList"></div>
                 </div>
             </div>
 
             <div class="col">
                 <div class="card">
                     <div class="card-head a-aci">
-                        <span class="tag">§3</span>
+                        <span class="tag">§4</span>
                         <span class="card-title">Aptitudes</span>
                         <span class="tag">socle Ordinaire</span>
                     </div>
                     <div class="caps" id="compCaps"></div>
                     <div id="compList"></div>
                 </div>
+            </div>
+        </div>
 
+        <div class="cols3">
+            <div class="col">
+                <div class="card">
+                    <div class="card-head a-vector">
+                        <span class="tag">§5</span>
+                        <span class="card-title">Vecteurs d'effet</span>
+                        <span class="hint" style="margin-left:auto;">plafonds partagés</span>
+                    </div>
+                    <div class="caps" id="vecCaps"></div>
+                    <div id="vecList"></div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card">
+                    <div class="card-head a-domain">
+                        <span class="tag">§6</span>
+                        <span class="card-title">Domaines d'application</span>
+                        <span class="hint" style="margin-left:auto;">plafonds partagés</span>
+                    </div>
+                    <div class="caps" id="domCaps"></div>
+                    <div id="domList"></div>
+                </div>
+            </div>
+
+            <div class="col col-lecture">
                 <div class="card">
                     <div class="card-head a-aci">
-                        <span class="tag">§6</span>
-                        <span class="card-title">Bilan du dossier</span>
+                        <span class="tag">§7</span>
+                        <span class="card-title">Lecture d'un couple</span>
                     </div>
-                    <div class="card-body">
-                        <div class="derived" id="derived"></div>
-                        <div id="summary"></div>
+                    <div class="lex">
+
+                        <div class="lex-block">
+                            <div class="lex-title">Principe</div>
+                            <p>Un pouvoir est un <strong>vecteur</strong> (ce que fait l'agent) appliqué à un
+                                <strong>domaine</strong> (ce sur quoi il agit). La somme des deux échelons donne
+                                la Magnitude maximum, donc le nombre de dés de Puissance engageables. Un couple
+                                dont une moitié reste à Non habilité ne peut rien lancer.</p>
+                        </div>
+
+                        <div class="lex-block d">
+                            <div class="lex-title">Le domaine décrit la matière, pas la cible</div>
+                            <p><span class="lex-ex">Absorber × Éléments</span>siphonne une flamme, vide une nappe,
+                                éteint une décharge. Dirigé vers un être <em>fait</em> de cet élément, le même
+                                siphon change de signe : détourner l'eau vers un élémentaire d'eau le nourrit et
+                                le répare.</p>
+                            <p>Un domaine ouvert sert donc bien au-delà de son usage évident. À budget égal,
+                                monter un domaine déjà acheté rapporte souvent plus que d'en ouvrir un autre.</p>
+                        </div>
+
+                        <div class="lex-block v">
+                            <div class="lex-title">Les vecteurs se recouvrent</div>
+                            <p>La même image se décrit parfois par deux couples. Pour un pouvoir d'ombre :</p>
+                            <p><span class="lex-ex">Dissimuler × Éléments</span>travailler la lumière autour de
+                                soi : éteindre les sources, aveugler, masquer un allié, noircir une pièce.</p>
+                            <p><span class="lex-ex">Altérer × Corps</span>devenir l'ombre : passer sous une porte,
+                                encaisser un coup qui traverse, tenir la forme plus longtemps.</p>
+                            <p>Ce que vous achetez ici ne décide pas de la couleur du pouvoir, mais de ce que
+                                l'agent sait faire en plus.</p>
+                        </div>
+
+                        <div class="lex-block">
+                            <div class="lex-title">Conseil d'achat</div>
+                            <p>Un couple solide et une ou deux extensions valent mieux que six échelons dispersés :
+                                le plafond de Magnitude se lit couple par couple, jamais sur le total investi.</p>
+                        </div>
+
                     </div>
                 </div>
             </div>
