@@ -448,82 +448,36 @@
         }
 
         .page-power {
-            grid-template-columns: 1fr 1fr 1.1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 18px;
+            align-items: stretch;
         }
 
-        @media (max-width: 1320px) {
-            .page-power {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .page-power .col-lecture {
-                grid-column: 1 / -1;
-            }
+        .page-power .col {
+            height: 100%;
         }
 
-        @media (max-width: 820px) {
+        .page-power .col>.card:last-child {
+            flex: 1 1 auto;
+        }
+
+        @media (max-width: 900px) {
             .page-power {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* ---- Lecture des couples vecteur x domaine ---- */
-        .lex {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .lex-block {
-            padding: 9px 11px;
-            background: var(--panel-2);
-            border: 1px solid var(--line-soft);
-            border-left: 2px solid var(--aci);
-            border-radius: 2px;
-        }
-
-        .lex-block.v {
-            border-left-color: var(--vector);
-        }
-
-        .lex-block.d {
-            border-left-color: var(--domain);
-        }
-
-        .lex-title {
+        /* compteur d'habilitations dans l'en-tête des deux listes */
+        .vd-count {
             font-family: var(--font-mono);
-            font-size: 0.64em;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--ink-3);
-            margin-bottom: 5px;
+            font-size: 0.66em;
+            letter-spacing: 0.08em;
+            color: var(--ink-4);
+            white-space: nowrap;
         }
 
-        .lex-block p {
-            font-size: 0.79em;
+        .vd-count b {
             color: var(--ink-2);
-            line-height: 1.55;
-        }
-
-        .lex-block p+p {
-            margin-top: 6px;
-        }
-
-        .lex-ex {
-            display: block;
-            font-family: var(--font-mono);
-            font-size: 0.92em;
-            color: var(--aci-bright);
-            margin-bottom: 2px;
-        }
-
-        .lex-block.v .lex-ex {
-            color: var(--vector);
-        }
-
-        .lex-block.d .lex-ex {
-            color: var(--domain);
         }
 
         .canal-row {
@@ -540,23 +494,15 @@
         }
 
         .page-rolls {
-            grid-template-columns: 1.35fr 1fr;
+            grid-template-columns: 1.3fr 1fr;
             gap: 18px;
-            align-items: stretch;
+            align-items: start;
         }
 
-        .page-rolls .col {
-            height: 100%;
-        }
-
-        .page-rolls .col>.card:last-child {
-            flex: 1 1 auto;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .page-rolls .col>.card:last-child>.card-body {
-            flex: 1 1 auto;
+        @media (max-width: 1080px) {
+            .page-rolls {
+                grid-template-columns: 1fr;
+            }
         }
 
         .page-gear {
@@ -1504,10 +1450,211 @@
             display: block;
         }
 
-        .roll-fields {
+        /* ---- Champs du pupitre ---- */
+        .rf-main {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
             gap: 10px;
+        }
+
+        .rf-main select {
+            font-size: 0.98em;
+            padding: 8px 9px;
+        }
+
+        .field.f-skill label {
+            color: var(--aci);
+        }
+
+        .field.f-skill select {
+            border-color: rgba(63, 159, 224, .38);
+        }
+
+        .field.f-vector label {
+            color: var(--vector);
+        }
+
+        .field.f-vector select {
+            border-color: rgba(139, 122, 224, .38);
+        }
+
+        .field.f-domain label {
+            color: var(--domain);
+        }
+
+        .field.f-domain select {
+            border-color: rgba(217, 164, 65, .38);
+        }
+
+        .rf-num {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .numbox {
+            flex: 1 1 148px;
+            min-width: 136px;
+            max-width: 240px;
+        }
+
+        .numbox label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.6em;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+            color: var(--ink-4);
+            margin-bottom: 4px;
+            white-space: nowrap;
+        }
+
+        .numbox label .nb-cap {
+            color: var(--ink-3);
+        }
+
+        .nb-ctl {
+            display: flex;
+        }
+
+        .nb-ctl button {
+            width: 30px;
+            flex: 0 0 30px;
+            background: var(--panel-3);
+            border: 1px solid var(--line);
+            color: var(--ink-2);
+            cursor: pointer;
+            font-size: 0.95em;
+            line-height: 1;
+        }
+
+        .nb-ctl button:first-child {
+            border-radius: 2px 0 0 2px;
+        }
+
+        .nb-ctl button:last-child {
+            border-radius: 0 2px 2px 0;
+        }
+
+        .nb-ctl button:hover {
+            border-color: var(--aci);
+            color: var(--aci-bright);
+        }
+
+        .nb-ctl input {
+            flex: 1 1 auto;
+            min-width: 0;
+            text-align: center;
+            background: var(--panel-3);
+            border: 1px solid var(--line);
+            border-left: none;
+            border-right: none;
+            color: var(--ink);
+            font-family: var(--font-mono);
+            font-size: 1.04em;
+            font-weight: 700;
+            padding: 6px 2px;
+            -moz-appearance: textfield;
+        }
+
+        .nb-ctl input::-webkit-outer-spin-button,
+        .nb-ctl input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .nb-ctl input:focus {
+            outline: none;
+            border-color: var(--aci);
+        }
+
+        .numbox.mag .nb-ctl input {
+            color: var(--vector);
+        }
+
+        .numbox.surge .nb-ctl input {
+            color: var(--charge);
+        }
+
+        .numbox.mod .nb-ctl input {
+            color: var(--aci-bright);
+        }
+
+        /* ---- Bandeau de réserve : le résumé lisible d'un coup d'oeil ---- */
+        .poolbar {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-wrap: wrap;
+            padding: 9px 12px;
+            background: var(--panel-2);
+            border: 1px solid var(--line-soft);
+            border-radius: 2px;
+            margin-bottom: 12px;
+        }
+
+        .pb-n {
+            font-family: var(--font-mono);
+            font-size: 1.85em;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--aci-bright);
+        }
+
+        .pg-power .pb-n {
+            color: var(--vector);
+        }
+
+        .pb-l {
+            font-family: var(--font-mono);
+            font-size: 0.6em;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-4);
+            line-height: 1.35;
+            margin-right: 3px;
+        }
+
+        .pb-chip {
+            font-family: var(--font-mono);
+            font-size: 0.7em;
+            padding: 3px 8px;
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--ink-3);
+            background: var(--panel-3);
+            white-space: nowrap;
+        }
+
+        .pb-chip b {
+            color: var(--ink);
+            font-weight: 700;
+        }
+
+        .pb-chip.bad {
+            border-color: rgba(224, 92, 82, .5);
+            color: var(--bad);
+        }
+
+        .pb-chip.warn {
+            border-color: rgba(224, 162, 60, .5);
+            color: var(--warn);
+        }
+
+        .pb-faces {
+            margin-left: auto;
+            font-family: var(--font-mono);
+            font-size: 0.72em;
+            color: var(--ink-3);
+            white-space: nowrap;
+        }
+
+        .pb-empty {
+            font-family: var(--font-mono);
+            font-size: 0.72em;
+            letter-spacing: 0.08em;
+            color: var(--ink-4);
         }
 
         /* Séparation nette entre paramètres d'aptitude et paramètres de pouvoir */
@@ -2140,6 +2287,52 @@
             gap: 5px;
         }
 
+        /* jauges côte à côte dans l'état opérationnel */
+        .op-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .op-grid .gauge {
+            margin-bottom: 0;
+        }
+
+        /* pastilles de focalisation reportées dans l'en-tête */
+        .card-head .foc-dots .foc-dot {
+            width: 11px;
+            height: 11px;
+        }
+
+        .card-head .ctx-note {
+            font-size: 0.7em;
+            white-space: nowrap;
+        }
+
+        /* cartouches repliables */
+        .card.foldable>.card-head {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .card.foldable>.card-head:hover .card-fold {
+            color: var(--aci-bright);
+        }
+
+        .card-fold {
+            font-size: 0.8em;
+            color: var(--ink-4);
+            transition: transform .15s;
+        }
+
+        .card.folded>.card-body {
+            display: none;
+        }
+
+        .card.folded .card-fold {
+            transform: rotate(-90deg);
+        }
+
         .foc-dot {
             width: 15px;
             height: 15px;
@@ -2452,7 +2645,7 @@
                                     onchange="saveField()">
                             </div>
                         </div>
-                        <div class="disclose" onclick="toggleDisclose('classif-desc')">▸ Définition de la classe</div>
+                        <div class="disclose" onclick="toggleDisclose('classif-desc', this)">▸ Définition de la classe</div>
                         <div class="disclose-body" id="classif-desc"></div>
                     </div>
                 </div>
@@ -2612,6 +2805,7 @@
                     <div class="card-head accent-vector">
                         <span class="tag">§8</span>
                         <span class="card-title">Vecteurs d'effet</span>
+                        <span class="vd-count" id="vec-count"></span>
                     </div>
                     <div class="card-body tight">
                         <div class="vd-list" id="vectors-list"></div>
@@ -2625,6 +2819,7 @@
                     <div class="card-head accent-domain">
                         <span class="tag">§9</span>
                         <span class="card-title">Domaines d'application</span>
+                        <span class="vd-count" id="dom-count"></span>
                     </div>
                     <div class="card-body tight">
                         <div class="vd-list" id="domains-list"></div>
@@ -2632,21 +2827,14 @@
                 </div>
 
             </div>
-
-
-
-    </div>
-    </div>
-    </div>
-    </div>
-    </section>
+        </section>
 
     <!-- ================= PAGE 4 · JETS ================= -->
     <section class="page page-rolls" id="page-rolls">
         <div class="col">
             <div class="card">
                 <div class="card-head accent-aci">
-                    <span class="tag">§11</span>
+                    <span class="tag">§10</span>
                     <span class="card-title">Pupitre de résolution</span>
                 </div>
                 <div class="card-body">
@@ -2661,18 +2849,25 @@
                         <div class="pgroup pg-skill">
                             <div class="pgroup-head"><span class="pg-dot"></span>Paramètres d'aptitude</div>
                             <div class="pgroup-body">
-                                <div class="roll-fields">
-                                    <div class="field">
-                                        <label>Attribut</label>
-                                        <select id="s-attr" onchange="refreshRollUI()"></select>
-                                    </div>
-                                    <div class="field">
-                                        <label>Aptitude</label>
+                                <div class="poolbar" id="s-pool"></div>
+                                <div class="rf-main">
+                                    <div class="field f-skill">
+                                        <label>Aptitude engagée</label>
                                         <select id="s-skill" onchange="onSkillPick()"></select>
                                     </div>
                                     <div class="field">
-                                        <label>Modificateur</label>
-                                        <input type="number" id="s-bonus" value="0">
+                                        <label>Attribut de référence</label>
+                                        <select id="s-attr" onchange="refreshRollUI()"></select>
+                                    </div>
+                                </div>
+                                <div class="rf-num">
+                                    <div class="numbox mod">
+                                        <label>Modificateur de jet</label>
+                                        <div class="nb-ctl">
+                                            <button type="button" onclick="stepNum('s-bonus',-1)">−</button>
+                                            <input type="number" id="s-bonus" value="0" onchange="refreshRollUI()">
+                                            <button type="button" onclick="stepNum('s-bonus',1)">+</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="readout" id="s-readout"></div>
@@ -2686,28 +2881,43 @@
                         <div class="pgroup pg-power">
                             <div class="pgroup-head"><span class="pg-dot"></span>Paramètres de pouvoir</div>
                             <div class="pgroup-body">
-                                <div class="roll-fields">
-                                    <div class="field">
+                                <div class="poolbar" id="p-poolp"></div>
+                                <div class="rf-main">
+                                    <div class="field f-vector">
                                         <label>Vecteur d'effet</label>
                                         <select id="p-vector" onchange="refreshRollUI()"></select>
                                     </div>
-                                    <div class="field">
+                                    <div class="field f-domain">
                                         <label>Domaine d'application</label>
                                         <select id="p-domain" onchange="refreshRollUI()"></select>
                                     </div>
-                                    <div class="field">
-                                        <label>Magnitude</label>
-                                        <input type="number" id="p-mag" value="1" min="0" max="20"
-                                            onchange="refreshRollUI()">
+                                </div>
+                                <div class="rf-num">
+                                    <div class="numbox mag">
+                                        <label>Magnitude <span class="nb-cap" id="p-mag-cap"></span></label>
+                                        <div class="nb-ctl">
+                                            <button type="button" onclick="stepNum('p-mag',-1)">−</button>
+                                            <input type="number" id="p-mag" value="1" min="0" max="20"
+                                                onchange="refreshRollUI()">
+                                            <button type="button" onclick="stepNum('p-mag',1)">+</button>
+                                        </div>
                                     </div>
-                                    <div class="field">
-                                        <label>Dés bonus</label>
-                                        <input type="number" id="p-surge" value="0" min="0" max="3"
-                                            onchange="refreshRollUI()">
+                                    <div class="numbox surge">
+                                        <label>Dés bonus <span class="nb-cap">max 3</span></label>
+                                        <div class="nb-ctl">
+                                            <button type="button" onclick="stepNum('p-surge',-1)">−</button>
+                                            <input type="number" id="p-surge" value="0" min="0" max="3"
+                                                onchange="refreshRollUI()">
+                                            <button type="button" onclick="stepNum('p-surge',1)">+</button>
+                                        </div>
                                     </div>
-                                    <div class="field">
+                                    <div class="numbox mod">
                                         <label>Mod. de puissance</label>
-                                        <input type="number" id="p-bonus" value="0" onchange="refreshRollUI()">
+                                        <div class="nb-ctl">
+                                            <button type="button" onclick="stepNum('p-bonus',-1)">−</button>
+                                            <input type="number" id="p-bonus" value="0" onchange="refreshRollUI()">
+                                            <button type="button" onclick="stepNum('p-bonus',1)">+</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="readout" id="p-readout"></div>
@@ -2721,18 +2931,25 @@
                         <div class="pgroup pg-skill">
                             <div class="pgroup-head"><span class="pg-dot"></span>Paramètres d'aptitude</div>
                             <div class="pgroup-body">
-                                <div class="roll-fields">
+                                <div class="poolbar" id="c-pool"></div>
+                                <div class="rf-main">
+                                    <div class="field f-skill">
+                                        <label>Aptitude engagée</label>
+                                        <select id="c-skill" onchange="onComboSkillPick()"></select>
+                                    </div>
                                     <div class="field">
-                                        <label>Attribut</label>
+                                        <label>Attribut de référence</label>
                                         <select id="c-sattr" onchange="refreshRollUI()"></select>
                                     </div>
-                                    <div class="field">
-                                        <label>Aptitude</label>
-                                        <select id="c-skill" onchange="refreshRollUI()"></select>
-                                    </div>
-                                    <div class="field">
-                                        <label>Modificateur</label>
-                                        <input type="number" id="c-bonus" value="0">
+                                </div>
+                                <div class="rf-num">
+                                    <div class="numbox mod">
+                                        <label>Modificateur de jet</label>
+                                        <div class="nb-ctl">
+                                            <button type="button" onclick="stepNum('c-bonus',-1)">−</button>
+                                            <input type="number" id="c-bonus" value="0" onchange="refreshRollUI()">
+                                            <button type="button" onclick="stepNum('c-bonus',1)">+</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="readout" id="c-readout-skill"></div>
@@ -2744,28 +2961,43 @@
                         <div class="pgroup pg-power">
                             <div class="pgroup-head"><span class="pg-dot"></span>Paramètres de pouvoir</div>
                             <div class="pgroup-body">
-                                <div class="roll-fields">
-                                    <div class="field">
+                                <div class="poolbar" id="c-poolp"></div>
+                                <div class="rf-main">
+                                    <div class="field f-vector">
                                         <label>Vecteur d'effet</label>
                                         <select id="c-vector" onchange="refreshRollUI()"></select>
                                     </div>
-                                    <div class="field">
+                                    <div class="field f-domain">
                                         <label>Domaine d'application</label>
                                         <select id="c-domain" onchange="refreshRollUI()"></select>
                                     </div>
-                                    <div class="field">
-                                        <label>Magnitude</label>
-                                        <input type="number" id="c-mag" value="1" min="0" max="20"
-                                            onchange="refreshRollUI()">
+                                </div>
+                                <div class="rf-num">
+                                    <div class="numbox mag">
+                                        <label>Magnitude <span class="nb-cap" id="c-mag-cap"></span></label>
+                                        <div class="nb-ctl">
+                                            <button type="button" onclick="stepNum('c-mag',-1)">−</button>
+                                            <input type="number" id="c-mag" value="1" min="0" max="20"
+                                                onchange="refreshRollUI()">
+                                            <button type="button" onclick="stepNum('c-mag',1)">+</button>
+                                        </div>
                                     </div>
-                                    <div class="field">
-                                        <label>Dés bonus</label>
-                                        <input type="number" id="c-surge" value="0" min="0" max="3"
-                                            onchange="refreshRollUI()">
+                                    <div class="numbox surge">
+                                        <label>Dés bonus <span class="nb-cap">max 3</span></label>
+                                        <div class="nb-ctl">
+                                            <button type="button" onclick="stepNum('c-surge',-1)">−</button>
+                                            <input type="number" id="c-surge" value="0" min="0" max="3"
+                                                onchange="refreshRollUI()">
+                                            <button type="button" onclick="stepNum('c-surge',1)">+</button>
+                                        </div>
                                     </div>
-                                    <div class="field">
+                                    <div class="numbox mod">
                                         <label>Mod. de puissance</label>
-                                        <input type="number" id="c-pbonus" value="0" onchange="refreshRollUI()">
+                                        <div class="nb-ctl">
+                                            <button type="button" onclick="stepNum('c-pbonus',-1)">−</button>
+                                            <input type="number" id="c-pbonus" value="0" onchange="refreshRollUI()">
+                                            <button type="button" onclick="stepNum('c-pbonus',1)">+</button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="readout" id="c-readout-power"></div>
@@ -2781,88 +3013,88 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-head accent-charge">
-                    <span class="tag">§12</span>
-                    <span class="card-title">État opérationnel</span>
-                </div>
-                <div class="card-body">
-                    <div class="gauge">
-                        <div class="gauge-head">
-                            <span class="gauge-label">Élan</span>
-                            <span class="gauge-num" id="elan-num-2">10<small> / 10</small></span>
-                        </div>
-                        <div class="gauge-bar">
-                            <div class="gauge-fill elan" id="elan-fill-2" style="width:100%"></div>
-                        </div>
-                    </div>
-                    <div class="gauge">
-                        <div class="gauge-head">
-                            <span class="gauge-label">Charge</span>
-                            <span class="gauge-num" id="charge-num-2">0<small> / 0</small></span>
-                        </div>
-                        <div class="gauge-bar">
-                            <div class="gauge-fill charge" id="charge-fill-2" style="width:0%"></div>
-                        </div>
-                        <div class="gauge-ctl">
-                            <button onclick="adjustCharge(-1)">−1</button>
-                            <button onclick="adjustCharge(1)">+1</button>
-                            <button onclick="restCharge()">↺ Récupération</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="col">
             <div class="card">
-                <div class="card-head accent-aci">
-                    <span class="tag">§13</span>
-                    <span class="card-title">Focalisation</span>
+                <div class="card-head accent-charge">
+                    <span class="tag">§11</span>
+                    <span class="card-title">État opérationnel</span>
                 </div>
-                <div class="card-body">
-                    <div class="ctx">
-                        <div class="ctx-row">
-                            <button class="mini-btn" onclick="modFocalisation(-1)">−</button>
-                            <span class="ctx-big" id="foc-current">1</span>
-                            <span class="ctx-unit">/</span>
-                            <input class="mini-num" type="number" id="foc-max" min="1" max="9" value="1"
-                                onchange="setFocalisationMax(this.value)">
-                            <button class="mini-btn" onclick="modFocalisation(1)">+</button>
-                            <button class="mini-btn wide" onclick="refillFocalisation()">↻ Nouveau round</button>
+                <div class="card-body tight">
+                    <div class="op-grid">
+                        <div class="gauge">
+                            <div class="gauge-head">
+                                <span class="gauge-label">Élan</span>
+                                <span class="gauge-num" id="elan-num-2">10<small> / 10</small></span>
+                            </div>
+                            <div class="gauge-bar">
+                                <div class="gauge-fill elan" id="elan-fill-2" style="width:100%"></div>
+                            </div>
                         </div>
-                        <div class="foc-dots" id="foc-dots"></div>
-                        <div class="disclose" onclick="toggleDisclose('foc-usages')">▸ Usages du point de
-                            focalisation</div>
-                        <div class="disclose-body" id="foc-usages">
-                            <p><b>Action tactique</b> - dépenser un point pour tenter un geste adapté à la situation
-                                par un jet d'aptitude contre la DC tactique. Chaque tranche de 3 points d'écart
-                                abaisse d'un cran le dé de l'adversaire à sa prochaine confrontation.</p>
-                            <p><b>Couvrir un équipier</b> - un allié à portée immédiate prend votre place dans une
-                                confrontation défensive, ou tente d'intercepter un pouvoir à distance.</p>
-                            <p><b>Maintenir un pouvoir</b> - le point reste immobilisé tant que le pouvoir est
-                                actif.</p>
-                            <p><b>Riposte</b> - lors d'une confrontation défensive, attaquer au lieu de se défendre.
-                                Victoire : résolution comme une confrontation offensive. Échec : l'attaque est subie
-                                comme une défense perdue.</p>
+                        <div class="gauge">
+                            <div class="gauge-head">
+                                <span class="gauge-label">Charge</span>
+                                <span class="gauge-num" id="charge-num-2">0<small> / 0</small></span>
+                            </div>
+                            <div class="gauge-bar">
+                                <div class="gauge-fill charge" id="charge-fill-2" style="width:0%"></div>
+                            </div>
                         </div>
+                    </div>
+                    <div class="gauge-ctl">
+                        <span class="ctx-unit">Charge</span>
+                        <button onclick="adjustCharge(-1)">−1</button>
+                        <button onclick="adjustCharge(1)">+1</button>
+                        <button onclick="restCharge()">↺ Récupération</button>
                     </div>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-head accent-aci">
-                    <span class="tag">§14</span>
-                    <span class="card-title">Déplacement</span>
+                    <span class="tag">§12</span>
+                    <span class="card-title">Focalisation</span>
+                    <span class="foc-dots" id="foc-dots"></span>
                 </div>
-                <div class="card-body">
+                <div class="card-body tight">
+                    <div class="ctx-row">
+                        <button class="mini-btn" onclick="modFocalisation(-1)">−</button>
+                        <span class="ctx-big" id="foc-current">1</span>
+                        <span class="ctx-unit">/</span>
+                        <input class="mini-num" type="number" id="foc-max" min="1" max="9" value="1"
+                            onchange="setFocalisationMax(this.value)">
+                        <button class="mini-btn" onclick="modFocalisation(1)">+</button>
+                        <button class="mini-btn wide" onclick="refillFocalisation()">↻ Nouveau round</button>
+                        <span class="disclose" style="margin:0 0 0 auto;"
+                            onclick="toggleDisclose('foc-usages', this)">▸ Usages</span>
+                    </div>
+                    <div class="disclose-body" id="foc-usages">
+                        <p><b>Action tactique</b> - dépenser un point pour tenter un geste adapté à la situation
+                            par un jet d'aptitude contre la DC tactique. Chaque tranche de 3 points d'écart
+                            abaisse d'un cran le dé de l'adversaire à sa prochaine confrontation.</p>
+                        <p><b>Couvrir un équipier</b> - un allié à portée immédiate prend votre place dans une
+                            confrontation défensive, ou tente d'intercepter un pouvoir à distance.</p>
+                        <p><b>Maintenir un pouvoir</b> - le point reste immobilisé tant que le pouvoir est
+                            actif.</p>
+                        <p><b>Riposte</b> - lors d'une confrontation défensive, attaquer au lieu de se défendre.
+                            Victoire : résolution comme une confrontation offensive. Échec : l'attaque est subie
+                            comme une défense perdue.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-head accent-aci">
+                    <span class="tag">§13</span>
+                    <span class="card-title">Déplacement</span>
+                    <span class="ctx-note" id="vitesse-detail"></span>
+                </div>
+                <div class="card-body tight">
                     <div class="ctx-row">
                         <span class="ctx-big" id="vitesse-val">30</span>
                         <span class="ctx-unit">pieds</span>
-                        <span class="ctx-note" style="margin-left:auto;" id="vitesse-detail"></span>
-                    </div>
-                    <div class="ctx-row" style="margin-top:9px;">
-                        <span class="ctx-unit">Bonus de pouvoir</span>
+                        <span class="ctx-unit" style="margin-left:12px;">bonus de pouvoir</span>
                         <input class="mini-num" type="number" id="vitesse-bonus" min="0" value="0"
                             onchange="setVitesseBonus(this.value)">
                         <button class="mini-btn" onclick="setVitesseBonus(0)" title="Réinitialiser">↺</button>
@@ -2870,42 +3102,50 @@
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-head accent-vector">
-                    <span class="tag">§15</span>
+            <div class="card foldable" id="sustained-card">
+                <div class="card-head accent-vector" onclick="toggleCard('sustained-card')">
+                    <span class="tag">§14</span>
                     <span class="card-title">Pouvoirs maintenus</span>
+                    <span class="vd-count" id="sus-count"></span>
+                    <span class="card-fold">▾</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body tight">
                     <div id="sustained-list"></div>
-                    <div class="ctx-row" style="margin-top:7px;">
+                    <div class="ctx-row">
                         <input class="mini-text" type="text" id="sus-name" placeholder="Effet en cours">
                         <input class="mini-num" type="number" id="sus-pow" value="2" min="1" title="Puissance">
                         <button class="mini-btn" onclick="addSustained()">＋</button>
+                        <span class="disclose" style="margin:0 0 0 auto;"
+                            onclick="toggleDisclose('sus-help', this)">▸ Entretien</span>
                     </div>
                     <button class="ctx-turn" id="sus-turn" onclick="applyTurnUpkeep()" style="display:none;">
                         ▶ Nouveau tour - <span id="sus-cost">0</span> Charge
                     </button>
-                    <div class="ctx-note" style="margin-top:8px;">
+                    <div class="disclose-body" id="sus-help">
                         Entretien par tour : ⌈Puissance ÷ 2⌉ de Charge, et un point de focalisation immobilisé
                         par effet. Une perte d'Élan exige un jet de Résilience, difficulté = Élan perdu × 2.
                     </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-head accent-aci">
-                    <span class="tag">§16</span>
+            <div class="card foldable" id="buffs-card">
+                <div class="card-head accent-aci" onclick="toggleCard('buffs-card')">
+                    <span class="tag">§15</span>
                     <span class="card-title">Appuis reçus</span>
+                    <span class="vd-count" id="buff-count"></span>
+                    <span class="card-fold">▾</span>
                 </div>
-                <div class="card-body">
+                <div class="card-body tight">
                     <div id="buffs-list"></div>
-                    <div class="ctx-row" style="margin-top:7px;">
+                    <div class="ctx-row">
                         <input class="mini-text" type="text" id="buff-name" placeholder="Appui (ex. couverture)">
                         <input class="mini-num" type="number" id="buff-pow" value="2" min="1" title="Puissance">
                         <button class="mini-btn" onclick="addBuff()">＋</button>
+                        <span class="disclose" style="margin:0 0 0 auto;"
+                            onclick="toggleDisclose('buff-help', this)">▸ Effet</span>
                     </div>
-                    <div class="ctx-note" style="margin-top:8px;">
-                        La moitié de la Puissance d'un appui (arrondie à l'inférieur) module la valeur concernée :
+                    <div class="disclose-body" id="buff-help">
+                        La moitié de la Puissance d'un appui, arrondie à l'inférieur, module la valeur concernée :
                         gravité infligée, palier de soin, portée, vitesse.
                     </div>
                 </div>
@@ -2919,7 +3159,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-head accent-domain">
-                    <span class="tag">§17</span>
+                    <span class="tag">§16</span>
                     <span class="card-title">Dotation et effets personnels</span>
                 </div>
                 <div class="card-body">
@@ -2940,7 +3180,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-head accent-aci">
-                    <span class="tag">§18</span>
+                    <span class="tag">§17</span>
                     <span class="card-title">Observations du référent</span>
                 </div>
                 <div class="card-body">
@@ -3749,6 +3989,18 @@
             };
             mk(appState.vectors, 'v', 'vectors-list');
             mk(appState.domains, 'd', 'domains-list');
+
+            const count = (arr, id) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const n = arr.filter(x => x.level > 0).length;
+                const top = Math.max(0, ...arr.map(x => x.level));
+                el.innerHTML = n
+                    ? `<b>${n}</b> / ${arr.length} habilités · sommet <b>${getClearance(top).name}</b>`
+                    : 'aucune habilitation';
+            };
+            count(appState.vectors, 'vec-count');
+            count(appState.domains, 'dom-count');
         }
 
         function modVD(kind, id, d) {
@@ -3760,11 +4012,19 @@
         }
 
         /* ---------- Panneaux de jeu (colonne droite des jets) ---------- */
-        function toggleDisclose(id) {
+        // Cartouches de suivi : l'en-tête sert d'interrupteur, le corps se replie
+        function toggleCard(id) {
+            const c = document.getElementById(id);
+            if (c) c.classList.toggle('folded');
+        }
+
+        function toggleDisclose(id, toggler) {
             const el = document.getElementById(id);
             if (!el) return;
             el.classList.toggle('open');
-            const t = el.previousElementSibling;
+            // le déclencheur n'est pas toujours le frère précédent : il peut vivre dans une barre d'outils
+            const t = toggler || (el.previousElementSibling && el.previousElementSibling.classList.contains('disclose')
+                ? el.previousElementSibling : null);
             if (t) t.textContent = (el.classList.contains('open') ? '▾' : '▸') + t.textContent.slice(1);
         }
 
@@ -3821,7 +4081,10 @@
                     <span class="ctx-item-val">P${p.puissance}</span>
                     <span class="ctx-item-val" style="color:var(--charge)">−${upkeepOf(p)}/tour</span>
                     <button class="mini-btn" onclick="delSustained('${p.id}')">✕</button>
-                </div>`).join('') || '<div class="empty">Aucun effet maintenu</div>';
+                </div>`).join('');
+            el.style.marginBottom = appState.sustained.length ? '7px' : '0';
+            const c = document.getElementById('sus-count');
+            if (c) c.innerHTML = appState.sustained.length ? `<b>${appState.sustained.length}</b> actif(s)` : 'aucun';
 
             const total = appState.sustained.reduce((n, p) => n + upkeepOf(p), 0);
             const btn = document.getElementById('sus-turn');
@@ -3856,13 +4119,17 @@
         function renderBuffs() {
             const el = document.getElementById('buffs-list');
             if (!el) return;
+            // À vide la carte se réduit à sa ligne de saisie ; elle ne s'étend qu'une fois servie.
             el.innerHTML = appState.buffs.map(b => `
                 <div class="ctx-item buff">
                     <span class="ctx-item-name" title="${escAttr(b.name)}">${escAttr(b.name)}</span>
                     <span class="ctx-item-val">P${b.puissance}</span>
                     <span class="ctx-item-val" style="color:var(--ink-3)">effet ${Math.floor(b.puissance / 2)}</span>
                     <button class="mini-btn" onclick="delBuff('${b.id}')">✕</button>
-                </div>`).join('') || '<div class="empty">Aucun appui en cours</div>';
+                </div>`).join('');
+            el.style.marginBottom = appState.buffs.length ? '7px' : '0';
+            const c = document.getElementById('buff-count');
+            if (c) c.innerHTML = appState.buffs.length ? `<b>${appState.buffs.length}</b> en cours` : 'aucun';
         }
         function addBuff() {
             const name = document.getElementById('buff-name').value.trim();
@@ -3955,13 +4222,21 @@
            F · PUPITRE DE JET
            ========================================================== */
 
-        function fillSelect(id, items, valueKey, labelFn, keepValue) {
+        function fillSelect(id, items, valueKey, labelFn, emptyLabel) {
             const el = document.getElementById(id);
             if (!el) return;
-            const prev = keepValue === false ? '' : el.value;
-            el.innerHTML = items.map(it => `<option value="${it[valueKey]}">${labelFn(it)}</option>`).join('');
+            const prev = el.value;
+            el.innerHTML = items.length
+                ? items.map(it => `<option value="${it[valueKey]}">${labelFn(it)}</option>`).join('')
+                : `<option value="">${emptyLabel || 'Aucune entrée'}</option>`;
+            el.disabled = !items.length;
             if (prev && items.some(it => String(it[valueKey]) === prev)) el.value = prev;
         }
+
+        // Un vecteur ou un domaine à Non habilité ne peut rien engager : il ne
+        // figure pas dans le pupitre, seules les entrées au moins Éveillé sont proposées.
+        const openVectors = () => appState.vectors.filter(v => v.level > 0);
+        const openDomains = () => appState.domains.filter(d => d.level > 0);
 
         function buildSelects() {
             ['s-attr', 'c-sattr'].forEach(id =>
@@ -3969,10 +4244,12 @@
             ['s-skill', 'c-skill'].forEach(id =>
                 fillSelect(id, appState.skills, 'id', s => `${s.name} · ${getSkillLevel(s.level).name}`));
             ['p-vector', 'c-vector'].forEach(id =>
-                fillSelect(id, appState.vectors, 'id', v => `${v.name} · ${getClearance(v.level).name}`));
-            // Le canal du vecteur est rappelé dans la lecture du pupitre
+                fillSelect(id, openVectors(), 'id', v => `${v.glyph} ${v.name} · ${getClearance(v.level).name}`,
+                    'Aucun vecteur habilité'));
+            // Le canal est commun à tous les vecteurs : il se règle sur la page Pouvoirs
             ['p-domain', 'c-domain'].forEach(id =>
-                fillSelect(id, appState.domains, 'id', d => `${d.name} · ${getClearance(d.level).name}`));
+                fillSelect(id, openDomains(), 'id', d => `${d.glyph} ${d.name} · ${getClearance(d.level).name}`,
+                    'Aucun domaine habilité'));
         }
 
         function onSkillPick() {
@@ -3981,13 +4258,36 @@
             refreshRollUI();
         }
 
+        function onComboSkillPick() {
+            const sk = appState.skills.find(s => s.id === document.getElementById('c-skill').value);
+            if (sk) document.getElementById('c-sattr').value = sk.attr;
+            refreshRollUI();
+        }
+
+        // Les champs chiffrés du pupitre se règlent au pas, bornes comprises
+        function stepNum(id, d) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const min = el.min === '' ? -99 : parseInt(el.min);
+            const max = el.max === '' ? 99 : parseInt(el.max);
+            el.value = Math.max(min, Math.min(max, (parseInt(el.value) || 0) + d));
+            refreshRollUI();
+        }
+
         function refreshRollUI() {
             buildSelects();
+
+            const setReadout = (id, html) => {
+                const el = document.getElementById(id);
+                el.innerHTML = html;
+                el.style.display = html ? '' : 'none';
+            };
 
             // ----- Bloc APTITUDE (jet simple)
             const sAttr = document.getElementById('s-attr').value;
             const sk = appState.skills.find(s => s.id === document.getElementById('s-skill').value);
-            document.getElementById('s-readout').innerHTML = skillReadout(sk, sAttr);
+            document.getElementById('s-pool').innerHTML = poolbarSkill(sk, sAttr);
+            setReadout('s-readout', skillReadout(sk, sAttr));
             document.getElementById('s-go').disabled = !sk;
 
             // ----- Bloc POUVOIR (jet simple) - le canal est réglé sur la page Pouvoirs
@@ -3997,19 +4297,22 @@
             const pcap = pv && pd ? magnitudeMax(pv.level, pd.level) : 0;
             const pMagEl = document.getElementById('p-mag');
             pMagEl.max = Math.max(1, pcap);
-            let pmag = Math.max(0, Math.min(pcap, parseInt(pMagEl.value) || 0));
+            let pmag = Math.max(pcap > 0 ? 1 : 0, Math.min(pcap, parseInt(pMagEl.value) || 0));
             pMagEl.value = pmag;
             const pBonusEl = document.getElementById('p-surge');
             let pbonus = Math.max(0, Math.min(MAX_BONUS_DICE, parseInt(pBonusEl.value) || 0));
             pBonusEl.value = pbonus;
             const pmod = parseInt(document.getElementById('p-bonus').value) || 0;
-            document.getElementById('p-readout').innerHTML = powerReadout(pv, pd, pAttr, pmag, pbonus, pmod);
+            document.getElementById('p-mag-cap').textContent = pv && pd ? `max ${pcap}` : '';
+            document.getElementById('p-poolp').innerHTML = poolbarPower(pv, pd, pAttr, pmag, pbonus, pmod);
+            setReadout('p-readout', powerReadout(pv, pd, pAttr, pmag, pbonus, pmod));
             document.getElementById('p-go').disabled = !(pv && pd && pcap > 0 && (pmag + pbonus) > 0);
 
             // ----- Blocs du jet combiné
             const cAttr = document.getElementById('c-sattr').value;
             const csk = appState.skills.find(s => s.id === document.getElementById('c-skill').value);
-            document.getElementById('c-readout-skill').innerHTML = skillReadout(csk, cAttr);
+            document.getElementById('c-pool').innerHTML = poolbarSkill(csk, cAttr);
+            setReadout('c-readout-skill', skillReadout(csk, cAttr));
 
             const cpAttr = getCanal();
             const cv = appState.vectors.find(v => v.id === document.getElementById('c-vector').value);
@@ -4017,31 +4320,55 @@
             const ccap = cv && cd ? magnitudeMax(cv.level, cd.level) : 0;
             const cMagEl = document.getElementById('c-mag');
             cMagEl.max = Math.max(1, ccap);
-            let cmag = Math.max(0, Math.min(ccap, parseInt(cMagEl.value) || 0));
+            let cmag = Math.max(ccap > 0 ? 1 : 0, Math.min(ccap, parseInt(cMagEl.value) || 0));
             cMagEl.value = cmag;
             const cBonusEl = document.getElementById('c-surge');
             let cbonus = Math.max(0, Math.min(MAX_BONUS_DICE, parseInt(cBonusEl.value) || 0));
             cBonusEl.value = cbonus;
             const cmod = parseInt(document.getElementById('c-pbonus').value) || 0;
-            document.getElementById('c-readout-power').innerHTML = powerReadout(cv, cd, cpAttr, cmag, cbonus, cmod);
+            document.getElementById('c-mag-cap').textContent = cv && cd ? `max ${ccap}` : '';
+            document.getElementById('c-poolp').innerHTML = poolbarPower(cv, cd, cpAttr, cmag, cbonus, cmod);
+            setReadout('c-readout-power', powerReadout(cv, cd, cpAttr, cmag, cbonus, cmod));
             document.getElementById('c-go').disabled = !(csk && cv && cd && ccap > 0 && (cmag + cbonus) > 0);
 
             renderGauges();
         }
 
-        function skillReadout(sk, attrId) {
-            if (!sk || !attrId) return 'Sélectionner une aptitude.';
+        function poolbarSkill(sk, attrId) {
+            if (!sk) return '<span class="pb-empty">Choisir une aptitude pour composer la réserve</span>';
             const al = getAttributeLevel(appState.attributes[attrId]);
             const sl = getSkillLevel(sk.level);
             const nb = SOCLE_DICE + Math.max(0, sl.add);
-            const neg = sl.add < 0 ? ` + ${-sl.add} dé(s) défavorable(s)` : '';
-            const spec = sk.name === 'Érudition' ? declaredSpecialties() : [];
-            return `Réserve : <b>${nb} dé(s)</b> profil ${al.name}${neg}<br>`
-                + `${facesSummary(al.faces)}<br>`
-                + `Valeur passive : <b>${getPassiveValue(sk)}</b>`
-                + (sk.name === 'Érudition'
-                    ? `<br>Corpus : ${spec.length ? '<b>' + spec.join('</b> · <b>') + '</b>' : '<span class="warnline">aucun corpus déclaré</span>'}`
-                    : '');
+            return `<span class="pb-n">${nb}</span><span class="pb-l">dés<br>lancés</span>`
+                + `<span class="pb-chip">Profil <b style="color:${al.color}">${al.name}</b></span>`
+                + `<span class="pb-chip">Maîtrise <b style="color:${sl.color}">${sl.name}</b></span>`
+                + (sl.add < 0 ? `<span class="pb-chip bad">${-sl.add} dé(s) défavorable(s)</span>` : '')
+                + `<span class="pb-chip">Passive <b>${getPassiveValue(sk)}</b></span>`
+                + `<span class="pb-faces">${facesSummary(al.faces)}</span>`;
+        }
+
+        function poolbarPower(v, d, attrId, magnitude, bonusDice, powerMod) {
+            if (!v || !d) return '<span class="pb-empty">Aucun couple disponible : ouvrir un vecteur et un domaine</span>';
+            const al = getAttributeLevel(appState.attributes[attrId]);
+            const nb = magnitude + bonusDice;
+            const left = getChargeLeft();
+            const [e, su, vd, rv, x] = al.faces;
+            const esp = Math.round(nb * ((e + su - rv - x) / (12 - e - x)) * 10) / 10;
+            const canal = ATTRIBUTES.find(a => a.id === attrId);
+            return `<span class="pb-n">${nb}</span><span class="pb-l">dés de<br>puissance</span>`
+                + `<span class="pb-chip">Canal <b style="color:${al.color}">${canal ? canal.name : '-'}</b></span>`
+                + `<span class="pb-chip">Attendu <b>≈ ${esp}</b>${powerMod ? ` ${powerMod > 0 ? '+' : '−'} ${Math.abs(powerMod)}` : ''}</span>`
+                + `<span class="pb-chip${nb > left ? ' warn' : ''}" style="${nb > left ? '' : 'color:var(--charge)'}">`
+                + `Coût <b>${nb}</b> / ${left} Charge</span>`
+                + `<span class="pb-faces">${facesSummary(al.faces)}</span>`;
+        }
+
+        function skillReadout(sk, attrId) {
+            if (!sk || !attrId || sk.name !== 'Érudition') return '';
+            const spec = declaredSpecialties();
+            return `Corpus déclarés : ${spec.length
+                ? '<b>' + spec.join('</b> · <b>') + '</b>'
+                : '<span class="warnline">aucun corpus déclaré</span>'}`;
         }
 
         function powerReadout(v, d, attrId, magnitude, bonusDice, powerMod) {
@@ -4060,15 +4387,12 @@
             const perDie = (e + su - rv - x) / (12 - e - x);
             const esp = Math.round(nb * perDie * 10) / 10;
 
-            const canal = ATTRIBUTES.find(a => a.id === attrId);
-            return `Magnitude <b>${magnitude}</b> / ${cap} autorisée (Vecteur ${v.level} + Domaine ${d.level})<br>`
-                + `Canal : <b>${canal ? canal.name : '-'}</b> (${al.name}) · réglé sur la page Pouvoirs<br>`
-                + `Réserve : <b>${nb} dé(s)</b> de Puissance${bonusDice ? ` dont ${bonusDice} bonus` : ''} · profil ${al.name}<br>`
-                + `${facesSummary(al.faces)}<br>`
-                + `Puissance attendue <b>≈ ${esp}</b>${powerMod ? ` ${powerMod > 0 ? '+' : '−'} ${Math.abs(powerMod)} de modificateur` : ''} · coût <b>${cost} Charge</b> (restante ${left})`
+            return `<b>${v.glyph} ${v.name}</b> ${v.level} × <b>${d.glyph} ${d.name}</b> ${d.level}`
+                + ` · Magnitude <b>${magnitude}</b> sur ${cap} autorisée`
+                + (bonusDice ? ` · ${bonusDice} dé(s) bonus hors plafond` : '')
                 + (missing.length ? `<br><span class="badline">Habilitation absente : ${missing.join(' et ')}</span>`
                     : magnitude > cap ? `<br><span class="badline">Magnitude au-delà du plafond d'habilitation</span>` : '')
-                + (!missing.length && cost > left ? `<br><span class="warnline">Réserve insuffisante - seuls ${left} dé(s) seront réellement payés</span>` : '');
+                + (!missing.length && cost > left ? `<br><span class="warnline">Réserve insuffisante : seuls ${left} dé(s) seront réellement payés</span>` : '');
         }
 
         /* ==========================================================
