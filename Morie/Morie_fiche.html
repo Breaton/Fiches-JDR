@@ -2121,12 +2121,26 @@
             padding: 3px 0;
         }
 
-        .pr-row span { color: var(--slate-blue); }
-        .pr-row strong { font-family: var(--font-display); font-size: 1.05em; }
+        .pr-row span {
+            color: var(--slate-blue);
+        }
 
-        .pr-base strong { color: var(--deep-navy); }
-        .pr-plus strong { color: #1D9E75; }
-        .pr-minus strong { color: var(--vitality-red); }
+        .pr-row strong {
+            font-family: var(--font-display);
+            font-size: 1.05em;
+        }
+
+        .pr-base strong {
+            color: var(--deep-navy);
+        }
+
+        .pr-plus strong {
+            color: #1D9E75;
+        }
+
+        .pr-minus strong {
+            color: var(--vitality-red);
+        }
 
         .pr-total {
             border-top: 1px solid var(--moonlight);
@@ -2134,8 +2148,16 @@
             padding-top: 6px;
             font-weight: 700;
         }
-        .pr-total span { color: var(--deep-navy); font-weight: 700; }
-        .pr-total strong { color: var(--gold); font-size: 1.2em; }
+
+        .pr-total span {
+            color: var(--deep-navy);
+            font-weight: 700;
+        }
+
+        .pr-total strong {
+            color: var(--gold);
+            font-size: 1.2em;
+        }
 
         /* Dés magiques enrichis : label, valeur, effet tiré */
         .magic-die {
@@ -3084,7 +3106,9 @@
             font-family: var(--font-body);
         }
 
-        .reserve-override button:hover { background: rgba(107, 76, 154, 0.2); }
+        .reserve-override button:hover {
+            background: rgba(107, 76, 154, 0.2);
+        }
 
         .reserve-override span {
             font-size: 0.68em;
@@ -3111,7 +3135,9 @@
             line-height: 1;
         }
 
-        .qi-refresh:hover { background: rgba(29, 158, 117, 0.25); }
+        .qi-refresh:hover {
+            background: rgba(29, 158, 117, 0.25);
+        }
 
         .qi-pool-row {
             display: flex;
@@ -3147,7 +3173,9 @@
             font-family: var(--font-body);
         }
 
-        .qi-step:hover { background: rgba(29, 158, 117, 0.22); }
+        .qi-step:hover {
+            background: rgba(29, 158, 117, 0.22);
+        }
 
         .qi-stepper {
             display: flex;
@@ -3657,8 +3685,13 @@
             text-align: right;
         }
 
-        .passive-row.mid .pr-val { color: #1D9E75; }
-        .passive-row.high .pr-val { color: #D4AF37; }
+        .passive-row.mid .pr-val {
+            color: #1D9E75;
+        }
+
+        .passive-row.high .pr-val {
+            color: #D4AF37;
+        }
 
         .passives-empty {
             font-size: 0.78em;
@@ -3720,6 +3753,7 @@
             color: rgba(255, 255, 255, 0.2);
             font-style: italic;
         }
+
         /* =====================================================================
            ==  RÉSULTAT DU JET : une plaque rectangulaire  =====================
            ==  Le chiffre qui décide en haut à droite, les compteurs sous lui,
@@ -3753,14 +3787,31 @@
             border-bottom: 1px solid var(--card-border);
         }
 
-        .result-title { font-size: 1.55em; }
-        .result-subtitle { margin-top: 2px; }
+        .result-title {
+            font-size: 1.55em;
+        }
 
-        #dice-display-area { grid-column: 1; grid-row: 2 / span 3; min-width: 0; }
-        .dice-container { justify-content: flex-start; }
-        .dice-section-label, .faces-summary, .dice-legend { text-align: left; }
+        .result-subtitle {
+            margin-top: 2px;
+        }
 
-        .dice-section + .dice-section {
+        #dice-display-area {
+            grid-column: 1;
+            grid-row: 2 / span 3;
+            min-width: 0;
+        }
+
+        .dice-container {
+            justify-content: flex-start;
+        }
+
+        .dice-section-label,
+        .faces-summary,
+        .dice-legend {
+            text-align: left;
+        }
+
+        .dice-section+.dice-section {
             margin-top: 14px;
             padding-top: 14px;
             border-top: 1px solid var(--card-border);
@@ -3775,7 +3826,10 @@
             padding: 18px 16px;
         }
 
-        .result-total-value { font-size: 3.4em; line-height: 1; }
+        .result-total-value {
+            font-size: 3.4em;
+            line-height: 1;
+        }
 
         /* La Puissance du sort : second chiffre qui décide, sous le total. */
         .result-power {
@@ -3815,24 +3869,92 @@
             align-content: start;
         }
 
-        .stat-item { margin: 0; }
+        .stat-item {
+            margin: 0;
+        }
 
-        #magnitude-result-area { grid-column: 1 / -1; grid-row: 5; min-width: 0; }
-        #magnitude-result-area:empty { display: none; }
+        #magnitude-result-area {
+            grid-column: 1 / -1;
+            grid-row: 5;
+            min-width: 0;
+        }
 
-        .result-close-btn { grid-column: 1 / -1; grid-row: 6; margin: 0; }
+        #magnitude-result-area:empty {
+            display: none;
+        }
+
+        /* Bandeau de vision : la joueuse sait qu'il s'est passé quelque chose, rien de plus */
+        .vision-banner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            background: rgba(58, 95, 122, 0.14);
+            border: 1px solid rgba(58, 95, 122, 0.4);
+            border-left: 3px solid var(--soul-blue, #3a5f7a);
+            border-radius: 10px;
+        }
+
+        .vision-banner-mark {
+            font-size: 1.5em;
+            color: var(--soul-blue, #3a5f7a);
+            line-height: 1;
+        }
+
+        .vision-banner-title {
+            font-weight: 700;
+            font-size: 0.95em;
+            color: var(--soul-blue, #3a5f7a);
+        }
+
+        .vision-banner-sub {
+            font-size: 0.8em;
+            color: var(--silver-mist);
+            font-style: italic;
+        }
+
+        .result-close-btn {
+            grid-column: 1 / -1;
+            grid-row: 6;
+            margin: 0;
+        }
 
         /* Les récapitulatifs de magie se lisent alignés à gauche : puissance
            d'abord, effets et suites ensuite. */
-        .magnitude-result { text-align: left; }
-        .power-recap { max-width: 520px; }
-        .followup-magic, .sustain-block, .perturbation-inline { text-align: left; }
+        .magnitude-result {
+            text-align: left;
+        }
+
+        .power-recap {
+            max-width: 520px;
+        }
+
+        .followup-magic,
+        .sustain-block,
+        .perturbation-inline {
+            text-align: left;
+        }
 
         @media (max-width: 980px) {
-            .result-container { grid-template-columns: minmax(0, 1fr); }
-            .result-header, #dice-display-area, .result-total, .result-power, .result-stats,
-            #magnitude-result-area, .result-close-btn { grid-column: 1; grid-row: auto; }
-            .result-total { order: -1; }
+            .result-container {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .result-header,
+            #dice-display-area,
+            .result-total,
+            .result-power,
+            .result-stats,
+            #magnitude-result-area,
+            .result-close-btn {
+                grid-column: 1;
+                grid-row: auto;
+            }
+
+            .result-total {
+                order: -1;
+            }
         }
 
         /* === PAGE MAGIE : CANAL, VERBES, CIBLES === */
@@ -3852,11 +3974,68 @@
             }
         }
 
+        /* Le canal tient sur un bandeau au-dessus des deux colonnes */
+        .canal-card .magic-note {
+            margin-top: 10px;
+        }
+
         .canal-row {
             display: flex;
             gap: 20px;
             align-items: stretch;
             flex-wrap: wrap;
+        }
+
+        /* Indicateur du don de visions */
+        .seer-banner {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 18px;
+            background: rgba(58, 95, 122, 0.12);
+            border: 1px solid rgba(58, 95, 122, 0.42);
+            border-left: 3px solid var(--soul-blue, #3a5f7a);
+            border-radius: 12px;
+        }
+
+        .seer-mark {
+            font-size: 1.7em;
+            line-height: 1;
+            color: var(--soul-blue, #3a5f7a);
+        }
+
+        .seer-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .seer-title {
+            font-weight: 700;
+            font-size: 0.98em;
+            color: var(--soul-blue, #3a5f7a);
+        }
+
+        .seer-sub {
+            font-size: 0.8em;
+            color: var(--silver-mist);
+            line-height: 1.5;
+        }
+
+        .seer-test {
+            flex: 0 0 auto;
+            padding: 6px 14px;
+            font-size: 0.78em;
+            font-weight: 600;
+            color: var(--soul-blue, #3a5f7a);
+            background: rgba(58, 95, 122, 0.16);
+            border: 1px solid rgba(58, 95, 122, 0.45);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .seer-test:hover {
+            background: rgba(58, 95, 122, 0.3);
         }
 
         .canal-pick {
@@ -4024,8 +4203,6 @@
             opacity: 0.3;
             cursor: not-allowed;
         }
-
-
     </style>
 </head>
 
@@ -4188,10 +4365,10 @@
                             </div>
                             <div class="reserve-override">
                                 <label>Max :</label>
-                                <input type="number" id="reserve-max-input" min="1"
-                                    placeholder="auto" oninput="setReserveOverride(this.value)"
-                                    onchange="setReserveOverride(this.value)">
-                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺ auto</button>
+                                <input type="number" id="reserve-max-input" min="1" placeholder="auto"
+                                    oninput="setReserveOverride(this.value)" onchange="setReserveOverride(this.value)">
+                                <button onclick="clearReserveOverride()" title="Revenir au maximum du niveau">↺
+                                    auto</button>
                                 <span id="reserve-base-hint"></span>
                             </div>
                             <div class="counter-bar" style="background:rgba(107,76,154,0.15);">
@@ -4208,7 +4385,8 @@
                             <div id="qi-perso-block" class="qi-perso" style="display:none;">
                                 <div class="qi-perso-head">
                                     <span class="qi-perso-name">☯ Qi partagé</span>
-                                    <button class="qi-perso-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
+                                    <button class="qi-perso-refresh" onclick="qiPull()"
+                                        title="Relire depuis GitHub">↻</button>
                                 </div>
                                 <div class="qi-perso-body">
                                     <span class="qi-perso-num" id="qi-value-perso">0</span>
@@ -4370,10 +4548,20 @@
         <!-- PAGE : MAGIE -->
         <div class="page magic-page" id="page-magie">
 
-            <div class="card">
+            <!-- Don de visions : visible uniquement sur une fiche qui le porte -->
+            <div class="seer-banner magic-span" id="seer-banner" style="display:none;">
+                <span class="seer-mark">✦</span>
+                <div class="seer-body">
+                    <div class="seer-title">Don de visions actif</div>
+                    <div class="seer-sub" id="seer-sub"></div>
+                </div>
+                <button class="seer-test" onclick="testVision()" title="Envoie une vision de test à la MJ">Tester
+                    l'envoi</button>
+            </div>
+
+            <div class="card magic-span canal-card">
                 <div class="card-title">
-                    <span class="icon"
-                        style="background: rgba(107,76,154,0.15); color: var(--ombre-purple);">✨</span>
+                    <span class="icon" style="background: rgba(107,76,154,0.15); color: var(--ombre-purple);">✨</span>
                     Canal de manifestation
                 </div>
                 <div class="canal-row">
@@ -4383,16 +4571,14 @@
                     </div>
                     <div class="canal-info" id="canal-info"></div>
                 </div>
-                <p class="magic-note">Toute la magie du personnage passe par ce seul attribut : c'est lui qui donne
-                    aux dés de Puissance leur profil de faces, quel que soit le sort lancé. Chacun canalise à sa
-                    manière, et cette manière ne change pas d'un sort à l'autre. Le couple Verbe × Cible, lui, ne dit
-                    pas comment la magie sort, mais combien de dés elle peut engager.</p>
+                <p class="magic-note">Un seul attribut porte toute la magie : il donne aux dés de Puissance leur
+                    profil de faces. Le couple Verbe × Cible ne dit pas comment la magie sort, mais combien de dés
+                    elle peut engager.</p>
             </div>
 
             <div class="card">
                 <div class="card-title">
-                    <span class="icon"
-                        style="background: rgba(107,76,154,0.15); color: var(--ombre-purple);">◈</span>
+                    <span class="icon" style="background: rgba(107,76,154,0.15); color: var(--ombre-purple);">◈</span>
                     Verbes <span class="vd-count" id="verb-count"></span>
                 </div>
                 <div class="vd-list" id="verb-list"></div>
@@ -4400,8 +4586,7 @@
 
             <div class="card">
                 <div class="card-title">
-                    <span class="icon"
-                        style="background: rgba(212,168,75,0.18); color: #a07a1e;">✺</span>
+                    <span class="icon" style="background: rgba(212,168,75,0.18); color: #a07a1e;">✺</span>
                     Cibles <span class="vd-count" id="target-count"></span>
                 </div>
                 <div class="vd-list" id="target-list"></div>
@@ -4508,7 +4693,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
-                                <input id="simple-bonus" class="bonus-input" type="number" value="0" oninput="renderRollStats('simple')">
+                                <input id="simple-bonus" class="bonus-input" type="number" value="0"
+                                    oninput="renderRollStats('simple')">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Mod. Explosion</label>
@@ -4552,7 +4738,9 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label" title="Laisser vide pour une magie pure, sans support technique">Compétence <span style="opacity:.6;font-weight:400">(facultatif)</span></label>
+                                <label class="form-label"
+                                    title="Laisser vide pour une magie pure, sans support technique">Compétence <span
+                                        style="opacity:.6;font-weight:400">(facultatif)</span></label>
                                 <select id="hybrid-skill-select" class="form-select" onchange="updateRollButtons()">
                                     <option value="">- Aucune : magie pure -</option>
                                 </select>
@@ -4564,7 +4752,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label" style="color:#a07a1e;">Cible</label>
-                                <select id="hybrid-target-select" class="form-select" onchange="updateHybridMagicInfo()">
+                                <select id="hybrid-target-select" class="form-select"
+                                    onchange="updateHybridMagicInfo()">
                                 </select>
                             </div>
                             <div class="form-group">
@@ -4574,13 +4763,16 @@
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
-                                <label class="form-label" title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques bonus</label>
+                                <label class="form-label"
+                                    title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques
+                                    bonus</label>
                                 <input id="hybrid-bonus-dice" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Bonus / Malus</label>
-                                <input id="hybrid-bonus" class="bonus-input" type="number" value="0" oninput="renderRollStats('hybrid')">
+                                <input id="hybrid-bonus" class="bonus-input" type="number" value="0"
+                                    oninput="renderRollStats('hybrid')">
                             </div>
                         </div>
                         <div id="hybrid-magic-info"
@@ -4628,7 +4820,8 @@
 
                 <!-- Qi partagé -->
                 <div class="ctx-panel qi-panel" id="qi-panel" style="display:none;">
-                    <div class="ctx-panel-title" style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                    <div class="ctx-panel-title"
+                        style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
                         <span>☯ Qi partagé</span>
                         <button class="qi-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
                     </div>
@@ -6347,11 +6540,11 @@
 
         // ========== SYSTÈME DE FACES ==========
         const FACE_INFO = {
-            eclat:   { label: 'Éclat',   sym: '✦', value: 1,  explodes: true,  color: '#D4AF37' },
-            succes:  { label: 'Succès',  sym: '●', value: 1,  explodes: false, color: '#1D9E75' },
-            vide:    { label: 'Vide',    sym: '○', value: 0,  explodes: false, color: '#8b9dc3' },
-            revers:  { label: 'Revers',  sym: '▼', value: -1, explodes: false, color: '#c45c5c' },
-            reversP: { label: 'Revers+', sym: '▼▼', value: -1, explodes: true,  color: '#A32D2D' },
+            eclat: { label: 'Éclat', sym: '✦', value: 1, explodes: true, color: '#D4AF37' },
+            succes: { label: 'Succès', sym: '●', value: 1, explodes: false, color: '#1D9E75' },
+            vide: { label: 'Vide', sym: '○', value: 0, explodes: false, color: '#8b9dc3' },
+            revers: { label: 'Revers', sym: '▼', value: -1, explodes: false, color: '#c45c5c' },
+            reversP: { label: 'Revers+', sym: '▼▼', value: -1, explodes: true, color: '#A32D2D' },
         };
         const FACE_ORDER = ['eclat', 'succes', 'vide', 'revers', 'reversP'];
 
@@ -6556,6 +6749,8 @@
             // l'exception coupait l'envoi Discord. La compétence est ici toujours définie.
             if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, ATTR_LABEL[attrName] || capitalize(attrName),
                 { successes, bonus, eclats: counts.eclats, revers: counts.revers, perturb });
+
+            if (maybeVision(skill.name)) appendVisionBanner();
         }
 
         // Affiche une stat-value ; masque la carte entière si la valeur est 0/absente,
@@ -7401,6 +7596,7 @@
 
             renderVdList('verb-list', VERBS, verbLevel, 'setVerbLevel', 'verb');
             renderVdList('target-list', TARGETS, targetLevel, 'setTargetLevel', 'target');
+            renderSeerBanner();
 
         }
 
@@ -7489,14 +7685,14 @@
             const attrLevel = hasSkill ? getAttributeLevel(attrValue) : null;
             const skillDice = hasSkill ? rollSkillCheck(attrValue, skill.level) : [];
             const skillCounts = hasSkill ? countSuccesses(skillDice, skill.level)
-                                         : { successes: 0, eclats: 0, revers: 0, explosions: 0 };
+                : { successes: 0, eclats: 0, revers: 0, explosions: 0 };
 
             const hybridBonus = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
             const paidMagicDice = actualMagic;   // conservé avant réassignation, pour comparaison à l'affichage
             const totalMagicDice = actualMagic + hybridBonus;
             const canalLvl = getCanalValue();
             const { results: magicResults, successes: magicSuccesses, basePower, powerMod, ruptures, fractures,
-                    energyCost, mjGain, elanLoss, effects } = resolveMagicDice(canalLvl, totalMagicDice, emotion, actualMagic, cap);
+                energyCost, mjGain, elanLoss, effects } = resolveMagicDice(canalLvl, totalMagicDice, emotion, actualMagic, cap);
             if (totalMagicDice > 0) {
                 spendReserve(energyCost);
                 if (mjGain > 0) addMjDice(mjGain);
@@ -7541,6 +7737,9 @@
                         inTotal: hasSkill
                     }
                 });
+
+            // Une magie pure n'est pas un jet de compétence : le don ne s'y déclenche pas
+            if (hasSkill && maybeVision(skill.name)) appendVisionBanner();
         }
 
         function displayHybridResult(data) {
@@ -7834,8 +8033,10 @@
                 'Accept': 'application/vnd.github+json',
                 'X-GitHub-Api-Version': '2022-11-28'
             };
-            const payload = { qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
-                              by: (appState.profile && appState.profile.name) || '' };
+            const payload = {
+                qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
+                by: (appState.profile && appState.profile.name) || ''
+            };
             const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
             try {
                 const res = await fetch(qiApi(), {
@@ -8153,6 +8354,203 @@
         }
 
         // ========== UTILITAIRES ==========
+        /* ===================================================================
+           VISIONS DE ZAYA
+           Un don subi, pas un pouvoir lancé : à chaque jet de compétence, une
+           chance sur dix qu'une vision la traverse. Le contenu (quand, qui,
+           quoi) est du pur hasard ; seules la Pertinence et la Clarté suivent
+           son couple Percevoir × Destin. Côté joueuse, rien d'autre qu'une
+           notification : le détail part directement chez la MJ.
+        =================================================================== */
+        const VISION_WEBHOOK_URL = 'https://discord.com/api/webhooks/1550973882742083624/M9R-zET2kmT5zQQIuB6gGHDgiBOY965W_g6_fOAYBb6PDoSKdieKKZNhsClu2hS1mtgV';
+
+        // Le don est reconnu sur le nom de la sauvegarde, comme le Qi partagé de Shu et Yue.
+        // Une fiche peut aussi le forcer avec `"visionsEnabled": true` à la racine du .json.
+        const VISION_SEER_NAME = 'zaya';
+        const VISION_TRIGGER_DIE = 10;   // dé du déclencheur : 1 sur 10, soit 10 %
+        const VISION_TRIGGER_FACE = 1;   // face qui déclenche
+        const VISION_COOLDOWN_MS = 0;    // verrou entre deux visions ; 600000 = 10 minutes
+
+        // Équipage nommé : si la liste est remplie, le tirage désigne quelqu'un.
+        // Laissée vide, la MJ choisit elle-même.
+        const VISION_CREW = [];
+
+        let lastVisionAt = 0;
+        let visionCount = 0;      // visions survenues depuis l'ouverture de la fiche
+
+        function isVisionSeer() {
+            if (appState.visionsEnabled === true) return true;
+            const n = ((appState.profile && appState.profile.name) || '')
+                .toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            return n.includes(VISION_SEER_NAME);
+        }
+
+        // ── Les trois axes de contenu, hors de son contrôle ──
+
+        // Échelle symétrique autour du présent, graduée par la même unité dans les deux sens
+        const VISION_TIME = [
+            { deg: 'Passé lointain', dist: 'des années voir des siècles' },
+            { deg: 'Passé ancien', dist: 'des mois' },
+            { deg: 'Passé récent', dist: 'des jours' },
+            { deg: 'Passé immédiat', dist: 'des heures' },
+            { deg: 'Passé immédiat', dist: 'des heures' },
+            { deg: 'Présent', dist: 'en ce moment même' },
+            { deg: 'Présent', dist: 'en ce moment même' },
+            { deg: 'Futur immédiat', dist: 'des heures' },
+            { deg: 'Futur immédiat', dist: 'des heures' },
+            { deg: 'Futur proche', dist: 'des jours' },
+            { deg: 'Futur éloigné', dist: 'des mois' },
+            { deg: 'Futur lointain', dist: 'des années voir des siècles' }
+        ];
+
+        const VISION_WHO = [
+            'Zaya elle-même',
+            'Un membre de l\'équipage',
+            'Un membre de l\'équipage',
+            'L\'équipage entier, ou le navire',
+            'Un proche absent d\'un membre de l\'équipage',
+            'Un parfait inconnu',
+            'Un parfait inconnu',
+            'Une foule, un port, un peuple',
+            'Un noble, une maison',
+            'La royauté, la couronne, la succession',
+            'Un commerçant',
+            'Un religieux'
+        ];
+
+        const VISION_TOPIC = [
+            'Amour',
+            'Amitié, loyauté',
+            'Trahison',
+            'Mort',
+            'Naissance, commencement',
+            'Serment, pacte, dette',
+            'Départ, perte, abandon',
+            'Violence, bataille',
+            'Un secret.',
+            'Pouvoir et politique',
+            'La mer',
+            'Magie, arcane'
+        ];
+
+        // ── Les deux axes pondérés par son don ──
+        // Destin dit à quoi elle est reliée, Percevoir dit ce qu'elle arrive à lire.
+        const VISION_RELEVANCE = [
+            { min: 13, name: 'Central', desc: 'Concerne ce qui se joue là, maintenant. C\'est un avertissement.' },
+            { min: 10, name: 'Lié', desc: 'Concerne l\'intrigue en cours.' },
+            { min: 7, name: 'Tangent', desc: 'Touche un PNJ, un lieu ou un objet déjà croisés.' },
+            { min: 4, name: 'Lointain', desc: 'Quelque chose qui servira, peut être.' },
+            { min: 0, name: 'Parasite', desc: 'Bullshit' }
+        ];
+
+        const VISION_CLARITY = [
+            { min: 13, name: 'Limpide', desc: 'La scène, les visages, et une phrase prononcée.' },
+            { min: 10, name: 'Nette', desc: 'Une scène complète, mais sans son contexte.' },
+            { min: 7, name: 'Fragmentaire', desc: 'Un détail parfaitement net dans un ensemble flou.' },
+            { min: 4, name: 'Symbolique', desc: 'Des images qui tiennent, mais métaphoriques. Aucun nom, aucun visage.' },
+            { min: 0, name: 'Flashs', desc: 'Des images d\'une fraction de seconde. Deux ou trois impressions brutes, aucune scène.' }
+        ];
+
+        function d12() { return Math.floor(Math.random() * 12) + 1; }
+        function visionTriggerRoll() { return Math.floor(Math.random() * VISION_TRIGGER_DIE) + 1; }
+        function visionTier(table, total) { return table.find(t => total >= t.min) || table[table.length - 1]; }
+
+        function rollVision() {
+            const tD = d12(), wD = d12(), sD = d12(), rD = d12(), cD = d12();
+            const destin = targetLevel('destin');
+            const percevoir = verbLevel('percevoir');
+
+            let who = VISION_WHO[wD - 1];
+            if (VISION_CREW.length && who === 'Un membre de l\'équipage') {
+                who += ' : ' + VISION_CREW[Math.floor(Math.random() * VISION_CREW.length)];
+            }
+
+            return {
+                time: VISION_TIME[tD - 1], timeD: tD,
+                who, whoD: wD,
+                topic: VISION_TOPIC[sD - 1], topicD: sD,
+                relevance: visionTier(VISION_RELEVANCE, rD + destin), relD: rD, destin,
+                clarity: visionTier(VISION_CLARITY, cD + percevoir), clarD: cD, percevoir
+            };
+        }
+
+        // Le détail ne va qu'à la MJ, sur son propre canal
+        function sendVisionToMJ(v, skillName, isTest) {
+            const charName = (appState.profile && appState.profile.name) || 'Zaya';
+            const lines = [
+                isTest ? '*envoi de test, aucune vision réelle*' : `*pendant un jet de ${skillName || 'compétence'}*`,
+                '',
+                `**Temporalité** · ${v.time.deg}, ${v.time.dist}  \`d12 ${v.timeD}\``,
+                `**Qui** · ${v.who}  \`d12 ${v.whoD}\``,
+                `**Sujet** · ${v.topic}  \`d12 ${v.topicD}\``,
+                `**Pertinence** · ${v.relevance.name}  \`${v.relD} + Destin ${v.destin} = ${v.relD + v.destin}\``,
+                `┈ ${v.relevance.desc}`,
+                `**Clarté** · ${v.clarity.name}  \`${v.clarD} + Percevoir ${v.percevoir} = ${v.clarD + v.percevoir}\``,
+                `┈ ${v.clarity.desc}`
+            ];
+
+            const embed = {
+                title: isTest ? '✦ Vision · TEST' : '✦ Vision',
+                description: lines.join('\n'),
+                color: 0x3a5f7a,
+                author: { name: charName }
+            };
+
+            fetch(VISION_WEBHOOK_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: charName + ' · visions', embeds: [embed] })
+            }).catch(() => { });
+        }
+
+        // Appelé à chaque jet de compétence. Renvoie vrai si une vision est survenue.
+        function maybeVision(skillName) {
+            if (!isVisionSeer()) return false;
+            // Un jet privé masque le jet, pas le don : la vision part quand même à la MJ.
+            if (VISION_COOLDOWN_MS && Date.now() - lastVisionAt < VISION_COOLDOWN_MS) return false;
+            if (visionTriggerRoll() !== VISION_TRIGGER_FACE) return false;
+            lastVisionAt = Date.now();
+            visionCount++;
+            sendVisionToMJ(rollVision(), skillName);
+            renderSeerBanner();
+            showNotification('✦ Une vision te traverse');
+            return true;
+        }
+
+        // Indicateur sur la page Magie : le don est-il chargé, et sur quoi s'appuie-t-il
+        function renderSeerBanner() {
+            const el = document.getElementById('seer-banner');
+            if (!el) return;
+            const on = isVisionSeer();
+            el.style.display = on ? 'flex' : 'none';
+            if (!on) return;
+            const sub = document.getElementById('seer-sub');
+            if (!sub) return;
+            const pct = (100 / VISION_TRIGGER_DIE).toFixed(1).replace('.', ',').replace(',0', '');
+            const seen = visionCount === 0 ? 'aucune vision pour l\'instant'
+                : `${visionCount} vision${visionCount > 1 ? 's' : ''} depuis l'ouverture de la fiche`;
+            sub.textContent = `1 jet de compétence sur ${VISION_TRIGGER_DIE} (${pct} %) · `
+                + `Clarté + Percevoir ${verbLevel('percevoir')} · Pertinence + Destin ${targetLevel('destin')} · ${seen}`;
+        }
+
+        // Vérifier que le canal de la MJ reçoit bien, sans attendre un vrai tirage
+        function testVision() {
+            sendVisionToMJ(rollVision(), null, true);
+            showNotification('✦ Vision de test envoyée à la MJ');
+        }
+
+        // Côté joueuse : on annonce la vision, jamais son contenu ni ses dés
+        function appendVisionBanner() {
+            const area = document.getElementById('magnitude-result-area');
+            if (!area) return;
+            area.insertAdjacentHTML('afterbegin',
+                '<div class="vision-banner">' +
+                '<span class="vision-banner-mark">✦</span>' +
+                '<div><div class="vision-banner-title">Une vision te traverse</div>' +
+                '<div class="vision-banner-sub">Tu n\'en retiens rien de clair. La MJ te dira ce que tu vois.</div></div>' +
+                '</div>');
+        }
+
         // ========== DISCORD WEBHOOK ==========
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1509003659407524041/plYUTg3J6tuwaSDM32dEhjjH3n9kj9JQm1e-Okit0vFT66ivfBuIsH6DULNJgkIR9iiN';
 
