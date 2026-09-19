@@ -3834,6 +3834,198 @@
             #magnitude-result-area, .result-close-btn { grid-column: 1; grid-row: auto; }
             .result-total { order: -1; }
         }
+
+        /* === PAGE MAGIE : CANAL, VERBES, CIBLES === */
+        .magic-page {
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        .magic-span {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 900px) {
+            .magic-page {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .canal-row {
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .canal-pick {
+            min-width: 220px;
+        }
+
+        .canal-label {
+            display: block;
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--silver-mist);
+            margin-bottom: 6px;
+        }
+
+        .canal-pick select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            background: var(--pure-white);
+            color: var(--deep-navy);
+            font-family: var(--font-body);
+            font-size: 0.95em;
+            cursor: pointer;
+        }
+
+        .canal-pick select:focus {
+            outline: none;
+            border-color: var(--ombre-purple);
+        }
+
+        .canal-info {
+            flex: 1;
+            min-width: 240px;
+            padding: 12px 16px;
+            background: rgba(107, 76, 154, 0.07);
+            border: 1px solid rgba(107, 76, 154, 0.22);
+            border-left: 3px solid var(--ombre-purple);
+            border-radius: 10px;
+            font-size: 0.86em;
+            line-height: 1.6;
+            color: var(--slate-blue);
+        }
+
+        .canal-info strong {
+            color: var(--ombre-purple);
+        }
+
+        .magic-note {
+            margin-top: 14px;
+            font-size: 0.82em;
+            line-height: 1.6;
+            color: var(--silver-mist);
+        }
+
+        .vd-count {
+            float: right;
+            font-family: var(--font-body);
+            font-size: 0.62em;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            color: var(--silver-mist);
+            text-transform: none;
+        }
+
+        .vd-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .vd-row {
+            display: grid;
+            grid-template-columns: 30px 1fr auto auto;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 10px;
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.6);
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .vd-row.open {
+            background: rgba(107, 76, 154, 0.06);
+            border-color: rgba(107, 76, 154, 0.3);
+        }
+
+        .vd-row:hover {
+            border-color: var(--ombre-purple);
+        }
+
+        .vd-glyph {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            font-size: 0.95em;
+            color: var(--silver-mist);
+        }
+
+        .vd-row.open .vd-glyph {
+            color: var(--ombre-purple);
+            border-color: rgba(107, 76, 154, 0.35);
+            background: rgba(107, 76, 154, 0.1);
+        }
+
+        .vd-name {
+            font-family: var(--font-display);
+            font-size: 1.12em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            line-height: 1.15;
+        }
+
+        .vd-desc {
+            font-size: 0.72em;
+            color: var(--silver-mist);
+            line-height: 1.35;
+        }
+
+        .vd-rank {
+            font-size: 0.78em;
+            font-weight: 700;
+            white-space: nowrap;
+            text-align: right;
+            min-width: 84px;
+        }
+
+        .vd-rank sub {
+            font-size: 0.78em;
+            opacity: 0.55;
+            margin-left: 2px;
+        }
+
+        .vd-step {
+            display: flex;
+            gap: 4px;
+        }
+
+        .vd-step button {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            background: var(--pure-white);
+            color: var(--slate-blue);
+            font-size: 0.9em;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .vd-step button:hover:not(:disabled) {
+            border-color: var(--ombre-purple);
+            color: var(--ombre-purple);
+        }
+
+        .vd-step button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+
     </style>
 </head>
 
@@ -3844,6 +4036,7 @@
             <div class="nav-tabs">
                 <button class="nav-tab active" onclick="switchPage('attributes', this)">Personnage</button>
                 <button class="nav-tab" onclick="switchPage('skills', this)">Compétences</button>
+                <button class="nav-tab" onclick="switchPage('magie', this)">Magie</button>
                 <button class="nav-tab" onclick="switchPage('rolls', this)">Jets</button>
                 <button class="nav-tab" onclick="switchPage('objects', this)">Objets</button>
             </div>
@@ -3973,10 +4166,10 @@
                             <!-- État actuel -->
                             <div id="magic-etat-display"
                                 style="text-align:center; font-weight:600; font-size:0.9em; padding:5px 10px; border-radius:6px; margin-bottom:4px; border:1px solid transparent;">
-                                —</div>
+                                ·</div>
                             <div id="magic-score-val"
                                 style="font-size:0.72em; color:var(--silver-mist); text-align:center; margin-bottom:10px;">
-                                —</div>
+                                ·</div>
 
                             <!-- Réserve d'énergie -->
                             <div
@@ -4009,7 +4202,7 @@
 
                             <button onclick="resetReserve()"
                                 style="margin-top:10px; width:100%; padding:6px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺
-                                Repos — Réserve pleine</button>
+                                Repos · Réserve pleine</button>
 
                             <!-- Qi partagé -->
                             <div id="qi-perso-block" class="qi-perso" style="display:none;">
@@ -4173,6 +4366,49 @@
             </div>
         </div>
 
+
+        <!-- PAGE : MAGIE -->
+        <div class="page magic-page" id="page-magie">
+
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon"
+                        style="background: rgba(107,76,154,0.15); color: var(--ombre-purple);">✨</span>
+                    Canal de manifestation
+                </div>
+                <div class="canal-row">
+                    <div class="canal-pick">
+                        <label class="canal-label" for="canal-select">Attribut de canal</label>
+                        <select id="canal-select" onchange="setCanal(this.value)"></select>
+                    </div>
+                    <div class="canal-info" id="canal-info"></div>
+                </div>
+                <p class="magic-note">Toute la magie du personnage passe par ce seul attribut : c'est lui qui donne
+                    aux dés de Puissance leur profil de faces, quel que soit le sort lancé. Chacun canalise à sa
+                    manière, et cette manière ne change pas d'un sort à l'autre. Le couple Verbe × Cible, lui, ne dit
+                    pas comment la magie sort, mais combien de dés elle peut engager.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon"
+                        style="background: rgba(107,76,154,0.15); color: var(--ombre-purple);">◈</span>
+                    Verbes <span class="vd-count" id="verb-count"></span>
+                </div>
+                <div class="vd-list" id="verb-list"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <span class="icon"
+                        style="background: rgba(212,168,75,0.18); color: #a07a1e;">✺</span>
+                    Cibles <span class="vd-count" id="target-count"></span>
+                </div>
+                <div class="vd-list" id="target-list"></div>
+            </div>
+
+        </div>
+
         <!-- PAGE 3 : JETS -->
         <div class="page rolls-page" id="page-rolls">
             <div class="roll-section dual">
@@ -4253,7 +4489,7 @@
                             <div class="form-group">
                                 <label class="form-label">Attribut</label>
                                 <select id="simple-attr-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
+                                    <option value="">- Sélectionner -</option>
                                     <option value="puissance">Puissance</option>
                                     <option value="vivacite">Vivacité</option>
                                     <option value="precision">Précision</option>
@@ -4267,7 +4503,7 @@
                             <div class="form-group">
                                 <label class="form-label">Compétence</label>
                                 <select id="simple-skill-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
+                                    <option value="">- Sélectionner -</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -4304,7 +4540,7 @@
                             <div class="form-group">
                                 <label class="form-label">Attribut</label>
                                 <select id="hybrid-attr-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
+                                    <option value="">- Sélectionner -</option>
                                     <option value="puissance">Puissance</option>
                                     <option value="vivacite">Vivacité</option>
                                     <option value="precision">Précision</option>
@@ -4318,11 +4554,22 @@
                             <div class="form-group">
                                 <label class="form-label" title="Laisser vide pour une magie pure, sans support technique">Compétence <span style="opacity:.6;font-weight:400">(facultatif)</span></label>
                                 <select id="hybrid-skill-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Aucune : magie pure —</option>
+                                    <option value="">- Aucune : magie pure -</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Magnitude</label>
+                                <label class="form-label" style="color:var(--ombre-purple);">Verbe</label>
+                                <select id="hybrid-verb-select" class="form-select" onchange="updateHybridMagicInfo()">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="color:#a07a1e;">Cible</label>
+                                <select id="hybrid-target-select" class="form-select" onchange="updateHybridMagicInfo()">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Magnitude <span id="hybrid-mag-cap"
+                                        style="opacity:.6;font-weight:400"></span></label>
                                 <input id="hybrid-magic-dice" class="bonus-input" type="number" value="1" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
@@ -4354,20 +4601,21 @@
                     <div class="roll-info" style="margin-top: 16px;">
                         <div class="roll-info-title">Mécanique de la Magie</div>
                         <div class="roll-info-content">
-                            Sans compétence, le jet ne produit qu'une <strong>Puissance</strong> : la magie agit seule.<br>
-                            Avec une compétence, deux jets <strong>séparés</strong> : la compétence détermine si l'action
-                            réussit, la magie détermine la Puissance de l'effet.<br>
-                            La Puissance ne s'ajoute jamais au Résultat Final. La valeur de la <strong>puissance divisée
-                                par deux</strong> sera utilisée pour modifier une valeur de l'action. (La gravitée
-                            infligée, les palliers de soin, la vitesse de déplacement etc...)<br>
+                            Un sort est un <strong>Verbe × Cible</strong> : la somme des deux échelons plafonne la
+                            Magnitude, c'est-à-dire le nombre de dés de Puissance engageables.<br>
+                            Les faces de ces dés viennent du <strong>canal</strong>, l'attribut par lequel passe toute
+                            la magie du personnage (page Magie).<br>
+                            Sans compétence, le jet ne produit qu'une <strong>Puissance</strong> : la magie agit seule.
+                            Avec une compétence, la <strong>Puissance s'ajoute au Résultat Final</strong> du jet, et
+                            dimensionne en plus l'effet obtenu (gravité infligée, paliers de soin, portée, durée…).<br>
                             <strong>Coût :</strong> 1 point d'énergie par dé engagé. Chaque jet cède au MJ
                             ⌈dés ÷ 2⌉ dés de Perturbation.<br>
                             <strong>Puissance :</strong> Succès +1 · Résonance +2 · Transcendance +3<br>
-                            <strong>Effets secondaires (1d12)</strong> — Résonance et Transcendance :
+                            <strong>Effets secondaires (1d12)</strong> · Résonance et Transcendance :
                             Stabilité (fréquent), Fluidité, Amplification, Cascade (rare).
                             Rupture et Fracture : Résistance (fréquent), Fuite, Dissipation, Contrecoup (rare).
                             Transcendance et Fracture <strong>doublent</strong> l'effet.<br>
-                            <strong>Tribut au MJ :</strong> proportionnel au ratio dés engagés / dés maximum —
+                            <strong>Tribut au MJ :</strong> proportionnel au ratio dés engagés / dés maximum ;
                             rester sous son plafond limite le risque.<br>
                             <strong>Moment d'émotion :</strong> chaque face monte d'un cran, le Vide disparaît.
                         </div>
@@ -4480,7 +4728,7 @@
                         <div id="active-spells-list"></div>
                         <button id="apply-all-turn-costs-btn" onclick="applyAllTurnCosts()"
                             style="display:none;margin-top:8px;width:100%;padding:7px;background:linear-gradient(135deg,var(--ombre-purple),#9b7cd4);border:none;border-radius:7px;color:white;font-weight:700;font-size:0.8em;cursor:pointer;">▶
-                            Nouveau tour — <span id="total-turn-cost">0</span> dés</button>
+                            Nouveau tour · <span id="total-turn-cost">0</span> dés</button>
                     </div>
                 </div>
 
@@ -4595,7 +4843,7 @@
         // ========== COMPÉTENCES RÉGULIÈRES PAR DÉFAUT ==========
         const defaultRegularSkills = [
             'Art', 'Athlétisme', 'Autorité', 'Apothicairerie', 'Combat',
-            'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Ésotérisme',
+            'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage',
             'Médecine', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Technologie',
             'Tir', 'Tromperie', 'Vigilance'
         ];
@@ -4684,11 +4932,50 @@
             return SKILL_LEVELS[Math.min(8, Math.max(1, value))] || SKILL_LEVELS[1];
         }
 
-        // ========== ÉLAN & VITESSE — VALEURS DÉRIVÉES ==========
+        // ========== ÉLAN & VITESSE · VALEURS DÉRIVÉES ==========
         // Élan = contribution(Endurance) + contribution(Volonté)
         const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
         // Vitesse de déplacement basée sur le niveau de Vivacité (en pieds)
         const VITESSE_TABLE = { 1: 10, 2: 15, 3: 20, 4: 30, 5: 35, 6: 40, 7: 50, 8: 60 };
+
+        // ========== RÉFÉRENTIEL MAGIQUE : VERBES × CIBLES ==========
+        // Un sort est un verbe appliqué à une cible. La somme des deux échelons
+        // donne la Magnitude maximum, donc le nombre de dés de Puissance engageables.
+        const MAX_RANK = 5;
+        const MAGIC_RANKS = {
+            0: { name: 'Profane', color: '#8b9dc3' },
+            1: { name: 'Éveillé', color: '#7a8ba8' },
+            2: { name: 'Initié', color: '#4a9b6e' },
+            3: { name: 'Adepte', color: '#4a90c2' },
+            4: { name: 'Maître', color: '#6b4c9a' },
+            5: { name: 'Archimage', color: '#d4a84b' }
+        };
+
+        const VERBS = [
+            { id: 'absorber', name: 'Absorber', glyph: '⤓', desc: 'Drainer, siphonner, se nourrir de, capter.' },
+            { id: 'alterer', name: 'Altérer', glyph: '⟳', desc: "Changer la nature ou l'état, métamorphoser." },
+            { id: 'amplifier', name: 'Amplifier', glyph: '▲', desc: 'Renforcer, exalter, dépasser les limites.' },
+            { id: 'assujettir', name: 'Assujettir', glyph: '⛓', desc: 'Contraindre, entraver, dominer, lier.' },
+            { id: 'dissimuler', name: 'Dissimuler', glyph: '◌', desc: 'Voiler, effacer, rendre indétectable.' },
+            { id: 'dissiper', name: 'Dissiper', glyph: '✕', desc: 'Annuler, rompre, briser, purger.' },
+            { id: 'manifester', name: 'Manifester', glyph: '◈', desc: 'Créer, matérialiser, projeter, invoquer.' },
+            { id: 'mouvoir', name: 'Mouvoir', glyph: '↭', desc: 'Déplacer, propulser, repousser, attirer.' },
+            { id: 'percevoir', name: 'Percevoir', glyph: '◉', desc: 'Détecter, lire, sonder, pressentir.' },
+            { id: 'restaurer', name: 'Restaurer', glyph: '✚', desc: 'Soigner, régénérer, réparer, purifier.' }
+        ];
+
+        const TARGETS = [
+            { id: 'ame', name: 'Âme', glyph: '☽', desc: 'Esprits, morts, pactes, ce qui survit au corps.' },
+            { id: 'arcane', name: 'Arcane', glyph: '✦', desc: 'La magie elle-même : sorts, sceaux, enchantements, flux.' },
+            { id: 'corps', name: 'Corps', glyph: '⚕', desc: "La chair d'un être : anatomie, membres, sens." },
+            { id: 'destin', name: 'Destin', glyph: '◷', desc: 'Présages, chance, serments, ce qui est écrit.' },
+            { id: 'elements', name: 'Éléments', glyph: '⚡', desc: 'Feu, glace, eau, air, foudre, lumière, ténèbres.' },
+            { id: 'espace', name: 'Espace', glyph: '⬡', desc: 'Distance, direction, passages, lieux.' },
+            { id: 'esprit', name: 'Esprit', glyph: '❂', desc: 'Pensée, émotion, mémoire, volonté.' },
+            { id: 'matiere', name: 'Matière', glyph: '▣', desc: "L'inerte façonné : objets, structures, matériaux." },
+            { id: 'nature', name: 'Nature', glyph: '❦', desc: 'Flore, faune, terrain, climat.' },
+            { id: 'vie', name: 'Vie', glyph: '✺', desc: 'Vitalité, souffle, santé, vieillissement.' }
+        ];
 
         // ========== ÉTAT DE L'APPLICATION ==========
         const appState = {
@@ -4709,7 +4996,9 @@
             currentModal: null,
             qiShared: false,
             qiPool: 0,
-            magic: { reserveUsed: 0, mjDice: 0, reserveMaxOverride: null },
+            magic: { reserveUsed: 0, mjDice: 0, reserveMaxOverride: null, canal: 'volonte' },
+            verbs: [],
+            targets: [],
             focalisation: { current: 1, max: 1 },
             receivedBuffs: [],
             masteries: [],
@@ -4733,6 +5022,7 @@
             appState.attributes[attr] = newVal;
             updateAttributeDisplay(attr);
             updateMagicState();
+            renderMagicPage();
             renderPassives();
             updateElanMax();
             renderVitesse();
@@ -5271,7 +5561,7 @@
             if (!lastMagicRoll || lastMagicRoll.dice <= 0) return '';
             const upkeep = Math.ceil(lastMagicRoll.dice / 2);
             return `<div class="sustain-block">
-                <div class="sustain-label">⏳ Transformer en sort de durée — entretien ${upkeep} dés/tour</div>
+                <div class="sustain-label">⏳ Transformer en sort de durée · entretien ${upkeep} dés/tour</div>
                 <div class="sustain-row">
                     <input type="text" id="sustain-name" placeholder="Nom du sort..." class="sustain-name-input">
                     <button class="sustain-btn" onclick="sustainLastSpell()">⏳ Maintenir</button>
@@ -5408,7 +5698,7 @@
             const cost = getTurnCost(s.initialDice);
             const left = getReserveLeft();
             if (cost > left) {
-                showNotification(`⚠ Réserve insuffisante (${left} restants, ${cost} requis) — « ${s.name || 'Sort'} » se dissipe`);
+                showNotification(`⚠ Réserve insuffisante (${left} restants, ${cost} requis) : « ${s.name || 'Sort'} » se dissipe`);
                 appState.activeSpells = appState.activeSpells.filter(x => x.id !== id);
                 renderActiveSpells();
                 return;
@@ -5438,7 +5728,7 @@
                 appState.activeSpells = spells.filter(s => keptIds.has(s.id));
                 spendReserve(running);
                 renderActiveSpells();
-                showNotification(`⚠ Réserve insuffisante — ${dissipated.length} sort(s) dissipé(s) : ${dissipated.map(s => s.name || 'Sans nom').join(', ')}`);
+                showNotification(`⚠ Réserve insuffisante : ${dissipated.length} sort(s) dissipé(s) : ${dissipated.map(s => s.name || 'Sans nom').join(', ')}`);
                 return;
             }
 
@@ -5506,6 +5796,8 @@
             'Éloquence': ['Éloquence', 'Diplomatie', 'Séduction', 'Raison'],
             'Érudition': ['Érudition', 'Histoire', 'Théologie', 'Droit'],
             'Escamotage': ['Escamotage', 'Larcin', 'Crochetage', 'Prestidigitation'],
+            // Ésotérisme ne fait plus partie du référentiel : la magie vient des couples.
+            // Les noms alternatifs restent définis pour les sauvegardes qui la portent encore.
             'Ésotérisme': ['Ésotérisme', 'Arcanes', 'Pouvoir', 'Magie'],
             'Médecine': ['Médecine', 'Chirurgie', 'Soins', 'Premiers secours'],
             'Recherche': ['Recherche', 'Enquête', 'Pistage', 'Investigation'],
@@ -5645,29 +5937,26 @@
 
             appState.skills.forEach(skill => {
                 const item = document.createElement('div');
-                const isPowerSkill = skill.name === 'Ésotérisme';
                 const isBaseSkill = skill.isBase === true;
                 const level = getSkillLevel(skill.level);
                 const hasAlts = !!(skill.baseName ? SKILL_ALTERNATIVES[skill.baseName] : getBaseSkillName(skill.name));
-                item.className = 'skill-item' + (isPowerSkill ? ' power-skill' : '');
+                item.className = 'skill-item';
                 const attrOptions = ATTR_IDS.map(a =>
                     `<option value="${a}"${skill.defaultAttr === a ? ' selected' : ''}>${ATTR_SHORT[a]}</option>`
                 ).join('');
-                // Ésotérisme n'a pas de valeur passive : la magie ne s'exerce pas passivement
-                const attrSelectHtml = isPowerSkill
-                    ? `<span class="skill-attr-none" title="Ésotérisme n'a pas de valeur passive">—</span>`
-                    : `<select class="skill-attr-select" onchange="updateSkillDefaultAttr('${skill.id}', this.value)" title="Attribut passif">
-                        <option value="">—</option>
+                const attrSelectHtml =
+                    `<select class="skill-attr-select" onchange="updateSkillDefaultAttr('${skill.id}', this.value)" title="Attribut passif">
+                        <option value="">-</option>
                         ${attrOptions}
                     </select>`;
                 item.innerHTML = `
                     <div class="skill-name ${hasAlts || isBaseSkill ? 'skill-renameable' : ''}" id="skill-name-${skill.id}"
                          ${isBaseSkill || hasAlts ? `onclick="openRenameSkill('${skill.id}')" title="Cliquer pour choisir un nom alternatif"` : ''}>
-                        ${isPowerSkill ? '✨ ' : ''}${skill.name}
+                        ${skill.name}
                         ${isBaseSkill || hasAlts ? '<span class="rename-hint">✎</span>' : ''}
                     </div>
                     <div class="skill-level-controls">
-                        <button class="skill-level-btn" onclick="modifySkillLevel('${skill.id}', -1)" ${skill.level <= 1 ? 'disabled' : ''}>−</button>
+                        <button class="skill-level-btn" onclick="modifySkillLevel('${skill.id}', -1)" ${skill.level <= 0 ? 'disabled' : ''}>−</button>
                         <span class="skill-level-value" title="Niveau ${skill.level} • ${level.dice} dés" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${skill.level}</sub></span>
                         <button class="skill-level-btn" onclick="modifySkillLevel('${skill.id}', 1)" ${skill.level >= 8 ? 'disabled' : ''}>+</button>
                     </div>
@@ -5700,7 +5989,9 @@
         function modifySkillLevel(id, delta) {
             const skill = appState.skills.find(s => s.id === id);
             if (skill) {
-                const floor = (skill.baseName || skill.name) === 'Ésotérisme' ? 0 : 1;
+                // Une compétence descend jusqu'à 1 ; seule une entrée déjà à 0
+                // (sauvegarde antérieure) peut y rester tant qu'on ne la monte pas.
+                const floor = skill.level <= 0 ? 0 : 1;
                 skill.level = Math.max(floor, Math.min(8, skill.level + delta));
                 renderSkills();
                 updateMagicState();
@@ -5711,7 +6002,6 @@
         function updateSkillDefaultAttr(id, attrId) {
             const skill = appState.skills.find(s => s.id === id);
             if (!skill) return;
-            if (skill.name === 'Ésotérisme' || skill.baseName === 'Ésotérisme') { skill.defaultAttr = null; return; }
             skill.defaultAttr = attrId || null;
             renderPassives();
             scheduleAutosave();
@@ -5829,17 +6119,13 @@
         }
 
         // ========== MISE À JOUR DES SELECTS ==========
-        function isEsoterisme(s) {
-            return (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme';
-        }
-
         function updateRollSelects() {
             // Jet simple
             const simpleSkillSelect = document.getElementById('simple-skill-select');
             if (simpleSkillSelect) {
                 const currentSimpleValue = simpleSkillSelect.value;
-                simpleSkillSelect.innerHTML = '<option value="">— Sélectionner —</option>';
-                appState.skills.filter(s => !isEsoterisme(s)).forEach(s => {
+                simpleSkillSelect.innerHTML = '<option value="">- Sélectionner -</option>';
+                appState.skills.forEach(s => {
                     const opt = document.createElement('option');
                     opt.value = s.id;
                     opt.textContent = `${s.name} (${s.level})`;
@@ -5854,8 +6140,8 @@
             const hybridSkillSelect = document.getElementById('hybrid-skill-select');
             if (hybridSkillSelect) {
                 const currentValue = hybridSkillSelect.value;
-                hybridSkillSelect.innerHTML = '<option value="">— Aucune : magie pure —</option>';
-                appState.skills.filter(s => !isEsoterisme(s)).forEach(s => {
+                hybridSkillSelect.innerHTML = '<option value="">- Aucune : magie pure -</option>';
+                appState.skills.forEach(s => {
                     const opt = document.createElement('option');
                     opt.value = s.id;
                     opt.textContent = `${s.name} (${s.level})`;
@@ -5871,7 +6157,7 @@
                 const sel = document.getElementById(id);
                 if (!sel) return;
                 const cur = sel.value;
-                sel.innerHTML = '<option value="">— Sélectionner —</option>';
+                sel.innerHTML = '<option value="">- Sélectionner -</option>';
                 ATTR_IDS.forEach(a => {
                     const lv = appState.attributes[a] || 4;
                     const info = getAttributeLevel(lv);
@@ -5883,6 +6169,22 @@
                 if (cur) sel.value = cur;
             });
 
+            // Verbes et cibles : seules les entrées ouvertes sont proposées
+            const fillVd = (id, list, levelFn, vide) => {
+                const sel = document.getElementById(id);
+                if (!sel) return;
+                const cur = sel.value;
+                const open = list.filter(x => levelFn(x.id) > 0);
+                sel.innerHTML = open.length
+                    ? open.map(x => `<option value="${x.id}">${x.glyph} ${x.name} (${levelFn(x.id)})</option>`).join('')
+                    : `<option value="">${vide}</option>`;
+                sel.disabled = open.length === 0;
+                if (cur && open.some(x => x.id === cur)) sel.value = cur;
+            };
+            fillVd('hybrid-verb-select', VERBS, verbLevel, 'Aucun verbe ouvert');
+            fillVd('hybrid-target-select', TARGETS, targetLevel, 'Aucune cible ouverte');
+
+            updateHybridMagicInfo();
             updateRollButtons();
         }
 
@@ -5901,8 +6203,8 @@
             const hybridSkill = document.getElementById('hybrid-skill-select');
             const hybridBtn = document.getElementById('perform-hybrid-roll-btn');
             if (hybridBtn) {
-                // La magie peut être lancée seule : seule la présence d'Ésotérisme compte
-                hybridBtn.disabled = getEsoterismeLevel() <= 0;
+                // La magie peut être lancée seule : il suffit d'un couple Verbe × Cible ouvert
+                hybridBtn.disabled = !hasMagic();
             }
             renderRollStats('hybrid');
         }
@@ -6225,7 +6527,7 @@
             lastRollContext = {
                 skillName: skill.name,
                 baseName: skill.baseName,
-                attrName: capitalize(attrName),
+                attrName: ATTR_LABEL[attrName] || capitalize(attrName),
                 dice: diceResults,
                 successes,
                 eclats: counts.eclats,
@@ -6233,7 +6535,7 @@
                 explosions: counts.explosions,
                 bonus,
                 total,
-                subtitle: `${skill.name} (${capitalize(attrName)}) · ${skillLevel.name} | ${poolText}`
+                subtitle: `${skill.name} (${ATTR_LABEL[attrName] || capitalize(attrName)}) · ${skillLevel.name} | ${poolText}`
             };
 
             displaySimpleResult({
@@ -6250,9 +6552,9 @@
                 perturb,
                 allowFollowUpMagic: true
             });
-            // Correctif : `hasSkill` / `esotLvl` n'existent pas dans ce jet simple —
+            // Correctif : `hasSkill` / `esotLvl` n'existent pas dans ce jet simple,
             // l'exception coupait l'envoi Discord. La compétence est ici toujours définie.
-            if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName),
+            if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, ATTR_LABEL[attrName] || capitalize(attrName),
                 { successes, bonus, eclats: counts.eclats, revers: counts.revers, perturb });
         }
 
@@ -6295,8 +6597,9 @@
             // Option : enchaîner un jet de magie (ex. amplifier l'impact après avoir touché)
             const magArea = document.getElementById('magnitude-result-area');
             let extra = perturbationHtml(data.perturb);
-            if (data.allowFollowUpMagic && getEsoterismeLevel() > 0) {
+            if (data.allowFollowUpMagic && hasMagic()) {
                 magArea.innerHTML = extra + renderFollowUpMagicPanel();
+                updateFollowUpInfo();
             } else {
                 magArea.innerHTML = extra;
             }
@@ -6315,37 +6618,61 @@
         let lastRollContext = null;
 
         function renderFollowUpMagicPanel() {
-            const esotLvl = getEsoterismeLevel();
-            const nbDice = getEsoterismeMaxDice();
-            const col = getMagicColor(esotLvl);
+            const canalLvl = getCanalValue();
+            const col = getMagicColor(canalLvl);
+            const opts = (list, levelFn) => list.filter(x => levelFn(x.id) > 0)
+                .map(x => `<option value="${x.id}">${x.glyph} ${x.name} (${levelFn(x.id)})</option>`).join('');
             return `<div class="followup-magic">
                 <div class="followup-magic-title">✨ Ajouter un jet de magie</div>
-                <div class="followup-magic-sub">Amplifie l'effet de ce jet (impact, soin, portée…). N'affecte pas le total ci-dessus.</div>
+                <div class="followup-magic-sub">La Puissance obtenue s'ajoute au total ci-dessus et dimensionne l'effet (impact, soin, portée…).</div>
                 <div class="followup-magic-row">
+                    <select id="followup-verb-select" onchange="updateFollowUpInfo()" style="padding:4px 6px;border-radius:6px;border:1px solid var(--card-border);">${opts(VERBS, verbLevel)}</select>
+                    <select id="followup-target-select" onchange="updateFollowUpInfo()" style="padding:4px 6px;border-radius:6px;border:1px solid var(--card-border);">${opts(TARGETS, targetLevel)}</select>
                     <label>Dés</label>
-                    <input type="number" id="followup-magic-dice" value="1" min="1" max="${nbDice}">
+                    <input type="number" id="followup-magic-dice" value="1" min="1" oninput="updateFollowUpInfo()">
                     <label style="font-size:0.8em;font-weight:600;color:var(--ombre-purple);">+ bonus</label>
                     <input type="number" id="followup-bonus-dice" value="0" min="0" style="width:44px;">
-                    <span class="followup-magic-max">max ${nbDice}/jet · réserve ${getReserveLeft()}</span>
+                    <span class="followup-magic-max" id="followup-magic-max"></span>
                     <label class="followup-emotion">
                         <input type="checkbox" id="followup-emotion">
                         🔥 Moment d'émotion
                     </label>
                     <button class="followup-magic-btn" onclick="performFollowUpMagic()">Lancer</button>
                 </div>
-                <div class="followup-magic-tier" style="color:${col.color};">Ésotérisme ${esotLvl} — ${describeFaces(esotLvl)}</div>
+                <div class="followup-magic-tier" style="color:${col.color};">Canal ${ATTR_LABEL[getCanal()]} ${canalLvl} · ${describeFaces(canalLvl)}</div>
                 <div id="followup-magic-result"></div>
             </div>`;
         }
 
+        // Couple choisi dans le panneau de réaction
+        function followUpPair() {
+            const v = document.getElementById('followup-verb-select')?.value || '';
+            const t = document.getElementById('followup-target-select')?.value || '';
+            return {
+                verb: VERBS.find(x => x.id === v) || null,
+                target: TARGETS.find(x => x.id === t) || null,
+                cap: magnitudeMax(v, t)
+            };
+        }
+
+        function updateFollowUpInfo() {
+            const el = document.getElementById('followup-magic-max');
+            if (!el) return;
+            const pair = followUpPair();
+            el.textContent = pair.cap > 0
+                ? `Magnitude max ${pair.cap} · réserve ${getReserveLeft()}`
+                : 'Aucun couple ouvert';
+        }
+
         function performFollowUpMagic() {
-            const esotLvl = getEsoterismeLevel();
-            if (esotLvl <= 0) return;
+            const pair = followUpPair();
+            if (!pair.verb || !pair.target) { showNotification('⚠ Aucun couple Verbe × Cible ouvert'); return; }
+            const canalLvl = getCanalValue();
             const requested = parseInt(document.getElementById('followup-magic-dice')?.value) || 1;
             const emotion = document.getElementById('followup-emotion')?.checked || false;
 
             const bonusDice = parseInt(document.getElementById('followup-bonus-dice')?.value) || 0;
-            const out = resolveMagicAction({ requested, emotion, source: 'followup', extraDice: bonusDice });
+            const out = resolveMagicAction({ requested, emotion, source: 'followup', extraDice: bonusDice, cap: pair.cap });
             if (!out) return;
             const { results, successes, ruptures, fractures, mjGain, elanLoss } = out;
             const count = out.dice;
@@ -6354,7 +6681,9 @@
             const resEl = document.getElementById('followup-magic-result');
             if (resEl) {
                 let html = `<div class="followup-dice-row" id="followup-dice-row"></div>`;
-                html += `<div class="followup-puissance">✨ Puissance : <strong>${successes}</strong></div>`;
+                html += `<div class="followup-puissance">✨ ${pair.verb.name} × ${pair.target.name} · Puissance : <strong>${successes}</strong>`
+                    + (lastRollContext ? ` · Résultat Final porté à <strong>${(lastRollContext.total || 0) + successes}</strong>` : '')
+                    + `</div>`;
                 const notes = [];
                 if (mjGain > 0) notes.push(`<span style="color:var(--vitality-red);">⚠ +${mjGain} dé(s) de Perturbation au MJ</span>`);
                 if (notes.length) html += `<div class="followup-notes">${notes.join(' · ')}</div>`;
@@ -6373,8 +6702,11 @@
                     skillBonus: lastRollContext.skillBonus,
                     bonus: lastRollContext.bonus,
                     magic: {
-                        level: esotLvl, results, puissance: successes, emotion,
-                        ruptures, fractures, mjGain, followUp: true
+                        level: canalLvl, results, puissance: successes, emotion,
+                        ruptures, fractures, mjGain, followUp: true,
+                        pair: `${pair.verb.name} × ${pair.target.name}`, cap: pair.cap,
+                        canalName: ATTR_LABEL[getCanal()],
+                        inTotal: true
                     }
                 });
             }
@@ -6382,9 +6714,9 @@
 
         // ========== SYSTÈME DE DÉS MAGIQUES ==========
 
-        // Couleur d'affichage selon le niveau d'Ésotérisme
+        // Couleur d'affichage selon le niveau du canal (1 à 8)
         function getMagicColor(level) {
-            if (level >= 9) return { color: '#8a6d00', bg: 'rgba(212,175,55,0.14)', border: '#D4AF37' };
+            if (level >= 8) return { color: '#8a6d00', bg: 'rgba(212,175,55,0.14)', border: '#D4AF37' };
             if (level >= 7) return { color: '#27500A', bg: 'rgba(59,109,17,0.1)', border: '#639922' };
             if (level >= 5) return { color: '#085041', bg: 'rgba(29,158,117,0.1)', border: '#1D9E75' };
             if (level >= 3) return { color: '#633806', bg: 'rgba(186,117,23,0.1)', border: '#BA7517' };
@@ -6401,7 +6733,7 @@
             'rupture': { bg: 'rgba(163,45,45,0.15)', border: '#E24B4A', text: '#501313' },
         };
 
-        // Composition du d12 magique par niveau d'Ésotérisme
+        // Composition du d12 magique par niveau du canal
         // [Transcendance, Résonance, Flux, Succès, Vide, Rupture, Fracture]
         // Composition du d12 magique. [Résonance, Succès, Vide, Rupture]
         const MAGIC_FACE_COUNTS = {
@@ -6417,10 +6749,8 @@
             return [r, s, Math.ceil(v / 2), Math.floor(v / 2), R];
         }
 
-        // Nombre de dés magiques par niveau d'Ésotérisme
-        const MAGIC_DICE = { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 7, 8: 8 };
 
-        // Tribut de base cédé au MJ : plus tu forces ton max, plus tu es risqué —
+        // Tribut de base cédé au MJ : plus tu forces ton max, plus tu es risqué,
         // rester sous ton plafond montre de la technique et te rend discret.
         function baseMjDice(numDice, maxDice) {
             const cap = Math.max(1, maxDice || numDice);
@@ -6477,23 +6807,88 @@
         }
 
 
-        function getEsoterismeLevel() {
-            const s = appState.skills.find(s => (s.baseName || s.name) === 'Ésotérisme' || s.name === 'Ésotérisme');
-            return s ? s.level : 0;
+        // ========== CANAL, VERBES ET CIBLES ==========
+        // Le canal est l'attribut par lequel passe toute la magie du personnage :
+        // c'est lui qui donne aux dés de Puissance leur profil de faces.
+        // Le couple Verbe × Cible, lui, dit combien de dés peuvent être engagés.
+        function initMagicRefs() {
+            appState.verbs = VERBS.map(v => ({ id: v.id, level: 0 }));
+            appState.targets = TARGETS.map(t => ({ id: t.id, level: 0 }));
         }
 
-        // Max de dés injectables dans un seul jet
-        function getEsoterismeMaxDice() {
-            const lvl = getEsoterismeLevel();
-            return lvl > 0 ? (MAGIC_DICE[Math.min(8, lvl)] || 0) : 0;
+        function getCanal() {
+            const id = appState.magic && appState.magic.canal;
+            return (id && appState.attributes[id] !== undefined) ? id : 'volonte';
         }
 
-        // Réserve d'énergie magique disponible par jour, selon le niveau d'Ésotérisme
+        function setCanal(id) {
+            if (appState.attributes[id] === undefined) return;
+            appState.magic.canal = id;
+            updateMagicState();
+            renderMagicPage();
+            scheduleAutosave();
+        }
+
+        // Niveau du canal : c'est lui qui indexe la table de faces magiques
+        function getCanalValue() {
+            return Math.min(8, Math.max(1, appState.attributes[getCanal()] || 4));
+        }
+
+        function verbLevel(id) {
+            const v = (appState.verbs || []).find(x => x.id === id);
+            return v ? Math.min(MAX_RANK, Math.max(0, v.level || 0)) : 0;
+        }
+
+        function targetLevel(id) {
+            const t = (appState.targets || []).find(x => x.id === id);
+            return t ? Math.min(MAX_RANK, Math.max(0, t.level || 0)) : 0;
+        }
+
+        function setVerbLevel(id, delta) {
+            const v = (appState.verbs || []).find(x => x.id === id);
+            if (!v) return;
+            v.level = Math.min(MAX_RANK, Math.max(0, (v.level || 0) + delta));
+            afterMagicRefChange();
+        }
+
+        function setTargetLevel(id, delta) {
+            const t = (appState.targets || []).find(x => x.id === id);
+            if (!t) return;
+            t.level = Math.min(MAX_RANK, Math.max(0, (t.level || 0) + delta));
+            afterMagicRefChange();
+        }
+
+        function afterMagicRefChange() {
+            renderMagicPage();
+            updateRollSelects();
+            updateMagicState();
+            scheduleAutosave();
+        }
+
+        function openVerbs() { return VERBS.filter(v => verbLevel(v.id) > 0); }
+        function openTargets() { return TARGETS.filter(t => targetLevel(t.id) > 0); }
+        function hasMagic() { return openVerbs().length > 0 && openTargets().length > 0; }
+
+        // Magnitude maximum d'un couple : la somme de ses deux échelons
+        function magnitudeMax(verbId, targetId) {
+            if (!verbId || !targetId) return 0;
+            return verbLevel(verbId) + targetLevel(targetId);
+        }
+
+        // Le meilleur couple accessible : sert de repère et fixe la réserve
+        function bestPair() {
+            const v = openVerbs().sort((a, b) => verbLevel(b.id) - verbLevel(a.id))[0];
+            const t = openTargets().sort((a, b) => targetLevel(b.id) - targetLevel(a.id))[0];
+            if (!v || !t) return { verb: null, target: null, cap: 0 };
+            return { verb: v, target: t, cap: verbLevel(v.id) + targetLevel(t.id) };
+        }
+
+        // Réserve d'énergie magique disponible par jour, selon le meilleur couple
         const MAGIC_RESERVE = { 1: 3, 2: 6, 3: 10, 4: 14, 5: 18, 6: 22, 7: 28, 8: 35, 9: 43, 10: 52 };
 
         // Ajustement manuel du maximum de réserve (override)
         function getReserveMaxBase() {
-            const lvl = getEsoterismeLevel();
+            const lvl = bestPair().cap;
             if (lvl <= 0) return 0;
             return MAGIC_RESERVE[Math.min(10, lvl)] || 0;
         }
@@ -6516,9 +6911,10 @@
             return getReserveMaxBase();
         }
 
-        // Le niveau magique ne se dégrade plus : seule la réserve limite l'usage
+        // Le profil des dés magiques suit le canal, jamais une compétence :
+        // chacun canalise par l'attribut qui lui ressemble.
         function getEffectiveMagicLevel() {
-            return getEsoterismeLevel();
+            return getCanalValue();
         }
 
         // Coût en réserve d'une face donnée
@@ -6649,21 +7045,23 @@
             updateMagicState();
         }
 
-        // Nombre de dés réellement lancés : borné par le max/jet ET par la réserve restante
-        function clampMagicDice(requested) {
-            return Math.max(0, Math.min(requested, getEsoterismeMaxDice(), getReserveLeft()));
+        // Nombre de dés réellement lancés : borné par la Magnitude du couple ET par la réserve
+        function clampMagicDice(requested, cap) {
+            const top = (cap === undefined || cap === null) ? bestPair().cap : cap;
+            return Math.max(0, Math.min(requested, top, getReserveLeft()));
         }
 
         // ========== PIPELINE COMMUN DE RÉSOLUTION MAGIQUE ==========
-        function resolveMagicAction({ requested, emotion, source, extraDice }) {
+        function resolveMagicAction({ requested, emotion, source, extraDice, cap }) {
             const ctx = { source, requested, emotion, extraDice: extraDice || 0 };
+            const top = (cap === undefined || cap === null) ? bestPair().cap : cap;
 
-            const baseDice = clampMagicDice(ctx.requested);
+            const baseDice = clampMagicDice(ctx.requested, top);
             const dice = baseDice + ctx.extraDice;
             if (dice <= 0) { showNotification('⚠ Réserve magique épuisée'); return null; }
 
             const effLvl = getEffectiveMagicLevel();
-            const res = resolveMagicDice(effLvl, dice, ctx.emotion, baseDice);
+            const res = resolveMagicDice(effLvl, dice, ctx.emotion, baseDice, top);
 
             spendReserve(res.energyCost);
             if (res.mjGain > 0) addMjDice(res.mjGain);
@@ -6672,26 +7070,28 @@
         }
 
         function updateMagicState() {
-            const esotLvl = getEsoterismeLevel();
-            const effLvl = getEffectiveMagicLevel();
+            const bp = bestPair();
+            const maxDice = bp.cap;                       // Magnitude du meilleur couple
+            const effLvl = getEffectiveMagicLevel();      // niveau du canal : il donne les faces
             const col = getMagicColor(effLvl);
-            const maxDice = getEsoterismeMaxDice();
 
             const etatEl = document.getElementById('magic-etat-display');
             const scoreEl = document.getElementById('magic-score-val');
 
-            if (etatEl && esotLvl > 0) {
-                etatEl.textContent = `Ésotérisme ${esotLvl} · ${maxDice} dés`;
+            if (etatEl && maxDice > 0) {
+                etatEl.textContent = `Canal ${ATTR_LABEL[getCanal()]} ${effLvl} · Magnitude ${maxDice}`;
                 etatEl.style.color = col.color;
                 etatEl.style.background = col.bg;
                 etatEl.style.border = `1px solid ${col.border}`;
             } else if (etatEl) {
-                etatEl.textContent = 'Aucune compétence Ésotérisme';
+                etatEl.textContent = 'Aucun couple Verbe × Cible';
                 etatEl.style.color = 'var(--silver-mist)';
                 etatEl.style.background = 'transparent';
                 etatEl.style.border = 'none';
             }
-            if (scoreEl) scoreEl.textContent = esotLvl > 0 ? describeFaces(effLvl, isEmotionOn()) : '—';
+            if (scoreEl) scoreEl.textContent = maxDice > 0
+                ? `${bp.verb.name} × ${bp.target.name} · ${describeFaces(effLvl, isEmotionOn())}`
+                : '-';
 
             // Réserve d'énergie
             const resMax = getReserveMax();
@@ -6707,13 +7107,13 @@
             const ovHint = document.getElementById('reserve-base-hint');
             const ov = appState.magic.reserveMaxOverride;
             if (ovInput && document.activeElement !== ovInput) ovInput.value = ov != null ? ov : '';
-            if (ovHint) ovHint.textContent = ov != null ? `(niveau : ${getReserveMaxBase()})` : `niveau ${esotLvl}`;
+            if (ovHint) ovHint.textContent = ov != null ? `(couple : ${getReserveMaxBase()})` : `couple ${maxDice}`;
 
             // Réserve de Perturbation du MJ
             const mjVal = document.getElementById('mj-dice-val');
             const mjBlock = document.getElementById('mj-dice-block');
             if (mjVal) mjVal.textContent = getMjDice();
-            if (mjBlock) mjBlock.style.display = esotLvl > 0 ? 'block' : 'none';
+            if (mjBlock) mjBlock.style.display = maxDice > 0 ? 'block' : 'none';
 
             const pBar = document.getElementById('perturb-inject-bar');
             const pAvail = document.getElementById('perturb-inject-avail');
@@ -6726,9 +7126,9 @@
             const rollDetails = document.getElementById('roll-pool-details');
             // Visible uniquement sur les onglets magiques
             const magicMode = (currentRollMode === 'hybrid');
-            if (rollPool) rollPool.style.display = (esotLvl > 0 && magicMode) ? 'block' : 'none';
-            if (rollStatus && esotLvl > 0) {
-                rollStatus.textContent = `Ésotérisme ${esotLvl} · ${maxDice} dés max`;
+            if (rollPool) rollPool.style.display = (maxDice > 0 && magicMode) ? 'block' : 'none';
+            if (rollStatus && maxDice > 0) {
+                rollStatus.textContent = `Canal ${ATTR_LABEL[getCanal()]} ${effLvl} · Magnitude max ${maxDice}`;
                 rollStatus.style.color = col.color;
             }
 
@@ -6742,7 +7142,7 @@
             if (rBar) rBar.style.width = resMax > 0 ? `${(resLeft / resMax) * 100}%` : '0%';
             if (rMj) rMj.textContent = getMjDice();
 
-            if (rollDetails) rollDetails.textContent = esotLvl > 0
+            if (rollDetails) rollDetails.textContent = maxDice > 0
                 ? `${describeFaces(effLvl, isEmotionOn())} · Réserve ${getReserveLeft()}/${getReserveMax()} · MJ ${getMjDice()} dé(s)`
                 : '';
 
@@ -6774,23 +7174,49 @@
             return parts.join(' ');
         }
 
+        // Couple sélectionné sur le pupitre magique
+        function selectedPair() {
+            const v = document.getElementById('hybrid-verb-select')?.value || '';
+            const t = document.getElementById('hybrid-target-select')?.value || '';
+            return {
+                verbId: v, targetId: t,
+                verb: VERBS.find(x => x.id === v) || null,
+                target: TARGETS.find(x => x.id === t) || null,
+                cap: magnitudeMax(v, t)
+            };
+        }
+
         function updateHybridMagicInfo() {
             const infoEl = document.getElementById('hybrid-magic-info');
             if (!infoEl) return;
-            const nbDice = getEsoterismeMaxDice();
-            const esotLvl = getEsoterismeLevel();
-            const effLvl = getEffectiveMagicLevel();
-            const col = getMagicColor(effLvl);
+            const pair = selectedPair();
+            const cap = pair.cap;
+            const canalLvl = getCanalValue();
+            const col = getMagicColor(canalLvl);
             const requested = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
             const bonusD = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
             const left = getReserveLeft();
+
+            const capEl = document.getElementById('hybrid-mag-cap');
+            if (capEl) capEl.textContent = cap > 0 ? `(max ${cap})` : '';
+
+            if (!pair.verb || !pair.target) {
+                infoEl.innerHTML = `<span style="color:var(--vitality-red);font-weight:600;">Aucun couple disponible</span><br>
+                    <span style="font-size:0.92em;color:var(--silver-mist);">Ouvre au moins un verbe et une cible sur la page Magie.</span>`;
+                return;
+            }
+
+            const moy = averagePowerPerDie(canalLvl, isEmotionOn());
+            const engaged = Math.min(requested, cap, left) + bonusD;
             infoEl.innerHTML = `
-                <span style="color:${col.color};font-weight:600;">Ésotérisme ${esotLvl}</span> — ${nbDice} dés/jet · Réserve ${left}/${getReserveMax()}<br>
-                ${describeFaces(effLvl, isEmotionOn())}<br>
-                <span style="font-size:0.92em;color:var(--silver-mist);">La Puissance obtenue est indépendante du jet de compétence.</span>
-                ${requested > nbDice ? `<br><span style="color:var(--vitality-red)">⚠ Max ${nbDice} dés par jet</span>` : ''}
+                <span style="color:var(--ombre-purple);font-weight:600;">${pair.verb.name} × ${pair.target.name}</span>
+                · Magnitude max ${cap} (${verbLevel(pair.verbId)} + ${targetLevel(pair.targetId)}) · Réserve ${left}/${getReserveMax()}<br>
+                <span style="color:${col.color};font-weight:600;">Canal ${ATTR_LABEL[getCanal()]} ${canalLvl}</span> · ${describeFaces(canalLvl, isEmotionOn())}
+                · ${moy.toFixed(2)} Puissance/dé en moyenne<br>
+                <span style="font-size:0.92em;color:var(--silver-mist);">La Puissance obtenue s'ajoute au Résultat Final du jet de compétence.</span>
+                ${requested > cap ? `<br><span style="color:var(--vitality-red)">⚠ Magnitude max ${cap} pour ce couple</span>` : ''}
                 ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
-                ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus (sans coût d'énergie) → ${Math.min(requested, nbDice, left) + bonusD} dés lancés</span>` : ''}
+                ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus (sans coût d'énergie) → ${engaged} dés lancés</span>` : ''}
             `;
         }
 
@@ -6805,7 +7231,7 @@
         // Puissance : Succès +1 · Résonance +2 · Transcendance +3
         // Chaque Résonance, Transcendance, Rupture et Fracture tire un d8 d'effet secondaire.
         // Transcendance et Fracture doublent l'effet obtenu.
-        function resolveMagicDice(level, count, emotion, paidDice) {
+        function resolveMagicDice(level, count, emotion, paidDice, cap) {
             const results = [];
             let basePower = 0;               // Puissance des dés seuls, avant modificateurs
             let powerMod = 0;                // Amplification / Dissipation cumulées
@@ -6814,7 +7240,7 @@
             // les dés bonus (Qi, artefact, aide extérieure) sont gratuits et ne rendent pas plus risqué.
             const billable = (paidDice === undefined || paidDice === null) ? count : paidDice;
             let energyCost = billable;               // 1 point par dé payé
-            const maxDiceForLevel = getEsoterismeMaxDice();
+            const maxDiceForLevel = (cap === undefined || cap === null) ? bestPair().cap : cap;
             let mjGain = baseMjDice(billable, maxDiceForLevel);  // tribut selon le ratio d'engagement des dés payés
             const effects = [];
 
@@ -6905,6 +7331,79 @@
             el.innerHTML = html || '<div class="passives-empty">Définir un attribut passif sur les compétences, onglet Compétences.</div>';
         }
 
+
+        // ========== RENDU DE LA PAGE MAGIE ==========
+        const ATTR_ORDER = ['puissance', 'vivacite', 'precision', 'endurance', 'intelligence', 'intuition', 'volonte', 'presence'];
+        const ATTR_LABEL = {
+            puissance: 'Puissance', vivacite: 'Vivacité', precision: 'Précision', endurance: 'Endurance',
+            intelligence: 'Intelligence', intuition: 'Intuition', volonte: 'Volonté', presence: 'Présence'
+        };
+
+        // Puissance moyenne d'un dé magique sur un profil donné
+        function averagePowerPerDie(level, emotion) {
+            const dist = getFaceDistribution(level, emotion);
+            const val = { 'succès': 1, 'résonance': 2, 'transcendance': 3, 'vide': 0, 'rupture': 0, 'fracture': 0 };
+            const sum = dist.reduce((t, f) => t + (val[f] || 0), 0);
+            return sum / 12;
+        }
+
+        function rankHtml(level) {
+            const r = MAGIC_RANKS[Math.min(MAX_RANK, Math.max(0, level))] || MAGIC_RANKS[0];
+            return `<span class="vd-rank" style="color:${r.color}">${r.name}<sub>${level}</sub></span>`;
+        }
+
+        function renderVdList(elId, list, levelFn, setter, kind) {
+            const el = document.getElementById(elId);
+            if (!el) return;
+            el.innerHTML = list.map(x => {
+                const lv = levelFn(x.id);
+                return `<div class="vd-row${lv > 0 ? ' open' : ''}">
+                    <span class="vd-glyph" title="${x.name}">${x.glyph}</span>
+                    <div class="vd-id">
+                        <div class="vd-name">${x.name}</div>
+                        <div class="vd-desc">${x.desc}</div>
+                    </div>
+                    ${rankHtml(lv)}
+                    <div class="vd-step">
+                        <button onclick="${setter}('${x.id}', -1)" ${lv <= 0 ? 'disabled' : ''} title="Descendre d'un échelon">−</button>
+                        <button onclick="${setter}('${x.id}', 1)" ${lv >= MAX_RANK ? 'disabled' : ''} title="Monter d'un échelon">+</button>
+                    </div>
+                </div>`;
+            }).join('');
+            const count = document.getElementById(kind + '-count');
+            if (count) {
+                const open = list.filter(x => levelFn(x.id) > 0).length;
+                const top = Math.max(0, ...list.map(x => levelFn(x.id)));
+                count.textContent = `${open}/${list.length} ouverts · sommet ${MAGIC_RANKS[top].name}`;
+            }
+        }
+
+        function renderMagicPage() {
+            const sel = document.getElementById('canal-select');
+            if (!sel) return;
+            const cur = getCanal();
+            sel.innerHTML = ATTR_ORDER.map(a => {
+                const lv = getAttributeLevel(appState.attributes[a] || 4);
+                return `<option value="${a}"${a === cur ? ' selected' : ''}>${ATTR_LABEL[a]} · ${lv.name} (${appState.attributes[a]})</option>`;
+            }).join('');
+
+            const info = document.getElementById('canal-info');
+            if (info) {
+                const lvl = getCanalValue();
+                const col = getMagicColor(lvl);
+                const moy = averagePowerPerDie(lvl, false);
+                const moyEm = averagePowerPerDie(lvl, true);
+                info.innerHTML = `<strong>${ATTR_LABEL[cur]} ${lvl}</strong> · ${describeFaces(lvl, false)}<br>
+                    Rendement moyen : <strong>${moy.toFixed(2)}</strong> de Puissance par dé
+                    (<span style="color:#8a6d00;">${moyEm.toFixed(2)}</span> sous émotion).<br>
+                    <span style="color:${col.color};">Monter le canal ne donne pas plus de dés : il rend chaque dé meilleur et moins instable.</span>`;
+            }
+
+            renderVdList('verb-list', VERBS, verbLevel, 'setVerbLevel', 'verb');
+            renderVdList('target-list', TARGETS, targetLevel, 'setTargetLevel', 'target');
+
+        }
+
         function renderAll() {
             renderSkills();
             renderObjects();
@@ -6921,6 +7420,7 @@
             renderFocalisation();
             renderReceivedBuffs();
             renderQiPanel();
+            renderMagicPage();
         }
 
         function showNotification(msg) {
@@ -6951,8 +7451,8 @@
                 ? `<span class="md-effect" style="opacity:${die.effectBlocked ? 0.35 : 1}">${die.effect.label}${die.boost > 1 ? ' ×2' : ''}${die.effectBlocked ? ' (bloqué)' : ''}</span>`
                 : '';
             el.innerHTML = `<span class="md-label">${labels[die.type] || die.type}</span><span class="md-value">${die.value}</span>${effectTag}`;
-            if (die.isBonus) el.title = 'Cascade — dé bonus';
-            else if (die.effect) el.title = `d12 ${die.effect.d12} · ${die.effect.label} — ${die.effect.desc}`;
+            if (die.isBonus) el.title = 'Cascade · dé bonus';
+            else if (die.effect) el.title = `d12 ${die.effect.d12} · ${die.effect.label} · ${die.effect.desc}`;
             return el;
         }
 
@@ -6968,6 +7468,8 @@
         </div>`;
 
         // ========== JET HYBRIDE ==========
+        // Un sort est un couple Verbe × Cible : le couple donne le nombre de dés,
+        // le canal donne leurs faces, et la Puissance obtenue s'ajoute au jet de compétence.
         function performHybridRoll() {
             const attrName = document.getElementById('hybrid-attr-select').value;
             const skillId = document.getElementById('hybrid-skill-select').value;
@@ -6976,14 +7478,15 @@
             const skill = appState.skills.find(s => s.id === skillId);   // facultatif
             const hasSkill = !!(skill && attrName);
 
-            const esotLvl = getEsoterismeLevel();
-            if (esotLvl <= 0) { showNotification('⚠ Aucun niveau d\'Ésotérisme'); return; }
+            const pair = selectedPair();
+            if (!pair.verb || !pair.target) { showNotification('⚠ Aucun couple Verbe × Cible ouvert'); return; }
+            const cap = pair.cap;
+
             const requestedMagic = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
-            let actualMagic = clampMagicDice(requestedMagic);
+            let actualMagic = clampMagicDice(requestedMagic, cap);
 
             const attrValue = hasSkill ? appState.attributes[attrName] : null;
             const attrLevel = hasSkill ? getAttributeLevel(attrValue) : null;
-            const skillLevel = hasSkill ? getSkillLevel(skill.level) : null;
             const skillDice = hasSkill ? rollSkillCheck(attrValue, skill.level) : [];
             const skillCounts = hasSkill ? countSuccesses(skillDice, skill.level)
                                          : { successes: 0, eclats: 0, revers: 0, explosions: 0 };
@@ -6991,9 +7494,9 @@
             const hybridBonus = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
             const paidMagicDice = actualMagic;   // conservé avant réassignation, pour comparaison à l'affichage
             const totalMagicDice = actualMagic + hybridBonus;
-            const effLvl = getEffectiveMagicLevel();
+            const canalLvl = getCanalValue();
             const { results: magicResults, successes: magicSuccesses, basePower, powerMod, ruptures, fractures,
-                    energyCost, mjGain, elanLoss, effects } = resolveMagicDice(effLvl, totalMagicDice, emotion, actualMagic);
+                    energyCost, mjGain, elanLoss, effects } = resolveMagicDice(canalLvl, totalMagicDice, emotion, actualMagic, cap);
             if (totalMagicDice > 0) {
                 spendReserve(energyCost);
                 if (mjGain > 0) addMjDice(mjGain);
@@ -7002,38 +7505,49 @@
             lastMagicRoll = totalMagicDice > 0 ? { puissance: magicSuccesses, dice: totalMagicDice } : null;
             actualMagic = totalMagicDice;
 
-            // La magie ne s'ajoute PAS au total du jet de compétence
+            // La Puissance du sort monte le Résultat Final du jet de compétence
             const perturb = hasSkill ? consumePerturbationForRoll() : null;
             const netSkillSuccesses = skillCounts.successes - (perturb ? perturb.successLoss : 0);
-            const total = hasSkill ? netSkillSuccesses + bonus : 0;
+            const skillTotal = hasSkill ? netSkillSuccesses + bonus : 0;
+            const total = hasSkill ? skillTotal + magicSuccesses : 0;
 
             displayHybridResult({
                 hasSkill,
                 skillName: hasSkill ? skill.name : null,
-                attrName: hasSkill ? capitalize(attrName) : null,
-                skillDice, magicResults, esotLvl, emotion,
+                attrName: hasSkill ? (ATTR_LABEL[attrName] || capitalize(attrName)) : null,
+                verbName: pair.verb.name, targetName: pair.target.name, cap,
+                canalLvl, canalName: ATTR_LABEL[getCanal()],
+                skillDice, magicResults, emotion,
                 basePower, powerMod, energyCostBase: paidMagicDice,
                 facesInfo: hasSkill ? facesSummary(attrLevel.faces) : null,
-                skillSuccesses: netSkillSuccesses, magicSuccesses, perturb,
+                skillSuccesses: netSkillSuccesses, skillTotal, magicSuccesses, perturb,
                 eclats: skillCounts.eclats, revers: skillCounts.revers,
                 bonus, total, ruptures, fractures, mjGain, energyCost, elanLoss, effects, actualMagic
             });
 
-            if (!isPrivateRoll()) sendDiscordRoll(hasSkill ? skill.name : 'Magie', hasSkill ? skill.baseName : null, total, hasSkill ? capitalize(attrName) : `Ésotérisme ${esotLvl}`, {
-                successes: netSkillSuccesses,
-                bonus,
-                magic: {
-                    level: esotLvl, results: magicResults, puissance: magicSuccesses, emotion,
-                    ruptures, fractures, mjGain
-                }
-            });
+            if (!isPrivateRoll()) sendDiscordRoll(
+                hasSkill ? skill.name : `${pair.verb.name} × ${pair.target.name}`,
+                hasSkill ? skill.baseName : null,
+                hasSkill ? total : magicSuccesses,
+                hasSkill ? (ATTR_LABEL[attrName] || capitalize(attrName)) : `canal ${ATTR_LABEL[getCanal()]}`,
+                {
+                    successes: netSkillSuccesses,
+                    bonus,
+                    magic: {
+                        level: canalLvl, results: magicResults, puissance: magicSuccesses, emotion,
+                        ruptures, fractures, mjGain,
+                        pair: `${pair.verb.name} × ${pair.target.name}`, cap,
+                        canalName: ATTR_LABEL[getCanal()],
+                        inTotal: hasSkill
+                    }
+                });
         }
 
         function displayHybridResult(data) {
-            const info = getMagicColor(data.esotLvl);
+            const info = getMagicColor(data.canalLvl);
             document.getElementById('result-title').textContent = data.hasSkill ? '🎲✨ Jet + Magie' : '✨ Magie pure';
             document.getElementById('result-subtitle').textContent = (data.hasSkill ? `${data.skillName} (${data.attrName}) + ` : '')
-                + `${data.actualMagic} dé(s) magiques · Ésotérisme ${data.esotLvl}${data.emotion ? ' · 🔥 Émotion' : ''}`;
+                + `${data.verbName} × ${data.targetName} · Magnitude ${data.actualMagic}/${data.cap} · canal ${data.canalName} ${data.canalLvl}${data.emotion ? ' · 🔥 Émotion' : ''}`;
 
             const diceArea = document.getElementById('dice-display-area');
             diceArea.innerHTML = '';
@@ -7051,7 +7565,7 @@
                 const magicSection = document.createElement('div');
                 magicSection.className = 'dice-section';
                 const emotionTag = data.emotion ? ` · <span style="color:#8a6d00;">🔥 Émotion</span>` : '';
-                magicSection.innerHTML = `<div class="dice-section-label power" style="color:${info.color}">✨ Magie · Ésotérisme ${data.esotLvl} — Puissance séparée${emotionTag}</div><div class="dice-container" id="hm-dice"></div>${MAGIC_DIE_LEGEND}`;
+                magicSection.innerHTML = `<div class="dice-section-label power" style="color:${info.color}">✨ ${data.verbName} × ${data.targetName} · canal ${data.canalName} · ${data.actualMagic} dé(s) de Magnitude${emotionTag}</div><div class="dice-container" id="hm-dice"></div>${MAGIC_DIE_LEGEND}`;
                 diceArea.appendChild(magicSection);
                 const hmCont = magicSection.querySelector('#hm-dice');
                 data.magicResults.forEach((d, i) => hmCont.appendChild(renderMagicDie(d, (data.skillDice.length + i) * 0.08)));
@@ -7066,7 +7580,9 @@
             let mag = `<div class="magnitude-result">`;
             if (data.actualMagic > 0) {
                 mag += `<div class="magnitude-label">✨ Puissance du sort : <strong>${data.magicSuccesses}</strong></div>`;
-                mag += `<div style="font-size:0.76em;color:var(--silver-mist);margin-bottom:8px;">Détermine l'ampleur de l'effet magique — Gravité soignée, portée, durée, taille de la zone…</div>`;
+                mag += `<div style="font-size:0.76em;color:var(--silver-mist);margin-bottom:8px;">${data.hasSkill
+                    ? "S'ajoute au Résultat Final et dimensionne l'effet : gravité, portée, durée, taille de la zone…"
+                    : "Dimensionne l'effet magique : gravité soignée, portée, durée, taille de la zone…"}</div>`;
 
                 // Récapitulatif : base des dés + chaque modificateur appliqué
                 mag += `<div class="power-recap">`;
@@ -7111,6 +7627,10 @@
             if (data.hasSkill) {
                 if (totalLabel) totalLabel.textContent = 'Résultat Final';
                 document.getElementById('result-total').textContent = data.total;
+                const totalEl = document.getElementById('result-total');
+                if (totalEl) totalEl.title = data.actualMagic > 0
+                    ? `Compétence ${data.skillTotal} + Puissance ${data.magicSuccesses}`
+                    : `Compétence ${data.skillTotal}`;
                 // La Puissance est le second chiffre qui décide : elle monte
                 // dans la colonne de droite plutôt que d'attendre en pied de page.
                 if (powerBox) {
@@ -7223,14 +7743,14 @@
                 let sha;
                 const head = await fetch(`${api}?ref=${GH_CFG.branch}&t=${Date.now()}`, { headers });
                 if (head.status === 200) sha = (await head.json()).sha;
-                else if (head.status === 401) { updateGhStatus('Jeton invalide'); showNotification('⚠️ Jeton GitHub refusé (401) — vérifie-le via ⚙️'); return; }
+                else if (head.status === 401) { updateGhStatus('Jeton invalide'); showNotification('⚠️ Jeton GitHub refusé (401), vérifie-le via ⚙️'); return; }
                 else if (head.status === 404 && !sha) { /* fichier neuf ou repo/chemin absent : on tente la création */ }
 
                 const res = await fetch(api, {
                     method: 'PUT',
                     headers,
                     body: JSON.stringify({
-                        message: `save ${name} — ${new Date().toISOString()}`,
+                        message: `save ${name} · ${new Date().toISOString()}`,
                         content,
                         branch: GH_CFG.branch,
                         ...(sha ? { sha } : {})
@@ -7321,7 +7841,7 @@
                 const res = await fetch(qiApi(), {
                     method: 'PUT', headers,
                     body: JSON.stringify({
-                        message: `qi ${payload.qi} — ${payload.by}`,
+                        message: `qi ${payload.qi} · ${payload.by}`,
                         content, branch: GH_CFG.branch,
                         ...(qiSha ? { sha: qiSha } : {})
                     })
@@ -7482,7 +8002,7 @@
         window.addEventListener('resize', positionSaveMenu);
         window.addEventListener('scroll', positionSaveMenu, true);
 
-        // ========== PARTAGE MJ (code compact — repli hors-ligne) ==========
+        // ========== PARTAGE MJ (code compact, repli hors-ligne) ==========
         // Construit un instantané allégé (sans portrait/objets/notes) destiné à la console MJ.
         function buildMjSnapshot() {
             return {
@@ -7492,7 +8012,12 @@
                 skills: (appState.skills || []).map(s => ({ name: s.name, level: s.level })),
                 counters: { health: appState.counters.health },
                 wounds: (appState.wounds || []).map(w => ({ gravity: w.gravity || 0 })),
-                magic: { reserveUsed: (appState.magic && appState.magic.reserveUsed) || 0 },
+                magic: {
+                    reserveUsed: (appState.magic && appState.magic.reserveUsed) || 0,
+                    canal: getCanal()
+                },
+                verbs: (appState.verbs || []).filter(v => v.level > 0),
+                targets: (appState.targets || []).filter(t => t.level > 0),
                 vitesseBonus: appState.vitesseBonus || 0,
                 ts: Date.now()
             };
@@ -7512,6 +8037,7 @@
             applyBackwardCompatDefaults();
             renderPassives();
             restoreProfileUI();
+            renderMagicPage();
             if (appState.qiShared) { qiPull(true); startQiAutoSync(); }
 
             updateAllAttributes();
@@ -7556,7 +8082,7 @@
                 try {
                     localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(appState));
                     updateAutosaveIndicator();
-                } catch (e) { /* localStorage indisponible ou plein — silencieux */ }
+                } catch (e) { /* localStorage indisponible ou plein, silencieux */ }
             }, 600);
         }
 
@@ -7577,6 +8103,19 @@
 
         function applyBackwardCompatDefaults() {
             if (!appState.magic) appState.magic = { reserveUsed: 0 };
+            // Le canal et les échelons de Verbes/Cibles repartent du référentiel courant :
+            // une entrée inconnue d'une version antérieure est écartée, les autres gardent leur échelon.
+            if (!appState.magic.canal || appState.attributes[appState.magic.canal] === undefined) {
+                appState.magic.canal = 'volonte';
+            }
+            delete appState.magic.portee;   // la portée ne fait plus partie du système
+            const keepLevel = (arr, ref) => {
+                const prev = {};
+                (Array.isArray(arr) ? arr : []).forEach(x => { if (x && x.id) prev[x.id] = Math.min(MAX_RANK, Math.max(0, parseInt(x.level) || 0)); });
+                return ref.map(r => ({ id: r.id, level: prev[r.id] || 0 }));
+            };
+            appState.verbs = keepLevel(appState.verbs, VERBS);
+            appState.targets = keepLevel(appState.targets, TARGETS);
             if (appState.magic.reserveUsed === undefined) appState.magic.reserveUsed = 0;
             if (appState.magic.mjDice === undefined) appState.magic.mjDice = 0;
             if (appState.magic.reserveMaxOverride === undefined) appState.magic.reserveMaxOverride = null;
@@ -7592,7 +8131,6 @@
             if (!appState.activeSpells) appState.activeSpells = [];
             // Assigner un attribut passif par défaut aux compétences qui n'en ont pas
             (appState.skills || []).forEach(s => {
-                if (s.name === 'Ésotérisme' || s.baseName === 'Ésotérisme') { s.defaultAttr = null; return; }
                 if (!s.defaultAttr) {
                     const def = getDefaultSkillAttr(s.baseName || s.name);
                     if (def) s.defaultAttr = def;
@@ -7635,11 +8173,11 @@
             if (details?.magic?.isPure) {
                 const m = details.magic;
                 const status = m.powerSuccess ? '✓ Réussi' : '✗ Échec';
-                text = `✨ **Pouvoir** — Magnitude ${m.magnitude} — Puissance **${m.puissance}** (${status})`;
+                text = `✨ **Pouvoir** · Magnitude ${m.magnitude} · Puissance **${m.puissance}** (${status})`;
             } else if (details?.magic) {
-                text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} + ✨ Magie — Résultat : **${total}**`;
+                text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} + ✨ Magie · Résultat : **${total}**`;
             } else {
-                text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} — Résultat : **${total}**`;
+                text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} · Résultat : **${total}**`;
             }
 
             // Ligne détail compétence
@@ -7656,7 +8194,7 @@
             // Perturbation appliquée au jet par le MJ
             const pt = details && details.perturb;
             if (pt && pt.spent) {
-                let ptLine = `┈ ⚠ Perturbation : ${pt.spent} dé${pt.spent > 1 ? 's' : ''} — −${pt.successLoss} succès`;
+                let ptLine = `┈ ⚠ Perturbation : ${pt.spent} dé${pt.spent > 1 ? 's' : ''} · −${pt.successLoss} succès`;
                 if (pt.dispersions > 0) ptLine += ` · 🌫 ${pt.dispersions} dispersion(s)`;
                 if (pt.keptDice > 0) ptLine += ` · ↩ ${pt.keptDice} conservé(s)`;
                 lines.push(ptLine);
@@ -7668,9 +8206,11 @@
                 const info = getMagicColor(m.level);
                 const emotionTag = m.emotion ? ' · 🔥 *Émotion*' : '';
                 const followUpTag = m.followUp ? ' · ↪ *en réaction*' : '';
-                lines.push(`✨ **Ésotérisme ${m.level}**${emotionTag}${followUpTag}`);
+                lines.push(`✨ **${m.pair || 'Magie'}**${m.canalName ? ` · canal ${m.canalName} ${m.level}` : ''}`
+                    + `${emotionTag}${followUpTag}`);
 
-                if (!m.isPure) lines.push(`┈ Puissance du sort : **${m.puissance}** *(séparée du total)*`);
+                lines.push(`┈ Puissance du sort : **${m.puissance}**`
+                    + (m.inTotal ? ' *(comprise dans le résultat)*' : ''));
 
                 // Comptage des faces
                 if (m.results && m.results.length > 0) {
@@ -7722,11 +8262,12 @@
         // ========== INITIALISATION ==========
         document.addEventListener('DOMContentLoaded', function () {
             // Compétences régulières par défaut (marquées comme base)
-            // Ordinaire (3) est le socle de tout adulte ; Ésotérisme démarre à 0 (pas de magie par défaut)
+            // Ordinaire (3) est le socle de tout adulte
             defaultRegularSkills.forEach((name, i) => {
-                const lvl = name === 'Ésotérisme' ? 0 : 3;
-                appState.skills.push({ id: `regular_${i}`, name, level: lvl, isBase: true, defaultAttr: getDefaultSkillAttr(name) });
+                appState.skills.push({ id: `regular_${i}`, name, level: 3, isBase: true, defaultAttr: getDefaultSkillAttr(name) });
             });
+
+            initMagicRefs();
 
             // Priorité de restauration : import point-buy en attente > sauvegarde locale > défaut
             const pendingPB = localStorage.getItem('aequor_pb_export');
@@ -7749,7 +8290,7 @@
                         applyBackwardCompatDefaults();
                         restoreProfileUI();
                         restoredFromAutosave = true;
-                    } catch (e) { /* sauvegarde corrompue — on garde le défaut */ }
+                    } catch (e) { /* sauvegarde corrompue, on garde le défaut */ }
                 }
             }
 

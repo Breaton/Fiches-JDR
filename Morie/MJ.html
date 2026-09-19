@@ -451,7 +451,26 @@
             color: var(--danger);
         }
 
-        /* Bandeau magie : niveau + usure + réserve */
+        .keystat.magnitude {
+            flex: 1.6;
+            min-width: 100px;
+        }
+
+        .keystat.magnitude .kl {
+            color: #b49ae0;
+        }
+
+        .keystat.magnitude .kv {
+            color: #cdb9f0;
+        }
+
+        .keystat .ks.pair {
+            color: #9d8ac0;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+
+        /* Bandeau magie : canal + profil de faces + réserve */
         .magic-strip {
             display: flex;
             align-items: center;
@@ -478,9 +497,10 @@
             color: #cdb9f0;
         }
 
-        .ms-worn {
-            color: var(--gold);
-            font-size: 0.85em;
+        .ms-faces {
+            color: var(--silver-mist);
+            letter-spacing: 0.08em;
+            font-size: 0.95em;
         }
 
         .ms-res {
@@ -501,6 +521,65 @@
             background: linear-gradient(90deg, #6b4c9a, #b49ae0);
             border-radius: 2px;
             transition: width 0.3s ease;
+        }
+
+        /* Bandeau des verbes et cibles ouverts */
+        .vt-strip {
+            margin: 0 12px 12px;
+            padding: 7px 9px 8px;
+            background: rgba(45, 58, 92, 0.38);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .vt-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .vt-label {
+            flex: 0 0 46px;
+            font-size: 0.56rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--silver-mist);
+            padding-top: 4px;
+        }
+
+        .vt-pills {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .vt-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.66rem;
+            line-height: 1.5;
+            padding: 1px 8px;
+            border-radius: 999px;
+            border: 1px solid;
+            white-space: nowrap;
+        }
+
+        .vt-pill b {
+            font-family: var(--font-display);
+            font-size: 1.05em;
+            font-weight: 700;
+        }
+
+        .vt-none {
+            font-size: 0.66rem;
+            color: var(--silver-mist);
+            font-style: italic;
+            padding-top: 3px;
         }
 
         .keystat.elan .kv {
@@ -926,6 +1005,42 @@
             }
         }
 
+        @media (min-width: 1200px) {
+            .ref-grid {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+
+        .ref-note {
+            font-size: 0.75rem;
+            line-height: 1.5;
+            color: var(--silver-mist);
+            margin-bottom: 12px;
+        }
+
+        .ref-note strong {
+            color: var(--moonlight);
+        }
+
+        .ref-sub {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--alt-teal);
+            margin: 14px 0 8px;
+            font-weight: 700;
+        }
+
+        .ref-range {
+            font-size: 0.74rem;
+            color: var(--silver-mist);
+            line-height: 1.6;
+        }
+
+        .ref-range b {
+            color: var(--moonlight);
+        }
+
         .ref-col h3 {
             font-family: var(--font-display);
             font-size: 1.15rem;
@@ -1045,7 +1160,7 @@
         <!-- REFERENCE -->
         <section class="ref-panel" id="ref-panel">
             <button class="ref-toggle" onclick="document.getElementById('ref-panel').classList.toggle('open')">
-                <span>Les Attributs &amp; Compétences</span>
+                <span>Les Attributs, les Compétences &amp; la Magie</span>
                 <span class="chev">▼</span>
             </button>
             <div class="ref-body">
@@ -1055,6 +1170,9 @@
                     </div>
                     <div class="ref-col" id="ref-skills">
                         <h3>Compétences · les domaines de situation</h3>
+                    </div>
+                    <div class="ref-col" id="ref-magic">
+                        <h3>Magie · Verbe × Cible</h3>
                     </div>
                 </div>
             </div>
@@ -1067,7 +1185,7 @@
 
     <script>
         /* ===================================================================
-           RÉFÉRENTIELS — copiés à l'identique de la fiche joueur pour que
+           RÉFÉRENTIELS · copiés à l'identique de la fiche joueur pour que
            toutes les valeurs dérivées (Élan, passifs, vitesse) coïncident.
         =================================================================== */
         const ATTRIBUTE_LEVELS = {
@@ -1092,6 +1210,62 @@
         };
         const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
         const VITESSE_TABLE = { 1: 10, 2: 15, 3: 20, 4: 30, 5: 35, 6: 40, 7: 50, 8: 60 };
+
+        /* ── Référentiel magique : Verbes × Cibles (miroir de la fiche joueur) ──
+           Un sort est un verbe appliqué à une cible. La somme des deux échelons
+           donne la Magnitude max, donc le nombre de dés engageables. Le canal
+           (un attribut) donne aux dés leur profil de faces. Plus aucune
+           compétence ne commande la magie. */
+        const MAX_RANK = 5;
+        const MAGIC_RANKS = {
+            0: { name: 'Profane', color: '#8b9dc3' },
+            1: { name: 'Éveillé', color: '#7a8ba8' },
+            2: { name: 'Initié', color: '#4a9b6e' },
+            3: { name: 'Adepte', color: '#4a90c2' },
+            4: { name: 'Maître', color: '#6b4c9a' },
+            5: { name: 'Archimage', color: '#d4a84b' }
+        };
+
+        const VERBS = [
+            { id: 'absorber', name: 'Absorber', glyph: '⤓', desc: 'Drainer, siphonner, se nourrir de, capter.' },
+            { id: 'alterer', name: 'Altérer', glyph: '⟳', desc: "Changer la nature ou l'état, métamorphoser." },
+            { id: 'amplifier', name: 'Amplifier', glyph: '▲', desc: 'Renforcer, exalter, dépasser les limites.' },
+            { id: 'assujettir', name: 'Assujettir', glyph: '⛓', desc: 'Contraindre, entraver, dominer, lier.' },
+            { id: 'dissimuler', name: 'Dissimuler', glyph: '◌', desc: 'Voiler, effacer, rendre indétectable.' },
+            { id: 'dissiper', name: 'Dissiper', glyph: '✕', desc: 'Annuler, rompre, briser, purger.' },
+            { id: 'manifester', name: 'Manifester', glyph: '◈', desc: 'Créer, matérialiser, projeter, invoquer.' },
+            { id: 'mouvoir', name: 'Mouvoir', glyph: '↭', desc: 'Déplacer, propulser, repousser, attirer.' },
+            { id: 'percevoir', name: 'Percevoir', glyph: '◉', desc: 'Détecter, lire, sonder, pressentir.' },
+            { id: 'restaurer', name: 'Restaurer', glyph: '✚', desc: 'Soigner, régénérer, réparer, purifier.' }
+        ];
+
+        const TARGETS = [
+            { id: 'ame', name: 'Âme', glyph: '☽', desc: 'Esprits, morts, pactes, ce qui survit au corps.' },
+            { id: 'arcane', name: 'Arcane', glyph: '✦', desc: 'La magie elle-même : sorts, sceaux, enchantements, flux.' },
+            { id: 'corps', name: 'Corps', glyph: '⚕', desc: "La chair d'un être : anatomie, membres, sens." },
+            { id: 'destin', name: 'Destin', glyph: '◷', desc: 'Présages, chance, serments, ce qui est écrit.' },
+            { id: 'elements', name: 'Éléments', glyph: '⚡', desc: 'Feu, glace, eau, air, foudre, lumière, ténèbres.' },
+            { id: 'espace', name: 'Espace', glyph: '⬡', desc: 'Distance, direction, passages, lieux.' },
+            { id: 'esprit', name: 'Esprit', glyph: '❂', desc: 'Pensée, émotion, mémoire, volonté.' },
+            { id: 'matiere', name: 'Matière', glyph: '▣', desc: "L'inerte façonné : objets, structures, matériaux." },
+            { id: 'nature', name: 'Nature', glyph: '❦', desc: 'Flore, faune, terrain, climat.' },
+            { id: 'vie', name: 'Vie', glyph: '✺', desc: 'Vitalité, souffle, santé, vieillissement.' }
+        ];
+
+        // Composition du d12 magique selon le niveau du canal : [Résonance, Succès, Vide, Rupture]
+        const MAGIC_FACE_COUNTS = {
+            1: [1, 2, 5, 4], 2: [1, 3, 4, 4], 3: [1, 4, 4, 3], 4: [1, 5, 3, 3],
+            5: [2, 4, 3, 3], 6: [2, 5, 3, 2], 7: [3, 4, 3, 2], 8: [3, 5, 2, 2]
+        };
+        function describeFaces(level) {
+            const [res, succ, vide, rupt] = MAGIC_FACE_COUNTS[clampLvl(level)];
+            const parts = [];
+            if (res) parts.push(`✧${res}`);
+            if (succ) parts.push(`✦${succ}`);
+            if (vide) parts.push(`○${vide}`);
+            if (rupt) parts.push(`✗${rupt}`);
+            return parts.join(' ');
+        }
 
         // Référentiel des blessures (copié de la fiche joueur)
         const WOUND_REFERENCE = [
@@ -1148,7 +1322,7 @@
             const k = norm(skillName);
             if (attrId === DEFAULT_PASSIVE_ATTR[k]) delete ov[k]; else ov[k] = attrId;
             try { localStorage.setItem(PASSIVE_ATTR_KEY, JSON.stringify(ov)); } catch (e) { }
-            // Mise à jour en place — sans reconstruire les cartes
+            // Mise à jour en place, sans reconstruire les cartes
             refreshPassiveValues();
         }
 
@@ -1197,7 +1371,6 @@
             ['Éloquence', "Agir sur autrui par l'échange sincère : convaincre, négocier, séduire, apaiser."],
             ['Érudition', "Le savoir constitué que l'on possède ou que l'on retrouve dans les sources : histoire, théorie, lois, cultures."],
             ['Escamotage', "La dextérité fine sur les objets et les serrures : crocheter, subtiliser, dissimuler."],
-            ['Ésotérisme', "Technique magique et éngergie manipulable."],
             ['Médecine', "Intervenir sur le corps vivant pour le soigner : diagnostiquer, opérer, stabiliser une blessure."],
             ['Recherche', "Produire de l'information par l'investigation : enquêter, pister, fouiller, recouper des indices."],
             ['Résilience', "Continuer de fonctionner sous une pression qui devrait faire céder : peur, douleur, panique, conditions extrêmes."],
@@ -1219,7 +1392,7 @@
                 .normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
         }
         function clampLvl(v) { const n = parseInt(v); return Math.min(8, Math.max(1, isNaN(n) ? 1 : n)); }
-        // Les compétences peuvent valoir 0 (Ésotérisme sans magie)
+        // Une vieille sauvegarde peut porter une compétence à 0 : on la tolère
         function clampSkill(v) { const n = parseInt(v); return Math.min(8, Math.max(0, isNaN(n) ? 1 : n)); }
         function getAttributeLevel(v) { return ATTRIBUTE_LEVELS[clampLvl(v)] || ATTRIBUTE_LEVELS[4]; }
         const SKILL_LEVEL_NONE = { name: 'Aucune', dice: 0, explosion: 12, bonus: 0, color: '#8b9dc3' };
@@ -1246,8 +1419,10 @@
             ATTR_ORDER.forEach(a => attributes[a] = clampLvl(attributes[a]));
 
             // Compétences : nom + niveau. Le niveau 1 « Inapte » est une faiblesse assumée, donc affiché.
+            // L'Ésotérisme ne fait plus partie du référentiel : une vieille sauvegarde qui le porte
+            // encore le voit écarté ici, la magie se lisant désormais sur les couples Verbe × Cible.
             const skills = (obj.skills || [])
-                .filter(s => s && s.name)
+                .filter(s => s && s.name && norm(s.name) !== 'esoterisme')
                 .map(s => ({ name: s.name, level: clampSkill(s.level) }));
 
             const wounds = (obj.wounds || []).map(w => ({
@@ -1260,6 +1435,9 @@
             })).filter(w => w.gravity > 0);
             const storedHealth = (obj.counters && obj.counters.health) ? obj.counters.health : null;
 
+            const magic = obj.magic || {};
+            const canal = (magic.canal && attributes[magic.canal] !== undefined) ? magic.canal : 'volonte';
+
             return {
                 name,
                 image: profile.image || null,
@@ -1267,9 +1445,12 @@
                 skills,
                 wounds,
                 storedHealth,
-                reserveUsed: (obj.magic && obj.magic.reserveUsed) ? parseInt(obj.magic.reserveUsed) || 0 : 0,
-                mjDice: (obj.magic && obj.magic.mjDice) ? parseInt(obj.magic.mjDice) || 0 : 0,
-                reserveMaxOverride: (obj.magic && obj.magic.reserveMaxOverride != null) ? parseInt(obj.magic.reserveMaxOverride) || null : null,
+                canal,
+                verbs: readRanks(obj.verbs, VERBS),
+                targets: readRanks(obj.targets, TARGETS),
+                reserveUsed: parseInt(magic.reserveUsed) || 0,
+                mjDice: parseInt(magic.mjDice) || 0,
+                reserveMaxOverride: (magic.reserveMaxOverride != null) ? parseInt(magic.reserveMaxOverride) || null : null,
                 qiShared: !!(obj.qiShared || (obj.profile && obj.profile.qiShared)),
                 vitesseBonus: parseInt(obj.vitesseBonus) || 0,
                 updatedAt: obj.ts || Date.now()
@@ -1277,32 +1458,49 @@
         }
 
         /* ── Valeurs dérivées ── */
-        // Réserve d'énergie magique par niveau d'Ésotérisme
+        // Réserve d'énergie magique, indexée sur la Magnitude du meilleur couple
         const MAGIC_RESERVE = { 1: 3, 2: 6, 3: 10, 4: 14, 5: 18, 6: 22, 7: 28, 8: 35, 9: 43, 10: 52 };
-        const USURE_TRANCHE = 5;
 
-        function getEsoLevel(rec) {
-            const s = (rec.skills || []).find(x => norm(x.name) === norm('Ésotérisme'));
-            return s ? s.level : 0;
+        // Ne retient d'une liste importée que les entrées réellement ouvertes (échelon 1 ou plus),
+        // triées du plus haut échelon au plus bas. Les Profane (0) sont écartés au chargement.
+        function readRanks(list, ref) {
+            const byId = {};
+            (Array.isArray(list) ? list : []).forEach(x => {
+                if (!x || !x.id) return;
+                const lvl = Math.min(MAX_RANK, Math.max(0, parseInt(x.level) || 0));
+                if (lvl > 0) byId[x.id] = lvl;
+            });
+            return ref
+                .filter(e => byId[e.id])
+                .map(e => ({ id: e.id, name: e.name, glyph: e.glyph, level: byId[e.id] }))
+                .sort((a, b) => (b.level - a.level) || a.name.localeCompare(b.name));
         }
 
+        // Meilleur couple accessible : il fixe la Magnitude max et la réserve
+        function getBestPair(rec) {
+            const v = (rec.verbs || [])[0];
+            const t = (rec.targets || [])[0];
+            if (!v || !t) return { verb: null, target: null, cap: 0 };
+            return { verb: v, target: t, cap: v.level + t.level };
+        }
+
+        function hasMagic(rec) { return getBestPair(rec).cap > 0; }
+
+        // Le canal donne aux dés de Puissance leur profil de faces
+        function getCanalId(rec) {
+            const id = rec.canal;
+            return (id && rec.attributes[id] !== undefined) ? id : 'volonte';
+        }
+        function getCanalLevel(rec) { return clampLvl(rec.attributes[getCanalId(rec)] || 4); }
+
         function getReserveMax(rec) {
-            const lvl = getEsoLevel(rec);
             if (rec.reserveMaxOverride != null && rec.reserveMaxOverride > 0) return rec.reserveMaxOverride;
-            return lvl > 0 ? (MAGIC_RESERVE[Math.min(10, lvl)] || 0) : 0;
+            const cap = getBestPair(rec).cap;
+            return cap > 0 ? (MAGIC_RESERVE[Math.min(10, cap)] || 0) : 0;
         }
 
         function getReserveLeft(rec) {
             return Math.max(0, getReserveMax(rec) - (rec.reserveUsed || 0));
-        }
-
-        function getUsure(rec) {
-            return Math.floor((rec.reserveUsed || 0) / USURE_TRANCHE);
-        }
-
-        function getEffectiveEsoLevel(rec) {
-            const lvl = getEsoLevel(rec);
-            return lvl > 0 ? Math.max(1, lvl - getUsure(rec)) : 0;
         }
 
         function getElanMax(rec) {
@@ -1368,8 +1566,10 @@
         }
 
         function renderPlayerCard(key, rec) {
-            const esoLvl = getEsoLevel(rec);
-            const effEso = getEffectiveEsoLevel(rec);
+            const pair = getBestPair(rec);
+            const magic = pair.cap > 0;
+            const canalId = getCanalId(rec);
+            const canalLvl = getCanalLevel(rec);
             const resMax = getReserveMax(rec);
             const resLeft = getReserveLeft(rec);
             const elanMax = getElanMax(rec);
@@ -1389,7 +1589,7 @@
                 </div>`;
             });
 
-            // Blessures — détail
+            // Blessures · détail
             let woundHtml = '';
             if (rec.wounds && rec.wounds.length) {
                 const totalGrav = rec.wounds.reduce((s, w) => s + (w.gravity || 0), 0);
@@ -1418,7 +1618,7 @@
                 woundHtml = '<div class="skills-untrained">Aucune blessure.</div>';
             }
 
-            // Compétences — liste unique : niveau + passif (attribut ajustable)
+            // Compétences · liste unique : niveau + passif (attribut ajustable)
             const attrOptions = (sel) => ATTR_ORDER.map(a =>
                 `<option value="${a}"${a === sel ? ' selected' : ''}>${ATTR_LABEL[a]}</option>`).join('');
             const skillsSorted = rec.skills.slice().sort((a, b) => {
@@ -1431,17 +1631,26 @@
                 const attrId = getPassiveAttr(s.name, s.defaultAttr);
                 const pass = getPassiveValue(rec, s.name, attrId);
                 const pColor = pass >= 7 ? '#D4AF37' : pass >= 5 ? '#4a9b6e' : 'var(--silver-mist)';
-                const isPow = norm(s.name) === norm('Ésotérisme');
                 const safeName = s.name.replace(/'/g, "\\'");
                 const nk = norm(s.name);
                 skillHtml += `<div class="skill-row">
-                    <span class="sr-name" title="${s.name}">${isPow ? '✨ ' : ''}${s.name}</span>
+                    <span class="sr-name" title="${s.name}">${s.name}</span>
                     <span class="sr-lvl" style="color:${lvl.color}" title="Niveau ${s.level}">${lvl.name}<sub>${s.level}</sub></span>
                     <select class="pl-attr" data-skill-sel="${nk}" onchange="setPassiveAttr('${safeName}', this.value)" title="Attribut du passif">${attrOptions(attrId)}</select>
                     <span class="sr-pass" data-skill-pass="${nk}" style="color:${pColor}" title="Valeur passive">${pass}</span>
                 </div>`;
             });
             if (!skillHtml) skillHtml = '<span class="skills-untrained">Aucune compétence.</span>';
+
+            // Verbes et cibles réellement investis, du plus haut échelon au plus bas
+            const pills = (list) => list.map(x => {
+                const r = MAGIC_RANKS[Math.min(MAX_RANK, x.level)] || MAGIC_RANKS[0];
+                return `<span class="vt-pill" style="color:${r.color};border-color:${r.color}66;background:${r.color}1f" title="${r.name} (${x.level})">${x.glyph} ${x.name}<b>${x.level}</b></span>`;
+            }).join('');
+            const vtHtml = magic ? `<div class="vt-strip">
+                    <div class="vt-row"><span class="vt-label">Verbes</span><div class="vt-pills">${pills(rec.verbs)}</div></div>
+                    <div class="vt-row"><span class="vt-label">Cibles</span><div class="vt-pills">${pills(rec.targets)}</div></div>
+                </div>` : '';
 
             const portrait = rec.image
                 ? `<img class="pcard-portrait" src="${rec.image}" alt="">`
@@ -1470,13 +1679,20 @@
                         <div class="kl">⚠ Perturbation</div>
                         <div class="kv">${rec.mjDice}<span style="font-size:0.5em;opacity:0.6;"> dés</span></div>
                     </div>
+                    ${magic ? `<div class="keystat magnitude">
+                        <div class="kl">✨ Magnitude</div>
+                        <div class="kv">${pair.cap}</div>
+                        <div class="ks pair">${pair.verb.name} × ${pair.target.name}</div>
+                    </div>` : ''}
                 </div>
-                ${esoLvl > 0 ? `<div class="magic-strip">
-                    <span class="ms-label">✨ Ésotérisme</span>
-                    <span class="ms-lvl">${esoLvl}${effEso < esoLvl ? ` <span class="ms-worn">→ ${effEso}</span>` : ''}</span>
+                ${magic ? `<div class="magic-strip">
+                    <span class="ms-label">✨ Canal ${ATTR_LABEL[canalId]}</span>
+                    <span class="ms-lvl">${canalLvl}</span>
+                    <span class="ms-faces" title="Faces du d12 magique : ✧ Résonance · ✦ Succès · ○ Vide · ✗ Rupture">${describeFaces(canalLvl)}</span>
                     <span class="ms-res">Réserve ${resLeft}/${resMax}</span>
                     <div class="ms-bar"><div class="ms-fill" style="width:${resMax > 0 ? (resLeft / resMax) * 100 : 0}%"></div></div>
                 </div>` : ''}
+                ${vtHtml}
                 ${qiTileHtml(rec)}
                 <button class="pcard-detail-toggle" onclick="(function(el){el.classList.toggle('open'); if(el.classList.contains('open')) expandedCards.add(el.id); else expandedCards.delete(el.id);})(document.getElementById('pc-${key}'))">
                     Blessures · Attributs · Compétences ▾
@@ -1533,6 +1749,52 @@
             note.className = 'ref-passive-note';
             note.innerHTML = 'Passif = bonus d\'attribut + ⌊dés de compétence ÷ 2⌋. Chaque compétence a désormais un passif, calculé sur un attribut par défaut que tu peux changer directement sur la carte du joueur (le choix s\'applique à tout le groupe et reste mémorisé).';
             sEl.appendChild(note);
+
+            renderMagicReference();
+        }
+
+        function renderMagicReference() {
+            const mEl = document.getElementById('ref-magic');
+            if (!mEl) return;
+
+            const intro = document.createElement('div');
+            intro.className = 'ref-note';
+            intro.innerHTML =
+                'Un sort est un <strong>Verbe × Cible</strong>. La somme des deux échelons donne la ' +
+                '<strong>Magnitude max</strong>, donc le nombre de dés engageables ; chaque dé payé coûte ' +
+                '1 point de réserve. Le <strong>canal</strong> (un attribut) fixe le profil de faces du d12 : ' +
+                '✧ Résonance +2 · ✦ Succès +1 · ○ Vide · ✗ Rupture. La <strong>Puissance</strong> obtenue ' +
+                's\'ajoute au Résultat Final du jet de compétence qui accompagne le sort. ' +
+                'Il n\'y a plus de compétence dédiée : le sort emprunte celle que l\'action appelle.';
+            mEl.appendChild(intro);
+
+            const ranks = document.createElement('div');
+            ranks.className = 'ref-range';
+            ranks.innerHTML = 'Échelons : ' + Object.keys(MAGIC_RANKS).map(k =>
+                `<b style="color:${MAGIC_RANKS[k].color}">${k} ${MAGIC_RANKS[k].name}</b>`).join(' · ');
+            mEl.appendChild(ranks);
+
+            const addList = (title, list) => {
+                const h = document.createElement('div');
+                h.className = 'ref-sub';
+                h.textContent = title;
+                mEl.appendChild(h);
+                list.forEach(x => {
+                    const div = document.createElement('div');
+                    div.className = 'ref-item';
+                    div.innerHTML = `<span class="rt">${x.glyph} ${x.name}</span><span class="rd"> - ${x.desc}</span>`;
+                    mEl.appendChild(div);
+                });
+            };
+            addList('Les dix verbes', VERBS);
+            addList('Les dix cibles', TARGETS);
+
+            const tail = document.createElement('div');
+            tail.className = 'ref-passive-note';
+            tail.textContent = "La distance ne s'achète plus : c'est la Puissance obtenue qui dimensionne la " +
+                "portée du sort au même titre que sa gravité, sa durée ou sa zone. À toi de trancher ce " +
+                "qu'un total donné permet d'atteindre.";
+            mEl.appendChild(tail);
         }
 
         /* ===================================================================

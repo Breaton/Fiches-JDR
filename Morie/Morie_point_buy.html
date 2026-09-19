@@ -40,7 +40,7 @@
       --comp-cost-6: 8;
 
       /* TWEAKABLE BUDGET */
-      --budget: 80;
+      --budget: 100;
 
       /* TWEAKABLE PYRAMIDS */
       --max-attr-7: 1;
@@ -163,6 +163,19 @@
 
     .budget-remaining.over {
       color: var(--red);
+    }
+
+    .budget-split {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+      border-left: 1px solid var(--border);
+      padding-left: 1rem;
+    }
+
+    .budget-split b {
+      color: var(--gold);
+      font-weight: 600;
     }
 
     /* Settings panel */
@@ -562,6 +575,112 @@
       background: var(--border);
       margin: 1.5rem 0;
     }
+
+    /* Verbes et cibles */
+    .vd-glyph {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    .stat-row.open .vd-glyph {
+      color: var(--gold);
+      border-color: var(--gold-dim);
+      background: rgba(201, 147, 74, 0.1);
+    }
+
+    .stat-row.open {
+      background: rgba(201, 147, 74, 0.05);
+    }
+
+    .canal-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 0.8rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .canal-box label {
+      font-family: 'Cinzel', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .canal-box select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--text);
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.9rem;
+      padding: 0.35rem 0.6rem;
+      cursor: pointer;
+    }
+
+    .canal-box select:focus {
+      outline: none;
+      border-color: var(--gold-dim);
+    }
+
+    .canal-box .canal-read {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .lex {
+      padding: 1.2rem;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text-dim);
+    }
+
+    .lex p {
+      margin-bottom: 0.6rem;
+    }
+
+    .lex-block {
+      margin-bottom: 1.4rem;
+    }
+
+    .lex-block:last-child {
+      margin-bottom: 0;
+    }
+
+    .lex-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+    }
+
+    .lex b {
+      color: var(--text);
+    }
+
+    .lex .lex-ex {
+      color: var(--gold);
+      font-weight: 600;
+      margin-right: 0.3rem;
+    }
+
   </style>
 </head>
 
@@ -576,9 +695,10 @@
       <div class="budget-numbers" id="budgetNumbers">
         <span class="spent" id="spentDisplay">0</span>
         <span class="sep">/</span>
-        <span class="total" id="totalDisplay">80</span>
+        <span class="total" id="totalDisplay">100</span>
       </div>
-      <div class="budget-remaining" id="budgetRemaining">80 restants</div>
+      <div class="budget-remaining" id="budgetRemaining">100 restants</div>
+      <span class="budget-split" id="budgetSplit"></span>
       <button class="settings-toggle" id="exportBtn" onclick="exportToFiche()" style="border-color:var(--gold-dim);color:var(--gold)">↓ Exporter vers Fiche</button>
       <button class="settings-toggle" onclick="importFromFiche()">↑ Importer depuis Fiche</button>
       <span id="importBanner"></span>
@@ -586,33 +706,33 @@
     </div>
 
     <div class="settings-panel" id="settingsPanel">
-      <h3>Paramètres — Coûts & Limites</h3>
+      <h3>Paramètres · Coûts & Limites</h3>
       <div class="settings-grid">
         <div class="settings-section-title">Budget total</div>
         <div class="setting-item">
           <label>Budget total</label>
-          <input type="number" id="s_budget" value="80" min="10" max="300" onchange="updateSettings()">
+          <input type="number" id="s_budget" value="100" min="10" max="300" onchange="updateSettings()">
         </div>
 
-        <div class="settings-section-title">Coûts cumulatifs — Attributs (depuis Commun 4)</div>
-        <div class="setting-item"><label>Déficient (1) remboursé</label><input type="number" id="s_ac1" value="-3"
+        <div class="settings-section-title">Coûts cumulatifs · Attributs (depuis Commun 4)</div>
+        <div class="setting-item"><label>Déficient (1) remboursé</label><input type="number" id="s_ac1" value="-5"
             min="-20" max="0" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Faible (2) remboursé</label><input type="number" id="s_ac2" value="-2"
+        <div class="setting-item"><label>Faible (2) remboursé</label><input type="number" id="s_ac2" value="-3"
             min="-20" max="0" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Médiocre (3) remboursé</label><input type="number" id="s_ac3" value="-1"
+        <div class="setting-item"><label>Médiocre (3) remboursé</label><input type="number" id="s_ac3" value="-2"
             min="-20" max="0" onchange="updateSettings()"></div>
         <div class="setting-item"><label>Élevé (5)</label><input type="number" id="s_ac5" value="5" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Supérieur (6)</label><input type="number" id="s_ac6" value="8" min="0" max="50"
+        <div class="setting-item"><label>Supérieur (6)</label><input type="number" id="s_ac6" value="9" min="0" max="50"
             onchange="updateSettings()"></div>
         <div class="setting-item"><label>Exceptionnel (7)</label><input type="number" id="s_ac7" value="12" min="0"
             max="50" onchange="updateSettings()"></div>
 
-        <div class="settings-section-title">Coûts cumulatifs — Compétences</div>
-        <div class="setting-item"><label>Novice (2)</label><input type="number" id="s_cc2" value="1" min="0" max="50"
-            onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Compétent (3)</label><input type="number" id="s_cc3" value="2" min="0" max="50"
-            onchange="updateSettings()"></div>
+        <div class="settings-section-title">Coûts cumulatifs · Compétences (depuis Ordinaire 3)</div>
+        <div class="setting-item"><label>Inapte (1) remboursé</label><input type="number" id="s_cc1" value="-3"
+            min="-20" max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Maladroit (2) remboursé</label><input type="number" id="s_cc2" value="-1"
+            min="-20" max="0" onchange="updateSettings()"></div>
         <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="3" min="0" max="50"
             onchange="updateSettings()"></div>
         <div class="setting-item"><label>Excellent (5)</label><input type="number" id="s_cc5" value="5" min="0" max="50"
@@ -620,7 +740,27 @@
         <div class="setting-item"><label>Expert (6)</label><input type="number" id="s_cc6" value="8" min="0" max="50"
             onchange="updateSettings()"></div>
 
-        <div class="settings-section-title">Limites pyramide — Attributs</div>
+        <div class="settings-section-title">Coûts cumulatifs · Verbes et Cibles (depuis Profane 0)</div>
+        <div class="setting-item"><label>Éveillé (1)</label><input type="number" id="s_h1" value="2" min="0" max="60"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Initié (2)</label><input type="number" id="s_h2" value="4" min="0" max="60"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Adepte (3)</label><input type="number" id="s_h3" value="7" min="0" max="60"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Maître (4)</label><input type="number" id="s_h4" value="11" min="0" max="60"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Archimage (5)</label><input type="number" id="s_h5" value="16" min="0"
+            max="60" onchange="updateSettings()"></div>
+
+        <div class="settings-section-title">Limites · Verbes et Cibles (listes réunies)</div>
+        <div class="setting-item"><label>Échelon maximum</label><input type="number" id="s_hmax" value="4" min="1"
+            max="5" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Max Maître (4)</label><input type="number" id="s_mh4" value="1" min="0"
+            max="20" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Max Adepte (3)</label><input type="number" id="s_mh3" value="2" min="0"
+            max="20" onchange="updateSettings()"></div>
+
+        <div class="settings-section-title">Limites pyramide · Attributs</div>
         <div class="setting-item"><label>Max Exceptionnel (7)</label><input type="number" id="s_max_a7" value="1"
             min="0" max="8" onchange="updateSettings()"></div>
         <div class="setting-item"><label>Max Supérieur (6)</label><input type="number" id="s_max_a6" value="2" min="0"
@@ -628,7 +768,7 @@
         <div class="setting-item"><label>Max Élevé (5)</label><input type="number" id="s_max_a5" value="3" min="0"
             max="8" onchange="updateSettings()"></div>
 
-        <div class="settings-section-title">Limites pyramide — Compétences</div>
+        <div class="settings-section-title">Limites pyramide · Compétences</div>
         <div class="setting-item"><label>Max Expert (6)</label><input type="number" id="s_max_c6" value="2" min="0"
             max="21" onchange="updateSettings()"></div>
         <div class="setting-item"><label>Max Excellent (5)</label><input type="number" id="s_max_c5" value="3" min="0"
@@ -642,7 +782,7 @@
         <div class="section">
           <div class="section-header">
             <span class="section-title">Attributs</span>
-            <span class="pyramid-info">8 attributs</span>
+            <span class="pyramid-info" id="attrCount"></span>
           </div>
           <div class="pyramid-counters" id="attrPyramid"></div>
           <div id="attrList"></div>
@@ -654,11 +794,79 @@
         <div class="section">
           <div class="section-header">
             <span class="section-title">Compétences</span>
-            <span class="pyramid-info">21 compétences</span>
+            <span class="pyramid-info" id="compCount"></span>
           </div>
           <div class="pyramid-counters" id="compPyramid"></div>
           <div id="compList"></div>
         </div>
+      </div>
+    </div>
+
+    <div class="columns" style="margin-top:2rem;">
+      <!-- VERBES -->
+      <div>
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Verbes</span>
+            <span class="pyramid-info" id="verbInfo">plafonds partagés</span>
+          </div>
+          <div class="pyramid-counters" id="habPyramid"></div>
+          <div id="verbList"></div>
+        </div>
+      </div>
+
+      <!-- CIBLES -->
+      <div>
+        <div class="section">
+          <div class="section-header">
+            <span class="section-title">Cibles</span>
+            <span class="pyramid-info" id="targetInfo">plafonds partagés</span>
+          </div>
+          <div class="canal-box">
+            <label for="canalSelect">Canal</label>
+            <select id="canalSelect" onchange="setCanal(this.value)"></select>
+            <span class="canal-read" id="canalRead"></span>
+          </div>
+          <div id="targetList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" style="margin-top:2rem;">
+      <div class="section-header">
+        <span class="section-title">Lecture d'un couple</span>
+        <span class="pyramid-info">comment se lit un sort</span>
+      </div>
+      <div class="lex">
+
+        <div class="lex-block">
+          <div class="lex-title">Principe</div>
+          <p>Un sort est un verbe appliqué à une cible, qui est ce sur quoi il agit ou ce avec quoi il agit.
+            La somme des deux échelons donne la Magnitude maximum, donc le nombre de dés de Puissance
+            engageables. Un couple dont une moitié reste à Profane ne peut rien lancer. Tout comme certaines
+            combinaisons, même ouvertes, ne peuvent être lancées selon le sort.</p>
+        </div>
+
+        <div class="lex-block">
+          <div class="lex-title">Les verbes sont polyvalents</div>
+          <p><span class="lex-ex">Absorber × Éléments</span> Par exemple Restaurer n'est pas la seule façon de se
+            soigner. Un personnage qui est un élémentaire d'eau peut se soigner en utilisant Absorber avec la
+            cible Éléments.</p>
+          <p>Un verbe ouvert sert donc bien au-delà de son usage évident. À budget égal, monter une cible déjà
+            achetée rapporte souvent plus que d'en ouvrir une autre.</p>
+        </div>
+
+        <div class="lex-block">
+          <div class="lex-title">Les verbes se recouvrent</div>
+          <p>La même image se décrit parfois par deux couples. Pour une magie d'ombre :</p>
+          <p><span class="lex-ex">Dissimuler × Éléments</span> Le personnage se dissimule avec les ombres, et donc
+            devient une ombre par exemple.</p>
+          <p><span class="lex-ex">Altérer × Corps</span> Devenir l'ombre : passer sous une porte, encaisser un coup
+            qui traverse, tenir la forme plus longtemps.</p>
+          <p>Ainsi, au vu du sort il faudra choisir le verbe le plus approprié pour le personnage, au vu de leur
+            similarité.</p>
+        </div>
+
       </div>
     </div>
 
@@ -722,7 +930,6 @@
       { id: 'eloquence', name: 'Éloquence', alt: 'Diplomatie · Séduction · Raison' },
       { id: 'erudition', name: 'Érudition', alt: 'Histoire · Théologie · Droit' },
       { id: 'escamotage', name: 'Escamotage', alt: 'Larcin · Crochetage · Prestidigitation' },
-      { id: 'esoterisme', name: 'Ésotérisme', alt: 'Arcanes · Pouvoir · Magie' },
       { id: 'medecine', name: 'Médecine', alt: 'Chirurgie · Soins · Premiers secours' },
       { id: 'recherche', name: 'Recherche', alt: 'Enquête · Pistage · Investigation' },
       { id: 'resilience', name: 'Résilience', alt: 'Sang-froid · Bravoure · Calme' },
@@ -734,24 +941,85 @@
       { id: 'vigilance', name: 'Vigilance', alt: 'Perception · Instinct · Observation' },
     ];
 
+    // ---------- RÉFÉRENTIEL MAGIQUE : VERBES × CIBLES ----------
+    // Un sort est un verbe appliqué à une cible ; la somme des deux échelons
+    // donne la Magnitude maximum, donc le nombre de dés de Puissance engageables.
+    const MAX_RANK = 5;
+    const MAGIC_RANKS = {
+      0: { name: 'Profane', color: 'var(--text-dim)' },
+      1: { name: 'Éveillé', color: '#8a7f6e' },
+      2: { name: 'Initié', color: '#5a8a4a' },
+      3: { name: 'Adepte', color: '#4a6a9a' },
+      4: { name: 'Maître', color: '#8a6aa8' },
+      5: { name: 'Archimage', color: '#e8b86d' }
+    };
+
+    const VERBS = [
+      { id: 'absorber', name: 'Absorber', glyph: '⤓', alt: 'Drainer · Siphonner · Capter' },
+      { id: 'alterer', name: 'Altérer', glyph: '⟳', alt: "Changer l'état · Métamorphoser" },
+      { id: 'amplifier', name: 'Amplifier', glyph: '▲', alt: 'Renforcer · Exalter · Dépasser' },
+      { id: 'assujettir', name: 'Assujettir', glyph: '⛓', alt: 'Contraindre · Entraver · Lier' },
+      { id: 'dissimuler', name: 'Dissimuler', glyph: '◌', alt: 'Voiler · Effacer · Masquer' },
+      { id: 'dissiper', name: 'Dissiper', glyph: '✕', alt: 'Annuler · Rompre · Purger' },
+      { id: 'manifester', name: 'Manifester', glyph: '◈', alt: 'Créer · Projeter · Invoquer' },
+      { id: 'mouvoir', name: 'Mouvoir', glyph: '↭', alt: 'Déplacer · Propulser · Attirer' },
+      { id: 'percevoir', name: 'Percevoir', glyph: '◉', alt: 'Détecter · Sonder · Pressentir' },
+      { id: 'restaurer', name: 'Restaurer', glyph: '✚', alt: 'Soigner · Régénérer · Réparer' }
+    ];
+
+    const TARGETS = [
+      { id: 'ame', name: 'Âme', glyph: '☽', alt: 'Esprits · Morts · Pactes' },
+      { id: 'arcane', name: 'Arcane', glyph: '✦', alt: 'Sorts · Sceaux · Flux' },
+      { id: 'corps', name: 'Corps', glyph: '⚕', alt: 'Chair · Anatomie · Sens' },
+      { id: 'destin', name: 'Destin', glyph: '◷', alt: 'Présages · Chance · Serments' },
+      { id: 'elements', name: 'Éléments', glyph: '⚡', alt: 'Feu · Glace · Foudre · Ténèbres' },
+      { id: 'espace', name: 'Espace', glyph: '⬡', alt: 'Distance · Passages · Lieux' },
+      { id: 'esprit', name: 'Esprit', glyph: '❂', alt: 'Pensée · Émotion · Mémoire' },
+      { id: 'matiere', name: 'Matière', glyph: '▣', alt: 'Objets · Structures · Matériaux' },
+      { id: 'nature', name: 'Nature', glyph: '❦', alt: 'Flore · Faune · Terrain · Climat' },
+      { id: 'vie', name: 'Vie', glyph: '✺', alt: 'Vitalité · Santé · Vieillissement' }
+    ];
+
+    // Réserve d'énergie magique, indexée sur le meilleur couple
+    const MAGIC_RESERVE = { 1: 3, 2: 6, 3: 10, 4: 14, 5: 18, 6: 22, 7: 28, 8: 35, 9: 43, 10: 52 };
+
+    // Composition du d12 magique selon le niveau du canal
+    const MAGIC_FACE_COUNTS = {
+      1: [1, 2, 5, 4], 2: [1, 3, 4, 4], 3: [1, 4, 4, 3], 4: [1, 5, 3, 3],
+      5: [2, 4, 3, 3], 6: [2, 5, 3, 2], 7: [3, 4, 3, 2], 8: [3, 5, 2, 2],
+    };
+
     // ========================
     // STATE
     // ========================
 
     let config = {
-      budget: 80,
+      // La magie se paie sur la même dotation que le reste : un mage achète ses
+      // couples au prix de ses attributs et de ses compétences. La distance ne
+      // s'achète plus, c'est la Puissance obtenue qui dit jusqu'où le sort porte,
+      // donc le paquet magique se réduit aux seuls couples.
+      budget: 100,
       // Coûts cumulatifs depuis la baseline 4 (Commun). Valeurs négatives = remboursement.
       attrCosts: [0, -5, -3, -2, 0, 5, 9, 12], // index = value, baseline = 4
       compCosts: [0, -3, -1, 0, 3, 5, 8],
       maxAttr: { 7: 1, 6: 2, 5: 3 },
       maxComp: { 6: 2, 5: 3, },
+      // Verbes et cibles : coûts cumulés depuis Profane (0), plafonds comptés sur les deux listes réunies
+      habCosts: [0, 2, 4, 7, 11, 16],
+      habMax: 4,
+      maxHab: { 4: 1, 3: 2 },
     };
 
     let attrValues = {};
     let compValues = {};
+    let verbValues = {};
+    let targetValues = {};
+    let canal = 'volonte';
 
     ATTRIBUTES.forEach(a => attrValues[a.id] = 4);
     COMPETENCES.forEach(c => compValues[c.id] = 3);
+    VERBS.forEach(v => verbValues[v.id] = 0);
+    TARGETS.forEach(t => targetValues[t.id] = 0);
 
     // ========================
     // COST CALCULATION
@@ -765,11 +1033,87 @@
       return config.compCosts[val] || 0;
     }
 
+    function habCost(val) {
+      return config.habCosts[Math.min(MAX_RANK, Math.max(0, val))] || 0;
+    }
+
     function totalSpent() {
       let total = 0;
       ATTRIBUTES.forEach(a => total += attrCost(attrValues[a.id]));
       COMPETENCES.forEach(c => total += compCost(compValues[c.id]));
+      VERBS.forEach(v => total += habCost(verbValues[v.id]));
+      TARGETS.forEach(t => total += habCost(targetValues[t.id]));
       return total;
+    }
+
+    // ========================
+    // VERBES ET CIBLES
+    // ========================
+
+    // Les plafonds se comptent sur un pool unique : un Maître pris par un verbe
+    // ferme la place à toutes les cibles, et réciproquement.
+    function habPool() {
+      const list = [], values = {};
+      VERBS.forEach(v => { list.push({ id: 'v:' + v.id }); values['v:' + v.id] = verbValues[v.id]; });
+      TARGETS.forEach(t => { list.push({ id: 't:' + t.id }); values['t:' + t.id] = targetValues[t.id]; });
+      return { list, values };
+    }
+
+    const habCeiling = () => Math.max(1, Math.min(MAX_RANK, config.habMax || 4));
+
+    function habCountAt(level) {
+      const { list, values } = habPool();
+      return list.filter(x => values[x.id] === level).length;
+    }
+
+    function nextFreeHab(cur) {
+      for (let lv = cur + 1; lv <= habCeiling(); lv++) {
+        const limit = config.maxHab[lv];
+        if (limit === undefined || habCountAt(lv) < limit) return lv;
+      }
+      return null;
+    }
+
+    function canIncreaseHab(cur) {
+      if (cur >= habCeiling()) return { ok: false, reason: 'Maximum atteint à la création' };
+      const next = nextFreeHab(cur);
+      if (next === null) return { ok: false, reason: 'Tous les échelons supérieurs sont saturés' };
+      const cost = habCost(next) - habCost(cur);
+      if (totalSpent() + cost > config.budget) return { ok: false, reason: 'Budget insuffisant' };
+      return { ok: true, cost, next, skipped: next > cur + 1 };
+    }
+
+    function lowerHab(cur) {
+      if (cur <= 0) return 0;
+      let target = cur - 1;
+      while (target > 0) {
+        const limit = config.maxHab[target];
+        if (limit === undefined || habCountAt(target) < limit) break;
+        target--;
+      }
+      return target;
+    }
+
+    function openVerbs() { return VERBS.filter(v => verbValues[v.id] > 0); }
+    function openTargets() { return TARGETS.filter(t => targetValues[t.id] > 0); }
+
+    // Le meilleur couple : il fixe la Magnitude maximum et la réserve d'énergie
+    function bestPair() {
+      const v = openVerbs().sort((a, b) => verbValues[b.id] - verbValues[a.id])[0];
+      const t = openTargets().sort((a, b) => targetValues[b.id] - targetValues[a.id])[0];
+      if (!v || !t) return { verb: null, target: null, cap: 0 };
+      return { verb: v, target: t, cap: verbValues[v.id] + targetValues[t.id] };
+    }
+
+    function reserveMax() {
+      const cap = bestPair().cap;
+      return cap > 0 ? (MAGIC_RESERVE[Math.min(10, cap)] || 0) : 0;
+    }
+
+    // Puissance moyenne d'un dé magique sur le profil du canal
+    function averagePowerPerDie(level) {
+      const [res, succ] = MAGIC_FACE_COUNTS[Math.min(8, Math.max(1, level))];
+      return (succ * 1 + res * 2) / 12;
     }
 
     // ========================
@@ -824,6 +1168,13 @@
     // ========================
     // RENDER
     // ========================
+
+    function renderCounts() {
+      const a = document.getElementById('attrCount');
+      const c = document.getElementById('compCount');
+      if (a) a.textContent = `${ATTRIBUTES.length} attributs`;
+      if (c) c.textContent = `${COMPETENCES.length} compétences`;
+    }
 
     function renderAttrPyramid() {
       const el = document.getElementById('attrPyramid');
@@ -912,6 +1263,64 @@
       }).join('');
     }
 
+    function renderHabPyramid() {
+      const el = document.getElementById('habPyramid');
+      if (!el) return;
+      let html = '';
+      Object.keys(config.maxHab).sort((a, b) => b - a).forEach(lv => {
+        const count = habCountAt(+lv);
+        const max = config.maxHab[lv];
+        const cls = count >= max ? 'maxed' : 'ok';
+        html += `<span class="pyramid-counter">${MAGIC_RANKS[lv].name} : <span class="count ${cls}">${count}/${max}</span></span>`;
+      });
+      html += `<span class="pyramid-counter">Sommet à la création : <span class="count">${MAGIC_RANKS[habCeiling()].name}</span></span>`;
+      el.innerHTML = html;
+    }
+
+    function renderHabList(elId, list, values, changer) {
+      const el = document.getElementById(elId);
+      if (!el) return;
+      el.innerHTML = list.map(x => {
+        const val = values[x.id];
+        const rank = MAGIC_RANKS[val];
+        const cost = habCost(val);
+        const canUp = canIncreaseHab(val);
+        const dots = [1, 2, 3, 4, 5].map(i => `<div class="dot ${i <= val ? 'filled' : ''}"></div>`).join('');
+
+        return `<div class="stat-row${val > 0 ? ' open' : ''}">
+      <span class="vd-glyph">${x.glyph}</span>
+      <div class="stat-name-wrapper">
+        <div class="stat-name">${x.name}</div>
+        <div class="stat-alt">${x.alt}</div>
+      </div>
+      <div class="dots">${dots}</div>
+      <div class="stat-level" style="color:${rank.color}">${rank.name}</div>
+      <div class="stat-cost"><span class="cost-num">${cost}</span> pts</div>
+      <div class="controls">
+        <button class="btn" onclick="${changer}('${x.id}', -1)" ${val <= 0 ? 'disabled' : ''}>−</button>
+        <span class="value-display">${val}</span>
+        <button class="btn" onclick="${changer}('${x.id}', 1)" ${!canUp.ok ? 'disabled' : ''} title="${canUp.ok ? (canUp.skipped ? 'Échelon saturé : monte directement à ' + MAGIC_RANKS[canUp.next].name : '') : canUp.reason}">${canUp.ok && canUp.skipped ? '⇈' : '+'}</button>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    function renderCanal() {
+      const sel = document.getElementById('canalSelect');
+      if (!sel) return;
+      sel.innerHTML = ATTRIBUTES.map(a => {
+        const lv = attrValues[a.id];
+        const label = ATTR_LEVELS.find(l => l.val === lv)?.label || '';
+        return `<option value="${a.id}"${a.id === canal ? ' selected' : ''}>${a.name} · ${label} (${lv})</option>`;
+      }).join('');
+      const read = document.getElementById('canalRead');
+      if (read) {
+        const lv = attrValues[canal] || 4;
+        const [res, succ, vide, rupt] = MAGIC_FACE_COUNTS[Math.min(8, Math.max(1, lv))];
+        read.innerHTML = `✧${res} ✦${succ} ○${vide} ✗${rupt} · ${averagePowerPerDie(lv).toFixed(2)} Puissance par dé`;
+      }
+    }
+
     function renderBudget() {
       const spent = totalSpent();
       const pct = Math.min((spent / config.budget) * 100, 100);
@@ -927,6 +1336,12 @@
         ? `${Math.abs(remaining)} de trop`
         : `${remaining} restants`;
       document.getElementById('budgetRemaining').classList.toggle('over', over);
+
+      // Ce que la magie prend sur la dotation, à côté de ce qui reste au personnage
+      const magie = VERBS.reduce((t, v) => t + habCost(verbValues[v.id]), 0)
+        + TARGETS.reduce((t, x) => t + habCost(targetValues[x.id]), 0);
+      const split = document.getElementById('budgetSplit');
+      if (split) split.innerHTML = `dont <b>${magie}</b> en magie`;
     }
 
     function renderSummary() {
@@ -937,7 +1352,7 @@
       const compInvested = COMPETENCES.filter(c => compValues[c.id] > 1)
         .sort((a, b) => compValues[b.id] - compValues[a.id]);
 
-      if (attrInvested.length === 0 && compInvested.length === 0) {
+      if (attrInvested.length === 0 && compInvested.length === 0 && bestPair().cap === 0) {
         el.innerHTML = '<p style="color:var(--text-dim);font-style:italic">Aucun point investi pour l\'instant.</p>';
         return;
       }
@@ -967,15 +1382,42 @@
       }
 
       html += '</div>';
+
+      const bp = bestPair();
+      if (bp.cap > 0) {
+        const vList = openVerbs().sort((a, b) => verbValues[b.id] - verbValues[a.id]);
+        const tList = openTargets().sort((a, b) => targetValues[b.id] - targetValues[a.id]);
+        html += '<div class="divider"></div>';
+        html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem">';
+        html += '<div><div style="font-family:Cinzel,serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem">Verbes</div><div class="summary-grid">';
+        vList.forEach(v => {
+          html += `<div class="summary-item"><span class="s-name">${v.name}</span><span><span class="s-val">${verbValues[v.id]}</span><span class="s-level">${MAGIC_RANKS[verbValues[v.id]].name}</span></span></div>`;
+        });
+        html += '</div></div>';
+        html += '<div><div style="font-family:Cinzel,serif;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem">Cibles</div><div class="summary-grid">';
+        tList.forEach(t => {
+          html += `<div class="summary-item"><span class="s-name">${t.name}</span><span><span class="s-val">${targetValues[t.id]}</span><span class="s-level">${MAGIC_RANKS[targetValues[t.id]].name}</span></span></div>`;
+        });
+        html += '</div></div></div>';
+        html += `<div style="margin-top:0.8rem;font-size:0.82rem;color:var(--text-dim);font-style:italic;">
+          Canal ${ATTRIBUTES.find(a => a.id === canal).name} ${attrValues[canal]} · meilleur couple
+          ${bp.verb.name} × ${bp.target.name} · Magnitude maximum ${bp.cap} · réserve ${reserveMax()}</div>`;
+      }
+
       el.innerHTML = html;
     }
 
     function render() {
+      renderCounts();
       renderBudget();
       renderAttrPyramid();
       renderCompPyramid();
       renderAttrList();
       renderCompList();
+      renderHabPyramid();
+      renderHabList('verbList', VERBS, verbValues, 'changeVerb');
+      renderHabList('targetList', TARGETS, targetValues, 'changeTarget');
+      renderCanal();
       renderSummary();
     }
 
@@ -1021,9 +1463,39 @@
       render();
     }
 
+    function changeVerb(id, delta) {
+      if (delta > 0) {
+        const check = canIncreaseHab(verbValues[id]);
+        if (!check.ok) return;
+        verbValues[id] = check.next;
+      } else {
+        verbValues[id] = lowerHab(verbValues[id]);
+      }
+      render();
+    }
+
+    function changeTarget(id, delta) {
+      if (delta > 0) {
+        const check = canIncreaseHab(targetValues[id]);
+        if (!check.ok) return;
+        targetValues[id] = check.next;
+      } else {
+        targetValues[id] = lowerHab(targetValues[id]);
+      }
+      render();
+    }
+
+    function setCanal(id) {
+      if (ATTRIBUTES.some(a => a.id === id)) canal = id;
+      render();
+    }
+
     function resetAll() {
       ATTRIBUTES.forEach(a => attrValues[a.id] = 4);
       COMPETENCES.forEach(c => compValues[c.id] = 3);
+      VERBS.forEach(v => verbValues[v.id] = 0);
+      TARGETS.forEach(t => targetValues[t.id] = 0);
+      canal = 'volonte';
       render();
     }
 
@@ -1031,33 +1503,43 @@
       document.getElementById('settingsPanel').classList.toggle('open');
     }
 
+    // Un champ absent du panneau ne doit jamais interrompre la lecture des réglages :
+    // chaque valeur retombe sur son défaut si l'entrée n'existe pas.
+    function num(id, fallback) {
+      const el = document.getElementById(id);
+      if (!el) return fallback;
+      const v = parseFloat(el.value);
+      return isNaN(v) ? fallback : v;
+    }
+
     function updateSettings() {
-      config.budget = parseInt(document.getElementById('s_budget').value) || 60;
+      config.budget = num('s_budget', 100) || 100;
       config.attrCosts = [0,
-        parseInt(document.getElementById('s_ac1').value) || 0,
-        parseInt(document.getElementById('s_ac2').value) || 0,
-        parseInt(document.getElementById('s_ac3').value) || 0,
+        num('s_ac1', -5), num('s_ac2', -3), num('s_ac3', -2),
         0, // Commun (4) = baseline = 0
-        parseInt(document.getElementById('s_ac5').value) || 0,
-        parseInt(document.getElementById('s_ac6').value) || 0,
-        parseInt(document.getElementById('s_ac7').value) || 0,
+        num('s_ac5', 5), num('s_ac6', 9), num('s_ac7', 12),
       ];
-      config.compCosts = [0, 0,
-        parseInt(document.getElementById('s_cc2').value) || 0,
-        parseInt(document.getElementById('s_cc3').value) || 0,
-        parseInt(document.getElementById('s_cc4').value) || 0,
-        parseInt(document.getElementById('s_cc5').value) || 0,
-        parseInt(document.getElementById('s_cc6').value) || 0,
+      config.compCosts = [0,
+        num('s_cc1', -3), num('s_cc2', -1),
+        0, // Ordinaire (3) = socle = 0
+        num('s_cc4', 3), num('s_cc5', 5), num('s_cc6', 8),
       ];
       config.maxAttr = {
-        7: parseInt(document.getElementById('s_max_a7').value) || 0,
-        6: parseInt(document.getElementById('s_max_a6').value) || 0,
-        5: parseInt(document.getElementById('s_max_a5').value) || 0,
+        7: num('s_max_a7', 1),
+        6: num('s_max_a6', 2),
+        5: num('s_max_a5', 3),
       };
       config.maxComp = {
-        6: parseInt(document.getElementById('s_max_c6').value) || 0,
-        5: parseInt(document.getElementById('s_max_c5').value) || 0,
-        4: parseInt(document.getElementById('s_max_c4').value) || 0,
+        6: num('s_max_c6', 2),
+        5: num('s_max_c5', 3),
+      };
+      config.habCosts = [0,
+        num('s_h1', 2), num('s_h2', 4), num('s_h3', 7), num('s_h4', 11), num('s_h5', 16),
+      ];
+      config.habMax = num('s_hmax', 4) || 4;
+      config.maxHab = {
+        4: num('s_mh4', 1),
+        3: num('s_mh3', 2),
       };
       render();
     }
@@ -1074,7 +1556,7 @@
         art: 'Art', athletisme: 'Athlétisme', autorite: 'Autorité',
         apothicairerie: 'Apothicairerie', combat: 'Combat',
         discretion: 'Discrétion', dressage: 'Dressage', eloquence: 'Éloquence',
-        erudition: 'Érudition', escamotage: 'Escamotage', esoterisme: 'Ésotérisme',
+        erudition: 'Érudition', escamotage: 'Escamotage',
         medecine: 'Médecine', recherche: 'Recherche', resilience: 'Résilience',
         sagacite: 'Sagacité', strategie: 'Stratégie', technologie: 'Technologie',
         tir: 'Tir', tromperie: 'Tromperie', vigilance: 'Vigilance'
@@ -1112,6 +1594,9 @@
       const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
       const elanMax = (ELAN_CONTRIB[attrValues['endurance']] || 5) + (ELAN_CONTRIB[attrValues['volonte']] || 5);
 
+      const verbs = VERBS.map(v => ({ id: v.id, level: verbValues[v.id] }));
+      const targets = TARGETS.map(t => ({ id: t.id, level: targetValues[t.id] }));
+
       const attributes = {
           puissance: attrValues['puissance'],
           vivacite: attrValues['vivacite'],
@@ -1126,7 +1611,9 @@
       let state;
       if (importedFiche) {
         // Mise à jour : tout est conservé, seuls attributs et niveaux changent
-        state = { ...importedFiche, attributes, skills };
+        state = { ...importedFiche, attributes, skills, verbs, targets };
+        state.magic = { ...(importedFiche.magic || {}), canal };
+        delete state.magic.portee;   // la portée ne fait plus partie du système
         // L'Élan maximum suit les attributs, en gardant la valeur courante plafonnée
         const prev = importedFiche.counters?.health || {};
         state.counters = {
@@ -1144,10 +1631,12 @@
           },
           customResources: [],
           skills,
+          verbs,
+          targets,
           wounds: [],
           objects: [],
           notes: '',
-          magic: { reserveUsed: 0, mjDice: 0 },
+          magic: { reserveUsed: 0, mjDice: 0, reserveMaxOverride: null, canal },
           vitesseBonus: 0,
           activeSpells: [],
           currentModal: null
@@ -1212,7 +1701,7 @@
       // Anciens noms encore présents dans certaines sauvegardes
       const aliases = {
         'Bagarre': 'combat', 'Combat': 'combat',
-        'Ésotérisme': 'esoterisme', 'Éloquence': 'eloquence', 'Érudition': 'erudition',
+        'Éloquence': 'eloquence', 'Érudition': 'erudition',
         'Résilience': 'resilience', 'Sagacité': 'sagacite', 'Stratégie': 'strategie',
         'Athlétisme': 'athletisme', 'Autorité': 'autorite', 'Discrétion': 'discretion',
         'Médecine': 'medecine', 'Apothicairerie': 'apothicairerie',
@@ -1223,6 +1712,22 @@
           if (k in attrValues) attrValues[k] = Math.max(1, Math.min(7, Number(v) || 4));
         });
       }
+
+      // Verbes, cibles et canal : on repart du référentiel courant, les entrées
+      // inconnues d'une version antérieure sont écartées.
+      VERBS.forEach(v => verbValues[v.id] = 0);
+      TARGETS.forEach(t => targetValues[t.id] = 0);
+      const readLevels = (arr, values) => {
+        (Array.isArray(arr) ? arr : []).forEach(x => {
+          if (x && x.id && values[x.id] !== undefined) {
+            values[x.id] = Math.max(0, Math.min(MAX_RANK, Number(x.level) || 0));
+          }
+        });
+      };
+      readLevels(data.verbs, verbValues);
+      readLevels(data.targets, targetValues);
+      const loadedCanal = data.magic && data.magic.canal;
+      canal = ATTRIBUTES.some(a => a.id === loadedCanal) ? loadedCanal : 'volonte';
 
       const ignored = [];
       if (Array.isArray(data.skills)) {
@@ -1257,6 +1762,12 @@
       [6, 5, 4].forEach(lv => {
         const n = compCountAt(lv);
         if (config.maxComp[lv] !== undefined && n > config.maxComp[lv]) { config.maxComp[lv] = n; relaxed = true; }
+      });
+      const topHab = Math.max(0, ...VERBS.map(v => verbValues[v.id]), ...TARGETS.map(t => targetValues[t.id]));
+      if (topHab > config.habMax) { config.habMax = topHab; relaxed = true; }
+      [5, 4, 3].forEach(lv => {
+        const n = habCountAt(lv);
+        if (config.maxHab[lv] !== undefined && n > config.maxHab[lv]) { config.maxHab[lv] = n; relaxed = true; }
       });
       return relaxed;
     }
