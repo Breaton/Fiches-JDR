@@ -561,12 +561,56 @@
 
         /* ---------- Stockage ---------- */
         function loadRoster() { try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { return {}; } }
-        function saveRoster(r) { try { localStorage.setItem(STORE_KEY, JSON.stringify(r)); } catch (e) { toast('Stockage local indisponible', true); } }
+        const isQuota = e => e && (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED' || e.code === 22 || e.code === 1014);
+        function saveRoster(r) {
+            try { localStorage.setItem(STORE_KEY, JSON.stringify(r)); return true; }
+            catch (e) {
+                if (isQuota(e)) {
+                    // Plan B : on sauve sans les portraits plutôt que de tout perdre
+                    const lite = {};
+                    Object.keys(r).forEach(k => lite[k] = Object.assign({}, r[k], { image: null }));
+                    try { localStorage.setItem(STORE_KEY, JSON.stringify(lite)); toast('Mémoire du navigateur pleine : portraits non conservés', true); return true; }
+                    catch (e2) { toast('Mémoire du navigateur pleine : vide le suivi puis rafraîchis', true); }
+                } else {
+                    toast('Stockage local bloqué par le navigateur (' + (e.name || 'erreur') + ')', true);
+                }
+                console.error('saveRoster', e);
+                return false;
+            }
+        }
+
+        /* Portraits : réduits en vignette 96×96 JPEG avant stockage (quelques Ko au lieu de plusieurs centaines) */
+        const THUMB = 96;
+        function makeThumb(src) {
+            return new Promise(resolve => {
+                if (!src || typeof src !== 'string') return resolve(null);
+                if (src.length < 15000) return resolve(src); // déjà petite
+                const img = new Image();
+                img.onload = () => {
+                    try {
+                        const c = document.createElement('canvas'); c.width = c.height = THUMB;
+                        const side = Math.min(img.naturalWidth, img.naturalHeight);
+                        const sx = (img.naturalWidth - side) / 2, sy = (img.naturalHeight - side) / 2;
+                        c.getContext('2d').drawImage(img, sx, sy, side, side, 0, 0, THUMB, THUMB);
+                        resolve(c.toDataURL('image/jpeg', 0.8));
+                    } catch (e) { resolve(null); }
+                };
+                img.onerror = () => resolve(null);
+                img.src = src;
+            });
+        }
+        async function shrinkStoredPortraits() {
+            let raw; try { raw = localStorage.getItem(STORE_KEY); } catch (e) { return; }
+            if (!raw || raw.length < 200000) return;
+            const r = loadRoster();
+            for (const k of Object.keys(r)) r[k].image = await makeThumb(r[k].image);
+            saveRoster(r); render();
+        }
         function upsert(rec) { if (!rec) return; const r = loadRoster(); r[norm(rec.name)] = rec; saveRoster(r); }
         function removeRecord(k) { const r = loadRoster(); delete r[k]; saveRoster(r); render(); }
         function clearRoster() {
             if (!confirm('Vider le suivi ? Les dossiers des joueurs ne sont pas touchés.')) return;
-            localStorage.removeItem(STORE_KEY); render(); toast('Suivi vidé');
+            try { localStorage.removeItem(STORE_KEY); } catch (e) {} render(); toast('Suivi vidé');
         }
 
         /* ==========================================================
@@ -756,7 +800,7 @@
                         const raw = await fetch(f.url, { headers: ghHeaders(true), cache: 'no-store' });
                         if (!raw.ok) { console.warn('Lecture impossible', f.name, raw.status); continue; }
                         const rec = normalizeRecord(JSON.parse(await raw.text()));
-                        if (rec) { upsert(rec); ok++; }
+                        if (rec) { rec.image = await makeThumb(rec.image); upsert(rec); ok++; }
                     } catch (e) { console.warn('Fichier illisible', f.name, e); }
                 }
                 render();
@@ -783,7 +827,7 @@
         /* ========================== INIT ========================== */
         renderReference();
         render();
-        pullFromGitHub(false);
+        shrinkStoredPortraits().finally(() => pullFromGitHub(false));
     </script>
 </body>
 
