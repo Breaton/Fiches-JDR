@@ -855,6 +855,14 @@
             background: var(--panel-3);
             color: var(--ink);
         }
+    
+        /* Icônes d'axe des attributs */
+        .attr-ico { display: inline-block; vertical-align: -3px; flex: none; margin-right: 6px; }
+        .attr-axis-head { display: flex; align-items: center; gap: 7px; margin: 14px 0 6px; padding: 0 2px 5px;
+            border-bottom: 1px solid var(--axis); color: var(--axis); font-size: 0.78em; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase; }
+        .attr-axis-head:first-child { margin-top: 2px; }
+        .attr-axis-head .attr-ico { margin-right: 0; }
     </style>
 </head>
 
@@ -1146,15 +1154,45 @@
         const VITESSE_TABLE = { 1: 10, 2: 15, 3: 20, 4: 30, 5: 35, 6: 40, 7: 50, 8: 60 };
         const SOCLE_DICE = 3;
 
+        // ── Axes des attributs : Imposer / Tenir / Réagir / Maîtriser (corps = disque plein, esprit = cercle) ──
+        const ATTR_AXES = [
+            { id: 'imposer', name: 'Imposer', color: '#E24B4A', corps: 'puissance', esprit: 'presence', g: '<path d="M-15 0H8"/><path d="M0 -9L9 0L0 9"/><path d="M15 -14V14"/>' },
+            { id: 'tenir', name: 'Tenir', color: '#378ADD', corps: 'endurance', esprit: 'volonte', g: '<path d="M0 -17L13 -11V0C13 9 7 14 0 17C-7 14 -13 9 -13 0V-11Z"/>' },
+            { id: 'reagir', name: 'Réagir', color: '#BA7517', corps: 'vivacite', esprit: 'intuition', g: '<path d="M4 -18L-9 2H0L-4 18L9 -2H0Z"/>' },
+            { id: 'maitriser', name: 'Maîtriser', color: '#7F77DD', corps: 'precision', esprit: 'intelligence', g: '<path d="M0 -17L15 0L0 17L-15 0Z"/><circle r="3" fill="FG" stroke="none"/>' }
+        ];
+        const ATTR_AXIS_OF = {};
+        ATTR_AXES.forEach(ax => { ATTR_AXIS_OF[ax.corps] = [ax, 'corps']; ATTR_AXIS_OF[ax.esprit] = [ax, 'esprit']; });
+        function attrIcon(id, size) {
+            size = size || 16;
+            const e = ATTR_AXIS_OF[id];
+            if (!e) return '';
+            const ax = e[0], corps = e[1] === 'corps', fg = corps ? '#FFFFFF' : ax.color;
+            const ring = corps ? `<circle r="30" fill="${ax.color}"/>` : `<circle r="28" fill="none" stroke="${ax.color}" stroke-width="4"/>`;
+            return `<svg class="attr-ico" width="${size}" height="${size}" viewBox="-32 -32 64 64" aria-hidden="true">${ring}<g transform="scale(0.85)" fill="none" stroke="${fg}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${ax.g.split('FG').join(fg)}</g></svg>`;
+        }
+        function axisIcon(ax, size) {
+            size = size || 15;
+            return `<svg class="attr-ico" width="${size}" height="${size}" viewBox="-20 -20 40 40" aria-hidden="true"><g fill="none" stroke="${ax.color}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${ax.g.split('FG').join(ax.color)}</g></svg>`;
+        }
+        function axisHeadHtml(ax) {
+            return `<div class="attr-axis-head" style="--axis:${ax.color}">${axisIcon(ax)}<span>${ax.name}</span></div>`;
+        }
+        // Rend une liste d'attributs regroupée par axe (en-tête + corps + esprit)
+        function axisGroupedHtml(list, rowFn) {
+            return ATTR_AXES.map(ax => axisHeadHtml(ax) + list.filter(a => ATTR_AXIS_OF[a.id] && ATTR_AXIS_OF[a.id][0] === ax).map(rowFn).join('')).join('');
+        }
+
         const ATTRIBUTES = [
-            { id: 'puissance', name: 'Puissance', alt: 'Force brute · masse · contrainte physique' },
-            { id: 'vivacite', name: 'Vivacité', alt: 'Réflexes · esquive · initiative' },
-            { id: 'precision', name: 'Précision', alt: 'Justesse du geste · visée · finesse' },
+            // Ordre par axe : Imposer, Tenir, Réagir, Maîtriser (corps puis esprit)
+            { id: 'puissance', name: 'Force', alt: 'Force brute · masse · contrainte physique' },
+            { id: 'presence', name: 'Charisme', alt: 'Persuasion · tromperie · intimidation' },
             { id: 'endurance', name: 'Endurance', alt: 'Encaisser · tenir dans la durée' },
-            { id: 'intelligence', name: 'Intelligence', alt: 'Analyse · déduction · planification' },
-            { id: 'intuition', name: 'Intuition', alt: 'Perception · pressentiment · lecture' },
             { id: 'volonte', name: 'Volonté', alt: 'Sang-froid · détermination · ne plus céder' },
-            { id: 'presence', name: 'Présence', alt: 'Aura · autorité · magnétisme' }
+            { id: 'vivacite', name: 'Vivacité', alt: 'Réflexes · esquive · initiative' },
+            { id: 'intuition', name: 'Intuition', alt: 'Perception · pressentiment · lecture' },
+            { id: 'precision', name: 'Finesse', alt: 'Justesse du geste · visée · discrétion' },
+            { id: 'intelligence', name: 'Intelligence', alt: 'Analyse · déduction · planification' }
         ];
 
         const COMPETENCES = [
@@ -1336,11 +1374,11 @@
         function renderAttrs() {
             document.getElementById('attrCaps').innerHTML = capsHtml(ATTRIBUTES, attrValues, config.maxAttr,
                 { 5: 'Élevé', 6: 'Supérieur', 7: 'Exceptionnel' });
-            document.getElementById('attrList').innerHTML = ATTRIBUTES.map(a => {
+            document.getElementById('attrList').innerHTML = axisGroupedHtml(ATTRIBUTES, a => {
                 const v = attrValues[a.id], lv = ATTR_LEVELS[v], c = attrCost(v);
                 const up = canRaise(ATTRIBUTES, attrValues, a.id, 7, config.maxAttr, attrCost);
                 return `<div class="row">
-                    <div><div class="r-name">${a.name}</div><div class="r-alt">${a.alt}</div></div>
+                    <div><div class="r-name">${attrIcon(a.id)}${a.name}</div><div class="r-alt">${a.alt}</div></div>
                     <div class="pips">${pips(v, 8)}</div>
                     <div class="r-lvl" style="color:${lv.color}">${lv.name}</div>
                     <div class="r-cost">${c < 0 ? `<b class="free">${c}</b>` : `<b>${c}</b>`} pts</div>
@@ -1351,7 +1389,7 @@
                             title="${up.ok ? (up.skipped ? 'Palier saturé : monte directement au niveau ' + up.next : '') : up.reason}">${up.ok && up.skipped ? '⇈' : '+'}</button>
                     </div>
                 </div>`;
-            }).join('');
+            });
         }
 
         function renderComps() {

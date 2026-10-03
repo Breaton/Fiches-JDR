@@ -253,6 +253,10 @@
         ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: var(--hull); }
         ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+    
+        /* Icônes d'axe des attributs */
+        .attr-ico { display: inline-block; vertical-align: -3px; flex: none; margin-right: 6px; }
+        .attr-cell .an .attr-ico { margin-right: 5px; vertical-align: -2px; }
     </style>
 </head>
 
@@ -354,10 +358,39 @@
         const VITESSE_TABLE = { 1:10, 2:15, 3:20, 4:30, 5:35, 6:40, 7:50, 8:60 };
         const SOCLE_DICE = 3;
 
-        const ATTR_ORDER = ['puissance','vivacite','precision','endurance','intelligence','intuition','volonte','presence'];
+        // ── Axes des attributs : Imposer / Tenir / Réagir / Maîtriser (corps = disque plein, esprit = cercle) ──
+        const ATTR_AXES = [
+            { id: 'imposer', name: 'Imposer', color: '#E24B4A', corps: 'puissance', esprit: 'presence', g: '<path d="M-15 0H8"/><path d="M0 -9L9 0L0 9"/><path d="M15 -14V14"/>' },
+            { id: 'tenir', name: 'Tenir', color: '#378ADD', corps: 'endurance', esprit: 'volonte', g: '<path d="M0 -17L13 -11V0C13 9 7 14 0 17C-7 14 -13 9 -13 0V-11Z"/>' },
+            { id: 'reagir', name: 'Réagir', color: '#BA7517', corps: 'vivacite', esprit: 'intuition', g: '<path d="M4 -18L-9 2H0L-4 18L9 -2H0Z"/>' },
+            { id: 'maitriser', name: 'Maîtriser', color: '#7F77DD', corps: 'precision', esprit: 'intelligence', g: '<path d="M0 -17L15 0L0 17L-15 0Z"/><circle r="3" fill="FG" stroke="none"/>' }
+        ];
+        const ATTR_AXIS_OF = {};
+        ATTR_AXES.forEach(ax => { ATTR_AXIS_OF[ax.corps] = [ax, 'corps']; ATTR_AXIS_OF[ax.esprit] = [ax, 'esprit']; });
+        function attrIcon(id, size) {
+            size = size || 16;
+            const e = ATTR_AXIS_OF[id];
+            if (!e) return '';
+            const ax = e[0], corps = e[1] === 'corps', fg = corps ? '#FFFFFF' : ax.color;
+            const ring = corps ? `<circle r="30" fill="${ax.color}"/>` : `<circle r="28" fill="none" stroke="${ax.color}" stroke-width="4"/>`;
+            return `<svg class="attr-ico" width="${size}" height="${size}" viewBox="-32 -32 64 64" aria-hidden="true">${ring}<g transform="scale(0.85)" fill="none" stroke="${fg}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${ax.g.split('FG').join(fg)}</g></svg>`;
+        }
+        function axisIcon(ax, size) {
+            size = size || 15;
+            return `<svg class="attr-ico" width="${size}" height="${size}" viewBox="-20 -20 40 40" aria-hidden="true"><g fill="none" stroke="${ax.color}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${ax.g.split('FG').join(ax.color)}</g></svg>`;
+        }
+        function axisHeadHtml(ax) {
+            return `<div class="attr-axis-head" style="--axis:${ax.color}">${axisIcon(ax)}<span>${ax.name}</span></div>`;
+        }
+        // Rend une liste d'attributs regroupée par axe (en-tête + corps + esprit)
+        function axisGroupedHtml(list, rowFn) {
+            return ATTR_AXES.map(ax => axisHeadHtml(ax) + list.filter(a => ATTR_AXIS_OF[a.id] && ATTR_AXIS_OF[a.id][0] === ax).map(rowFn).join('')).join('');
+        }
+
+        const ATTR_ORDER = ['puissance','presence','endurance','volonte','vivacite','intuition','precision','intelligence'];
         const ATTR_LABEL = {
-            puissance:'Puissance', vivacite:'Vivacité', precision:'Précision', endurance:'Endurance',
-            intelligence:'Intelligence', intuition:'Intuition', volonte:'Volonté', presence:'Présence'
+            puissance:'Force', vivacite:'Vivacité', precision:'Finesse', endurance:'Endurance',
+            intelligence:'Intelligence', intuition:'Intuition', volonte:'Volonté', presence:'Charisme'
         };
 
         const CLASSES = {
@@ -378,14 +411,14 @@
         };
 
         const ATTR_DEFS = [
-            ['Puissance', "Force brute sur le monde matériel : frapper, soulever, briser, contraindre par la masse."],
-            ['Vivacité', "Agir et réagir dans l'instant : réflexes, esquive, initiative, saisir une fenêtre."],
-            ['Précision', "La justesse du geste produit : viser, crocheter, suturer, se mouvoir sans bruit."],
-            ['Endurance', "La résistance de la chair dans la durée : encaisser, persévérer, tenir l'effort long."],
-            ['Intelligence', "Traiter le monde par l'analyse : comprendre, déduire, planifier, déchiffrer."],
-            ['Intuition', "La justesse de la perception reçue : sentir les intentions, remarquer le caché, anticiper."],
-            ['Volonté', "L'esprit qui ne cède pas : sang-froid, détermination. Fixe la réserve de Charge."],
-            ['Présence', "Projeter son aura sur les esprits : marquer, inspirer, charmer, intimider."]
+            ['Force', "Force brute sur le monde matériel : frapper, soulever, briser, contraindre par la masse.", 'puissance'],
+            ['Charisme', "Agir sur les esprits par la force de sa personnalité : convaincre, charmer, tromper, intimider, négocier.", 'presence'],
+            ['Endurance', "La résistance de la chair dans la durée : encaisser, persévérer, tenir l'effort long.", 'endurance'],
+            ['Volonté', "L'esprit qui ne cède pas : sang-froid, détermination. Fixe la réserve de Charge.", 'volonte'],
+            ['Vivacité', "Agir et réagir dans l'instant : réflexes, esquive, initiative, saisir une fenêtre.", 'vivacite'],
+            ['Intuition', "La justesse de la perception reçue : sentir les intentions, remarquer le caché, anticiper.", 'intuition'],
+            ['Finesse', "La justesse du geste produit : viser, crocheter, suturer, se mouvoir sans bruit.", 'precision'],
+            ['Intelligence', "Traiter le monde par l'analyse : comprendre, déduire, planifier, déchiffrer.", 'intelligence']
         ];
         const SKILL_DEFS = [
             ['Art', "Créer ou exécuter une œuvre, et reconnaître la valeur d'une création."],
@@ -633,7 +666,7 @@
 
             const attrHtml = ATTR_ORDER.map(a => {
                 const lv = attrLevel(r.attributes[a]);
-                return `<div class="attr-cell"><span class="an">${ATTR_LABEL[a]}</span>
+                return `<div class="attr-cell"><span class="an">${attrIcon(a, 14)}${ATTR_LABEL[a]}</span>
                     <span class="av" style="color:${lv.color}">${lv.name}<sub>${r.attributes[a]}</sub></span></div>`;
             }).join('');
 
@@ -741,7 +774,7 @@
 
         function renderReference() {
             const fill = (id, defs) => document.getElementById(id).innerHTML =
-                defs.map(([n, d]) => `<div class="ref-item"><b>${n}</b> <span>- ${d}</span></div>`).join('');
+                defs.map(([n, d, id]) => `<div class="ref-item"><b>${id ? attrIcon(id, 14) : ''}${n}</b> <span>- ${d}</span></div>`).join('');
             fill('ref-attr', ATTR_DEFS); fill('ref-skill', SKILL_DEFS);
             fill('ref-vec', VECTOR_DEFS); fill('ref-dom', DOMAIN_DEFS);
         }

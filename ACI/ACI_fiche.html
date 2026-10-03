@@ -2501,6 +2501,17 @@
                 grid-template-columns: 1fr;
             }
         }
+    
+        /* Icônes d'axe des attributs */
+        .attr-ico { display: inline-block; vertical-align: -3px; flex: none; margin-right: 6px; }
+        .attr-axis-head { display: flex; align-items: center; gap: 7px; margin: 14px 0 6px; padding: 0 2px 5px;
+            border-bottom: 1px solid var(--axis); color: var(--axis); font-size: 0.78em; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase; }
+        .attr-axis-head:first-child { margin-top: 2px; }
+        .attr-axis-head .attr-ico { margin-right: 0; }
+        .attr-grid .attr-axis-head { grid-column: 1 / -1; margin: 6px 0 0; }
+        .attr-grid .attr-axis-head:first-child { margin-top: 0; }
+        .attr-name { display: flex; align-items: center; }
     </style>
 </head>
 
@@ -3229,15 +3240,45 @@
            A · TABLES DE RÉFÉRENCE
            ========================================================== */
 
+        // ── Axes des attributs : Imposer / Tenir / Réagir / Maîtriser (corps = disque plein, esprit = cercle) ──
+        const ATTR_AXES = [
+            { id: 'imposer', name: 'Imposer', color: '#E24B4A', corps: 'puissance', esprit: 'presence', g: '<path d="M-15 0H8"/><path d="M0 -9L9 0L0 9"/><path d="M15 -14V14"/>' },
+            { id: 'tenir', name: 'Tenir', color: '#378ADD', corps: 'endurance', esprit: 'volonte', g: '<path d="M0 -17L13 -11V0C13 9 7 14 0 17C-7 14 -13 9 -13 0V-11Z"/>' },
+            { id: 'reagir', name: 'Réagir', color: '#BA7517', corps: 'vivacite', esprit: 'intuition', g: '<path d="M4 -18L-9 2H0L-4 18L9 -2H0Z"/>' },
+            { id: 'maitriser', name: 'Maîtriser', color: '#7F77DD', corps: 'precision', esprit: 'intelligence', g: '<path d="M0 -17L15 0L0 17L-15 0Z"/><circle r="3" fill="FG" stroke="none"/>' }
+        ];
+        const ATTR_AXIS_OF = {};
+        ATTR_AXES.forEach(ax => { ATTR_AXIS_OF[ax.corps] = [ax, 'corps']; ATTR_AXIS_OF[ax.esprit] = [ax, 'esprit']; });
+        function attrIcon(id, size) {
+            size = size || 16;
+            const e = ATTR_AXIS_OF[id];
+            if (!e) return '';
+            const ax = e[0], corps = e[1] === 'corps', fg = corps ? '#FFFFFF' : ax.color;
+            const ring = corps ? `<circle r="30" fill="${ax.color}"/>` : `<circle r="28" fill="none" stroke="${ax.color}" stroke-width="4"/>`;
+            return `<svg class="attr-ico" width="${size}" height="${size}" viewBox="-32 -32 64 64" aria-hidden="true">${ring}<g transform="scale(0.85)" fill="none" stroke="${fg}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${ax.g.split('FG').join(fg)}</g></svg>`;
+        }
+        function axisIcon(ax, size) {
+            size = size || 15;
+            return `<svg class="attr-ico" width="${size}" height="${size}" viewBox="-20 -20 40 40" aria-hidden="true"><g fill="none" stroke="${ax.color}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${ax.g.split('FG').join(ax.color)}</g></svg>`;
+        }
+        function axisHeadHtml(ax) {
+            return `<div class="attr-axis-head" style="--axis:${ax.color}">${axisIcon(ax)}<span>${ax.name}</span></div>`;
+        }
+        // Rend une liste d'attributs regroupée par axe (en-tête + corps + esprit)
+        function axisGroupedHtml(list, rowFn) {
+            return ATTR_AXES.map(ax => axisHeadHtml(ax) + list.filter(a => ATTR_AXIS_OF[a.id] && ATTR_AXIS_OF[a.id][0] === ax).map(rowFn).join('')).join('');
+        }
+
         const ATTRIBUTES = [
-            { id: 'puissance', name: 'Puissance', short: 'PUI' },
-            { id: 'vivacite', name: 'Vivacité', short: 'VIV' },
-            { id: 'precision', name: 'Précision', short: 'PRE' },
+            // Ordre par axe : Imposer, Tenir, Réagir, Maîtriser (corps puis esprit)
+            { id: 'puissance', name: 'Force', short: 'FOR' },
+            { id: 'presence', name: 'Charisme', short: 'CHA' },
             { id: 'endurance', name: 'Endurance', short: 'END' },
-            { id: 'intelligence', name: 'Intelligence', short: 'INT' },
-            { id: 'intuition', name: 'Intuition', short: 'ITU' },
             { id: 'volonte', name: 'Volonté', short: 'VOL' },
-            { id: 'presence', name: 'Présence', short: 'PRS' }
+            { id: 'vivacite', name: 'Vivacité', short: 'VIV' },
+            { id: 'intuition', name: 'Intuition', short: 'ITU' },
+            { id: 'precision', name: 'Finesse', short: 'FIN' },
+            { id: 'intelligence', name: 'Intelligence', short: 'INT' }
         ];
 
         // Composition du d12 : [Éclat, Succès, Vide, Revers, Revers+]
@@ -3656,7 +3697,13 @@
         function renderAttributes() {
             const grid = document.getElementById('attr-grid');
             grid.innerHTML = '';
+            let lastAxis = null;
             ATTRIBUTES.forEach(a => {
+                const ax = ATTR_AXIS_OF[a.id] && ATTR_AXIS_OF[a.id][0];
+                if (ax && ax !== lastAxis) {
+                    grid.insertAdjacentHTML('beforeend', axisHeadHtml(ax));
+                    lastAxis = ax;
+                }
                 const val = appState.attributes[a.id];
                 const lv = getAttributeLevel(val);
                 const [e, s, v, r, x] = lv.faces;
@@ -3664,7 +3711,7 @@
                 row.className = 'attr-row';
                 row.title = `${a.name} ${val} · ✦${e} ●${s} ○${v}` + (r ? ` ▼${r}` : '') + (x ? ` ▼▼${x}` : '');
                 row.innerHTML = `
-                    <span class="attr-name">${a.short} · ${a.name}</span>
+                    <span class="attr-name">${attrIcon(a.id)}${a.short} · ${a.name}</span>
                     <span class="attr-val" style="color:${lv.color}">${lv.name}<sub>${val}</sub></span>
                     <span class="step">
                         <button onclick="modAttr('${a.id}',-1)">−</button>

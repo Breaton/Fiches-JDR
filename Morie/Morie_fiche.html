@@ -4203,6 +4203,14 @@
             opacity: 0.3;
             cursor: not-allowed;
         }
+    
+        /* Attributs regroupés par axe */
+        .attr-axis { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+        .attr-axis-head { display: flex; align-items: center; justify-content: center; gap: 6px; padding-bottom: 6px;
+            border-bottom: 2px solid var(--axis); color: var(--axis); font-size: 0.72em; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase; }
+        .attr-ico { display: inline-block; vertical-align: -3px; flex: none; }
+        .attribute-name .attr-ico { display: block; margin: 0 auto 6px; }
     </style>
 </head>
 
@@ -4445,69 +4453,81 @@
                             style="background: rgba(45, 58, 92, 0.15); color: var(--slate-blue);">⬡</span>
                         Attributs
                     </div>
-                    <div class="attributes-grid">
-                        <div class="attribute-item">
-                            <div class="attribute-name">Puissance</div>
-                            <div class="attribute-value" id="attr-puissance">5</div>
-                            <div class="attribute-controls">
-                                <button class="attribute-btn" onclick="modifyAttribute('puissance', -1)">−</button>
-                                <button class="attribute-btn" onclick="modifyAttribute('puissance', 1)">+</button>
+                    <div class="attributes-grid attributes-axes">
+                        <div class="attr-axis" style="--axis:#E24B4A">
+                            <div class="attr-axis-head"><svg class="attr-ico" width="15" height="15" viewBox="-20 -20 40 40" aria-hidden="true"><g fill="none" stroke="#E24B4A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M-15 0H8"/><path d="M0 -9L9 0L0 9"/><path d="M15 -14V14"/></g></svg><span>Imposer</span></div>
+                            <div class="attribute-item" title="Imposer · corps">
+                                <div class="attribute-name"><svg class="attr-ico" width="22" height="22" viewBox="-32 -32 64 64" aria-hidden="true"><circle r="30" fill="#E24B4A"/><g transform="scale(0.85)" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M-15 0H8"/><path d="M0 -9L9 0L0 9"/><path d="M15 -14V14"/></g></svg>Force</div>
+                                <div class="attribute-value" id="attr-puissance">5</div>
+                                <div class="attribute-controls">
+                                    <button class="attribute-btn" onclick="modifyAttribute('puissance', -1)">−</button>
+                                    <button class="attribute-btn" onclick="modifyAttribute('puissance', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="attribute-item" title="Imposer · esprit">
+                                <div class="attribute-name"><svg class="attr-ico" width="22" height="22" viewBox="-32 -32 64 64" aria-hidden="true"><circle r="28" fill="none" stroke="#E24B4A" stroke-width="4"/><g transform="scale(0.85)" fill="none" stroke="#E24B4A" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M-15 0H8"/><path d="M0 -9L9 0L0 9"/><path d="M15 -14V14"/></g></svg>Charisme</div>
+                                <div class="attribute-value" id="attr-presence">5</div>
+                                <div class="attribute-controls">
+                                    <button class="attribute-btn" onclick="modifyAttribute('presence', -1)">−</button>
+                                    <button class="attribute-btn" onclick="modifyAttribute('presence', 1)">+</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Vivacité</div>
-                            <div class="attribute-value" id="attr-vivacite">5</div>
-                            <div class="attribute-controls">
-                                <button class="attribute-btn" onclick="modifyAttribute('vivacite', -1)">−</button>
-                                <button class="attribute-btn" onclick="modifyAttribute('vivacite', 1)">+</button>
+                        <div class="attr-axis" style="--axis:#378ADD">
+                            <div class="attr-axis-head"><svg class="attr-ico" width="15" height="15" viewBox="-20 -20 40 40" aria-hidden="true"><g fill="none" stroke="#378ADD" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 -17L13 -11V0C13 9 7 14 0 17C-7 14 -13 9 -13 0V-11Z"/></g></svg><span>Tenir</span></div>
+                            <div class="attribute-item" title="Tenir · corps">
+                                <div class="attribute-name"><svg class="attr-ico" width="22" height="22" viewBox="-32 -32 64 64" aria-hidden="true"><circle r="30" fill="#378ADD"/><g transform="scale(0.85)" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M0 -17L13 -11V0C13 9 7 14 0 17C-7 14 -13 9 -13 0V-11Z"/></g></svg>Endurance</div>
+                                <div class="attribute-value" id="attr-endurance">5</div>
+                                <div class="attribute-controls">
+                                    <button class="attribute-btn" onclick="modifyAttribute('endurance', -1)">−</button>
+                                    <button class="attribute-btn" onclick="modifyAttribute('endurance', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="attribute-item" title="Tenir · esprit">
+                                <div class="attribute-name"><svg class="attr-ico" width="22" height="22" viewBox="-32 -32 64 64" aria-hidden="true"><circle r="28" fill="none" stroke="#378ADD" stroke-width="4"/><g transform="scale(0.85)" fill="none" stroke="#378ADD" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M0 -17L13 -11V0C13 9 7 14 0 17C-7 14 -13 9 -13 0V-11Z"/></g></svg>Volonté</div>
+                                <div class="attribute-value" id="attr-volonte">5</div>
+                                <div class="attribute-controls">
+                                    <button class="attribute-btn" onclick="modifyAttribute('volonte', -1)">−</button>
+                                    <button class="attribute-btn" onclick="modifyAttribute('volonte', 1)">+</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Précision</div>
-                            <div class="attribute-value" id="attr-precision">5</div>
-                            <div class="attribute-controls">
-                                <button class="attribute-btn" onclick="modifyAttribute('precision', -1)">−</button>
-                                <button class="attribute-btn" onclick="modifyAttribute('precision', 1)">+</button>
+                        <div class="attr-axis" style="--axis:#BA7517">
+                            <div class="attr-axis-head"><svg class="attr-ico" width="15" height="15" viewBox="-20 -20 40 40" aria-hidden="true"><g fill="none" stroke="#BA7517" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 -18L-9 2H0L-4 18L9 -2H0Z"/></g></svg><span>Réagir</span></div>
+                            <div class="attribute-item" title="Réagir · corps">
+                                <div class="attribute-name"><svg class="attr-ico" width="22" height="22" viewBox="-32 -32 64 64" aria-hidden="true"><circle r="30" fill="#BA7517"/><g transform="scale(0.85)" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 -18L-9 2H0L-4 18L9 -2H0Z"/></g></svg>Vivacité</div>
+                                <div class="attribute-value" id="attr-vivacite">5</div>
+                                <div class="attribute-controls">
+                                    <button class="attribute-btn" onclick="modifyAttribute('vivacite', -1)">−</button>
+                                    <button class="attribute-btn" onclick="modifyAttribute('vivacite', 1)">+</button>
+                                </div>
+                            </div>
+                            <div class="attribute-item" title="Réagir · esprit">
+                                <div class="attribute-name"><svg class="attr-ico" width="22" height="22" viewBox="-32 -32 64 64" aria-hidden="true"><circle r="28" fill="none" stroke="#BA7517" stroke-width="4"/><g transform="scale(0.85)" fill="none" stroke="#BA7517" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 -18L-9 2H0L-4 18L9 -2H0Z"/></g></svg>Intuition</div>
+                                <div class="attribute-value" id="attr-intuition">5</div>
+                                <div class="attribute-controls">
+                                    <button class="attribute-btn" onclick="modifyAttribute('intuition', -1)">−</button>
+                                    <button class="attribute-btn" onclick="modifyAttribute('intuition', 1)">+</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Endurance</div>
-                            <div class="attribute-value" id="attr-endurance">5</div>
-                            <div class="attribute-controls">
-                                <button class="attribute-btn" onclick="modifyAttribute('endurance', -1)">−</button>
-                                <button class="attribute-btn" onclick="modifyAttribute('endurance', 1)">+</button>
+                        <div class="attr-axis" style="--axis:#7F77DD">
+                            <div class="attr-axis-head"><svg class="attr-ico" width="15" height="15" viewBox="-20 -20 40 40" aria-hidden="true"><g fill="none" stroke="#7F77DD" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M0 -17L15 0L0 17L-15 0Z"/><circle r="3" fill="#7F77DD" stroke="none"/></g></svg><span>Maîtriser</span></div>
+                            <div class="attribute-item" title="Maîtriser · corps">
+                                <div class="attribute-name"><svg class="attr-ico" width="22" height="22" viewBox="-32 -32 64 64" aria-hidden="true"><circle r="30" fill="#7F77DD"/><g transform="scale(0.85)" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M0 -17L15 0L0 17L-15 0Z"/><circle r="3" fill="#FFFFFF" stroke="none"/></g></svg>Finesse</div>
+                                <div class="attribute-value" id="attr-precision">5</div>
+                                <div class="attribute-controls">
+                                    <button class="attribute-btn" onclick="modifyAttribute('precision', -1)">−</button>
+                                    <button class="attribute-btn" onclick="modifyAttribute('precision', 1)">+</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Intelligence</div>
-                            <div class="attribute-value" id="attr-intelligence">5</div>
-                            <div class="attribute-controls">
-                                <button class="attribute-btn" onclick="modifyAttribute('intelligence', -1)">−</button>
-                                <button class="attribute-btn" onclick="modifyAttribute('intelligence', 1)">+</button>
-                            </div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Intuition</div>
-                            <div class="attribute-value" id="attr-intuition">5</div>
-                            <div class="attribute-controls">
-                                <button class="attribute-btn" onclick="modifyAttribute('intuition', -1)">−</button>
-                                <button class="attribute-btn" onclick="modifyAttribute('intuition', 1)">+</button>
-                            </div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Volonté</div>
-                            <div class="attribute-value" id="attr-volonte">5</div>
-                            <div class="attribute-controls">
-                                <button class="attribute-btn" onclick="modifyAttribute('volonte', -1)">−</button>
-                                <button class="attribute-btn" onclick="modifyAttribute('volonte', 1)">+</button>
-                            </div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Présence</div>
-                            <div class="attribute-value" id="attr-presence">5</div>
-                            <div class="attribute-controls">
-                                <button class="attribute-btn" onclick="modifyAttribute('presence', -1)">−</button>
-                                <button class="attribute-btn" onclick="modifyAttribute('presence', 1)">+</button>
+                            <div class="attribute-item" title="Maîtriser · esprit">
+                                <div class="attribute-name"><svg class="attr-ico" width="22" height="22" viewBox="-32 -32 64 64" aria-hidden="true"><circle r="28" fill="none" stroke="#7F77DD" stroke-width="4"/><g transform="scale(0.85)" fill="none" stroke="#7F77DD" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M0 -17L15 0L0 17L-15 0Z"/><circle r="3" fill="#7F77DD" stroke="none"/></g></svg>Intelligence</div>
+                                <div class="attribute-value" id="attr-intelligence">5</div>
+                                <div class="attribute-controls">
+                                    <button class="attribute-btn" onclick="modifyAttribute('intelligence', -1)">−</button>
+                                    <button class="attribute-btn" onclick="modifyAttribute('intelligence', 1)">+</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -4675,14 +4695,14 @@
                                 <label class="form-label">Attribut</label>
                                 <select id="simple-attr-select" class="form-select" onchange="updateRollButtons()">
                                     <option value="">- Sélectionner -</option>
-                                    <option value="puissance">Puissance</option>
+                                    <option value="puissance">Force</option>
                                     <option value="vivacite">Vivacité</option>
-                                    <option value="precision">Précision</option>
+                                    <option value="precision">Finesse</option>
                                     <option value="endurance">Endurance</option>
                                     <option value="intelligence">Intelligence</option>
                                     <option value="intuition">Intuition</option>
                                     <option value="volonte">Volonté</option>
-                                    <option value="presence">Présence</option>
+                                    <option value="presence">Charisme</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -4727,14 +4747,14 @@
                                 <label class="form-label">Attribut</label>
                                 <select id="hybrid-attr-select" class="form-select" onchange="updateRollButtons()">
                                     <option value="">- Sélectionner -</option>
-                                    <option value="puissance">Puissance</option>
+                                    <option value="puissance">Force</option>
                                     <option value="vivacite">Vivacité</option>
-                                    <option value="precision">Précision</option>
+                                    <option value="precision">Finesse</option>
                                     <option value="endurance">Endurance</option>
                                     <option value="intelligence">Intelligence</option>
                                     <option value="intuition">Intuition</option>
                                     <option value="volonte">Volonté</option>
-                                    <option value="presence">Présence</option>
+                                    <option value="presence">Charisme</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -7530,8 +7550,8 @@
         // ========== RENDU DE LA PAGE MAGIE ==========
         const ATTR_ORDER = ['puissance', 'vivacite', 'precision', 'endurance', 'intelligence', 'intuition', 'volonte', 'presence'];
         const ATTR_LABEL = {
-            puissance: 'Puissance', vivacite: 'Vivacité', precision: 'Précision', endurance: 'Endurance',
-            intelligence: 'Intelligence', intuition: 'Intuition', volonte: 'Volonté', presence: 'Présence'
+            puissance: 'Force', vivacite: 'Vivacité', precision: 'Finesse', endurance: 'Endurance',
+            intelligence: 'Intelligence', intuition: 'Intuition', volonte: 'Volonté', presence: 'Charisme'
         };
 
         // Puissance moyenne d'un dé magique sur un profil donné
@@ -8653,7 +8673,7 @@
             }
         }
 
-        function capitalize(str) {
+        function capitalize(str) { const _ATTR_DISPLAY = { puissance: 'Force', presence: 'Charisme', precision: 'Finesse', vivacite: 'Vivacité', volonte: 'Volonté' }; if (_ATTR_DISPLAY[str]) return _ATTR_DISPLAY[str];
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
 
