@@ -2402,6 +2402,119 @@
             border-left-color: var(--ok);
         }
 
+        /* ---- Pouvoirs maintenus : trois modes de fonctionnement ---- */
+        .sus-item {
+            padding: 6px 8px;
+            background: var(--panel-2);
+            border: 1px solid var(--line-soft);
+            border-left: 2px solid var(--vector);
+            border-radius: 2px;
+            margin-bottom: 5px;
+        }
+
+        .sus-item.t-debut {
+            border-left-color: var(--warn);
+        }
+
+        .sus-item.t-manif {
+            border-left-color: var(--charge);
+        }
+
+        .sus-item.pending {
+            box-shadow: 0 0 0 1px rgba(224, 162, 60, .55);
+        }
+
+        .sus-top {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .sus-badge {
+            font-family: var(--font-mono);
+            font-size: 0.6em;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border: 1px solid currentColor;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+
+        .sus-sub {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+            font-family: var(--font-mono);
+            font-size: 0.7em;
+            color: var(--ink-3);
+        }
+
+        .sus-sub b {
+            color: var(--ink);
+        }
+
+        .sus-sub select,
+        .sus-sub input[type=text] {
+            background: var(--panel-3);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--ink);
+            font-family: var(--font-body);
+            font-size: 1.05em;
+            padding: 3px 6px;
+        }
+
+        .sus-sub input[type=text] {
+            flex: 1;
+            min-width: 110px;
+        }
+
+        .sus-sub select:focus,
+        .sus-sub input:focus {
+            outline: none;
+            border-color: var(--aci);
+        }
+
+        .sol-bar {
+            flex: 1 1 90px;
+            min-width: 70px;
+            height: 7px;
+            background: var(--panel-3);
+            border: 1px solid var(--line-soft);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .sol-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--charge), #63e2d3);
+            transition: width .3s ease;
+        }
+
+        .sus-log {
+            flex-basis: 100%;
+            color: var(--ink-4);
+        }
+
+        .sus-type-sel {
+            background: var(--panel-3);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--ink);
+            font-family: var(--font-mono);
+            font-size: 0.74em;
+            padding: 5px 4px;
+        }
+
+        .foc-dot.locked {
+            border-color: var(--vector);
+            background: repeating-linear-gradient(45deg, rgba(139, 122, 224, .55) 0 2px, transparent 2px 4px);
+        }
+
         .ctx-item-name {
             font-size: 0.84em;
             overflow: hidden;
@@ -3113,6 +3226,35 @@
                 </div>
             </div>
 
+            <div class="card">
+                <div class="card-head accent-vector">
+                    <span class="tag">§13b</span>
+                    <span class="card-title">Zone d'effet</span>
+                    <span class="ctx-note" id="zone-detail"></span>
+                </div>
+                <div class="card-body tight">
+                    <div class="ctx-row">
+                        <span class="ctx-big" id="zone-step" style="color:var(--vector)">5</span>
+                        <span class="ctx-unit">ft par Puissance</span>
+                        <span class="ctx-unit" style="margin-left:12px;">Puissance</span>
+                        <input class="mini-num" type="number" id="zone-pow" min="0" value="5"
+                            oninput="renderZone()">
+                        <span class="disclose" style="margin:0 0 0 auto;"
+                            onclick="toggleDisclose('zone-help', this)">▸ Règle</span>
+                    </div>
+                    <div class="readout" id="zone-readout" style="margin-top:8px;border-left-color:var(--vector)"></div>
+                    <div class="disclose-body" id="zone-help">
+                        <p><b>D = Puissance × pas de la classe</b> (ε/δ 2,5 · γ 5 · β 10 · α 20 · Ω 50 ft).</p>
+                        <p><b>Enveloppe</b> - un cube de D de côté contient toute la zone. Le lanceur y sculpte la
+                            forme de son choix (sphère, dôme, cône, mur, couloir…). Rien ne dépasse D, ni en longueur,
+                            ni en largeur, ni en hauteur.</p>
+                        <p><b>Étirement</b> - en renonçant à la largeur, une ligne d'un pas de large et d'un pas de
+                            haut peut atteindre 3 D de long.</p>
+                        <p><b>Maximum</b> - la taille est un plafond : le lanceur peut toujours réduire sa zone.</p>
+                    </div>
+                </div>
+            </div>
+
             <div class="card foldable" id="sustained-card">
                 <div class="card-head accent-vector" onclick="toggleCard('sustained-card')">
                     <span class="tag">§14</span>
@@ -3123,18 +3265,35 @@
                 <div class="card-body tight">
                     <div id="sustained-list"></div>
                     <div class="ctx-row">
+                        <select class="sus-type-sel" id="sus-type" title="Mode de fonctionnement">
+                            <option value="continu">Continu</option>
+                            <option value="debut">Début de tour</option>
+                            <option value="manif">Manifestation</option>
+                        </select>
                         <input class="mini-text" type="text" id="sus-name" placeholder="Effet en cours">
-                        <input class="mini-num" type="number" id="sus-pow" value="2" min="1" title="Puissance">
+                        <input class="mini-num" type="number" id="sus-pow" value="2" min="1" title="Puissance au lancement">
                         <button class="mini-btn" onclick="addSustained()">＋</button>
                         <span class="disclose" style="margin:0 0 0 auto;"
-                            onclick="toggleDisclose('sus-help', this)">▸ Entretien</span>
+                            onclick="toggleDisclose('sus-help', this)">▸ Règles</span>
                     </div>
                     <button class="ctx-turn" id="sus-turn" onclick="applyTurnUpkeep()" style="display:none;">
                         ▶ Nouveau tour - <span id="sus-cost">0</span> Charge
                     </button>
                     <div class="disclose-body" id="sus-help">
-                        Entretien par tour : ⌈Puissance ÷ 2⌉ de Charge, et un point de focalisation immobilisé
-                        par effet. Une perte d'Élan exige un jet de Résilience, difficulté = Élan perdu × 2.
+                        <p><b>Entretien</b> - par tour : ⌈Puissance ÷ 2⌉ de Charge, et un point de focalisation
+                            immobilisé par effet. Une perte d'Élan exige un jet de Résilience, difficulté = Élan
+                            perdu × 2.</p>
+                        <p><b>Effet continu</b> - ajoute ou retire sa Puissance sous une condition précise :
+                            amplifications, débilitations, protections. Un sort de vitesse ajoute sa Puissance aux
+                            esquives ; une barrière reprend le jet de lancement pour s'interposer lors des
+                            confrontations.</p>
+                        <p><b>Début de tour</b> - l'effet se résout au début du tour du lanceur, quelle que soit sa
+                            forme : un mur de feu lance une confrontation contre les ennemis ciblés, une zone de soin
+                            traite les blessures présentes.</p>
+                        <p><b>Manifestation</b> - naît avec une Solidité égale à la Puissance au lancement et
+                            s'interpose passivement. Une attaque qui ne dépasse pas la Solidité est arrêtée sans
+                            l'entamer ; une attaque qui la dépasse réduit la Solidité de l'écart, et ce surplus
+                            traverse. À Solidité 0, la manifestation est brisée et la focalisation libérée.</p>
                     </div>
                 </div>
             </div>
@@ -3333,6 +3492,8 @@
         const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
         // Réserve de Charge selon la classe de puissance de l'agent
         const CLASS_CHARGE = { epsilon: 10, delta: 22, gamma: 34, beta: 46, alpha: 58, omega: 70 };
+        // Pas de zone (ft par point de Puissance) selon la classe
+        const CLASS_ZONE_STEP = { epsilon: 2.5, delta: 2.5, gamma: 5, beta: 10, alpha: 20, omega: 50 };
         // Déplacement en pieds selon le niveau de Vivacité
         const VITESSE_TABLE = { 1: 10, 2: 15, 3: 20, 4: 30, 5: 35, 6: 40, 7: 50, 8: 60 };
 
@@ -4075,30 +4236,64 @@
             if (t) t.textContent = (el.classList.contains('open') ? '▾' : '▸') + t.textContent.slice(1);
         }
 
+        // Chaque pouvoir maintenu immobilise un point de focalisation tant qu'il dure
+        function focLocked() {
+            return Math.min(appState.focalisation.max || 1, (appState.sustained || []).length);
+        }
+        function focAvailable() {
+            return Math.max(0, (appState.focalisation.max || 1) - focLocked());
+        }
+
         function renderFocalisation() {
             const f = appState.focalisation;
             f.max = Math.max(1, Math.min(9, f.max || 1));
-            f.current = Math.max(0, Math.min(f.max, f.current));
+            const locked = focLocked();
+            f.current = Math.max(0, Math.min(focAvailable(), f.current));
             const cur = document.getElementById('foc-current');
             if (cur) cur.textContent = f.current;
             const max = document.getElementById('foc-max');
             if (max) max.value = f.max;
             const dots = document.getElementById('foc-dots');
-            if (dots) dots.innerHTML = Array.from({ length: f.max },
-                (_, i) => `<span class="foc-dot${i < f.current ? ' on' : ''}"></span>`).join('');
+            if (dots) dots.innerHTML = Array.from({ length: f.max }, (_, i) => {
+                const cls = i >= f.max - locked ? ' locked' : (i < f.current ? ' on' : '');
+                return `<span class="foc-dot${cls}" title="${cls === ' locked' ? 'Immobilisé par un pouvoir maintenu' : ''}"></span>`;
+            }).join('');
         }
         function modFocalisation(d) {
-            appState.focalisation.current = Math.max(0, Math.min(appState.focalisation.max, appState.focalisation.current + d));
+            appState.focalisation.current = Math.max(0, Math.min(focAvailable(), appState.focalisation.current + d));
             renderFocalisation();
         }
         function setFocalisationMax(v) {
             appState.focalisation.max = Math.max(1, Math.min(9, parseInt(v) || 1));
-            appState.focalisation.current = Math.min(appState.focalisation.current, appState.focalisation.max);
             renderFocalisation();
         }
         function refillFocalisation() {
-            appState.focalisation.current = appState.focalisation.max;
+            appState.focalisation.current = focAvailable();
             renderFocalisation();
+        }
+
+        function zoneStep() { return CLASS_ZONE_STEP[appState.file.clazz] || CLASS_ZONE_STEP.gamma; }
+        function fmtFt(v) { return (Math.round(v * 10) / 10).toString().replace('.', ','); }
+        function zoneText(puissance) {
+            const step = zoneStep(), D = Math.max(0, puissance) * step;
+            return { step, D, env: fmtFt(D), line: `${fmtFt(3 * D)} × ${fmtFt(step)}` };
+        }
+
+        function setZonePow(v) {
+            const el = document.getElementById('zone-pow');
+            if (el) el.value = Math.max(0, v);
+            renderZone();
+        }
+
+        function renderZone() {
+            const cl = CLASSES.find(c => c.id === appState.file.clazz) || CLASSES[2];
+            const z = zoneText(parseInt((document.getElementById('zone-pow') || {}).value) || 0);
+            const st = document.getElementById('zone-step');
+            if (st) st.textContent = fmtFt(z.step);
+            const det = document.getElementById('zone-detail');
+            if (det) det.innerHTML = `<span style="color:${cl.color}">${cl.sym} ${cl.name}</span>`;
+            const ro = document.getElementById('zone-readout');
+            if (ro) ro.innerHTML = `Enveloppe max <b>${z.env} ft</b> de côté · ou ligne <b>${z.line} ft</b>`;
         }
 
         function renderVitesse() {
@@ -4119,16 +4314,61 @@
 
         function upkeepOf(p) { return Math.max(1, Math.ceil((parseInt(p.puissance) || 1) / 2)); }
 
+        const SUSTAIN_TYPES = {
+            continu: { label: 'Continu', color: 'var(--vector)' },
+            debut: { label: 'Début de tour', color: 'var(--warn)' },
+            manif: { label: 'Manifestation', color: 'var(--charge)' }
+        };
+
+        function susSubHtml(p) {
+            if (p.type === 'manif') {
+                const max = Math.max(1, p.solMax || p.puissance);
+                const pct = Math.max(0, Math.min(100, (p.solidite / max) * 100));
+                return `<div class="sus-sub">
+                    Solidité <b>${p.solidite}</b> / ${max}
+                    <span class="sol-bar"><span class="sol-fill" style="display:block;width:${pct}%"></span></span>
+                    <input class="mini-num" type="number" id="hit-${p.id}" min="0" value="" placeholder="att.">
+                    <button class="mini-btn wide" onclick="hitManifestation('${p.id}')">Encaisser</button>
+                    ${p.log ? `<span class="sus-log">${escAttr(p.log)}</span>` : ''}
+                </div>`;
+            }
+            if (p.type === 'debut') {
+                return `<div class="sus-sub">
+                    ${p.pending
+                        ? `<span style="color:var(--warn)">▶ À résoudre ce tour, Puissance <b>${p.puissance}</b></span>
+                           <button class="mini-btn wide" onclick="resolveStartOfTurn('${p.id}')">✓ Résolu</button>`
+                        : `Se résout au début du tour à Puissance <b>${p.puissance}</b>`}
+                </div>`;
+            }
+            const sign = p.sign === '-' ? '-' : '+';
+            return `<div class="sus-sub">
+                <select onchange="editSustained('${p.id}','sign',this.value)" title="Ajoute ou retire">
+                    <option value="+"${sign === '+' ? ' selected' : ''}>+${p.puissance}</option>
+                    <option value="-"${sign === '-' ? ' selected' : ''}>−${p.puissance}</option>
+                </select>
+                sur
+                <input type="text" value="${escAttr(p.condition || '')}" placeholder="condition (esquives, confrontations…)"
+                    onchange="editSustained('${p.id}','condition',this.value)">
+            </div>`;
+        }
+
         function renderSustained() {
             const el = document.getElementById('sustained-list');
             if (!el) return;
-            el.innerHTML = appState.sustained.map(p => `
-                <div class="ctx-item">
-                    <span class="ctx-item-name" title="${escAttr(p.name)}">${escAttr(p.name)}</span>
-                    <span class="ctx-item-val">P${p.puissance}</span>
-                    <span class="ctx-item-val" style="color:var(--charge)">−${upkeepOf(p)}/tour</span>
-                    <button class="mini-btn" onclick="delSustained('${p.id}')">✕</button>
-                </div>`).join('');
+            el.innerHTML = appState.sustained.map(p => {
+                const t = SUSTAIN_TYPES[p.type] || SUSTAIN_TYPES.continu;
+                return `
+                <div class="sus-item t-${p.type}${p.pending ? ' pending' : ''}">
+                    <div class="sus-top">
+                        <span class="sus-badge" style="color:${t.color}">${t.label}</span>
+                        <span class="ctx-item-name" title="${escAttr(p.name)}">${escAttr(p.name)}</span>
+                        <span class="ctx-item-val">P${p.puissance}</span>
+                        <span class="ctx-item-val" style="color:var(--charge)">−${upkeepOf(p)}/tour</span>
+                        <button class="mini-btn" onclick="delSustained('${p.id}')">✕</button>
+                    </div>
+                    ${susSubHtml(p)}
+                </div>`;
+            }).join('');
             el.style.marginBottom = appState.sustained.length ? '7px' : '0';
             const c = document.getElementById('sus-count');
             if (c) c.innerHTML = appState.sustained.length ? `<b>${appState.sustained.length}</b> actif(s)` : 'aucun';
@@ -4143,24 +4383,74 @@
         function addSustained() {
             const name = document.getElementById('sus-name').value.trim();
             if (!name) return;
-            appState.sustained.push({
-                id: 'su' + Date.now(), name,
-                puissance: Math.max(1, parseInt(document.getElementById('sus-pow').value) || 1)
-            });
+            const puissance = Math.max(1, parseInt(document.getElementById('sus-pow').value) || 1);
+            const type = document.getElementById('sus-type').value;
+            const item = { id: 'su' + Date.now() + Math.random().toString(36).slice(2, 6), name, type, puissance };
+            if (type === 'continu') { item.sign = '+'; item.condition = ''; }
+            if (type === 'debut') item.pending = false;
+            if (type === 'manif') { item.solidite = puissance; item.solMax = puissance; item.log = ''; }
+            appState.sustained.push(item);
             document.getElementById('sus-name').value = '';
             renderSustained();
+            renderFocalisation();
+        }
+        function editSustained(id, field, val) {
+            const p = appState.sustained.find(x => x.id === id);
+            if (!p) return;
+            p[field] = val;
+            if (field === 'sign') renderSustained();
         }
         function delSustained(id) {
             appState.sustained = appState.sustained.filter(p => p.id !== id);
             renderSustained();
+            renderFocalisation();
         }
+
+        // Manifestation : une attaque ≤ Solidité est arrêtée sans l'entamer ;
+        // au-delà, la Solidité perd l'écart et ce surplus traverse.
+        function hitManifestation(id) {
+            const p = appState.sustained.find(x => x.id === id);
+            if (!p) return;
+            const inp = document.getElementById('hit-' + id);
+            const atk = Math.max(0, parseInt(inp && inp.value) || 0);
+            if (atk <= p.solidite) {
+                p.log = `Attaque ${atk} arrêtée, Solidité intacte`;
+                toast(`${p.name} · attaque ${atk} arrêtée`);
+                renderSustained();
+                return;
+            }
+            const ecart = atk - p.solidite;
+            p.solidite = Math.max(0, p.solidite - ecart);
+            if (p.solidite === 0) {
+                appState.sustained = appState.sustained.filter(x => x.id !== id);
+                toast(`${p.name} brisée · ${ecart} traverse · focalisation libérée`);
+                renderSustained();
+                renderFocalisation();
+                return;
+            }
+            p.log = `Attaque ${atk} : ${ecart} traverse, Solidité −${ecart}`;
+            toast(`${p.name} · ${ecart} traverse`);
+            renderSustained();
+        }
+
+        function resolveStartOfTurn(id) {
+            const p = appState.sustained.find(x => x.id === id);
+            if (!p) return;
+            p.pending = false;
+            renderSustained();
+        }
+
         function applyTurnUpkeep() {
             const total = appState.sustained.reduce((n, p) => n + upkeepOf(p), 0);
             if (!total) return;
             const paid = Math.min(total, getChargeLeft());
             spendCharge(paid);
+            const starts = appState.sustained.filter(p => p.type === 'debut');
+            starts.forEach(p => { p.pending = true; });
+            renderSustained();
             toast(`Entretien du tour · ${paid} Charge dépensée`
-                + (paid < total ? ` · ${total - paid} impayée, réserve à sec` : ''));
+                + (paid < total ? ` · ${total - paid} impayée, réserve à sec` : '')
+                + (starts.length ? ` · ${starts.length} effet(s) à résoudre` : ''));
         }
 
         function renderBuffs() {
@@ -4560,6 +4850,7 @@
             if (!v || !d) return;
 
             const r = resolvePower(attrId, v, d, magnitude, bonusDice, powerMod);
+            setZonePow(r.puissance);
             const al = getAttributeLevel(appState.attributes[attrId]);
             const attrName = ATTRIBUTES.find(a => a.id === attrId).name;
 
@@ -4572,7 +4863,8 @@
                     { l: 'Mod. puissance', v: powerMod ? (powerMod > 0 ? '+' + powerMod : powerMod) : 0, c: 'var(--vector)' },
                     { l: 'Éclats', v: r.c.eclats, c: FACE_INFO.eclat.color },
                     { l: 'Revers', v: r.c.revers, c: FACE_INFO.revers.color },
-                    { l: 'Charge', v: '−' + r.paid, always: true, c: 'var(--charge)' }
+                    { l: 'Charge', v: '−' + r.paid, always: true, c: 'var(--charge)' },
+                    { l: 'Zone max', v: zoneText(r.puissance).env + ' ft', always: true, c: 'var(--vector)' }
                 ]),
                 verdictHtml('Puissance de l\'effet', r.puissance,
                     `${r.magnitude} dé(s) de Magnitude${r.bonus ? ' + ' + r.bonus + ' bonus' : ''} sur le profil ${al.name}`
@@ -4605,6 +4897,7 @@
             const skillTotal = sc.total + sBonus;
 
             const r = resolvePower(pAttrId, v, d, magnitude, bonusDice, powerMod);
+            setZonePow(r.puissance);
             // La Puissance obtenue s'ajoute au jet d'aptitude
             const finalTotal = skillTotal + r.puissance;
 
@@ -4695,6 +4988,7 @@
             document.getElementById('f-number').value = f.number;
             appState.notes = document.getElementById('notes').value;
             renderClassification();
+            renderZone();
             appState.charge.used = Math.min(appState.charge.used || 0, getChargeMax());
             renderGauges();
         }
@@ -4804,6 +5098,15 @@
             }));
             if (!appState.focalisation) appState.focalisation = { current: 1, max: 1 };
             if (!Array.isArray(appState.sustained)) appState.sustained = [];
+            appState.sustained.forEach(p => {
+                if (!['continu', 'debut', 'manif'].includes(p.type)) p.type = 'continu';
+                p.puissance = Math.max(1, parseInt(p.puissance) || 1);
+                if (p.type === 'continu') { if (p.sign !== '-') p.sign = '+'; if (p.condition == null) p.condition = ''; }
+                if (p.type === 'manif') {
+                    if (p.solMax == null) p.solMax = p.puissance;
+                    if (p.solidite == null) p.solidite = p.solMax;
+                }
+            });
             if (!Array.isArray(appState.buffs)) appState.buffs = [];
             if (typeof appState.vitesseBonus !== 'number') appState.vitesseBonus = 0;
         }
@@ -4819,6 +5122,7 @@
             renderGear();
             renderFocalisation();
             renderVitesse();
+            renderZone();
             renderSustained();
             renderBuffs();
             buildSelects();
