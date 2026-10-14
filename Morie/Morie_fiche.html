@@ -3117,7 +3117,7 @@
             margin-left: auto;
         }
 
-        /* === QI DES JUMELLES : cycle, Ivresse, récolte === */
+        /* === QI DES JUMELLES : cycle, récolte === */
         .qi-cap {
             font-size: 0.5em;
             opacity: 0.55;
@@ -3128,17 +3128,6 @@
             display: flex;
             gap: 6px;
             margin-top: 9px;
-        }
-
-        .qi-ivresse {
-            margin-top: 9px;
-            padding: 5px 9px;
-            background: rgba(163, 45, 45, 0.08);
-            border: 1px solid rgba(163, 45, 45, 0.3);
-            border-radius: 6px;
-            color: var(--vitality-red);
-            font-size: 0.74em;
-            font-weight: 700;
         }
 
         .qi-result {
@@ -7439,10 +7428,7 @@
                 return null;
             }
 
-            // Ivresse : tant qu'il en reste, les sorts de Yue partent en émotion
-            const st = plan.role === 'yue' ? qiState() : null;
-            const drunk = !!(st && st.ivresse > 0);
-            const emo = emotion || drunk;
+            const emo = emotion;
 
             const effLvl = getEffectiveMagicLevel();
             // Les dés payés (énergie ou Qi) portent le coût ; base + supplément portent le tribut ;
@@ -7459,10 +7445,6 @@
                 if (plan.qi) { qiSpend(plan.qi); qiNotes.push(`☯ −${plan.qi} Qi en supplément`); }
             }
             if (plan.elan) { applyDonDeVie(plan.elan); qiNotes.push(`♥ −${plan.elan} Élan (Don de vie)`); }
-            if (drunk) {
-                qiQueue({ k: 'ivresse', n: -1 });
-                qiNotes.push(`🩸 Ivresse : sort forcé en émotion (reste ${st.ivresse - 1})`);
-            }
             let harvest = null;
             if (plan.role === 'yue' && plan.siphon && res.successes > 0) {
                 harvest = qiGain(res.successes);
@@ -7472,7 +7454,7 @@
 
             if (res.mjGain > 0) addMjDice(res.mjGain);
             lastMagicRoll = { puissance: res.successes, dice, fuel: plan.fuel };
-            return { ...res, dice, baseDice: plan.base, plan, emotion: emo, drunk, harvest, qiNotes, effLvl, fuel: plan.fuel };
+            return { ...res, dice, baseDice: plan.base, plan, emotion: emo, harvest, qiNotes, effLvl, fuel: plan.fuel };
         }
 
         function updateMagicState() {
@@ -7626,7 +7608,7 @@
                 return;
             }
 
-            const moy = averagePowerPerDie(canalLvl, isEmotionOn() || /Ivresse/.test(qiInfo));
+            const moy = averagePowerPerDie(canalLvl, isEmotionOn());
             const engaged = plan.base + plan.supp + bonusD;
             const fuelTxt = plan.fuel === 'qi' ? `Qi ${plan.avail}` : `Réserve ${left}/${getReserveMax()}`;
             infoEl.innerHTML = `
@@ -8168,7 +8150,6 @@
             };
             const toSave = { ...appState };
             delete toSave.qiPool;   // le pool partagé vit dans son propre fichier
-            delete toSave.qiIvresse;
             const content = btoa(unescape(encodeURIComponent(JSON.stringify(toSave, null, 2))));
 
             updateGhStatus('Envoi…');
@@ -8209,16 +8190,16 @@
 
         // ===== QI DES JUMELLES (Shu & Yue) =====
         // Yue récolte : sa réserve d'énergie ne sert qu'au siphon (Absorber × Vie), dont la
-        // Puissance remplit le pool ; boire une mort ajoute ⌈Élan max ÷ 3⌉ en Qi et autant d'Ivresse.
+        // Puissance remplit le pool ; boire une mort ajoute ⌈Élan max ÷ 3⌉ en Qi.
         // Ses autres sorts se paient en Qi. Shuhui donne : elle ajoute Qi ou Élan en supplément.
         // Supplément : au plus ⌊dés de base ÷ 2⌋, aux faces du canal, compté dans le tribut au MJ.
         // Contenance : 3 × (Absorber + Vie) de Yue, le trop-plein est perdu.
-        // Tombée de la nuit : −5 Qi. Aube : l'Ivresse se dissipe.
+        // Tombée de la nuit : −5 Qi. Ce qui dépasse la contenance est perdu.
         const QI_PATH = `${GH_CFG.dir}/shared/qi_pool.json`;
         const QI_NIGHTFALL_LOSS = 5;
         let qiSha = null;
         let qiBusy = false;
-        let qiRemote = { qi: 0, ivresse: 0, cap: null };   // dernier état lu sur GitHub
+        let qiRemote = { qi: 0, cap: null };   // dernier état lu sur GitHub
         let qiPending = [];                                 // opérations locales pas encore écrites
 
         function qiApi() {
@@ -8253,16 +8234,12 @@
         function qiCap() { return qiRole() === 'yue' ? qiCapLocal() : (qiRemote.cap ?? null); }
 
         function qiApplyOps(state, ops) {
-            const s = { qi: state.qi || 0, ivresse: state.ivresse || 0, cap: state.cap ?? null };
+            const s = { qi: state.qi || 0, cap: state.cap ?? null };
             if (qiRole() === 'yue') s.cap = qiCapLocal();
             ops.forEach(op => {
                 if (op.k === 'qi') {
                     s.qi = Math.max(0, s.qi + op.n);
                     if (s.cap != null) s.qi = Math.min(s.cap, s.qi);
-                } else if (op.k === 'ivresse') {
-                    s.ivresse = Math.max(0, s.ivresse + op.n);
-                } else if (op.k === 'aube') {
-                    s.ivresse = 0;
                 }
             });
             return s;
@@ -8274,7 +8251,6 @@
         function syncQiMirror() {
             const s = qiState();
             appState.qiPool = s.qi;
-            appState.qiIvresse = s.ivresse;
         }
 
         function qiQueue(op) {
@@ -8304,11 +8280,6 @@
             showNotification(`🌙 La nuit tombe : −${Math.min(before, QI_NIGHTFALL_LOSS)} Qi`);
         }
 
-        function qiDawn() {
-            qiQueue({ k: 'aube' });
-            showNotification('🌅 L\'aube se lève : l\'Ivresse se dissipe');
-        }
-
         function setQiStatus(msg) {
             document.querySelectorAll('#qi-status, #qi-status-perso').forEach(el => el.textContent = msg || '');
         }
@@ -8327,14 +8298,8 @@
             document.querySelectorAll('#qi-value, #qi-value-perso').forEach(el =>
                 el.innerHTML = cap != null ? `${s.qi}<span class="qi-cap">/${cap}</span>` : `${s.qi}`);
 
-            const ivresse = s.ivresse > 0
-                ? `<div class="qi-ivresse">🩸 Ivresse ${s.ivresse} · ${role === 'yue'
-                    ? 'tes prochains sorts partent en émotion'
-                    : 'Yue est grisée'}</div>`
-                : '';
-            const cycle = `${ivresse}<div class="qi-cycle-row">
-                <button class="qi-btn" onclick="qiNightfall()" title="Le Qi non donné se perd">🌙 Nuit −${QI_NIGHTFALL_LOSS}</button>
-                <button class="qi-btn" onclick="qiDawn()" title="L'Ivresse se dissipe">🌅 Aube</button>
+            const cycle = `<div class="qi-cycle-row">
+                <button class="qi-btn" onclick="qiNightfall()" title="Le Qi non donné se perd">🌙 Tombée de la nuit −${QI_NIGHTFALL_LOSS}</button>
             </div>`;
             document.querySelectorAll('#qi-cycle, #qi-cycle-perso').forEach(el => el.innerHTML = cycle);
 
@@ -8348,7 +8313,7 @@
 
         async function qiFetchRemote(token) {
             const res = await fetch(`${qiApi()}?ref=${GH_CFG.branch}&t=${Date.now()}`, { headers: qiHeaders(token), cache: 'no-store' });
-            if (res.status === 404) return { sha: null, data: { qi: 0, ivresse: 0, cap: null } };
+            if (res.status === 404) return { sha: null, data: { qi: 0, cap: null } };
             if (!res.ok) throw new Error('HTTP ' + res.status);
             const j = await res.json();
             const d = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g, '')))));
@@ -8356,7 +8321,6 @@
                 sha: j.sha,
                 data: {
                     qi: Math.max(0, parseInt(d.qi) || 0),
-                    ivresse: Math.max(0, parseInt(d.ivresse) || 0),
                     cap: d.cap == null ? null : parseInt(d.cap)
                 }
             };
@@ -8415,7 +8379,7 @@
                         method: 'PUT',
                         headers: qiHeaders(token),
                         body: JSON.stringify({
-                            message: `qi ${next.qi} · ivresse ${next.ivresse} · ${by}`,
+                            message: `qi ${next.qi} · ${by}`,
                             content, branch: GH_CFG.branch,
                             ...(r.sha ? { sha: r.sha } : {})
                         })
@@ -8496,8 +8460,6 @@
             else if (plan.role === 'yue') parts.push('☯ Siphon : payé en énergie, sa Puissance remplit le pool');
             if (plan.suppAllowed) parts.push(`supplément max ${plan.suppMax}`
                 + (plan.supp ? ` · engagé ${plan.qi ? plan.qi + ' Qi' : ''}${plan.qi && plan.elan ? ' + ' : ''}${plan.elan ? plan.elan + ' Élan' : ''}` : ''));
-            const st = qiState();
-            if (plan.role === 'yue' && st.ivresse > 0) parts.push(`🩸 Ivresse ${st.ivresse} : sort forcé en émotion`);
             return parts.length ? `<br><span style="color:#085041;font-weight:600;">${parts.join(' · ')}</span>` : '';
         }
 
@@ -8505,7 +8467,7 @@
         function killBlockHtml() {
             return `<div class="qi-kill" id="qi-kill">
                 <div class="qi-kill-title">☠ La cible meurt ?</div>
-                <div class="qi-kill-sub">Yue boit la mort : ⌈Élan max ÷ 3⌉ en Qi, et autant d'Ivresse.</div>
+                <div class="qi-kill-sub">Yue boit la mort : ⌈Élan max ÷ 3⌉ en Qi. Ce qui dépasse le pool est perdu.</div>
                 <div class="qi-kill-row">
                     <label for="qi-kill-elan">Élan max de la victime</label>
                     <input type="number" id="qi-kill-elan" min="1" value="10">
@@ -8519,12 +8481,11 @@
             if (e <= 0) return;
             const bonus = Math.ceil(e / 3);
             const h = qiGain(bonus);
-            qiQueue({ k: 'ivresse', n: bonus });
             const block = document.getElementById('qi-kill');
             if (block) block.innerHTML = `<div class="qi-kill-title">☠ Mort bue : +${h.gained} Qi`
                 + (h.lost ? ` (${h.lost} perdu${h.lost > 1 ? 's' : ''}, pool plein)` : '')
-                + ` · Ivresse +${bonus}</div>`;
-            showNotification(`☠ Mort bue : +${h.gained} Qi · Ivresse +${bonus}`);
+                + `</div>`;
+            showNotification(`☠ Mort bue : +${h.gained} Qi`);
             if (!isPrivateRoll()) {
                 const name = appState.profile.name || 'Yue';
                 fetch(DISCORD_WEBHOOK_URL, {
@@ -8534,7 +8495,7 @@
                         username: name,
                         embeds: [{
                             description: `☠ **${name} boit la mort** · +${h.gained} Qi`
-                                + (h.lost ? ` (${h.lost} perdu(s), pool plein)` : '') + ` · 🩸 Ivresse +${bonus}`,
+                                + (h.lost ? ` (${h.lost} perdu(s), pool plein)` : ''),
                             color: 0x501313, author: { name }
                         }]
                     })
@@ -8709,7 +8670,7 @@
             lastVisionAt = 0;
             visionCount = 0;
             qiSha = null;
-            qiRemote = { qi: 0, ivresse: 0, cap: null };
+            qiRemote = { qi: 0, cap: null };
             qiPending = [];
             if (qiPollTimer) { clearInterval(qiPollTimer); qiPollTimer = null; }
 
