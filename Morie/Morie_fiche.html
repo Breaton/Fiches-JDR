@@ -3117,6 +3117,82 @@
             margin-left: auto;
         }
 
+        /* === QI DES JUMELLES : cycle, Ivresse, récolte === */
+        .qi-cap {
+            font-size: 0.5em;
+            opacity: 0.55;
+            margin-left: 2px;
+        }
+
+        .qi-cycle-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 9px;
+        }
+
+        .qi-ivresse {
+            margin-top: 9px;
+            padding: 5px 9px;
+            background: rgba(163, 45, 45, 0.08);
+            border: 1px solid rgba(163, 45, 45, 0.3);
+            border-radius: 6px;
+            color: var(--vitality-red);
+            font-size: 0.74em;
+            font-weight: 700;
+        }
+
+        .qi-result {
+            margin-top: 8px;
+            padding: 7px 11px;
+            background: rgba(29, 158, 117, 0.07);
+            border: 1px solid rgba(29, 158, 117, 0.25);
+            border-radius: 8px;
+            color: #085041;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .qi-kill {
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: rgba(80, 19, 19, 0.06);
+            border: 1px solid rgba(80, 19, 19, 0.28);
+            border-left: 3px solid #501313;
+            border-radius: 9px;
+        }
+
+        .qi-kill-title {
+            font-weight: 700;
+            font-size: 0.86em;
+            color: #501313;
+        }
+
+        .qi-kill-sub {
+            font-size: 0.74em;
+            color: var(--silver-mist);
+            margin: 2px 0 7px;
+        }
+
+        .qi-kill-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 0.8em;
+        }
+
+        .qi-kill-row input {
+            width: 56px;
+            padding: 4px 6px;
+            border: 1px solid var(--moonlight);
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .qi-kill-row .qi-btn {
+            flex: 0 0 auto;
+        }
+
         /* === QI PARTAGÉ === */
         .qi-panel .ctx-panel-title {
             background: rgba(29, 158, 117, 0.1);
@@ -4405,6 +4481,7 @@
                                     </div>
                                     <span class="qi-perso-status" id="qi-status-perso"></span>
                                 </div>
+                                <div id="qi-cycle-perso"></div>
                             </div>
 
                             <!-- Perturbation : dette accumulée, sous le contrôle du MJ -->
@@ -4784,9 +4861,23 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label"
-                                    title="Dés au-delà du maximum : Qi, artefact, aide extérieure…">Dés magiques
+                                    title="Dés au-delà du maximum : artefact, aide extérieure…">Dés magiques
                                     bonus</label>
                                 <input id="hybrid-bonus-dice" class="bonus-input" type="number" value="0" min="0"
+                                    oninput="updateHybridMagicInfo()">
+                            </div>
+                            <div class="form-group" id="hybrid-qi-group" style="display:none;">
+                                <label class="form-label" style="color:#1D9E75;"
+                                    title="Dés supplémentaires payés en Qi : au plus la moitié des dés de base">☯ Supplément
+                                    Qi <span id="hybrid-supp-cap" style="opacity:.6;font-weight:400"></span></label>
+                                <input id="hybrid-qi-supp" class="bonus-input" type="number" value="0" min="0"
+                                    oninput="updateHybridMagicInfo()">
+                            </div>
+                            <div class="form-group" id="hybrid-elan-group" style="display:none;">
+                                <label class="form-label" style="color:var(--vitality-red);"
+                                    title="Dés supplémentaires payés en Élan : deviennent une blessure « Don de vie »">♥
+                                    Supplément Élan</label>
+                                <input id="hybrid-elan-supp" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group">
@@ -4854,8 +4945,9 @@
                                 <button class="qi-step" onclick="qiStep(1, 'qi-amount')">+</button>
                             </div>
                         </div>
+                        <div id="qi-cycle"></div>
                         <div class="qi-status" id="qi-status"></div>
-                        <div class="qi-note">Commun à Shu et Yue. Verse-le via « Dés bonus » sur un jet magique.</div>
+                        <div class="qi-note" id="qi-note">Commun à Shu et Yue.</div>
                     </div>
                 </div>
 
@@ -5806,7 +5898,8 @@
                 id: `spell_${Date.now()}`,
                 name,
                 puissance: lastMagicRoll.puissance,
-                initialDice: lastMagicRoll.dice
+                initialDice: lastMagicRoll.dice,
+                fuel: lastMagicRoll.fuel || 'energy'
             });
             const block = document.querySelector('.sustain-block');
             if (block) block.innerHTML = `<div class="sustain-label" style="color:#1D9E75;">✓ « ${name} » ajouté aux sorts de durée</div>`;
@@ -5924,6 +6017,17 @@
             const s = (appState.activeSpells || []).find(x => x.id === id);
             if (!s) return;
             const cost = getTurnCost(s.initialDice);
+            if (s.fuel === 'qi') {
+                if (cost > qiAvailable()) {
+                    showNotification(`⚠ Qi insuffisant (${qiAvailable()} restants, ${cost} requis) : « ${s.name || 'Sort'} » se dissipe`);
+                    appState.activeSpells = appState.activeSpells.filter(x => x.id !== id);
+                } else {
+                    qiSpend(cost);
+                    showNotification(`↻ ${s.name || 'Sort'} : −${cost} Qi`);
+                }
+                renderActiveSpells();
+                return;
+            }
             const left = getReserveLeft();
             if (cost > left) {
                 showNotification(`⚠ Réserve insuffisante (${left} restants, ${cost} requis) : « ${s.name || 'Sort'} » se dissipe`);
@@ -5937,8 +6041,18 @@
         }
 
         function applyAllTurnCosts() {
-            const spells = appState.activeSpells || [];
-            if (spells.length === 0) return;
+            // Sorts de Yue payés en Qi : chacun puise dans le pool ou se dissipe
+            const qiLost = [];
+            (appState.activeSpells || []).filter(s => s.fuel === 'qi').forEach(s => {
+                const c = getTurnCost(s.initialDice);
+                if (c > qiAvailable()) qiLost.push(s); else qiSpend(c);
+            });
+            if (qiLost.length) {
+                appState.activeSpells = appState.activeSpells.filter(s => !qiLost.includes(s));
+                showNotification(`⚠ Qi insuffisant : ${qiLost.map(s => s.name || 'Sans nom').join(', ')} se dissipe`);
+            }
+            const spells = (appState.activeSpells || []).filter(s => s.fuel !== 'qi');
+            if (spells.length === 0) { renderActiveSpells(); return; }
             const total = spells.reduce((sum, s) => sum + getTurnCost(s.initialDice), 0);
             const left = getReserveLeft();
 
@@ -5953,7 +6067,7 @@
                     dissipated.push(s);
                 }
                 const keptIds = new Set(spells.filter(s => !dissipated.includes(s)).map(s => s.id));
-                appState.activeSpells = spells.filter(s => keptIds.has(s.id));
+                appState.activeSpells = appState.activeSpells.filter(s => s.fuel === 'qi' || keptIds.has(s.id));
                 spendReserve(running);
                 renderActiveSpells();
                 showNotification(`⚠ Réserve insuffisante : ${dissipated.length} sort(s) dissipé(s) : ${dissipated.map(s => s.name || 'Sans nom').join(', ')}`);
@@ -6001,7 +6115,7 @@
                             <span class="active-spell-cost-val">${cost}</span>
                         </div>
                     </div>
-                    <button class="active-spell-turn-btn" onclick="applyTurnCost('${s.id}')">▶ Coût de tour : ${cost} dés</button>
+                    <button class="active-spell-turn-btn" onclick="applyTurnCost('${s.id}')">▶ Coût de tour : ${cost} ${s.fuel === 'qi' ? 'Qi' : 'dés'}</button>
                 </div>`;
             }).join('');
 
@@ -6862,6 +6976,7 @@
                     <input type="number" id="followup-magic-dice" value="1" min="1" oninput="updateFollowUpInfo()">
                     <label style="font-size:0.8em;font-weight:600;color:var(--ombre-purple);">+ bonus</label>
                     <input type="number" id="followup-bonus-dice" value="0" min="0" style="width:44px;">
+                    ${followUpSuppInputsHtml()}
                     <span class="followup-magic-max" id="followup-magic-max"></span>
                     <label class="followup-emotion">
                         <input type="checkbox" id="followup-emotion">
@@ -6874,24 +6989,49 @@
             </div>`;
         }
 
+        // Champs de supplément Qi / Élan des jumelles
+        function followUpSuppInputsHtml() {
+            const role = qiRole();
+            if (!role) return '';
+            let h = `<label style="font-size:0.8em;font-weight:600;color:#1D9E75;">☯ Qi</label>
+                <input type="number" id="followup-qi-supp" value="0" min="0" style="width:44px;" oninput="updateFollowUpInfo()">`;
+            if (role === 'shuhui') h += `<label style="font-size:0.8em;font-weight:600;color:var(--vitality-red);">♥ Élan</label>
+                <input type="number" id="followup-elan-supp" value="0" min="0" style="width:44px;" oninput="updateFollowUpInfo()">`;
+            return h;
+        }
+
         // Couple choisi dans le panneau de réaction
         function followUpPair() {
             const v = document.getElementById('followup-verb-select')?.value || '';
             const t = document.getElementById('followup-target-select')?.value || '';
             return {
+                verbId: v, targetId: t,
                 verb: VERBS.find(x => x.id === v) || null,
                 target: TARGETS.find(x => x.id === t) || null,
                 cap: magnitudeMax(v, t)
             };
         }
 
+        function followUpPlan() {
+            const pair = followUpPair();
+            return planMagic({
+                requested: parseInt(document.getElementById('followup-magic-dice')?.value) || 1,
+                cap: pair.cap, verbId: pair.verbId, targetId: pair.targetId,
+                qiSupp: parseInt(document.getElementById('followup-qi-supp')?.value) || 0,
+                elanSupp: parseInt(document.getElementById('followup-elan-supp')?.value) || 0
+            });
+        }
+
         function updateFollowUpInfo() {
             const el = document.getElementById('followup-magic-max');
             if (!el) return;
             const pair = followUpPair();
-            el.textContent = pair.cap > 0
-                ? `Magnitude max ${pair.cap} · réserve ${getReserveLeft()}`
-                : 'Aucun couple ouvert';
+            if (pair.cap <= 0) { el.textContent = 'Aucun couple ouvert'; return; }
+            const plan = followUpPlan();
+            let txt = `Magnitude max ${pair.cap} · ${plan.fuel === 'qi' ? 'Qi' : 'réserve'} ${plan.avail}`;
+            if (plan.suppAllowed) txt += ` · supplément max ${plan.suppMax}`;
+            if (plan.role === 'yue' && plan.siphon) txt += ' · siphon';
+            el.textContent = txt;
         }
 
         function performFollowUpMagic() {
@@ -6902,7 +7042,12 @@
             const emotion = document.getElementById('followup-emotion')?.checked || false;
 
             const bonusDice = parseInt(document.getElementById('followup-bonus-dice')?.value) || 0;
-            const out = resolveMagicAction({ requested, emotion, source: 'followup', extraDice: bonusDice, cap: pair.cap });
+            const out = resolveMagicAction({
+                requested, emotion, source: 'followup', extraDice: bonusDice, cap: pair.cap,
+                verbId: pair.verbId, targetId: pair.targetId,
+                qiSupp: parseInt(document.getElementById('followup-qi-supp')?.value) || 0,
+                elanSupp: parseInt(document.getElementById('followup-elan-supp')?.value) || 0
+            });
             if (!out) return;
             const { results, successes, ruptures, fractures, mjGain, elanLoss } = out;
             const count = out.dice;
@@ -6918,6 +7063,7 @@
                 if (mjGain > 0) notes.push(`<span style="color:var(--vitality-red);">⚠ +${mjGain} dé(s) de Perturbation au MJ</span>`);
                 if (notes.length) html += `<div class="followup-notes">${notes.join(' · ')}</div>`;
 
+                html += qiResultHtml(out);
                 html += sustainButtonsHtml();
                 resEl.innerHTML = html;
 
@@ -6932,8 +7078,8 @@
                     skillBonus: lastRollContext.skillBonus,
                     bonus: lastRollContext.bonus,
                     magic: {
-                        level: canalLvl, results, puissance: successes, emotion,
-                        ruptures, fractures, mjGain, followUp: true,
+                        level: canalLvl, results, puissance: successes, emotion: out.emotion,
+                        ruptures, fractures, mjGain, followUp: true, qiNotes: out.qiNotes,
                         pair: `${pair.verb.name} × ${pair.target.name}`, cap: pair.cap,
                         canalName: ATTR_LABEL[getCanal()],
                         inTotal: true
@@ -7118,7 +7264,8 @@
 
         // Ajustement manuel du maximum de réserve (override)
         function getReserveMaxBase() {
-            const lvl = bestPair().cap;
+            // La réserve de Yue ne sert qu'au siphon : elle suit ce couple
+            const lvl = qiRole() === 'yue' ? magnitudeMax('absorber', 'vie') : bestPair().cap;
             if (lvl <= 0) return 0;
             return MAGIC_RESERVE[Math.min(10, lvl)] || 0;
         }
@@ -7282,21 +7429,50 @@
         }
 
         // ========== PIPELINE COMMUN DE RÉSOLUTION MAGIQUE ==========
-        function resolveMagicAction({ requested, emotion, source, extraDice, cap }) {
-            const ctx = { source, requested, emotion, extraDice: extraDice || 0 };
+        function resolveMagicAction({ requested, emotion, source, extraDice, cap, verbId, targetId, qiSupp, elanSupp }) {
             const top = (cap === undefined || cap === null) ? bestPair().cap : cap;
+            const plan = planMagic({ requested, cap: top, verbId, targetId, qiSupp, elanSupp });
+            const extra = extraDice || 0;
+            const dice = plan.base + plan.supp + extra;
+            if (dice <= 0) {
+                showNotification(plan.fuel === 'qi' ? '⚠ Pas assez de Qi pour ce sort' : '⚠ Réserve magique épuisée');
+                return null;
+            }
 
-            const baseDice = clampMagicDice(ctx.requested, top);
-            const dice = baseDice + ctx.extraDice;
-            if (dice <= 0) { showNotification('⚠ Réserve magique épuisée'); return null; }
+            // Ivresse : tant qu'il en reste, les sorts de Yue partent en émotion
+            const st = plan.role === 'yue' ? qiState() : null;
+            const drunk = !!(st && st.ivresse > 0);
+            const emo = emotion || drunk;
 
             const effLvl = getEffectiveMagicLevel();
-            const res = resolveMagicDice(effLvl, dice, ctx.emotion, baseDice, top);
+            // Les dés payés (énergie ou Qi) portent le coût ; base + supplément portent le tribut ;
+            // les dés bonus extérieurs restent gratuits et discrets.
+            const paid = plan.fuel === 'qi' ? plan.base + plan.qi : plan.base;
+            const res = resolveMagicDice(effLvl, dice, emo, paid, top, plan.base + plan.supp);
 
-            spendReserve(res.energyCost);
+            const qiNotes = [];
+            if (plan.fuel === 'qi') {
+                qiSpend(res.energyCost);
+                qiNotes.push(`☯ −${res.energyCost} Qi`);
+            } else {
+                spendReserve(res.energyCost);
+                if (plan.qi) { qiSpend(plan.qi); qiNotes.push(`☯ −${plan.qi} Qi en supplément`); }
+            }
+            if (plan.elan) { applyDonDeVie(plan.elan); qiNotes.push(`♥ −${plan.elan} Élan (Don de vie)`); }
+            if (drunk) {
+                qiQueue({ k: 'ivresse', n: -1 });
+                qiNotes.push(`🩸 Ivresse : sort forcé en émotion (reste ${st.ivresse - 1})`);
+            }
+            let harvest = null;
+            if (plan.role === 'yue' && plan.siphon && res.successes > 0) {
+                harvest = qiGain(res.successes);
+                qiNotes.push(`☯ +${harvest.gained} Qi récolté${harvest.gained > 1 ? 's' : ''}`
+                    + (harvest.lost ? ` · ${harvest.lost} perdu${harvest.lost > 1 ? 's' : ''}, pool plein` : ''));
+            }
+
             if (res.mjGain > 0) addMjDice(res.mjGain);
-            lastMagicRoll = { puissance: res.successes, dice };
-            return { ...res, ctx, dice, baseDice, effLvl };
+            lastMagicRoll = { puissance: res.successes, dice, fuel: plan.fuel };
+            return { ...res, dice, baseDice: plan.base, plan, emotion: emo, drunk, harvest, qiNotes, effLvl, fuel: plan.fuel };
         }
 
         function updateMagicState() {
@@ -7430,22 +7606,38 @@
             const capEl = document.getElementById('hybrid-mag-cap');
             if (capEl) capEl.textContent = cap > 0 ? `(max ${cap})` : '';
 
+            // Qi des jumelles : source des dés et supplément permis
+            const plan = planMagic({
+                requested, cap, verbId: pair.verbId, targetId: pair.targetId,
+                qiSupp: parseInt(document.getElementById('hybrid-qi-supp')?.value) || 0,
+                elanSupp: parseInt(document.getElementById('hybrid-elan-supp')?.value) || 0
+            });
+            const qiGroup = document.getElementById('hybrid-qi-group');
+            const elanGroup = document.getElementById('hybrid-elan-group');
+            const suppCap = document.getElementById('hybrid-supp-cap');
+            if (qiGroup) qiGroup.style.display = plan.suppAllowed ? '' : 'none';
+            if (elanGroup) elanGroup.style.display = (plan.suppAllowed && plan.role === 'shuhui') ? '' : 'none';
+            if (suppCap) suppCap.textContent = plan.suppAllowed ? `(max ${plan.suppMax}${plan.role === 'shuhui' ? ' avec l\'Élan' : ''})` : '';
+            const qiInfo = planInfoHtml(plan);
+
             if (!pair.verb || !pair.target) {
                 infoEl.innerHTML = `<span style="color:var(--vitality-red);font-weight:600;">Aucun couple disponible</span><br>
                     <span style="font-size:0.92em;color:var(--silver-mist);">Ouvre au moins un verbe et une cible sur la page Magie.</span>`;
                 return;
             }
 
-            const moy = averagePowerPerDie(canalLvl, isEmotionOn());
-            const engaged = Math.min(requested, cap, left) + bonusD;
+            const moy = averagePowerPerDie(canalLvl, isEmotionOn() || /Ivresse/.test(qiInfo));
+            const engaged = plan.base + plan.supp + bonusD;
+            const fuelTxt = plan.fuel === 'qi' ? `Qi ${plan.avail}` : `Réserve ${left}/${getReserveMax()}`;
             infoEl.innerHTML = `
                 <span style="color:var(--ombre-purple);font-weight:600;">${pair.verb.name} × ${pair.target.name}</span>
-                · Magnitude max ${cap} (${verbLevel(pair.verbId)} + ${targetLevel(pair.targetId)}) · Réserve ${left}/${getReserveMax()}<br>
+                · Magnitude max ${cap} (${verbLevel(pair.verbId)} + ${targetLevel(pair.targetId)}) · ${fuelTxt}<br>
                 <span style="color:${col.color};font-weight:600;">Canal ${ATTR_LABEL[getCanal()]} ${canalLvl}</span> · ${describeFaces(canalLvl, isEmotionOn())}
                 · ${moy.toFixed(2)} Puissance/dé en moyenne<br>
                 <span style="font-size:0.92em;color:var(--silver-mist);">La Puissance obtenue s'ajoute au Résultat Final du jet de compétence.</span>
+                ${qiInfo}
                 ${requested > cap ? `<br><span style="color:var(--vitality-red)">⚠ Magnitude max ${cap} pour ce couple</span>` : ''}
-                ${requested > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
+                ${requested > plan.avail ? `<br><span style="color:var(--vitality-red)">⚠ ${plan.fuel === 'qi' ? 'Qi insuffisant' : 'Réserve insuffisante'} (${plan.avail} restants)</span>` : ''}
                 ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus (sans coût d'énergie) → ${engaged} dés lancés</span>` : ''}
             `;
         }
@@ -7461,7 +7653,7 @@
         // Puissance : Succès +1 · Résonance +2 · Transcendance +3
         // Chaque Résonance, Transcendance, Rupture et Fracture tire un d8 d'effet secondaire.
         // Transcendance et Fracture doublent l'effet obtenu.
-        function resolveMagicDice(level, count, emotion, paidDice, cap) {
+        function resolveMagicDice(level, count, emotion, paidDice, cap, tributeDice) {
             const results = [];
             let basePower = 0;               // Puissance des dés seuls, avant modificateurs
             let powerMod = 0;                // Amplification / Dissipation cumulées
@@ -7471,7 +7663,7 @@
             const billable = (paidDice === undefined || paidDice === null) ? count : paidDice;
             let energyCost = billable;               // 1 point par dé payé
             const maxDiceForLevel = (cap === undefined || cap === null) ? bestPair().cap : cap;
-            let mjGain = baseMjDice(billable, maxDiceForLevel);  // tribut selon le ratio d'engagement des dés payés
+            let mjGain = baseMjDice((tributeDice === undefined || tributeDice === null) ? billable : tributeDice, maxDiceForLevel);  // tribut selon le ratio d'engagement des dés payés
             const effects = [];
 
             let queue = count;
@@ -7714,7 +7906,18 @@
             const cap = pair.cap;
 
             const requestedMagic = parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0;
-            let actualMagic = clampMagicDice(requestedMagic, cap);
+            const hybridBonus = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
+            const qiSupp = parseInt(document.getElementById('hybrid-qi-supp')?.value) || 0;
+            const elanSupp = parseInt(document.getElementById('hybrid-elan-supp')?.value) || 0;
+
+            const wantMagic = requestedMagic > 0 || hybridBonus > 0;
+            const out = wantMagic ? resolveMagicAction({
+                requested: requestedMagic, emotion, source: 'hybrid', extraDice: hybridBonus, cap,
+                verbId: pair.verbId, targetId: pair.targetId, qiSupp, elanSupp
+            }) : null;
+            if (wantMagic && !out && !hasSkill) return;
+            if (out) applyMagicElanLoss(out.elanLoss);
+            if (!out) lastMagicRoll = null;
 
             const attrValue = hasSkill ? appState.attributes[attrName] : null;
             const attrLevel = hasSkill ? getAttributeLevel(attrValue) : null;
@@ -7722,19 +7925,14 @@
             const skillCounts = hasSkill ? countSuccesses(skillDice, skill.level)
                 : { successes: 0, eclats: 0, revers: 0, explosions: 0 };
 
-            const hybridBonus = parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0;
-            const paidMagicDice = actualMagic;   // conservé avant réassignation, pour comparaison à l'affichage
-            const totalMagicDice = actualMagic + hybridBonus;
             const canalLvl = getCanalValue();
-            const { results: magicResults, successes: magicSuccesses, basePower, powerMod, ruptures, fractures,
-                energyCost, mjGain, elanLoss, effects } = resolveMagicDice(canalLvl, totalMagicDice, emotion, actualMagic, cap);
-            if (totalMagicDice > 0) {
-                spendReserve(energyCost);
-                if (mjGain > 0) addMjDice(mjGain);
-                applyMagicElanLoss(elanLoss);
-            }
-            lastMagicRoll = totalMagicDice > 0 ? { puissance: magicSuccesses, dice: totalMagicDice } : null;
-            actualMagic = totalMagicDice;
+            const magicResults = out ? out.results : [];
+            const magicSuccesses = out ? out.successes : 0;
+            const { basePower = 0, powerMod = 0, ruptures = 0, fractures = 0,
+                energyCost = 0, mjGain = 0, elanLoss = 0, effects = [] } = out || {};
+            const actualMagic = out ? out.dice : 0;
+            const paidMagicDice = out ? (out.fuel === 'qi' ? out.plan.base + out.plan.qi : out.plan.base) : 0;
+            const usedEmotion = out ? out.emotion : emotion;
 
             // La Puissance du sort monte le Résultat Final du jet de compétence
             const perturb = hasSkill ? consumePerturbationForRoll() : null;
@@ -7748,7 +7946,8 @@
                 attrName: hasSkill ? (ATTR_LABEL[attrName] || capitalize(attrName)) : null,
                 verbName: pair.verb.name, targetName: pair.target.name, cap,
                 canalLvl, canalName: ATTR_LABEL[getCanal()],
-                skillDice, magicResults, emotion,
+                skillDice, magicResults, emotion: usedEmotion,
+                fuel: out ? out.fuel : 'energy', qiHtml: qiResultHtml(out),
                 basePower, powerMod, energyCostBase: paidMagicDice,
                 facesInfo: hasSkill ? facesSummary(attrLevel.faces) : null,
                 skillSuccesses: netSkillSuccesses, skillTotal, magicSuccesses, perturb,
@@ -7765,8 +7964,8 @@
                     successes: netSkillSuccesses,
                     bonus,
                     magic: {
-                        level: canalLvl, results: magicResults, puissance: magicSuccesses, emotion,
-                        ruptures, fractures, mjGain,
+                        level: canalLvl, results: magicResults, puissance: magicSuccesses, emotion: usedEmotion,
+                        ruptures, fractures, mjGain, qiNotes: out ? out.qiNotes : [],
                         pair: `${pair.verb.name} × ${pair.target.name}`, cap,
                         canalName: ATTR_LABEL[getCanal()],
                         inTotal: hasSkill
@@ -7843,7 +8042,7 @@
 
                 let effets = [];
                 if (data.mjGain > 0) effets.push(`⚠ ${data.mjGain} dé(s) de Perturbation au MJ`);
-                if (data.energyCost !== undefined) effets.push(`⚡ ${data.energyCost} énergie${data.energyCostBase && data.energyCost !== data.energyCostBase ? ` (base ${data.energyCostBase})` : ''}`);
+                if (data.energyCost !== undefined) effets.push(`${data.fuel === 'qi' ? '☯' : '⚡'} ${data.energyCost} ${data.fuel === 'qi' ? 'Qi' : 'énergie'}${data.energyCostBase && data.energyCost !== data.energyCostBase ? ` (base ${data.energyCostBase})` : ''}`);
                 if (data.elanLoss > 0) effets.push(`💔 −${data.elanLoss} Élan`);
                 if (effets.length) {
                     mag += `<div class="magnitude-status failure">${effets.join(' · ')}</div>`;
@@ -7852,7 +8051,7 @@
                 }
             }
             mag += `</div>`;
-            document.getElementById('magnitude-result-area').innerHTML = perturbationHtml(data.perturb) + (data.actualMagic > 0 ? mag + sustainButtonsHtml() : '');
+            document.getElementById('magnitude-result-area').innerHTML = perturbationHtml(data.perturb) + (data.actualMagic > 0 ? mag + (data.qiHtml || '') + sustainButtonsHtml() : '');
 
             // Sans compétence, le total d'un jet de compétence vaut 0 et n'a aucun
             // sens : le chiffre qui décide est la Puissance du sort.
@@ -7969,6 +8168,7 @@
             };
             const toSave = { ...appState };
             delete toSave.qiPool;   // le pool partagé vit dans son propre fichier
+            delete toSave.qiIvresse;
             const content = btoa(unescape(encodeURIComponent(JSON.stringify(toSave, null, 2))));
 
             updateGhStatus('Envoi…');
@@ -8007,14 +8207,106 @@
             }
         }
 
-        // ===== POOL DE QI PARTAGÉ (Shu & Yue) =====
+        // ===== QI DES JUMELLES (Shu & Yue) =====
+        // Yue récolte : sa réserve d'énergie ne sert qu'au siphon (Absorber × Vie), dont la
+        // Puissance remplit le pool ; boire une mort ajoute ⌈Élan max ÷ 3⌉ en Qi et autant d'Ivresse.
+        // Ses autres sorts se paient en Qi. Shuhui donne : elle ajoute Qi ou Élan en supplément.
+        // Supplément : au plus ⌊dés de base ÷ 2⌋, aux faces du canal, compté dans le tribut au MJ.
+        // Contenance : 2 × (Absorber + Vie) de Yue, le trop-plein est perdu.
+        // Tombée de la nuit : −5 Qi. Aube : l'Ivresse se dissipe.
         const QI_PATH = `${GH_CFG.dir}/shared/qi_pool.json`;
+        const QI_NIGHTFALL_LOSS = 5;
         let qiSha = null;
         let qiBusy = false;
-        let qiDirty = false;
+        let qiRemote = { qi: 0, ivresse: 0, cap: null };   // dernier état lu sur GitHub
+        let qiPending = [];                                 // opérations locales pas encore écrites
 
         function qiApi() {
             return `https://api.github.com/repos/${GH_CFG.owner}/${GH_CFG.repo}/contents/${QI_PATH}`;
+        }
+
+        function qiHeaders(token) {
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            };
+        }
+
+        // Qui tient la fiche : 'yue', 'shuhui' ou null. `qiRole` dans le .json prime sur le nom.
+        function qiRole() {
+            if (!appState.qiShared) return null;
+            if (appState.qiRole === 'yue' || appState.qiRole === 'shuhui') return appState.qiRole;
+            const n = ((appState.profile && appState.profile.name) || '')
+                .toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+            if (n.includes('yue')) return 'yue';
+            if (n.includes('shu')) return 'shuhui';
+            return null;
+        }
+
+        function isSiphonPair(verbId, targetId) {
+            return verbId === 'absorber' && targetId === 'vie';
+        }
+
+        // La contenance suit Yue : sa fiche l'écrit dans le fichier partagé pour celle de Shuhui
+        function qiCapLocal() { return 2 * (verbLevel('absorber') + targetLevel('vie')); }
+        function qiCap() { return qiRole() === 'yue' ? qiCapLocal() : (qiRemote.cap ?? null); }
+
+        function qiApplyOps(state, ops) {
+            const s = { qi: state.qi || 0, ivresse: state.ivresse || 0, cap: state.cap ?? null };
+            if (qiRole() === 'yue') s.cap = qiCapLocal();
+            ops.forEach(op => {
+                if (op.k === 'qi') {
+                    s.qi = Math.max(0, s.qi + op.n);
+                    if (s.cap != null) s.qi = Math.min(s.cap, s.qi);
+                } else if (op.k === 'ivresse') {
+                    s.ivresse = Math.max(0, s.ivresse + op.n);
+                } else if (op.k === 'aube') {
+                    s.ivresse = 0;
+                }
+            });
+            return s;
+        }
+
+        function qiState() { return qiApplyOps(qiRemote, qiPending); }
+        function qiAvailable() { return qiState().qi; }
+
+        function syncQiMirror() {
+            const s = qiState();
+            appState.qiPool = s.qi;
+            appState.qiIvresse = s.ivresse;
+        }
+
+        function qiQueue(op) {
+            qiPending.push(op);
+            syncQiMirror();
+            renderQiPanel();
+            updateHybridMagicInfo();
+            scheduleQiPush();
+        }
+
+        function qiSpend(n) { if (n > 0) qiQueue({ k: 'qi', n: -n }); }
+
+        // Ajoute du Qi ; ce qui dépasse la contenance est perdu
+        function qiGain(n) {
+            const s = qiState();
+            const cap = qiCap();
+            const room = cap == null ? n : Math.max(0, cap - s.qi);
+            const gained = Math.min(n, room);
+            qiQueue({ k: 'qi', n });
+            return { gained, lost: n - gained };
+        }
+
+        function qiNightfall() {
+            if (!confirm(`Tombée de la nuit : le pool perd ${QI_NIGHTFALL_LOSS} Qi.\nÀ ne faire qu'une fois par jour, sur une seule des deux fiches.`)) return;
+            const before = qiAvailable();
+            qiQueue({ k: 'qi', n: -QI_NIGHTFALL_LOSS });
+            showNotification(`🌙 La nuit tombe : −${Math.min(before, QI_NIGHTFALL_LOSS)} Qi`);
+        }
+
+        function qiDawn() {
+            qiQueue({ k: 'aube' });
+            showNotification('🌅 L\'aube se lève : l\'Ivresse se dissipe');
         }
 
         function setQiStatus(msg) {
@@ -8023,98 +8315,239 @@
 
         function renderQiPanel() {
             const on = !!appState.qiShared;
-            const qi = appState.qiPool ?? 0;
             const panel = document.getElementById('qi-panel');
             const perso = document.getElementById('qi-perso-block');
             if (panel) panel.style.display = on ? 'block' : 'none';
             if (perso) perso.style.display = on ? 'block' : 'none';
-            document.querySelectorAll('#qi-value, #qi-value-perso').forEach(el => el.textContent = qi);
+            if (!on) return;
+
+            const s = qiState();
+            const cap = qiCap();
+            const role = qiRole();
+            document.querySelectorAll('#qi-value, #qi-value-perso').forEach(el =>
+                el.innerHTML = cap != null ? `${s.qi}<span class="qi-cap">/${cap}</span>` : `${s.qi}`);
+
+            const ivresse = s.ivresse > 0
+                ? `<div class="qi-ivresse">🩸 Ivresse ${s.ivresse} · ${role === 'yue'
+                    ? 'tes prochains sorts partent en émotion'
+                    : 'Yue est grisée'}</div>`
+                : '';
+            const cycle = `${ivresse}<div class="qi-cycle-row">
+                <button class="qi-btn" onclick="qiNightfall()" title="Le Qi non donné se perd">🌙 Nuit −${QI_NIGHTFALL_LOSS}</button>
+                <button class="qi-btn" onclick="qiDawn()" title="L'Ivresse se dissipe">🌅 Aube</button>
+            </div>`;
+            document.querySelectorAll('#qi-cycle, #qi-cycle-perso').forEach(el => el.innerHTML = cycle);
+
+            const note = document.getElementById('qi-note');
+            if (note) note.textContent = role === 'yue'
+                ? 'Ta réserve ne sert qu\'au siphon (Absorber × Vie) : sa Puissance remplit le pool. Tes autres sorts se paient en Qi, avec un supplément d\'au plus la moitié des dés de base.'
+                : role === 'shuhui'
+                    ? 'Ajoute du Qi ou ton Élan en supplément d\'un sort : au plus la moitié des dés de base. Ces dés comptent dans le tribut au MJ.'
+                    : 'Commun à Shu et Yue.';
+        }
+
+        async function qiFetchRemote(token) {
+            const res = await fetch(`${qiApi()}?ref=${GH_CFG.branch}&t=${Date.now()}`, { headers: qiHeaders(token), cache: 'no-store' });
+            if (res.status === 404) return { sha: null, data: { qi: 0, ivresse: 0, cap: null } };
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const j = await res.json();
+            const d = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g, '')))));
+            return {
+                sha: j.sha,
+                data: {
+                    qi: Math.max(0, parseInt(d.qi) || 0),
+                    ivresse: Math.max(0, parseInt(d.ivresse) || 0),
+                    cap: d.cap == null ? null : parseInt(d.cap)
+                }
+            };
         }
 
         async function qiPull(silent) {
             if (!appState.qiShared) return;
             const token = ghToken();
             if (!token) { setQiStatus('jeton requis'); return; }
+            if (qiBusy) return;
             if (!silent) setQiStatus('lecture…');
             try {
-                const res = await fetch(`${qiApi()}?ref=${GH_CFG.branch}&t=${Date.now()}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Accept': 'application/vnd.github+json',
-                        'X-GitHub-Api-Version': '2022-11-28'
-                    }
-                });
-                if (res.status === 404) { qiSha = null; appState.qiPool = appState.qiPool ?? 0; setQiStatus('pool neuf'); renderQiPanel(); return; }
-                if (!res.ok) { setQiStatus('erreur ' + res.status); return; }
-                const j = await res.json();
-                qiSha = j.sha;
-                const data = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g, '')))));
-                appState.qiPool = Math.max(0, parseInt(data.qi) || 0);
-                setQiStatus('à jour ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                const r = await qiFetchRemote(token);
+                qiSha = r.sha;
+                qiRemote = r.data;
+                syncQiMirror();
                 renderQiPanel();
+                updateHybridMagicInfo();
+                setQiStatus('à jour ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                // La fiche de Yue tient la contenance à jour pour celle de Shuhui
+                if (qiRole() === 'yue' && qiRemote.cap !== qiCapLocal()) scheduleQiPush();
+                if (qiPending.length) scheduleQiPush();
             } catch (e) { setQiStatus('réseau'); console.error(e); }
         }
 
-        async function qiPush(retry) {
+        let qiPushTimer = null;
+
+        function scheduleQiPush() {
+            setQiStatus('modifié…');
+            if (qiPushTimer) clearTimeout(qiPushTimer);
+            qiPushTimer = setTimeout(() => { qiPushTimer = null; qiPush(); }, 500);
+        }
+
+        // Écrit les opérations en attente par-dessus la dernière version de GitHub :
+        // si l'autre fiche a écrit entre-temps, on relit et on rejoue, rien n'est perdu.
+        async function qiPush() {
             if (!appState.qiShared) return;
             const token = ghToken();
-            if (!token) { setGhToken(); return; }
-            if (qiBusy) { qiDirty = true; return; }   // un envoi est en cours : on repassera après
+            if (!token) { setQiStatus('jeton requis'); return; }
+            if (qiBusy) { scheduleQiPush(); return; }
+            const capStale = qiRole() === 'yue' && qiRemote.cap !== qiCapLocal();
+            if (!qiPending.length && !capStale) return;
+
             qiBusy = true;
-            qiDirty = false;
             setQiStatus('envoi…');
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'Accept': 'application/vnd.github+json',
-                'X-GitHub-Api-Version': '2022-11-28'
-            };
-            const payload = {
-                qi: appState.qiPool ?? 0, updated: new Date().toISOString(),
-                by: (appState.profile && appState.profile.name) || ''
-            };
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+            let ok = false;
             try {
-                const res = await fetch(qiApi(), {
-                    method: 'PUT', headers,
-                    body: JSON.stringify({
-                        message: `qi ${payload.qi} · ${payload.by}`,
-                        content, branch: GH_CFG.branch,
-                        ...(qiSha ? { sha: qiSha } : {})
-                    })
-                });
-                if (res.ok) {
-                    qiSha = (await res.json()).content.sha;
-                    setQiStatus('synchronisé ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
-                } else if (res.status === 409 && !retry) {
-                    // Conflit : quelqu'un a écrit entre temps. On relit et on réessaie une fois.
-                    qiBusy = false;
-                    await qiPull(true);
-                    return qiPush(true);
-                } else {
-                    setQiStatus('échec ' + res.status);
-                    showNotification('⚠️ Qi non synchronisé (' + res.status + ')');
+                for (let attempt = 0; attempt < 4 && !ok; attempt++) {
+                    const r = await qiFetchRemote(token);
+                    const batch = qiPending.length;
+                    const next = qiApplyOps(r.data, qiPending.slice(0, batch));
+                    const by = (appState.profile && appState.profile.name) || '';
+                    const payload = { ...next, updated: new Date().toISOString(), by };
+                    const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+                    const res = await fetch(qiApi(), {
+                        method: 'PUT',
+                        headers: qiHeaders(token),
+                        body: JSON.stringify({
+                            message: `qi ${next.qi} · ivresse ${next.ivresse} · ${by}`,
+                            content, branch: GH_CFG.branch,
+                            ...(r.sha ? { sha: r.sha } : {})
+                        })
+                    });
+                    if (res.ok) {
+                        qiSha = (await res.json()).content.sha;
+                        qiRemote = next;
+                        qiPending = qiPending.slice(batch);
+                        ok = true;
+                    } else if (res.status !== 409) {
+                        setQiStatus('échec ' + res.status);
+                        showNotification('⚠️ Qi non synchronisé (' + res.status + ')');
+                        break;
+                    }
                 }
+                if (ok) setQiStatus('synchronisé ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                else if (qiPending.length) setQiStatus('en attente, réessai au retour sur la fiche');
             } catch (e) { setQiStatus('réseau'); console.error(e); }
             qiBusy = false;
-            // Une modification est survenue pendant l'envoi : on renvoie la valeur à jour
-            if (qiDirty) { qiDirty = false; qiPush(); }
+            syncQiMirror();
+            renderQiPanel();
+            // Des opérations sont arrivées pendant l'envoi : on les pousse aussi
+            if (ok && qiPending.length) scheduleQiPush();
         }
 
-        // Applique ± le montant saisi dans le champ associé
+        // Correction manuelle : applique ± le montant saisi
         function qiStep(sign, fieldId) {
             const n = Math.max(1, parseInt(document.getElementById(fieldId)?.value) || 1);
             qiAdjust(sign * n);
         }
 
-        let qiPushTimer = null;
-
         function qiAdjust(delta) {
-            appState.qiPool = Math.max(0, (appState.qiPool ?? 0) + delta);
-            renderQiPanel();
-            setQiStatus('modifié…');
-            // Regroupe les clics rapprochés en un seul envoi
-            if (qiPushTimer) clearTimeout(qiPushTimer);
-            qiPushTimer = setTimeout(() => { qiPushTimer = null; qiPush(); }, 500);
+            qiQueue({ k: 'qi', n: delta });
+        }
+
+        // ── Effets du Qi sur un sort ──
+
+        // Don de vie : l'Élan que Shuhui verse devient une blessure magique déjà stabilisée
+        const DON_DE_VIE_ID = 'wound_don_de_vie';
+
+        function applyDonDeVie(n) {
+            if (!n || n <= 0) return;
+            let w = appState.wounds.find(x => x.id === DON_DE_VIE_ID);
+            if (w) {
+                w.gravity = (w.gravity || 0) + n;
+            } else {
+                appState.wounds.push({
+                    id: DON_DE_VIE_ID, name: 'Don de vie', type: 'Magique', gravity: n,
+                    stabilized: true, convalescence: false, convalescenceLabel: ''
+                });
+            }
+            renderWounds();
+            recalcHealthFromWounds();
+        }
+
+        // Comment un sort est financé : dés de base, supplément permis, source de chaque dé
+        function planMagic({ requested, cap, verbId, targetId, qiSupp, elanSupp }) {
+            const role = qiRole();
+            const siphon = isSiphonPair(verbId, targetId);
+            const fuel = (role === 'yue' && !siphon) ? 'qi' : 'energy';
+            const qiLeft = role ? qiAvailable() : 0;
+            const avail = fuel === 'qi' ? qiLeft : getReserveLeft();
+            const base = Math.max(0, Math.min(requested || 0, cap || 0, avail));
+            const suppAllowed = !!role && !(role === 'yue' && siphon);
+            const suppMax = suppAllowed ? Math.floor(base / 2) : 0;
+            const qiRoom = fuel === 'qi' ? qiLeft - base : qiLeft;
+            const qi = Math.max(0, Math.min(qiSupp || 0, suppMax, qiRoom));
+            const elanLeft = appState.counters.health.current || 0;
+            const elan = role === 'shuhui' ? Math.max(0, Math.min(elanSupp || 0, suppMax - qi, elanLeft)) : 0;
+            return { role, siphon, fuel, avail, base, suppMax, suppAllowed, qi, elan, supp: qi + elan, requested, cap };
+        }
+
+        // Ligne d'aide affichée sous les champs de magie
+        function planInfoHtml(plan) {
+            if (!plan.role) return '';
+            const parts = [];
+            if (plan.fuel === 'qi') parts.push(`☯ Payé en Qi : ${plan.base} dé(s) de base (Qi ${qiAvailable()})`);
+            else if (plan.role === 'yue') parts.push('☯ Siphon : payé en énergie, sa Puissance remplit le pool');
+            if (plan.suppAllowed) parts.push(`supplément max ${plan.suppMax}`
+                + (plan.supp ? ` · engagé ${plan.qi ? plan.qi + ' Qi' : ''}${plan.qi && plan.elan ? ' + ' : ''}${plan.elan ? plan.elan + ' Élan' : ''}` : ''));
+            const st = qiState();
+            if (plan.role === 'yue' && st.ivresse > 0) parts.push(`🩸 Ivresse ${st.ivresse} : sort forcé en émotion`);
+            return parts.length ? `<br><span style="color:#085041;font-weight:600;">${parts.join(' · ')}</span>` : '';
+        }
+
+        // Bloc de mise à mort, proposé après un siphon de Yue
+        function killBlockHtml() {
+            return `<div class="qi-kill" id="qi-kill">
+                <div class="qi-kill-title">☠ La cible meurt ?</div>
+                <div class="qi-kill-sub">Yue boit la mort : ⌈Élan max ÷ 3⌉ en Qi, et autant d'Ivresse.</div>
+                <div class="qi-kill-row">
+                    <label for="qi-kill-elan">Élan max de la victime</label>
+                    <input type="number" id="qi-kill-elan" min="1" value="10">
+                    <button class="qi-btn kill" onclick="drinkDeath()">Boire la mort</button>
+                </div>
+            </div>`;
+        }
+
+        function drinkDeath() {
+            const e = parseInt(document.getElementById('qi-kill-elan')?.value) || 0;
+            if (e <= 0) return;
+            const bonus = Math.ceil(e / 3);
+            const h = qiGain(bonus);
+            qiQueue({ k: 'ivresse', n: bonus });
+            const block = document.getElementById('qi-kill');
+            if (block) block.innerHTML = `<div class="qi-kill-title">☠ Mort bue : +${h.gained} Qi`
+                + (h.lost ? ` (${h.lost} perdu${h.lost > 1 ? 's' : ''}, pool plein)` : '')
+                + ` · Ivresse +${bonus}</div>`;
+            showNotification(`☠ Mort bue : +${h.gained} Qi · Ivresse +${bonus}`);
+            if (!isPrivateRoll()) {
+                const name = appState.profile.name || 'Yue';
+                fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: name,
+                        embeds: [{
+                            description: `☠ **${name} boit la mort** · +${h.gained} Qi`
+                                + (h.lost ? ` (${h.lost} perdu(s), pool plein)` : '') + ` · 🩸 Ivresse +${bonus}`,
+                            color: 0x501313, author: { name }
+                        }]
+                    })
+                }).catch(() => { });
+            }
+        }
+
+        function qiResultHtml(out) {
+            if (!out || !out.plan || !out.plan.role) return '';
+            let h = '';
+            if (out.qiNotes && out.qiNotes.length) h += `<div class="qi-result">${out.qiNotes.join(' · ')}</div>`;
+            if (out.plan.role === 'yue' && out.plan.siphon) h += killBlockHtml();
+            return h;
         }
 
         // Relecture automatique : retour sur l'onglet, focus fenêtre, et toutes les 60 s
@@ -8276,6 +8709,8 @@
             lastVisionAt = 0;
             visionCount = 0;
             qiSha = null;
+            qiRemote = { qi: 0, ivresse: 0, cap: null };
+            qiPending = [];
             if (qiPollTimer) { clearInterval(qiPollTimer); qiPollTimer = null; }
 
             const notesEl = document.getElementById('notes-textarea');
@@ -8671,6 +9106,7 @@
                 const effets = [];
                 if (m.mjGain > 0) effets.push(`⚠ +${m.mjGain} dé(s) de Perturbation au MJ`);
                 if (effets.length) lines.push(`┈ Effets : ${effets.join(' · ')}`);
+                if (m.qiNotes && m.qiNotes.length) lines.push(`┈ ${m.qiNotes.join(' · ')}`);
             }
 
             const embed = {
