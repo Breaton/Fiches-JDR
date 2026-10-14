@@ -8212,7 +8212,7 @@
         // Puissance remplit le pool ; boire une mort ajoute ⌈Élan max ÷ 3⌉ en Qi et autant d'Ivresse.
         // Ses autres sorts se paient en Qi. Shuhui donne : elle ajoute Qi ou Élan en supplément.
         // Supplément : au plus ⌊dés de base ÷ 2⌋, aux faces du canal, compté dans le tribut au MJ.
-        // Contenance : 2 × (Absorber + Vie) de Yue, le trop-plein est perdu.
+        // Contenance : 3 × (Absorber + Vie) de Yue, le trop-plein est perdu.
         // Tombée de la nuit : −5 Qi. Aube : l'Ivresse se dissipe.
         const QI_PATH = `${GH_CFG.dir}/shared/qi_pool.json`;
         const QI_NIGHTFALL_LOSS = 5;
@@ -8249,7 +8249,7 @@
         }
 
         // La contenance suit Yue : sa fiche l'écrit dans le fichier partagé pour celle de Shuhui
-        function qiCapLocal() { return 2 * (verbLevel('absorber') + targetLevel('vie')); }
+        function qiCapLocal() { return 3 * (verbLevel('absorber') + targetLevel('vie')); }
         function qiCap() { return qiRole() === 'yue' ? qiCapLocal() : (qiRemote.cap ?? null); }
 
         function qiApplyOps(state, ops) {
