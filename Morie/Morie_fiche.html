@@ -5191,7 +5191,10 @@
         ];
 
         // ========== ÉTAT DE L'APPLICATION ==========
-        const appState = {
+        // Fabrique d'un état vierge : chaque chargement repart de là, pour que
+        // rien d'un personnage (don de visions, Qi partagé…) ne fuie sur le suivant.
+        function makeDefaultState() {
+            return {
             profile: { name: '', image: null },
             attributes: {
                 puissance: 4, vivacite: 4, precision: 4, endurance: 4,
@@ -5202,22 +5205,34 @@
                 power: { current: 10, max: 10 }
             },
             customResources: [],
-            skills: [],
+            skills: defaultRegularSkills.map((name, i) => ({
+                id: `regular_${i}`, name, level: 3, isBase: true, defaultAttr: getDefaultSkillAttr(name)
+            })),
             wounds: [],
             objects: [],
             notes: "",
             currentModal: null,
             qiShared: false,
             qiPool: 0,
+            visionsEnabled: false,
             magic: { reserveUsed: 0, mjDice: 0, reserveMaxOverride: null, canal: 'volonte' },
-            verbs: [],
-            targets: [],
+            verbs: VERBS.map(v => ({ id: v.id, level: 0 })),
+            targets: TARGETS.map(t => ({ id: t.id, level: 0 })),
             focalisation: { current: 1, max: 1 },
             receivedBuffs: [],
             masteries: [],
             vitesseBonus: 0,
             activeSpells: []
-        };
+            };
+        }
+
+        const appState = makeDefaultState();
+
+        // Vide l'état puis le remplit avec un personnage chargé, sans rien hériter du précédent
+        function replaceState(loaded) {
+            Object.keys(appState).forEach(k => delete appState[k]);
+            Object.assign(appState, makeDefaultState(), loaded);
+        }
 
         // ========== GESTION DES PAGES ==========
         function switchPage(pageName, tabEl) {
@@ -8254,11 +8269,22 @@
         }
 
         function applyLoadedState(loaded) {
-            Object.assign(appState, loaded);
+            replaceState(loaded);
             applyBackwardCompatDefaults();
+
+            // Le don et le Qi appartiennent au personnage : leurs compteurs repartent à zéro
+            lastVisionAt = 0;
+            visionCount = 0;
+            qiSha = null;
+            if (qiPollTimer) { clearInterval(qiPollTimer); qiPollTimer = null; }
+
+            const notesEl = document.getElementById('notes-textarea');
+            if (notesEl) notesEl.value = appState.notes || '';
+
             renderPassives();
             restoreProfileUI();
             renderMagicPage();
+            renderQiPanel();
             if (appState.qiShared) { qiPull(true); startQiAutoSync(); }
 
             updateAllAttributes();
@@ -8367,10 +8393,10 @@
         function restoreProfileUI() {
             const nameEl = document.getElementById('character-name');
             if (nameEl) nameEl.value = appState.profile.name || '';
-            if (appState.profile.image) {
-                const imgDisplay = document.getElementById('profile-image-display');
-                if (imgDisplay) imgDisplay.innerHTML = `<img src="${appState.profile.image}" alt="Portrait">`;
-            }
+            const imgDisplay = document.getElementById('profile-image-display');
+            if (imgDisplay) imgDisplay.innerHTML = appState.profile.image
+                ? `<img src="${appState.profile.image}" alt="Portrait">`
+                : '👤';
         }
 
         // ========== UTILITAIRES ==========
@@ -8679,13 +8705,7 @@
 
         // ========== INITIALISATION ==========
         document.addEventListener('DOMContentLoaded', function () {
-            // Compétences régulières par défaut (marquées comme base)
-            // Ordinaire (3) est le socle de tout adulte
-            defaultRegularSkills.forEach((name, i) => {
-                appState.skills.push({ id: `regular_${i}`, name, level: 3, isBase: true, defaultAttr: getDefaultSkillAttr(name) });
-            });
-
-            initMagicRefs();
+            // Compétences par défaut et référentiel magique : déjà posés par makeDefaultState()
 
             // Priorité de restauration : import point-buy en attente > sauvegarde locale > défaut
             const pendingPB = localStorage.getItem('aequor_pb_export');
@@ -8695,7 +8715,7 @@
                 try {
                     const data = JSON.parse(pendingPB);
                     localStorage.removeItem('aequor_pb_export');
-                    Object.assign(appState, data);
+                    replaceState(data);
                     applyBackwardCompatDefaults();
                     restoreProfileUI();
                 } catch (e) { localStorage.removeItem('aequor_pb_export'); }
@@ -8704,7 +8724,7 @@
                 if (autosaved) {
                     try {
                         const data = JSON.parse(autosaved);
-                        Object.assign(appState, data);
+                        replaceState(data);
                         applyBackwardCompatDefaults();
                         restoreProfileUI();
                         restoredFromAutosave = true;
