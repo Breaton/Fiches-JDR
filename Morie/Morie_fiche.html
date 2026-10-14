@@ -4901,7 +4901,7 @@
                             Avec une compétence, la <strong>Puissance s'ajoute au Résultat Final</strong> du jet, et
                             dimensionne en plus l'effet obtenu (gravité infligée, paliers de soin, portée, durée…).<br>
                             <strong>Coût :</strong> 1 point d'énergie par dé engagé. Chaque jet cède au MJ
-                            ⌈dés ÷ 2⌉ dés de Perturbation.<br>
+                            ⌈dés ÷ 4⌉ dés de Perturbation, plus si l'on dépasse son plafond.<br>
                             <strong>Puissance :</strong> Succès +1 · Résonance +2 · Transcendance +3<br>
                             <strong>Effets secondaires (1d12)</strong> · Résonance et Transcendance :
                             Stabilité (fréquent), Fluidité, Amplification, Cascade (rare).
@@ -7120,7 +7120,8 @@
         function baseMjDice(numDice, maxDice) {
             const cap = Math.max(1, maxDice || numDice);
             const ratio = numDice / cap;
-            return Math.max(1, Math.ceil((numDice / 2) * ratio));
+            // Divisé par deux depuis que la Puissance s'ajoute aux jets : la magie est plus fréquente
+            return Math.max(1, Math.ceil((numDice / 4) * ratio));
         }
 
         // Effets secondaires tirés au d12. Répartition inégale : l'effet doux domine,
