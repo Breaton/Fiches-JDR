@@ -2614,17 +2614,50 @@
                 grid-template-columns: 1fr;
             }
         }
-    
+
         /* Icônes d'axe des attributs */
-        .attr-ico { display: inline-block; vertical-align: -3px; flex: none; margin-right: 6px; }
-        .attr-axis-head { display: flex; align-items: center; gap: 7px; margin: 14px 0 6px; padding: 0 2px 5px;
-            border-bottom: 1px solid var(--axis); color: var(--axis); font-size: 0.78em; font-weight: 700;
-            letter-spacing: 0.06em; text-transform: uppercase; }
-        .attr-axis-head:first-child { margin-top: 2px; }
-        .attr-axis-head .attr-ico { margin-right: 0; }
-        .attr-grid .attr-axis-head { grid-column: 1 / -1; margin: 6px 0 0; }
-        .attr-grid .attr-axis-head:first-child { margin-top: 0; }
-        .attr-name { display: flex; align-items: center; }
+        .attr-ico {
+            display: inline-block;
+            vertical-align: -3px;
+            flex: none;
+            margin-right: 6px;
+        }
+
+        .attr-axis-head {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin: 14px 0 6px;
+            padding: 0 2px 5px;
+            border-bottom: 1px solid var(--axis);
+            color: var(--axis);
+            font-size: 0.78em;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .attr-axis-head:first-child {
+            margin-top: 2px;
+        }
+
+        .attr-axis-head .attr-ico {
+            margin-right: 0;
+        }
+
+        .attr-grid .attr-axis-head {
+            grid-column: 1 / -1;
+            margin: 6px 0 0;
+        }
+
+        .attr-grid .attr-axis-head:first-child {
+            margin-top: 0;
+        }
+
+        .attr-name {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -2769,7 +2802,8 @@
                                     onchange="saveField()">
                             </div>
                         </div>
-                        <div class="disclose" onclick="toggleDisclose('classif-desc', this)">▸ Définition de la classe</div>
+                        <div class="disclose" onclick="toggleDisclose('classif-desc', this)">▸ Définition de la classe
+                        </div>
                         <div class="disclose-body" id="classif-desc"></div>
                     </div>
                 </div>
@@ -2953,413 +2987,417 @@
             </div>
         </section>
 
-    <!-- ================= PAGE 4 · JETS ================= -->
-    <section class="page page-rolls" id="page-rolls">
-        <div class="col">
-            <div class="card">
-                <div class="card-head accent-aci">
-                    <span class="tag">§10</span>
-                    <span class="card-title">Pupitre de résolution</span>
-                </div>
-                <div class="card-body">
-                    <div class="roll-tabs">
-                        <button class="roll-tab active" onclick="switchRoll('skill', this)">Aptitude</button>
-                        <button class="roll-tab" onclick="switchRoll('power', this)">Pouvoir</button>
-                        <button class="roll-tab" onclick="switchRoll('combo', this)">Combiné</button>
+        <!-- ================= PAGE 4 · JETS ================= -->
+        <section class="page page-rolls" id="page-rolls">
+            <div class="col">
+                <div class="card">
+                    <div class="card-head accent-aci">
+                        <span class="tag">§10</span>
+                        <span class="card-title">Pupitre de résolution</span>
                     </div>
-
-                    <!-- JET D'APTITUDE -->
-                    <div class="roll-panel active" id="rp-skill">
-                        <div class="pgroup pg-skill">
-                            <div class="pgroup-head"><span class="pg-dot"></span>Paramètres d'aptitude</div>
-                            <div class="pgroup-body">
-                                <div class="poolbar" id="s-pool"></div>
-                                <div class="rf-main">
-                                    <div class="field f-skill">
-                                        <label>Aptitude engagée</label>
-                                        <select id="s-skill" onchange="onSkillPick()"></select>
-                                    </div>
-                                    <div class="field">
-                                        <label>Attribut de référence</label>
-                                        <select id="s-attr" onchange="refreshRollUI()"></select>
-                                    </div>
-                                </div>
-                                <div class="rf-num">
-                                    <div class="numbox mod">
-                                        <label>Modificateur de jet</label>
-                                        <div class="nb-ctl">
-                                            <button type="button" onclick="stepNum('s-bonus',-1)">−</button>
-                                            <input type="number" id="s-bonus" value="0" onchange="refreshRollUI()">
-                                            <button type="button" onclick="stepNum('s-bonus',1)">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="readout" id="s-readout"></div>
-                            </div>
-                        </div>
-                        <button class="roll-go" id="s-go" onclick="rollSkill()">Lancer le jet d'aptitude</button>
-                    </div>
-
-                    <!-- JET DE POUVOIR -->
-                    <div class="roll-panel" id="rp-power">
-                        <div class="pgroup pg-power">
-                            <div class="pgroup-head"><span class="pg-dot"></span>Paramètres de pouvoir</div>
-                            <div class="pgroup-body">
-                                <div class="poolbar" id="p-poolp"></div>
-                                <div class="rf-main">
-                                    <div class="field f-vector">
-                                        <label>Vecteur d'effet</label>
-                                        <select id="p-vector" onchange="refreshRollUI()"></select>
-                                    </div>
-                                    <div class="field f-domain">
-                                        <label>Domaine d'application</label>
-                                        <select id="p-domain" onchange="refreshRollUI()"></select>
-                                    </div>
-                                </div>
-                                <div class="rf-num">
-                                    <div class="numbox mag">
-                                        <label>Magnitude <span class="nb-cap" id="p-mag-cap"></span></label>
-                                        <div class="nb-ctl">
-                                            <button type="button" onclick="stepNum('p-mag',-1)">−</button>
-                                            <input type="number" id="p-mag" value="1" min="0" max="20"
-                                                onchange="refreshRollUI()">
-                                            <button type="button" onclick="stepNum('p-mag',1)">+</button>
-                                        </div>
-                                    </div>
-                                    <div class="numbox surge">
-                                        <label>Dés bonus <span class="nb-cap">max 3</span></label>
-                                        <div class="nb-ctl">
-                                            <button type="button" onclick="stepNum('p-surge',-1)">−</button>
-                                            <input type="number" id="p-surge" value="0" min="0" max="3"
-                                                onchange="refreshRollUI()">
-                                            <button type="button" onclick="stepNum('p-surge',1)">+</button>
-                                        </div>
-                                    </div>
-                                    <div class="numbox mod">
-                                        <label>Mod. de puissance</label>
-                                        <div class="nb-ctl">
-                                            <button type="button" onclick="stepNum('p-bonus',-1)">−</button>
-                                            <input type="number" id="p-bonus" value="0" onchange="refreshRollUI()">
-                                            <button type="button" onclick="stepNum('p-bonus',1)">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="readout" id="p-readout"></div>
-                            </div>
-                        </div>
-                        <button class="roll-go power" id="p-go" onclick="rollPower()">Activer le pouvoir</button>
-                    </div>
-
-                    <!-- JET COMBINÉ -->
-                    <div class="roll-panel" id="rp-combo">
-                        <div class="pgroup pg-skill">
-                            <div class="pgroup-head"><span class="pg-dot"></span>Paramètres d'aptitude</div>
-                            <div class="pgroup-body">
-                                <div class="poolbar" id="c-pool"></div>
-                                <div class="rf-main">
-                                    <div class="field f-skill">
-                                        <label>Aptitude engagée</label>
-                                        <select id="c-skill" onchange="onComboSkillPick()"></select>
-                                    </div>
-                                    <div class="field">
-                                        <label>Attribut de référence</label>
-                                        <select id="c-sattr" onchange="refreshRollUI()"></select>
-                                    </div>
-                                </div>
-                                <div class="rf-num">
-                                    <div class="numbox mod">
-                                        <label>Modificateur de jet</label>
-                                        <div class="nb-ctl">
-                                            <button type="button" onclick="stepNum('c-bonus',-1)">−</button>
-                                            <input type="number" id="c-bonus" value="0" onchange="refreshRollUI()">
-                                            <button type="button" onclick="stepNum('c-bonus',1)">+</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="readout" id="c-readout-skill"></div>
-                            </div>
+                    <div class="card-body">
+                        <div class="roll-tabs">
+                            <button class="roll-tab active" onclick="switchRoll('skill', this)">Aptitude</button>
+                            <button class="roll-tab" onclick="switchRoll('power', this)">Pouvoir</button>
+                            <button class="roll-tab" onclick="switchRoll('combo', this)">Combiné</button>
                         </div>
 
-                        <div class="combo-link">- résolus dans la même action -</div>
-
-                        <div class="pgroup pg-power">
-                            <div class="pgroup-head"><span class="pg-dot"></span>Paramètres de pouvoir</div>
-                            <div class="pgroup-body">
-                                <div class="poolbar" id="c-poolp"></div>
-                                <div class="rf-main">
-                                    <div class="field f-vector">
-                                        <label>Vecteur d'effet</label>
-                                        <select id="c-vector" onchange="refreshRollUI()"></select>
+                        <!-- JET D'APTITUDE -->
+                        <div class="roll-panel active" id="rp-skill">
+                            <div class="pgroup pg-skill">
+                                <div class="pgroup-head"><span class="pg-dot"></span>Paramètres d'aptitude</div>
+                                <div class="pgroup-body">
+                                    <div class="poolbar" id="s-pool"></div>
+                                    <div class="rf-main">
+                                        <div class="field f-skill">
+                                            <label>Aptitude engagée</label>
+                                            <select id="s-skill" onchange="onSkillPick()"></select>
+                                        </div>
+                                        <div class="field">
+                                            <label>Attribut de référence</label>
+                                            <select id="s-attr" onchange="refreshRollUI()"></select>
+                                        </div>
                                     </div>
-                                    <div class="field f-domain">
-                                        <label>Domaine d'application</label>
-                                        <select id="c-domain" onchange="refreshRollUI()"></select>
+                                    <div class="rf-num">
+                                        <div class="numbox mod">
+                                            <label>Modificateur de jet</label>
+                                            <div class="nb-ctl">
+                                                <button type="button" onclick="stepNum('s-bonus',-1)">−</button>
+                                                <input type="number" id="s-bonus" value="0" onchange="refreshRollUI()">
+                                                <button type="button" onclick="stepNum('s-bonus',1)">+</button>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="readout" id="s-readout"></div>
                                 </div>
-                                <div class="rf-num">
-                                    <div class="numbox mag">
-                                        <label>Magnitude <span class="nb-cap" id="c-mag-cap"></span></label>
-                                        <div class="nb-ctl">
-                                            <button type="button" onclick="stepNum('c-mag',-1)">−</button>
-                                            <input type="number" id="c-mag" value="1" min="0" max="20"
-                                                onchange="refreshRollUI()">
-                                            <button type="button" onclick="stepNum('c-mag',1)">+</button>
+                            </div>
+                            <button class="roll-go" id="s-go" onclick="rollSkill()">Lancer le jet d'aptitude</button>
+                        </div>
+
+                        <!-- JET DE POUVOIR -->
+                        <div class="roll-panel" id="rp-power">
+                            <div class="pgroup pg-power">
+                                <div class="pgroup-head"><span class="pg-dot"></span>Paramètres de pouvoir</div>
+                                <div class="pgroup-body">
+                                    <div class="poolbar" id="p-poolp"></div>
+                                    <div class="rf-main">
+                                        <div class="field f-vector">
+                                            <label>Vecteur d'effet</label>
+                                            <select id="p-vector" onchange="refreshRollUI()"></select>
+                                        </div>
+                                        <div class="field f-domain">
+                                            <label>Domaine d'application</label>
+                                            <select id="p-domain" onchange="refreshRollUI()"></select>
                                         </div>
                                     </div>
-                                    <div class="numbox surge">
-                                        <label>Dés bonus <span class="nb-cap">max 3</span></label>
-                                        <div class="nb-ctl">
-                                            <button type="button" onclick="stepNum('c-surge',-1)">−</button>
-                                            <input type="number" id="c-surge" value="0" min="0" max="3"
-                                                onchange="refreshRollUI()">
-                                            <button type="button" onclick="stepNum('c-surge',1)">+</button>
+                                    <div class="rf-num">
+                                        <div class="numbox mag">
+                                            <label>Magnitude <span class="nb-cap" id="p-mag-cap"></span></label>
+                                            <div class="nb-ctl">
+                                                <button type="button" onclick="stepNum('p-mag',-1)">−</button>
+                                                <input type="number" id="p-mag" value="1" min="0" max="20"
+                                                    onchange="refreshRollUI()">
+                                                <button type="button" onclick="stepNum('p-mag',1)">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="numbox surge">
+                                            <label>Dés bonus <span class="nb-cap">max 3</span></label>
+                                            <div class="nb-ctl">
+                                                <button type="button" onclick="stepNum('p-surge',-1)">−</button>
+                                                <input type="number" id="p-surge" value="0" min="0" max="3"
+                                                    onchange="refreshRollUI()">
+                                                <button type="button" onclick="stepNum('p-surge',1)">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="numbox mod">
+                                            <label>Mod. de puissance</label>
+                                            <div class="nb-ctl">
+                                                <button type="button" onclick="stepNum('p-bonus',-1)">−</button>
+                                                <input type="number" id="p-bonus" value="0" onchange="refreshRollUI()">
+                                                <button type="button" onclick="stepNum('p-bonus',1)">+</button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="numbox mod">
-                                        <label>Mod. de puissance</label>
-                                        <div class="nb-ctl">
-                                            <button type="button" onclick="stepNum('c-pbonus',-1)">−</button>
-                                            <input type="number" id="c-pbonus" value="0" onchange="refreshRollUI()">
-                                            <button type="button" onclick="stepNum('c-pbonus',1)">+</button>
-                                        </div>
-                                    </div>
+                                    <div class="readout" id="p-readout"></div>
                                 </div>
-                                <div class="readout" id="c-readout-power"></div>
                             </div>
+                            <button class="roll-go power" id="p-go" onclick="rollPower()">Activer le pouvoir</button>
                         </div>
 
-                        <button class="roll-go" id="c-go" onclick="rollCombo()">Résoudre l'intervention</button>
-                    </div>
+                        <!-- JET COMBINÉ -->
+                        <div class="roll-panel" id="rp-combo">
+                            <div class="pgroup pg-skill">
+                                <div class="pgroup-head"><span class="pg-dot"></span>Paramètres d'aptitude</div>
+                                <div class="pgroup-body">
+                                    <div class="poolbar" id="c-pool"></div>
+                                    <div class="rf-main">
+                                        <div class="field f-skill">
+                                            <label>Aptitude engagée</label>
+                                            <select id="c-skill" onchange="onComboSkillPick()"></select>
+                                        </div>
+                                        <div class="field">
+                                            <label>Attribut de référence</label>
+                                            <select id="c-sattr" onchange="refreshRollUI()"></select>
+                                        </div>
+                                    </div>
+                                    <div class="rf-num">
+                                        <div class="numbox mod">
+                                            <label>Modificateur de jet</label>
+                                            <div class="nb-ctl">
+                                                <button type="button" onclick="stepNum('c-bonus',-1)">−</button>
+                                                <input type="number" id="c-bonus" value="0" onchange="refreshRollUI()">
+                                                <button type="button" onclick="stepNum('c-bonus',1)">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="readout" id="c-readout-skill"></div>
+                                </div>
+                            </div>
 
-                    <label class="private-toggle">
-                        <input type="checkbox" id="private-roll"> Jet confidentiel (pas de transmission)
-                    </label>
+                            <div class="combo-link">- résolus dans la même action -</div>
+
+                            <div class="pgroup pg-power">
+                                <div class="pgroup-head"><span class="pg-dot"></span>Paramètres de pouvoir</div>
+                                <div class="pgroup-body">
+                                    <div class="poolbar" id="c-poolp"></div>
+                                    <div class="rf-main">
+                                        <div class="field f-vector">
+                                            <label>Vecteur d'effet</label>
+                                            <select id="c-vector" onchange="refreshRollUI()"></select>
+                                        </div>
+                                        <div class="field f-domain">
+                                            <label>Domaine d'application</label>
+                                            <select id="c-domain" onchange="refreshRollUI()"></select>
+                                        </div>
+                                    </div>
+                                    <div class="rf-num">
+                                        <div class="numbox mag">
+                                            <label>Magnitude <span class="nb-cap" id="c-mag-cap"></span></label>
+                                            <div class="nb-ctl">
+                                                <button type="button" onclick="stepNum('c-mag',-1)">−</button>
+                                                <input type="number" id="c-mag" value="1" min="0" max="20"
+                                                    onchange="refreshRollUI()">
+                                                <button type="button" onclick="stepNum('c-mag',1)">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="numbox surge">
+                                            <label>Dés bonus <span class="nb-cap">max 3</span></label>
+                                            <div class="nb-ctl">
+                                                <button type="button" onclick="stepNum('c-surge',-1)">−</button>
+                                                <input type="number" id="c-surge" value="0" min="0" max="3"
+                                                    onchange="refreshRollUI()">
+                                                <button type="button" onclick="stepNum('c-surge',1)">+</button>
+                                            </div>
+                                        </div>
+                                        <div class="numbox mod">
+                                            <label>Mod. de puissance</label>
+                                            <div class="nb-ctl">
+                                                <button type="button" onclick="stepNum('c-pbonus',-1)">−</button>
+                                                <input type="number" id="c-pbonus" value="0" onchange="refreshRollUI()">
+                                                <button type="button" onclick="stepNum('c-pbonus',1)">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="readout" id="c-readout-power"></div>
+                                </div>
+                            </div>
+
+                            <button class="roll-go" id="c-go" onclick="rollCombo()">Résoudre l'intervention</button>
+                        </div>
+
+                        <label class="private-toggle">
+                            <input type="checkbox" id="private-roll"> Jet confidentiel (pas de transmission)
+                        </label>
+                    </div>
                 </div>
+
             </div>
 
-        </div>
-
-        <div class="col">
-            <div class="card">
-                <div class="card-head accent-charge">
-                    <span class="tag">§11</span>
-                    <span class="card-title">État opérationnel</span>
-                </div>
-                <div class="card-body tight">
-                    <div class="op-grid">
-                        <div class="gauge">
-                            <div class="gauge-head">
-                                <span class="gauge-label">Élan</span>
-                                <span class="gauge-num" id="elan-num-2">10<small> / 10</small></span>
+            <div class="col">
+                <div class="card">
+                    <div class="card-head accent-charge">
+                        <span class="tag">§11</span>
+                        <span class="card-title">État opérationnel</span>
+                    </div>
+                    <div class="card-body tight">
+                        <div class="op-grid">
+                            <div class="gauge">
+                                <div class="gauge-head">
+                                    <span class="gauge-label">Élan</span>
+                                    <span class="gauge-num" id="elan-num-2">10<small> / 10</small></span>
+                                </div>
+                                <div class="gauge-bar">
+                                    <div class="gauge-fill elan" id="elan-fill-2" style="width:100%"></div>
+                                </div>
                             </div>
-                            <div class="gauge-bar">
-                                <div class="gauge-fill elan" id="elan-fill-2" style="width:100%"></div>
+                            <div class="gauge">
+                                <div class="gauge-head">
+                                    <span class="gauge-label">Charge</span>
+                                    <span class="gauge-num" id="charge-num-2">0<small> / 0</small></span>
+                                </div>
+                                <div class="gauge-bar">
+                                    <div class="gauge-fill charge" id="charge-fill-2" style="width:0%"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="gauge">
-                            <div class="gauge-head">
-                                <span class="gauge-label">Charge</span>
-                                <span class="gauge-num" id="charge-num-2">0<small> / 0</small></span>
-                            </div>
-                            <div class="gauge-bar">
-                                <div class="gauge-fill charge" id="charge-fill-2" style="width:0%"></div>
-                            </div>
+                        <div class="gauge-ctl">
+                            <span class="ctx-unit">Charge</span>
+                            <button onclick="adjustCharge(-1)">−1</button>
+                            <button onclick="adjustCharge(1)">+1</button>
+                            <button onclick="restCharge()">↺ Récupération</button>
                         </div>
                     </div>
-                    <div class="gauge-ctl">
-                        <span class="ctx-unit">Charge</span>
-                        <button onclick="adjustCharge(-1)">−1</button>
-                        <button onclick="adjustCharge(1)">+1</button>
-                        <button onclick="restCharge()">↺ Récupération</button>
-                    </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <div class="card-head accent-aci">
-                    <span class="tag">§12</span>
-                    <span class="card-title">Focalisation</span>
-                    <span class="foc-dots" id="foc-dots"></span>
-                </div>
-                <div class="card-body tight">
-                    <div class="ctx-row">
-                        <button class="mini-btn" onclick="modFocalisation(-1)">−</button>
-                        <span class="ctx-big" id="foc-current">1</span>
-                        <span class="ctx-unit">/</span>
-                        <input class="mini-num" type="number" id="foc-max" min="1" max="9" value="1"
-                            onchange="setFocalisationMax(this.value)">
-                        <button class="mini-btn" onclick="modFocalisation(1)">+</button>
-                        <button class="mini-btn wide" onclick="refillFocalisation()">↻ Nouveau round</button>
-                        <span class="disclose" style="margin:0 0 0 auto;"
-                            onclick="toggleDisclose('foc-usages', this)">▸ Usages</span>
+                <div class="card">
+                    <div class="card-head accent-aci">
+                        <span class="tag">§12</span>
+                        <span class="card-title">Focalisation</span>
+                        <span class="foc-dots" id="foc-dots"></span>
                     </div>
-                    <div class="disclose-body" id="foc-usages">
-                        <p><b>Action tactique</b> - dépenser un point pour tenter un geste adapté à la situation
-                            par un jet d'aptitude contre la DC tactique. Chaque tranche de 3 points d'écart
-                            abaisse d'un cran le dé de l'adversaire à sa prochaine confrontation.</p>
-                        <p><b>Couvrir un équipier</b> - un allié à portée immédiate prend votre place dans une
-                            confrontation défensive, ou tente d'intercepter un pouvoir à distance.</p>
-                        <p><b>Maintenir un pouvoir</b> - le point reste immobilisé tant que le pouvoir est
-                            actif.</p>
-                        <p><b>Riposte</b> - lors d'une confrontation défensive, attaquer au lieu de se défendre.
-                            Victoire : résolution comme une confrontation offensive. Échec : l'attaque est subie
-                            comme une défense perdue.</p>
+                    <div class="card-body tight">
+                        <div class="ctx-row">
+                            <button class="mini-btn" onclick="modFocalisation(-1)">−</button>
+                            <span class="ctx-big" id="foc-current">1</span>
+                            <span class="ctx-unit">/</span>
+                            <input class="mini-num" type="number" id="foc-max" min="1" max="9" value="1"
+                                onchange="setFocalisationMax(this.value)">
+                            <button class="mini-btn" onclick="modFocalisation(1)">+</button>
+                            <button class="mini-btn wide" onclick="refillFocalisation()">↻ Nouveau round</button>
+                            <span class="disclose" style="margin:0 0 0 auto;"
+                                onclick="toggleDisclose('foc-usages', this)">▸ Usages</span>
+                        </div>
+                        <div class="disclose-body" id="foc-usages">
+                            <p><b>Action tactique</b> - dépenser un point pour tenter un geste adapté à la situation
+                                par un jet d'aptitude contre la DC tactique. Chaque tranche de 3 points d'écart
+                                abaisse d'un cran le dé de l'adversaire à sa prochaine confrontation.</p>
+                            <p><b>Couvrir un équipier</b> - un allié à portée immédiate prend votre place dans une
+                                confrontation défensive, ou tente d'intercepter un pouvoir à distance.</p>
+                            <p><b>Maintenir un pouvoir</b> - le point reste immobilisé tant que le pouvoir est
+                                actif.</p>
+                            <p><b>Riposte</b> - lors d'une confrontation défensive, attaquer au lieu de se défendre.
+                                Victoire : résolution comme une confrontation offensive. Échec : l'attaque est subie
+                                comme une défense perdue.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <div class="card-head accent-aci">
-                    <span class="tag">§13</span>
-                    <span class="card-title">Déplacement</span>
-                    <span class="ctx-note" id="vitesse-detail"></span>
-                </div>
-                <div class="card-body tight">
-                    <div class="ctx-row">
-                        <span class="ctx-big" id="vitesse-val">30</span>
-                        <span class="ctx-unit">pieds</span>
-                        <span class="ctx-unit" style="margin-left:12px;">bonus de pouvoir</span>
-                        <input class="mini-num" type="number" id="vitesse-bonus" min="0" value="0"
-                            onchange="setVitesseBonus(this.value)">
-                        <button class="mini-btn" onclick="setVitesseBonus(0)" title="Réinitialiser">↺</button>
+                <div class="card">
+                    <div class="card-head accent-aci">
+                        <span class="tag">§13</span>
+                        <span class="card-title">Déplacement</span>
+                        <span class="ctx-note" id="vitesse-detail"></span>
+                    </div>
+                    <div class="card-body tight">
+                        <div class="ctx-row">
+                            <span class="ctx-big" id="vitesse-val">30</span>
+                            <span class="ctx-unit">pieds</span>
+                            <span class="ctx-unit" style="margin-left:12px;">bonus de pouvoir</span>
+                            <input class="mini-num" type="number" id="vitesse-bonus" min="0" value="0"
+                                onchange="setVitesseBonus(this.value)">
+                            <button class="mini-btn" onclick="setVitesseBonus(0)" title="Réinitialiser">↺</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card">
-                <div class="card-head accent-vector">
-                    <span class="tag">§13b</span>
-                    <span class="card-title">Zone d'effet</span>
-                    <span class="ctx-note" id="zone-detail"></span>
-                </div>
-                <div class="card-body tight">
-                    <div class="ctx-row">
-                        <span class="ctx-big" id="zone-step" style="color:var(--vector)">5</span>
-                        <span class="ctx-unit">ft par Puissance</span>
-                        <span class="ctx-unit" style="margin-left:12px;">Puissance</span>
-                        <input class="mini-num" type="number" id="zone-pow" min="0" value="5"
-                            oninput="renderZone()">
-                        <span class="disclose" style="margin:0 0 0 auto;"
-                            onclick="toggleDisclose('zone-help', this)">▸ Règle</span>
+                <div class="card">
+                    <div class="card-head accent-vector">
+                        <span class="tag">§13b</span>
+                        <span class="card-title">Zone d'effet</span>
+                        <span class="ctx-note" id="zone-detail"></span>
                     </div>
-                    <div class="readout" id="zone-readout" style="margin-top:8px;border-left-color:var(--vector)"></div>
-                    <div class="disclose-body" id="zone-help">
-                        <p><b>D = Puissance × pas de la classe</b> (ε/δ 2,5 · γ 5 · β 10 · α 20 · Ω 50 ft).</p>
-                        <p><b>Enveloppe</b> - un cube de D de côté contient toute la zone. Le lanceur y sculpte la
-                            forme de son choix (sphère, dôme, cône, mur, couloir…). Rien ne dépasse D, ni en longueur,
-                            ni en largeur, ni en hauteur.</p>
-                        <p><b>Étirement</b> - en renonçant à la largeur, une ligne d'un pas de large et d'un pas de
-                            haut peut atteindre 3 D de long.</p>
-                        <p><b>Maximum</b> - la taille est un plafond : le lanceur peut toujours réduire sa zone.</p>
+                    <div class="card-body tight">
+                        <div class="ctx-row">
+                            <span class="ctx-big" id="zone-step" style="color:var(--vector)">5</span>
+                            <span class="ctx-unit">ft par Puissance</span>
+                            <span class="ctx-unit" style="margin-left:12px;">Puissance</span>
+                            <input class="mini-num" type="number" id="zone-pow" min="0" value="5"
+                                oninput="renderZone()">
+                            <span class="disclose" style="margin:0 0 0 auto;"
+                                onclick="toggleDisclose('zone-help', this)">▸ Règle</span>
+                        </div>
+                        <div class="readout" id="zone-readout" style="margin-top:8px;border-left-color:var(--vector)">
+                        </div>
+                        <div class="disclose-body" id="zone-help">
+                            <p><b>D = Puissance × unité de classe</b> ( γ 5 · β 10 · α 20 · Ω 50 ft).</p>
+                            <p><b>Enveloppe</b> - un cube de D de côté contient toute la zone. Le lanceur y sculpte la
+                                forme de son choix (sphère, dôme, cône, mur, couloir…). Rien ne dépasse D, ni en
+                                longueur,
+                                ni en largeur, ni en hauteur.</p>
+                            <p><b>Étirement</b> - en renonçant à la largeur, une ligne d'un pas de large et d'un pas de
+                                haut peut atteindre 3 D de long.</p>
+                            <p><b>Maximum</b> - la taille est un plafond : le lanceur peut toujours réduire sa zone.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card foldable" id="sustained-card">
-                <div class="card-head accent-vector" onclick="toggleCard('sustained-card')">
-                    <span class="tag">§14</span>
-                    <span class="card-title">Pouvoirs maintenus</span>
-                    <span class="vd-count" id="sus-count"></span>
-                    <span class="card-fold">▾</span>
-                </div>
-                <div class="card-body tight">
-                    <div id="sustained-list"></div>
-                    <div class="ctx-row">
-                        <select class="sus-type-sel" id="sus-type" title="Mode de fonctionnement">
-                            <option value="continu">Continu</option>
-                            <option value="debut">Début de tour</option>
-                            <option value="manif">Manifestation</option>
-                        </select>
-                        <input class="mini-text" type="text" id="sus-name" placeholder="Effet en cours">
-                        <input class="mini-num" type="number" id="sus-pow" value="2" min="1" title="Puissance au lancement">
-                        <button class="mini-btn" onclick="addSustained()">＋</button>
-                        <span class="disclose" style="margin:0 0 0 auto;"
-                            onclick="toggleDisclose('sus-help', this)">▸ Règles</span>
+                <div class="card foldable" id="sustained-card">
+                    <div class="card-head accent-vector" onclick="toggleCard('sustained-card')">
+                        <span class="tag">§14</span>
+                        <span class="card-title">Pouvoirs maintenus</span>
+                        <span class="vd-count" id="sus-count"></span>
+                        <span class="card-fold">▾</span>
                     </div>
-                    <button class="ctx-turn" id="sus-turn" onclick="applyTurnUpkeep()" style="display:none;">
-                        ▶ Nouveau tour - <span id="sus-cost">0</span> Charge
-                    </button>
-                    <div class="disclose-body" id="sus-help">
-                        <p><b>Entretien</b> - par tour : ⌈Puissance ÷ 2⌉ de Charge, et un point de focalisation
-                            immobilisé par effet. Une perte d'Élan exige un jet de Résilience, difficulté = Élan
-                            perdu × 2.</p>
-                        <p><b>Effet continu</b> - ajoute ou retire sa Puissance sous une condition précise :
-                            amplifications, débilitations, protections. Un sort de vitesse ajoute sa Puissance aux
-                            esquives ; une barrière reprend le jet de lancement pour s'interposer lors des
-                            confrontations.</p>
-                        <p><b>Début de tour</b> - l'effet se résout au début du tour du lanceur, quelle que soit sa
-                            forme : un mur de feu lance une confrontation contre les ennemis ciblés, une zone de soin
-                            traite les blessures présentes.</p>
-                        <p><b>Manifestation</b> - naît avec une Solidité égale à la Puissance au lancement et
-                            s'interpose passivement. Une attaque qui ne dépasse pas la Solidité est arrêtée sans
-                            l'entamer ; une attaque qui la dépasse réduit la Solidité de l'écart, et ce surplus
-                            traverse. À Solidité 0, la manifestation est brisée et la focalisation libérée.</p>
+                    <div class="card-body tight">
+                        <div id="sustained-list"></div>
+                        <div class="ctx-row">
+                            <select class="sus-type-sel" id="sus-type" title="Mode de fonctionnement">
+                                <option value="continu">Continu</option>
+                                <option value="debut">Début de tour</option>
+                                <option value="manif">Manifestation</option>
+                            </select>
+                            <input class="mini-text" type="text" id="sus-name" placeholder="Effet en cours">
+                            <input class="mini-num" type="number" id="sus-pow" value="2" min="1"
+                                title="Puissance au lancement">
+                            <button class="mini-btn" onclick="addSustained()">＋</button>
+                            <span class="disclose" style="margin:0 0 0 auto;"
+                                onclick="toggleDisclose('sus-help', this)">▸ Règles</span>
+                        </div>
+                        <button class="ctx-turn" id="sus-turn" onclick="applyTurnUpkeep()" style="display:none;">
+                            ▶ Nouveau tour - <span id="sus-cost">0</span> Charge
+                        </button>
+                        <div class="disclose-body" id="sus-help">
+                            <p><b>Entretien</b> - par tour : ⌈Puissance ÷ 2⌉ de Charge, et un point de focalisation
+                                immobilisé par effet. Une perte d'Élan exige un jet de Résilience, difficulté = Élan
+                                perdu × 2.</p>
+                            <p><b>Effet continu</b> - ajoute ou retire sa Puissance sous une condition précise :
+                                amplifications, débilitations, protections. Un sort de vitesse ajoute sa Puissance aux
+                                esquives ; une barrière reprend le jet de lancement pour s'interposer lors des
+                                confrontations.</p>
+                            <p><b>Début de tour</b> - l'effet se résout au début du tour du lanceur, quelle que soit sa
+                                forme : un mur de feu lance une confrontation contre les ennemis ciblés, une zone de
+                                soin
+                                traite les blessures présentes.</p>
+                            <p><b>Manifestation</b> - naît avec une Solidité égale à la Puissance au lancement et
+                                s'interpose passivement. Une attaque qui ne dépasse pas la Solidité est arrêtée sans
+                                l'entamer ; une attaque qui la dépasse réduit la Solidité de l'écart, et ce surplus
+                                traverse. À Solidité 0, la manifestation est brisée et la focalisation libérée.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="card foldable" id="buffs-card">
-                <div class="card-head accent-aci" onclick="toggleCard('buffs-card')">
-                    <span class="tag">§15</span>
-                    <span class="card-title">Appuis reçus</span>
-                    <span class="vd-count" id="buff-count"></span>
-                    <span class="card-fold">▾</span>
-                </div>
-                <div class="card-body tight">
-                    <div id="buffs-list"></div>
-                    <div class="ctx-row">
-                        <input class="mini-text" type="text" id="buff-name" placeholder="Appui (ex. couverture)">
-                        <input class="mini-num" type="number" id="buff-pow" value="2" min="1" title="Puissance">
-                        <button class="mini-btn" onclick="addBuff()">＋</button>
-                        <span class="disclose" style="margin:0 0 0 auto;"
-                            onclick="toggleDisclose('buff-help', this)">▸ Effet</span>
+                <div class="card foldable" id="buffs-card">
+                    <div class="card-head accent-aci" onclick="toggleCard('buffs-card')">
+                        <span class="tag">§15</span>
+                        <span class="card-title">Appuis reçus</span>
+                        <span class="vd-count" id="buff-count"></span>
+                        <span class="card-fold">▾</span>
                     </div>
-                    <div class="disclose-body" id="buff-help">
-                        La moitié de la Puissance d'un appui, arrondie à l'inférieur, module la valeur concernée :
-                        gravité infligée, palier de soin, portée, vitesse.
+                    <div class="card-body tight">
+                        <div id="buffs-list"></div>
+                        <div class="ctx-row">
+                            <input class="mini-text" type="text" id="buff-name" placeholder="Appui (ex. couverture)">
+                            <input class="mini-num" type="number" id="buff-pow" value="2" min="1" title="Puissance">
+                            <button class="mini-btn" onclick="addBuff()">＋</button>
+                            <span class="disclose" style="margin:0 0 0 auto;"
+                                onclick="toggleDisclose('buff-help', this)">▸ Effet</span>
+                        </div>
+                        <div class="disclose-body" id="buff-help">
+                            La moitié de la Puissance d'un appui, arrondie à l'inférieur, module la valeur concernée :
+                            gravité infligée, palier de soin, portée, vitesse.
+                        </div>
                     </div>
                 </div>
-            </div>
 
-        </div>
-    </section>
+            </div>
+        </section>
 
-    <!-- ================= PAGE 5 · MATÉRIEL ================= -->
-    <section class="page page-gear" id="page-gear">
-        <div class="col">
-            <div class="card">
-                <div class="card-head accent-domain">
-                    <span class="tag">§16</span>
-                    <span class="card-title">Dotation et effets personnels</span>
-                </div>
-                <div class="card-body">
-                    <div class="gear-list" id="gear-list"></div>
-                    <div class="gear-add">
-                        <input type="text" id="g-name" placeholder="Désignation">
-                        <input type="text" id="g-note" placeholder="Note">
-                        <input type="number" id="g-q" value="1" min="0" max="5" title="Qualité 0-5">
-                        <button class="btn-add" onclick="addGear()">+ Inscrire</button>
+        <!-- ================= PAGE 5 · MATÉRIEL ================= -->
+        <section class="page page-gear" id="page-gear">
+            <div class="col">
+                <div class="card">
+                    <div class="card-head accent-domain">
+                        <span class="tag">§16</span>
+                        <span class="card-title">Dotation et effets personnels</span>
                     </div>
-                    <div class="hint" style="margin-top:11px;">
-                        Qualité 1 à 5 : s'ajoute à la gravité infligée pour une arme, se retranche des dégâts
-                        reçus pour une protection.
+                    <div class="card-body">
+                        <div class="gear-list" id="gear-list"></div>
+                        <div class="gear-add">
+                            <input type="text" id="g-name" placeholder="Désignation">
+                            <input type="text" id="g-note" placeholder="Note">
+                            <input type="number" id="g-q" value="1" min="0" max="5" title="Qualité 0-5">
+                            <button class="btn-add" onclick="addGear()">+ Inscrire</button>
+                        </div>
+                        <div class="hint" style="margin-top:11px;">
+                            Qualité 1 à 5 : s'ajoute à la gravité infligée pour une arme, se retranche des dégâts
+                            reçus pour une protection.
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card">
-                <div class="card-head accent-aci">
-                    <span class="tag">§17</span>
-                    <span class="card-title">Observations du référent</span>
-                </div>
-                <div class="card-body">
-                    <textarea class="notes" id="notes" placeholder="Comptes rendus, contacts, engagements…"
-                        onchange="saveField()"></textarea>
+            <div class="col">
+                <div class="card">
+                    <div class="card-head accent-aci">
+                        <span class="tag">§17</span>
+                        <span class="card-title">Observations du référent</span>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="notes" id="notes" placeholder="Comptes rendus, contacts, engagements…"
+                            onchange="saveField()"></textarea>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
     </div>
 
