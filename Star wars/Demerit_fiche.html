@@ -518,6 +518,25 @@
             color: var(--silver-chrome);
         }
 
+
+        /* ===== Dés à faces (moteur Aequor) ===== */
+        .faces-summary { font-size: 0.72em; color: var(--silver-chrome); margin: 0 0 8px; letter-spacing: 0.02em; width: 100%; text-align: center; }
+        .faces-summary.weak { opacity: 0.85; }
+        .die.face-die { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; border-width: 2px; border-style: solid; background: rgba(255, 255, 255, 0.04); font-weight: 700; }
+        .face-die .fd-val { font-family: var(--font-display); font-size: 0.9em; line-height: 1; }
+        .face-die .fd-sym { font-size: 0.7em; line-height: 1; }
+        .face-die.from-explosion { box-shadow: 0 0 8px rgba(212, 175, 55, 0.5); }
+        .face-die.trained { background: rgba(29, 158, 117, 0.10); }
+        .face-die.weak { background: rgba(163, 45, 45, 0.15); border-style: dashed; }
+        .dice-legend { margin-top: 8px; font-size: 0.68em; color: var(--silver-chrome); display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; width: 100%; }
+
+        /* ===== Axes des attributs ===== */
+        .attr-ico { display: inline-block; vertical-align: -3px; flex: none; margin-right: 6px; }
+        .attr-axis-head { display: flex; align-items: center; justify-content: center; gap: 7px; margin: 0 0 2px; padding: 0 2px 5px; border-bottom: 1px solid var(--axis); color: var(--axis); font-size: 0.7em; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+        .attr-axis-head .attr-ico { margin-right: 0; }
+        .attr-axis-group { display: flex; flex-direction: column; gap: 8px; }
+        .attribute-name { display: flex; align-items: center; justify-content: center; }
+
         .attributes-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -3023,13 +3042,13 @@
                             <div class="counter-label"><span class="emoji">⚡</span> Points de Force <span
                                     style="font-size:0.72em;color:var(--silver-chrome);font-weight:400;">· auto :
                                     Intuition
-                                    + Présence</span></div>
+                                    + Charisme</span></div>
                             <div class="counter-controls">
                                 <button class="counter-btn minus" onclick="modifyCounter('force', -1)">−</button>
                                 <div class="counter-value"><input type="number" id="force-current" value="10" min="0"
                                         onchange="updateCounters()"><span class="counter-separator">/</span><input
                                         type="number" id="force-max" value="10" min="1" readonly
-                                        title="Calculé automatiquement : contribution d'Intuition + contribution de Présence"
+                                        title="Calculé automatiquement : contribution d'Intuition + contribution de Charisme"
                                         style="opacity:0.75;cursor:not-allowed;">
                                 </div>
                                 <button class="counter-btn plus" onclick="modifyCounter('force', 1)">+</button>
@@ -3044,64 +3063,7 @@
             <div class="right-column">
                 <div class="card">
                     <div class="card-title"><span class="icon">⬡</span>Attributs</div>
-                    <div class="attributes-grid">
-                        <div class="attribute-item">
-                            <div class="attribute-name">Puissance</div>
-                            <div class="attribute-value" id="attr-puissance">5</div>
-                            <div class="attribute-controls"><button class="attribute-btn"
-                                    onclick="modifyAttribute('puissance', -1)">−</button><button class="attribute-btn"
-                                    onclick="modifyAttribute('puissance', 1)">+</button></div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Vivacité</div>
-                            <div class="attribute-value" id="attr-vivacite">5</div>
-                            <div class="attribute-controls"><button class="attribute-btn"
-                                    onclick="modifyAttribute('vivacite', -1)">−</button><button class="attribute-btn"
-                                    onclick="modifyAttribute('vivacite', 1)">+</button></div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Précision</div>
-                            <div class="attribute-value" id="attr-precision">5</div>
-                            <div class="attribute-controls"><button class="attribute-btn"
-                                    onclick="modifyAttribute('precision', -1)">−</button><button class="attribute-btn"
-                                    onclick="modifyAttribute('precision', 1)">+</button></div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Endurance</div>
-                            <div class="attribute-value" id="attr-endurance">5</div>
-                            <div class="attribute-controls"><button class="attribute-btn"
-                                    onclick="modifyAttribute('endurance', -1)">−</button><button class="attribute-btn"
-                                    onclick="modifyAttribute('endurance', 1)">+</button></div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Intelligence</div>
-                            <div class="attribute-value" id="attr-intelligence">5</div>
-                            <div class="attribute-controls"><button class="attribute-btn"
-                                    onclick="modifyAttribute('intelligence', -1)">−</button><button
-                                    class="attribute-btn" onclick="modifyAttribute('intelligence', 1)">+</button></div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Intuition</div>
-                            <div class="attribute-value" id="attr-intuition">5</div>
-                            <div class="attribute-controls"><button class="attribute-btn"
-                                    onclick="modifyAttribute('intuition', -1)">−</button><button class="attribute-btn"
-                                    onclick="modifyAttribute('intuition', 1)">+</button></div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Volonté</div>
-                            <div class="attribute-value" id="attr-volonte">5</div>
-                            <div class="attribute-controls"><button class="attribute-btn"
-                                    onclick="modifyAttribute('volonte', -1)">−</button><button class="attribute-btn"
-                                    onclick="modifyAttribute('volonte', 1)">+</button></div>
-                        </div>
-                        <div class="attribute-item">
-                            <div class="attribute-name">Présence</div>
-                            <div class="attribute-value" id="attr-presence">5</div>
-                            <div class="attribute-controls"><button class="attribute-btn"
-                                    onclick="modifyAttribute('presence', -1)">−</button><button class="attribute-btn"
-                                    onclick="modifyAttribute('presence', 1)">+</button></div>
-                        </div>
-                    </div>
+                    <div class="attributes-grid" id="attributes-grid"></div>
                 </div>
                 <div class="card">
                     <div class="card-title"><span class="icon">⚖</span>Alignement</div>
@@ -3186,26 +3148,26 @@
                                 <div class="form-group"><label class="form-label">Verbe de Force</label>
                                     <select id="force-verb-select" class="form-select"
                                         onchange="onForceConjointVerbChange()">
-                                        <option value="">— Sélectionner —</option>
+                                        <option value="">- Sélectionner -</option>
                                     </select>
                                 </div>
                                 <div class="form-group"><label class="form-label">Attribut (Force) <span
                                             style="color: var(--silver-chrome); font-weight: 400;">(modifiable)</span></label>
                                     <select id="force-attr-select" class="form-select" onchange="updateRollButtons()">
-                                        <option value="">— Sélectionner —</option>
-                                        <option value="puissance">Puissance</option>
-                                        <option value="vivacite">Vivacité</option>
-                                        <option value="precision">Précision</option>
+                                        <option value="">- Sélectionner -</option>
+                                        <option value="puissance">Force</option>
+                                        <option value="presence">Charisme</option>
                                         <option value="endurance">Endurance</option>
-                                        <option value="intelligence">Intelligence</option>
-                                        <option value="intuition">Intuition</option>
                                         <option value="volonte">Volonté</option>
-                                        <option value="presence">Présence</option>
+                                        <option value="vivacite">Vivacité</option>
+                                        <option value="intuition">Intuition</option>
+                                        <option value="precision">Finesse</option>
+                                        <option value="intelligence">Intelligence</option>
                                     </select>
                                 </div>
                                 <div class="form-group"><label class="form-label">Cible de Force</label>
                                     <select id="force-target-select" class="form-select" onchange="updateRollButtons()">
-                                        <option value="">— Sélectionner —</option>
+                                        <option value="">- Sélectionner -</option>
                                     </select>
                                 </div>
                                 <div class="form-group"><label class="form-label">Magnitude</label>
@@ -3223,29 +3185,25 @@
                                 <div class="form-group"><label class="form-label">Attribut (Compétence)</label>
                                     <select id="conjoint-attr-select" class="form-select"
                                         onchange="updateRollButtons()">
-                                        <option value="">— Sélectionner —</option>
-                                        <option value="puissance">Puissance</option>
-                                        <option value="vivacite">Vivacité</option>
-                                        <option value="precision">Précision</option>
+                                        <option value="">- Sélectionner -</option>
+                                        <option value="puissance">Force</option>
+                                        <option value="presence">Charisme</option>
                                         <option value="endurance">Endurance</option>
-                                        <option value="intelligence">Intelligence</option>
-                                        <option value="intuition">Intuition</option>
                                         <option value="volonte">Volonté</option>
-                                        <option value="presence">Présence</option>
+                                        <option value="vivacite">Vivacité</option>
+                                        <option value="intuition">Intuition</option>
+                                        <option value="precision">Finesse</option>
+                                        <option value="intelligence">Intelligence</option>
                                     </select>
                                 </div>
                                 <div class="form-group"><label class="form-label">Compétence</label>
                                     <select id="conjoint-skill-select" class="form-select"
                                         onchange="updateRollButtons()">
-                                        <option value="">— Sélectionner —</option>
+                                        <option value="">- Sélectionner -</option>
                                     </select>
                                 </div>
                                 <div class="form-group"><label class="form-label">Bonus / Malus Global</label>
                                     <input id="force-bonus" class="bonus-input" type="number" value="0">
-                                </div>
-                                <div class="form-group"><label class="form-label">Mod. Explosion</label>
-                                    <input id="force-explosion" class="bonus-input" type="number" value="0" min="-4"
-                                        max="4">
                                 </div>
                             </div>
                         </div>
@@ -3263,28 +3221,23 @@
                         <div class="roll-form">
                             <div class="form-group"><label class="form-label">Attribut</label><select
                                     id="skill-page-attr-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
-                                    <option value="puissance">Puissance</option>
-                                    <option value="vivacite">Vivacité</option>
-                                    <option value="precision">Précision</option>
+                                    <option value="">- Sélectionner -</option>
+                                    <option value="puissance">Force</option>
+                                    <option value="presence">Charisme</option>
                                     <option value="endurance">Endurance</option>
-                                    <option value="intelligence">Intelligence</option>
-                                    <option value="intuition">Intuition</option>
                                     <option value="volonte">Volonté</option>
-                                    <option value="presence">Présence</option>
+                                    <option value="vivacite">Vivacité</option>
+                                    <option value="intuition">Intuition</option>
+                                    <option value="precision">Finesse</option>
+                                    <option value="intelligence">Intelligence</option>
                                 </select></div>
                             <div class="form-group"><label class="form-label">Compétence</label><select
                                     id="skill-page-skill-select" class="form-select" onchange="updateRollButtons()">
-                                    <option value="">— Sélectionner —</option>
+                                    <option value="">- Sélectionner -</option>
                                 </select></div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                                <div class="form-group"><label class="form-label">Bonus / Malus</label><input
-                                        id="skill-page-bonus" class="bonus-input" type="number" value="0"></div>
-                                <div class="form-group"><label class="form-label">Mod. Explosion</label><input
-                                        id="skill-page-explosion" class="bonus-input" type="number" value="0" min="-4"
-                                        max="4">
-                                </div>
-                            </div>
+                            <div class="form-group"><label class="form-label">Bonus / Malus</label><input
+                                    id="skill-page-bonus" class="bonus-input" type="number" value="0"></div>
+                            <div id="skill-page-pool" class="faces-summary" style="text-align:left;"></div>
                             <button class="roll-btn skill" id="skill-page-roll-btn" onclick="rollSkillPage()"
                                 disabled>🎲 LANCER
                                 LE JET</button>
@@ -3300,28 +3253,28 @@
                                 <div class="form-group"><label class="form-label">Verbe de Force</label>
                                     <select id="force-simple-verb-select" class="form-select"
                                         onchange="onForceSimpleVerbChange()">
-                                        <option value="">— Sélectionner —</option>
+                                        <option value="">- Sélectionner -</option>
                                     </select>
                                 </div>
                                 <div class="form-group"><label class="form-label">Attribut <span
                                             style="color: var(--silver-chrome); font-weight: 400;">(modifiable)</span></label>
                                     <select id="force-simple-attr-select" class="form-select"
                                         onchange="updateForcePreview()">
-                                        <option value="">— Sélectionner —</option>
-                                        <option value="puissance">Puissance</option>
-                                        <option value="vivacite">Vivacité</option>
-                                        <option value="precision">Précision</option>
+                                        <option value="">- Sélectionner -</option>
+                                        <option value="puissance">Force</option>
+                                        <option value="presence">Charisme</option>
                                         <option value="endurance">Endurance</option>
-                                        <option value="intelligence">Intelligence</option>
-                                        <option value="intuition">Intuition</option>
                                         <option value="volonte">Volonté</option>
-                                        <option value="presence">Présence</option>
+                                        <option value="vivacite">Vivacité</option>
+                                        <option value="intuition">Intuition</option>
+                                        <option value="precision">Finesse</option>
+                                        <option value="intelligence">Intelligence</option>
                                     </select>
                                 </div>
                                 <div class="form-group"><label class="form-label">Cible de Force</label>
                                     <select id="force-simple-target-select" class="form-select"
                                         onchange="updateForcePreview()">
-                                        <option value="">— Sélectionner —</option>
+                                        <option value="">- Sélectionner -</option>
                                     </select>
                                 </div>
                                 <div class="form-group"><label class="form-label">Magnitude</label>
@@ -3527,7 +3480,7 @@
                     <span class="form-mastery-label">Forme adoptée</span>
                 </div>
                 <select id="form-select" class="form-select-large" onchange="updateForm()">
-                    <option value="">— Aucune forme maîtrisée —</option>
+                    <option value="">- Aucune forme maîtrisée -</option>
                 </select>
                 <div class="form-effect-display" id="form-effect-display" style="display: none;">
                     <div class="form-effect-header">
@@ -3625,7 +3578,7 @@
             lourde: { name: "Claymore", effect: "Après avoir réduit les résistances d'un adversaire, son armure est réduite de 2 jusqu'au début du prochain tour du porteur." },
             jumelle: { name: "Dual wield", effect: "Le porteur dispose d'un point de focalisation supplémentaire, qui ne peut servir à lancer un pouvoir de durée ou faire des actions tactiques." },
             allonge: { name: "Pique laser", effect: "La portée de mêlée du porteur est étendue à 10 ft. Toute confrontation défensive contre lui se résout à sa portée d'arme si l'adversaire n'y est pas déjà, et le porteur peut contraindre un adversaire engagé à demeurer à sa portée." },
-            double: { name: "Sabre double", effect: "Le porteur conserve en mémoire le résultat brut de son meilleur jet de Bagarre depuis le début de son tour. Il peut l'employer à la place de tout jet de Bagarre ultérieur qui lui serait inférieur, pour toute action au sabre, jusqu'à ce qu'il perde une confrontation ou au début de son prochain tour, où la mémoire se réinitialise." }
+            double: { name: "Sabre double", effect: "Le porteur conserve en mémoire le résultat brut de son meilleur jet de Combat depuis le début de son tour. Il peut l'employer à la place de tout jet de Combat ultérieur qui lui serait inférieur, pour toute action au sabre, jusqu'à ce qu'il perde une confrontation ou au début de son prochain tour, où la mémoire se réinitialise." }
         };
         // ── POSTURES ────────────────────────────────────────────────────────
         // Quatre postures forment un cycle : Pression bat Finesse, Finesse bat
@@ -3663,23 +3616,23 @@
                 effect: "L'attaque du porteur frappe tous les adversaires à portée de son arme comme un pouvoir de zone : une seule confrontation est résolue, et le nombre de résistances retirées est augmenté du nombre de cibles touchées."
             },
             makashi: {
-                name: "Forme II - Makashi", attribute: "Précision", posture: "finesse",
-                effect: "En duel au corps à corps contre un adversaire unique, le porteur bénéficie d'un modificateur d'explosion de 1, et chaque explosion de son jet ignore un point d'armure de la cible."
+                name: "Forme II - Makashi", attribute: "Finesse", posture: "finesse",
+                effect: "En duel au corps à corps contre un adversaire unique, une face de Succès de ses dés devient un Éclat, et chaque Éclat de son jet ignore un point d'armure de la cible."
             },
             soresu: {
                 name: "Forme III - Soresu", attribute: "Endurance", posture: "fermete",
-                effect: "Lorsque le porteur consacre son action à se concentrer sur sa défense, chaque attaque qu'il reçoit compte double dans le nombre d'attaques par round de la confrontation. De plus, il reçoit un nombre de points d'armure temporaires égal à la moitié de son niveau de Bagarre, qui durent jusqu'au début de son prochain tour. Un point d'armure temporaire est consommé lorsqu'il subit des dégâts."
+                effect: "Lorsque le porteur consacre son action à se concentrer sur sa défense, chaque attaque qu'il reçoit compte double dans le nombre d'attaques par round de la confrontation. De plus, il reçoit un nombre de points d'armure temporaires égal à la moitié de son niveau de Combat, qui durent jusqu'au début de son prochain tour. Un point d'armure temporaire est consommé lorsqu'il subit des dégâts."
             },
             ataru: {
                 name: "Forme IV - Ataru", attribute: "Vivacité", posture: "pression",
-                effect: "Après avoir déclaré une attaque, le porteur peut effectuer gratuitement une action tactique d'Athlétisme sur la Vivacité, une fois par tour. Chaque action tactique réussie génère un nombre de points de vélocité égal à l'écart avec la DC, au lieu de ses effets habituels. En lançant une attaque, le porteur peut dépenser ces points pour augmenter sa Puissance de 1 par tranche de 2. Le maximum de points de vélocité est égal au niveau de Bagarre ; passer un round sans attaquer les fait tous perdre."
+                effect: "Après avoir déclaré une attaque, le porteur peut effectuer gratuitement une action tactique d'Athlétisme sur la Vivacité, une fois par tour. Chaque action tactique réussie génère un nombre de points de vélocité égal à l'écart avec la DC, au lieu de ses effets habituels. En lançant une attaque, le porteur peut dépenser ces points pour augmenter sa Puissance de 1 par tranche de 2. Le maximum de points de vélocité est égal au niveau de Combat ; passer un round sans attaquer les fait tous perdre."
             },
             shien: {
-                name: "Forme V - Shien", attribute: "Précision", posture: "riposte",
+                name: "Forme V - Shien", attribute: "Finesse", posture: "riposte",
                 effect: "Toute confrontation défensive du porteur contre un tir de blaster à distance devient une riposte."
             },
             djemso: {
-                name: "Forme V - Djem So", attribute: "Puissance", posture: "riposte",
+                name: "Forme V - Djem So", attribute: "Force", posture: "riposte",
                 effect: "Le porteur repousse son tour. Lorsqu'il remporte une confrontation défensive, il peut immédiatement déclencher son action offensive en employant l'écart de cette défense comme bonus tactique. S'il n'est pas attaqué, il agit à la fin du round."
             },
             niman: {
@@ -3687,57 +3640,110 @@
                 effect: "Lorsque le porteur accompagne son attaque au sabre d'un pouvoir de Force ou maintient un pouvoir de durée, il peut résoudre son attaque sur l'attribut du verbe de ce pouvoir. Si les deux conditions sont réunies, il choisit lequel des deux verbes employer. De plus il peut utiliser un pouvoir de durée d'activation en court pour accompagner une attaque au sabre au lieu de faire un double jet. "
             },
             juyo: {
-                name: "Forme VII - Juyo", attribute: "Puissance", posture: "pression",
+                name: "Forme VII - Juyo", attribute: "Force", posture: "pression",
                 effect: "Utilisable uniquement en teinte obscure. Après une confrontation offensive au sabre, le porteur peut enchaîner immédiatement une seconde attaque, une seule par tour, sur la même cible ou une autre à portée. S'il le fait, il subit −2 à toutes ses confrontations défensives jusqu'à son prochain tour. Tout pouvoir employé dans cette forme est obscur."
             },
             vaapad: {
                 name: "Forme VII - Vaapad", attribute: "Endurance", posture: "riposte",
-                effect: "Chaque confrontation offensive déclarée contre le porteur lui génère 1 point de Conduit, qu'il dépense ainsi : 2 points pour effectuer une riposte sans dépenser de focalisation ; 3 points pour enchaîner une attaque supplémentaire immédiatement après la résolution de la sienne, une seule par tour. Le maximum de points de Conduit est égal au niveau de Bagarre ; passer un round sans être attaqué les fait tous perdre."
+                effect: "Chaque confrontation offensive déclarée contre le porteur lui génère 1 point de Conduit, qu'il dépense ainsi : 2 points pour effectuer une riposte sans dépenser de focalisation ; 3 points pour enchaîner une attaque supplémentaire immédiatement après la résolution de la sienne, une seule par tour. Le maximum de points de Conduit est égal au niveau de Combat ; passer un round sans être attaqué les fait tous perdre."
             },
             ysannanite: {
                 name: "Ysannanite", attribute: "Vivacité", posture: "finesse",
-                effect: "Muni d'un sabre laser et d'un blaster, le porteur peut, après avoir déclaré une attaque au sabre sur son tour, effectuer gratuitement une action tactique de Tir sur la Précision, puis se déplacer jusqu'à l'adversaire visé avant de porter son attaque au sabre."
+                effect: "Muni d'un sabre laser et d'un blaster, le porteur peut, après avoir déclaré une attaque au sabre sur son tour, effectuer gratuitement une action tactique de Tir sur la Finesse, puis se déplacer jusqu'à l'adversaire visé avant de porter son attaque au sabre."
             },
             praetoria: {
                 name: "Praetoria", attribute: "Vivacité", posture: "finesse",
-                effect: "Tant que le porteur est en posture Praetoria, il gagne à la fin de son tour un point de formation par allié à portée de son arme, et confère un point de formation à chaque allié également en Praetoria. Le maximum de points de formation est égal à son niveau de Bagarre. Le porteur dépense 1 point pour défendre un allié à portée de son arme en prenant sa place dans une confrontation défensive, ou 3 points pour rejoindre la confrontation offensive d'un allié et en créer une seconde, simultanée, contre un adversaire à portée de son arme."
+                effect: "Tant que le porteur est en posture Praetoria, il gagne à la fin de son tour un point de formation par allié à portée de son arme, et confère un point de formation à chaque allié également en Praetoria. Le maximum de points de formation est égal à son niveau de Combat. Le porteur dépense 1 point pour défendre un allié à portée de son arme en prenant sa place dans une confrontation défensive, ou 3 points pour rejoindre la confrontation offensive d'un allié et en créer une seconde, simultanée, contre un adversaire à portée de son arme."
             }
         };
         // ========== NIVEAUX D'ATTRIBUTS ==========
-        // Bonus progressif : équilibré avec les compétences
+        // Faces du d12, pondérées par l'attribut : [Éclat, Succès, Vide, Revers, Revers+]
+        // Éclat : +1 et relance · Succès : +1 · Vide : 0 · Revers : -1 · Revers+ : -1 et relance
         const ATTRIBUTE_LEVELS = {
-            1: { name: 'Déficient', faces: 1, bonus: 0, color: '#ff4444' },
-            2: { name: 'Faible', faces: 2, bonus: 1, color: '#ff7744' },
-            3: { name: 'Médiocre', faces: 3, bonus: 1, color: '#ddaa33' },
-            4: { name: 'Commun', faces: 4, bonus: 2, color: '#8b949e' },
-            5: { name: 'Élevé', faces: 5, bonus: 2, color: '#3fb950' },
-            6: { name: 'Supérieur', faces: 6, bonus: 3, color: '#4dc3ff' },
-            7: { name: 'Exceptionnel', faces: 7, bonus: 3, color: '#b366ff' },
-            8: { name: 'Prodigieux', faces: 9, bonus: 4, color: '#ffcc00' }
+            1: { name: 'Déficient', faces: [0, 1, 4, 4, 3], color: '#ff4444' },
+            2: { name: 'Faible', faces: [0, 3, 6, 2, 1], color: '#ff7744' },
+            3: { name: 'Médiocre', faces: [0, 4, 7, 1, 0], color: '#ddaa33' },
+            4: { name: 'Commun', faces: [1, 5, 6, 0, 0], color: '#8b949e' },
+            5: { name: 'Élevé', faces: [1, 6, 5, 0, 0], color: '#3fb950' },
+            6: { name: 'Supérieur', faces: [2, 6, 4, 0, 0], color: '#4dc3ff' },
+            7: { name: 'Exceptionnel', faces: [2, 7, 3, 0, 0], color: '#b366ff' },
+            8: { name: 'Prodigieux', faces: [3, 7, 2, 0, 0], color: '#ffcc00' }
+        };
+
+        // Socle commun à tous les jets de compétence
+        const SOCLE_DICE = 3;
+        // Une seule relance par dé : le maximum reste prévisible
+        const MAX_CHAIN = 1;
+        // Dés ajoutés par les compétences sous Ordinaire : uniquement Vide / Revers / Revers+
+        const NEGATIVE_DICE = {
+            1: { faces: [0, 0, 3, 6, 3] },   // Inapte
+            2: { faces: [0, 0, 6, 4, 2] }    // Maladroit
         };
 
         // ========== NIVEAUX DE COMPÉTENCES ==========
-        // Explosion basée sur le tier : Novice(1-3)=12, Confirmé(4-5)=11, Expert(6-7)=10, Absolu(8)=8
+        // add : dés ajoutés au socle. Négatif = dés défavorables du profil correspondant.
+        // Ordinaire (3) est le niveau de départ de toute compétence.
         const SKILL_LEVELS = {
-            1: { name: 'Ignorant', dice: 1, explosion: 12, bonus: 0, color: '#ff4444' },
-            2: { name: 'Novice', dice: 2, explosion: 12, bonus: 0, color: '#ff7744' },
-            3: { name: 'Compétent', dice: 3, explosion: 12, bonus: 1, color: '#ddaa33' },
-            4: { name: 'Qualifié', dice: 4, explosion: 11, bonus: 1, color: '#8b949e' },
-            5: { name: 'Excellent', dice: 5, explosion: 11, bonus: 2, color: '#3fb950' },
-            6: { name: 'Expert', dice: 6, explosion: 10, bonus: 2, color: '#4dc3ff' },
-            7: { name: 'Maître', dice: 8, explosion: 10, bonus: 3, color: '#b366ff' },
-            8: { name: 'Absolue', dice: 10, explosion: 8, bonus: 4, color: '#ffcc00' }
+            1: { name: 'Inapte', add: -1, color: '#ff4444' },
+            2: { name: 'Maladroit', add: -1, color: '#ff7744' },
+            3: { name: 'Ordinaire', add: 1, color: '#ddaa33' },
+            4: { name: 'Qualifié', add: 2, color: '#8b949e' },
+            5: { name: 'Excellent', add: 3, color: '#3fb950' },
+            6: { name: 'Expert', add: 4, color: '#4dc3ff' },
+            7: { name: 'Maître', add: 5, color: '#b366ff' },
+            8: { name: 'Absolue', add: 7, color: '#ffcc00' }
         };
+
+        // ── AXES DES ATTRIBUTS ──────────────────────────────────────────────
+        // Imposer / Tenir / Réagir / Maîtriser (corps = disque plein, esprit = cercle)
+        const ATTR_AXES = [
+            { id: 'imposer', name: 'Imposer', color: '#E24B4A', corps: 'puissance', esprit: 'presence', g: '<path d="M-15 0H8"/><path d="M0 -9L9 0L0 9"/><path d="M15 -14V14"/>' },
+            { id: 'tenir', name: 'Tenir', color: '#378ADD', corps: 'endurance', esprit: 'volonte', g: '<path d="M0 -17L13 -11V0C13 9 7 14 0 17C-7 14 -13 9 -13 0V-11Z"/>' },
+            { id: 'reagir', name: 'Réagir', color: '#BA7517', corps: 'vivacite', esprit: 'intuition', g: '<path d="M4 -18L-9 2H0L-4 18L9 -2H0Z"/>' },
+            { id: 'maitriser', name: 'Maîtriser', color: '#7F77DD', corps: 'precision', esprit: 'intelligence', g: '<path d="M0 -17L15 0L0 17L-15 0Z"/><circle r="3" fill="FG" stroke="none"/>' }
+        ];
+        const ATTR_AXIS_OF = {};
+        ATTR_AXES.forEach(ax => { ATTR_AXIS_OF[ax.corps] = [ax, 'corps']; ATTR_AXIS_OF[ax.esprit] = [ax, 'esprit']; });
+        const ATTR_LABEL = { puissance: 'Force', presence: 'Charisme', endurance: 'Endurance', volonte: 'Volonté', vivacite: 'Vivacité', intuition: 'Intuition', precision: 'Finesse', intelligence: 'Intelligence' };
+        function attrIcon(id, size) {
+            size = size || 16;
+            const e = ATTR_AXIS_OF[id];
+            if (!e) return '';
+            const ax = e[0], corps = e[1] === 'corps', fg = corps ? '#FFFFFF' : ax.color;
+            const ring = corps ? `<circle r="30" fill="${ax.color}"/>` : `<circle r="28" fill="none" stroke="${ax.color}" stroke-width="4"/>`;
+            return `<svg class="attr-ico" width="${size}" height="${size}" viewBox="-32 -32 64 64" aria-hidden="true">${ring}<g transform="scale(0.85)" fill="none" stroke="${fg}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${ax.g.split('FG').join(fg)}</g></svg>`;
+        }
+        function axisIcon(ax, size) {
+            size = size || 15;
+            return `<svg class="attr-ico" width="${size}" height="${size}" viewBox="-20 -20 40 40" aria-hidden="true"><g fill="none" stroke="${ax.color}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">${ax.g.split('FG').join(ax.color)}</g></svg>`;
+        }
+        function axisHeadHtml(ax) {
+            return `<div class="attr-axis-head" style="--axis:${ax.color}">${axisIcon(ax)}<span>${ax.name}</span></div>`;
+        }
+        // Grille des attributs : une colonne par axe (en-tête, corps, esprit)
+        function renderAttributeGrid() {
+            const grid = document.getElementById('attributes-grid');
+            if (!grid) return;
+            grid.innerHTML = ATTR_AXES.map(ax => `<div class="attr-axis-group">${axisHeadHtml(ax)}` +
+                [ax.corps, ax.esprit].map(id => `
+                <div class="attribute-item">
+                    <div class="attribute-name">${attrIcon(id, 14)}${ATTR_LABEL[id]}</div>
+                    <div class="attribute-value" id="attr-${id}">4</div>
+                    <div class="attribute-controls"><button class="attribute-btn" onclick="modifyAttribute('${id}', -1)">−</button><button class="attribute-btn" onclick="modifyAttribute('${id}', 1)">+</button></div>
+                </div>`).join('') + `</div>`).join('');
+        }
+        renderAttributeGrid();
 
         // ── PASSIFS DE COMPÉTENCE ───────────────────────────────────────────
         // Chaque compétence possède une valeur passive, employée quand aucun jet
-        // n'est demandé : bonus de l'attribut + moitié des dés de compétence.
+        // n'est demandé : la moyenne attendue du jet, arrondie.
+        // passif = (3 + dés de compétence) × (Éclat + Succès - Revers - Revers+) / (12 - Éclat - Revers+)
         // L'attribut de calcul est réglable par compétence et voyage avec la fiche,
         // ce qui permet au dashboard MJ d'afficher les mêmes valeurs sans réglage.
-        const PASSIVE_ATTRS = ['puissance', 'vivacite', 'precision', 'endurance', 'intelligence', 'intuition', 'volonte', 'presence'];
+        const PASSIVE_ATTRS = ['puissance', 'presence', 'endurance', 'volonte', 'vivacite', 'intuition', 'precision', 'intelligence'];
         const DEFAULT_PASSIVE_ATTR = {
             'Art': 'intuition', 'Athlétisme': 'endurance', 'Autorité': 'presence',
-            'Bagarre': 'puissance', 'Discrétion': 'precision', 'Dressage': 'presence',
+            'Combat': 'puissance', 'Discrétion': 'precision', 'Dressage': 'presence',
             'Éloquence': 'presence', 'Érudition': 'intelligence', 'Escamotage': 'precision',
             'Informatique': 'intelligence', 'Ingénierie': 'intelligence', 'Médecine': 'intelligence',
             'Pilotage': 'vivacite', 'Recherche': 'intelligence', 'Résilience': 'volonte',
@@ -3750,9 +3756,9 @@
         }
         function getSkillPassiveValue(skill) {
             const attrId = getSkillPassiveAttr(skill);
-            const attrLevel = getAttributeLevel(appState.attributes[attrId] || 4);
-            const skillLevel = getSkillLevel(skill.level);
-            return attrLevel.bonus + Math.floor(skillLevel.dice / 2);
+            const [e, s, , r, x] = getAttributeLevel(appState.attributes[attrId] || 4).faces;
+            const add = Math.max(0, getSkillLevel(skill.level).add || 0);
+            return Math.round((SOCLE_DICE + add) * (e + s - r - x) / (12 - e - x));
         }
         function setSkillPassiveAttr(skillId, attrId) {
             const skill = appState.skills.find(x => x.id === skillId);
@@ -3784,7 +3790,7 @@
         }
 
         function getSkillLevel(value) {
-            return SKILL_LEVELS[Math.min(8, Math.max(1, value))] || SKILL_LEVELS[1];
+            return SKILL_LEVELS[Math.min(8, Math.max(1, value))] || SKILL_LEVELS[3];
         }
 
         // ── TEINTES ────────────────────────────────────────────────────────
@@ -3797,20 +3803,20 @@
         };
 
         const ATTR_COLORS = {
-            'Présence': 'var(--saber-purple)',
+            'Charisme': 'var(--saber-purple)',
             'Intelligence': 'var(--saber-blue)',
             'Intuition': 'var(--saber-cyan)',
             'Volonté': 'var(--saber-yellow)'
         };
         const FORCE_VERBS = [
             {
-                id: 'absorber', name: 'Absorber', attr: 'Présence', level: 1,
+                id: 'absorber', name: 'Absorber', attr: 'Charisme', level: 1,
                 desc: "Prendre en soi une énergie ou une essence. Tutaminis, boire la chaleur d'un brasier, capter l'énergie d'un lieu de pouvoir.",
                 light: 'Recueillir', lightDesc: "Aspirer un poison, prendre sur soi la douleur d'un blessé, encaisser une décharge destinée à un autre.",
                 dark: 'Drainer', darkDesc: "Siphonner la vitalité d'un être, voler la Force d'un adversaire."
             },
             {
-                id: 'amplifier', name: 'Amplifier', attr: 'Présence', level: 1,
+                id: 'amplifier', name: 'Amplifier', attr: 'Charisme', level: 1,
                 desc: "Pousser une chose au-delà de ses limites. Force Speed, accélérer sa course, renforcer sa prise, aiguiser ses sens.",
                 light: 'Exalter', lightDesc: "Force Valor, insuffler le courage à une troupe, décupler l'élan d'un allié.",
                 dark: 'Déchaîner', darkDesc: "Décupler sa force par la fureur, rendre une bête enragée, une puissance qui consume."
@@ -3835,7 +3841,7 @@
             },
 
             {
-                id: 'lier', name: 'Lier', attr: 'Présence', level: 1,
+                id: 'lier', name: 'Lier', attr: 'Charisme', level: 1,
                 desc: "Établir une prise entre des êtres ou sur une volonté. Communication télépathique, lien avec une monture, contact mental à distance.",
                 light: 'Unir', lightDesc: "Lien maître-padawan, méditation de bataille, partager sa force.",
                 dark: 'Asservir', darkDesc: "Domination mentale, marque de servitude, plier une volonté."
@@ -3878,12 +3884,13 @@
         // Migration des sauvegardes antérieures (anciens verbes / anciennes cibles)
         const LEGACY_VERB_MAP = { harmoniser: 'regenerer', transformer: 'faconner', proteger: 'dissimuler', proteger_old: 'dissimuler' };
         const LEGACY_TARGET_MAP = { bete: 'esprit', flore: 'nature', mecanismes: 'matiere', corruption: 'obscurite' };
-        const defaultSkills = ['Art', 'Athlétisme', 'Autorité', 'Bagarre', 'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Informatique', 'Ingénierie', 'Médecine', 'Pilotage', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Tir', 'Tromperie', 'Vigilance'];
+        const defaultSkills = ['Art', 'Athlétisme', 'Autorité', 'Combat', 'Discrétion', 'Dressage', 'Éloquence', 'Érudition', 'Escamotage', 'Informatique', 'Ingénierie', 'Médecine', 'Pilotage', 'Recherche', 'Résilience', 'Sagacité', 'Stratégie', 'Tir', 'Tromperie', 'Vigilance'];
         const appState = {
             profile: { name: '', image: null },
             attributes: { puissance: 4, vivacite: 4, precision: 4, endurance: 4, intelligence: 4, intuition: 4, volonte: 4, presence: 4 },
             counters: { health: { current: 10, max: 10 }, force: { current: 10, max: 10 } },
             skills: [],
+            skillScale: 'aequor',
             forceVerbs: JSON.parse(JSON.stringify(FORCE_VERBS)),
             forceTargets: JSON.parse(JSON.stringify(FORCE_TARGETS)),
             wounds: [],
@@ -3914,7 +3921,7 @@
             const teinteEff = document.getElementById('ctx-teinte-effect');
             if (teinteEff) { const t = teinteStatusText(); teinteEff.textContent = t; teinteEff.title = t; }
             // Forme : le menu ne propose que le répertoire maîtrisé, reconstruit à
-            // chaque synchronisation puisque le niveau de Bagarre peut avoir changé.
+            // chaque synchronisation puisque le niveau de Combat peut avoir changé.
             const formSel = document.getElementById('ctx-forme');
             if (formSel) {
                 if (typeof clampKnownForms === 'function') clampKnownForms();
@@ -4003,17 +4010,18 @@
         }
         // ── MAÎTRISE DES FORMES ─────────────────────────────────────────────
         // Le nombre de formes qu'un personnage peut connaître découle de son niveau
-        // de Bagarre. Un combattant novice n'en maîtrise aucune ; il faut atteindre
+        // de Combat. Un combattant ordinaire n'en maîtrise aucune ; il faut atteindre
         // les niveaux supérieurs pour disposer d'un véritable répertoire.
-        const FORM_MASTERY_BY_BAGARRE = { 1: 0, 2: 1, 3: 2, 4: 3, 5: 5, 6: 7, 7: 9, 8: 10 };
+        // Inapte, Maladroit et Ordinaire (le socle de tout personnage) n'ouvrent aucune forme.
+        const FORM_MASTERY_BY_COMBAT = { 1: 0, 2: 0, 3: 0, 4: 3, 5: 5, 6: 7, 7: 9, 8: 10 };
         function getFormMasteryCap() {
-            return FORM_MASTERY_BY_BAGARRE[getSaberSkillLevel()] || 0;
+            return FORM_MASTERY_BY_COMBAT[getSaberSkillLevel()] || 0;
         }
         function getKnownForms() {
             if (!Array.isArray(appState.saber.knownForms)) appState.saber.knownForms = [];
             return appState.saber.knownForms;
         }
-        // Si Bagarre baisse, le répertoire est rogné par la fin et la forme active
+        // Si Combat baisse, le répertoire est rogné par la fin et la forme active
         // est libérée si elle n'est plus connue.
         function clampKnownForms() {
             const cap = getFormMasteryCap();
@@ -4032,7 +4040,7 @@
                 if (appState.saber.form === id) appState.saber.form = '';
             } else {
                 if (known.length >= getFormMasteryCap()) {
-                    showNotification('Répertoire complet : ' + getFormMasteryCap() + ' forme(s) au niveau de Bagarre actuel');
+                    showNotification('Répertoire complet : ' + getFormMasteryCap() + ' forme(s) au niveau de Combat actuel');
                     return;
                 }
                 known.push(id);
@@ -4058,8 +4066,8 @@
             }
             const hint = document.getElementById('form-mastery-hint');
             if (hint) hint.textContent = cap === 0
-                ? 'Aucune forme accessible : le niveau de Bagarre est trop faible.'
-                : 'Répertoire déterminé par le niveau de Bagarre (' + getSaberSkillLevel() + ').';
+                ? 'Aucune forme accessible : le niveau de Combat est trop faible.'
+                : 'Répertoire déterminé par le niveau de Combat (' + getSaberSkillLevel() + ').';
             grid.innerHTML = '';
             // Regrouper les formes par posture, dans l'ordre du cycle
             POSTURE_ORDER.forEach(postId => {
@@ -4088,18 +4096,18 @@
             });
         }
         function getSaberSkillLevel() {
-            const sk = (appState.skills || []).find(s => (s.baseName || s.name) === 'Bagarre');
-            return sk ? Math.max(1, parseInt(sk.level) || 1) : 1;
+            const sk = (appState.skills || []).find(s => (s.baseName || s.name) === 'Combat');
+            return sk ? Math.max(1, parseInt(sk.level) || 3) : 3;
         }
         const FORM_COUNTER_META = {
-            ataru: { label: '💨 Vélocité', hint: 'Max : niveau de Bagarre. Un round sans attaquer vide la vélocité.' },
-            vaapad: { label: '🔄 Conduit', hint: 'Max : niveau de Bagarre. Un round sans être attaqué vide le Conduit.' },
-            praetoria: { label: '🛡 Formation', hint: 'Max : niveau de Bagarre. 1 point : défendre un allié à portée. 3 points : rejoindre une confrontation offensive alliée et en créer une seconde.' },
-            soresu: { label: '🛡 Armure temp.', hint: 'Concentration défensive : ⌊Bagarre ÷ 2⌋ points, qui est aussi le maximum. Chaque point est consommé en subissant des dégâts, et l\'armure disparaît au début du prochain tour. Le bouton ↺ recharge à la valeur de concentration.', cap: () => Math.floor(getSaberSkillLevel() / 2), refill: () => Math.floor(getSaberSkillLevel() / 2) }
+            ataru: { label: '💨 Vélocité', hint: 'Max : niveau de Combat. Un round sans attaquer vide la vélocité.' },
+            vaapad: { label: '🔄 Conduit', hint: 'Max : niveau de Combat. Un round sans être attaqué vide le Conduit.' },
+            praetoria: { label: '🛡 Formation', hint: 'Max : niveau de Combat. 1 point : défendre un allié à portée. 3 points : rejoindre une confrontation offensive alliée et en créer une seconde.' },
+            soresu: { label: '🛡 Armure temp.', hint: 'Concentration défensive : ⌊Combat ÷ 2⌋ points, qui est aussi le maximum. Chaque point est consommé en subissant des dégâts, et l\'armure disparaît au début du prochain tour. Le bouton ↺ recharge à la valeur de concentration.', cap: () => Math.floor(getSaberSkillLevel() / 2), refill: () => Math.floor(getSaberSkillLevel() / 2) }
         };
         function formCounterCap(form) {
             const meta = FORM_COUNTER_META[form];
-            // Soresu plafonne à ⌊Bagarre ÷ 2⌋ ; les autres au niveau de Bagarre.
+            // Soresu plafonne à ⌊Combat ÷ 2⌋ ; les autres au niveau de Combat.
             if (meta && meta.cap) return meta.cap();
             return getSaberSkillLevel();
         }
@@ -4132,7 +4140,7 @@
             const form = appState.saber.form;
             const meta = FORM_COUNTER_META[form];
             if (!meta) return;
-            // Pour Soresu, ↺ recharge à ⌊Bagarre ÷ 2⌋ ; pour les autres, remise à zéro.
+            // Pour Soresu, ↺ recharge à ⌊Combat ÷ 2⌋ ; pour les autres, remise à zéro.
             appState.formCounters[form] = meta.refill ? meta.refill() : 0;
             syncFormCounter();
         }
@@ -4230,7 +4238,8 @@
                 const val = appState.attributes[attr];
                 const level = getAttributeLevel(val);
                 el.innerHTML = `<span style="color: ${level.color}">${level.name}</span><sub style="opacity: 0.6; font-size: 0.6em; margin-left: 2px;">${val}</sub>`;
-                el.title = `Niveau ${val} • ${level.faces} faces • +${level.bonus} bonus`;
+                const [e, sc, v, r, x] = level.faces;
+                el.title = `${ATTR_LABEL[attr] || attr} ${val} · ✦${e} ●${sc} ○${v}` + (r ? ` ▼${r}` : '') + (x ? ` ▼▼${x}` : '');
             });
             if (typeof updateForceMax === 'function') updateForceMax();
             if (typeof updateElan === 'function') updateElan();
@@ -4283,7 +4292,7 @@
             appState.wounds.forEach((wound, index) => {
                 const item = document.createElement('div');
                 item.className = 'wound-item';
-                const removeBtn = wound.auto ? `<span style="font-size:0.62em;color:var(--silver-chrome);opacity:0.7;padding:0 6px;white-space:nowrap;" title="Affliction automatique — liée aux Points de Force restants">AUTO</span>` : `<button class="wound-remove" onclick="removeWound(${index})">✕</button>`;
+                const removeBtn = wound.auto ? `<span style="font-size:0.62em;color:var(--silver-chrome);opacity:0.7;padding:0 6px;white-space:nowrap;" title="Affliction automatique, liée aux Points de Force restants">AUTO</span>` : `<button class="wound-remove" onclick="removeWound(${index})">✕</button>`;
                 item.innerHTML = `<div class="wound-info"><div class="wound-name">${wound.name}</div><div class="wound-type">${wound.type}</div></div><div class="wound-gravity">${wound.gravity}</div>${removeBtn}`;
                 list.appendChild(item);
             });
@@ -4329,7 +4338,7 @@
             'Art': ['Art', 'Création', 'Artisanat', 'Danse'],
             'Athlétisme': ['Athlétisme', 'Acrobaties', 'Agilité', 'Endurance'],
             'Autorité': ['Autorité', 'Commandement', 'Intimidation', 'Leadership'],
-            'Bagarre': ['Bagarre', 'Sabre laser', 'Pugilat', 'Vibrolame'],
+            'Combat': ['Combat', 'Sabre laser', 'Pugilat', 'Vibrolame', 'Bagarre'],
             'Discrétion': ['Discrétion', 'Furtivité', 'Infiltration', 'Inaperçu'],
             'Dressage': ['Dressage', 'Apprivoisement', 'Créatures exotiques', 'Monture'],
             'Éloquence': ['Éloquence', 'Diplomatie', 'Négociation', 'Séduction'],
@@ -4445,8 +4454,8 @@
                 const hasAlts = !!(skill.baseName ? SKILL_ALTERNATIVES[skill.baseName] : getBaseSkillName(skill.name));
                 const pAttr = getSkillPassiveAttr(skill);
                 const pVal = getSkillPassiveValue(skill);
-                const pColor = pVal >= 7 ? '#ffcc00' : pVal >= 5 ? '#3fb950' : 'var(--silver-chrome)';
-                const attrOpts = PASSIVE_ATTRS.map(a => `<option value="${a}"${a === pAttr ? ' selected' : ''}>${capitalize(a)}</option>`).join('');
+                const pColor = pVal >= 5 ? '#ffcc00' : pVal >= 3 ? '#3fb950' : pVal < 0 ? '#ff7744' : 'var(--silver-chrome)';
+                const attrOpts = PASSIVE_ATTRS.map(a => `<option value="${a}"${a === pAttr ? ' selected' : ''}>${ATTR_LABEL[a]}</option>`).join('');
                 item.innerHTML = `
                     <div class="skill-name ${hasAlts ? 'skill-renameable' : ''}" id="skill-name-${skill.id}"
                          ${hasAlts ? `onclick="openRenameSkill('${skill.id}')" title="Cliquer pour choisir un nom alternatif"` : ''}>
@@ -4454,16 +4463,16 @@
                     </div>
                     <select class="skill-passive-attr" title="Attribut du passif"
                             onchange="setSkillPassiveAttr('${skill.id}', this.value)">${attrOpts}</select>
-                    <span class="skill-passive-value" style="color:${pColor}" title="Valeur passive : bonus d'attribut + moitié des dés">${pVal}</span>
+                    <span class="skill-passive-value" style="color:${pColor}" title="Valeur passive : moyenne attendue du jet (socle + dés de compétence)">${pVal}</span>
                     <div class="skill-level">
                         <button class="skill-level-btn" onclick="modifySkillById('${skill.id}', -1)" ${skill.level <= 1 ? 'disabled' : ''}>−</button>
-                        <span class="skill-level-value" title="Niveau ${skill.level} • ${level.dice} dés" style="color: ${level.color}">${level.name}<sub style="opacity:0.6;font-size:0.7em;margin-left:2px;">${skill.level}</sub></span>
+                        <span class="skill-level-value" title="Niveau ${skill.level} • ${skillPoolText(skill.level)}" style="color: ${level.color}">${level.name}<sub style="opacity:0.6;font-size:0.7em;margin-left:2px;">${skill.level}</sub></span>
                         <button class="skill-level-btn" onclick="modifySkillById('${skill.id}', 1)" ${skill.level >= 8 ? 'disabled' : ''}>+</button>
                     </div>`;
                 list.appendChild(item);
             });
         }
-        // Le niveau de Bagarre commande le repertoire de formes : toute variation
+        // Le niveau de Combat commande le repertoire de formes : toute variation
         // de competence rafraichit la grille de maitrise.
         function modifySkillById(id, delta) {
             const skill = appState.skills.find(s => s.id === id);
@@ -4634,8 +4643,8 @@
             clampKnownForms();
             const known = getKnownForms();
             select.innerHTML = known.length
-                ? '<option value="">— Aucune forme adoptée —</option>'
-                : '<option value="">— Aucune forme maîtrisée —</option>';
+                ? '<option value="">- Aucune forme adoptée -</option>'
+                : '<option value="">- Aucune forme maîtrisée -</option>';
             known.forEach(id => {
                 const form = COMBAT_FORMS[id];
                 if (!form) return;
@@ -4667,7 +4676,7 @@
                 const select = document.getElementById(selectId);
                 if (!select) return;
                 const currentValue = select.value;
-                select.innerHTML = '<option value="">— Sélectionner —</option>';
+                select.innerHTML = '<option value="">- Sélectionner -</option>';
                 appState.skills.forEach(skill => {
                     const opt = document.createElement('option');
                     opt.value = skill.name;
@@ -4681,7 +4690,7 @@
                 const verbSelect = document.getElementById(selectId);
                 if (verbSelect) {
                     const currentValue = verbSelect.value;
-                    verbSelect.innerHTML = '<option value="">— Sélectionner —</option>';
+                    verbSelect.innerHTML = '<option value="">- Sélectionner -</option>';
                     appState.forceVerbs.forEach(verb => {
                         const opt = document.createElement('option');
                         opt.value = verb.id;
@@ -4699,7 +4708,7 @@
                 const targetSelect = document.getElementById(selectId);
                 if (targetSelect) {
                     const currentValue = targetSelect.value;
-                    targetSelect.innerHTML = '<option value="">— Sélectionner —</option>';
+                    targetSelect.innerHTML = '<option value="">- Sélectionner -</option>';
                     appState.forceTargets.forEach(target => {
                         const opt = document.createElement('option');
                         opt.value = target.id;
@@ -4730,7 +4739,7 @@
         };
         const NV_FACE_ORDER = ['Bad2', 'Bad1', 'Vide', 'Succès', 'Résonance', 'Transcendance'];
         const NV_FACE_STYLE = { 'Transcendance': '#ffcc00', 'Résonance': '#b366ff', 'Succès': '#3fb950', 'Vide': '#8b949e', 'Bad1': '#ff9944', 'Bad2': '#ff4444' };
-        const NV_ATTR_KEY = { 'Présence': 'presence', 'Intelligence': 'intelligence', 'Intuition': 'intuition', 'Volonté': 'volonte' };
+        const NV_ATTR_KEY = { 'Charisme': 'presence', 'Présence': 'presence', 'Intelligence': 'intelligence', 'Intuition': 'intuition', 'Volonté': 'volonte' };
         const NV_ETAT_LABEL = { compose: ['Composé', '#8b949e'], sublime: ['Sublimé', '#ffcc00'], corrompu: ['Corrompu', '#ff4444'] };
         const NV_FACE_GLYPH = { 'Transcendance': '✦', 'Résonance': '◈', 'Succès': '✓', 'Vide': '·', 'Bad1': '▲', 'Bad2': '✕' };
         // Libellés affichés (les IDs internes restent Bad1/Bad2 pour le moteur) :
@@ -4877,7 +4886,7 @@
                 `<strong style="color:${col};font-size:1.15em;">${c.current}</strong> <span style="color:var(--silver-chrome)">/ ${c.max}</span>` +
                 `<div style="height:5px;background:rgba(255,255,255,0.08);border-radius:3px;margin-top:6px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${col};border-radius:3px;transition:width .3s;"></div></div>`;
         }
-        // Courbe de contribution partagée : Élan = Endurance + Volonté ; Points de Force = (Intuition + Présence) × multiplicateur
+        // Courbe de contribution partagée : Élan = Endurance + Volonté ; Points de Force = (Intuition + Charisme) × multiplicateur
         const ATTR_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
         const FORCE_POOL_MULT = 3;   // réserve plus large : un sort coûte son nombre de dés, il faut pouvoir en lancer beaucoup
         function updateForceMax() {
@@ -4890,7 +4899,7 @@
             updateForcePA();
             syncForceFatigue();
         }
-        // Rétablit les Points de Force au maximum (repos / méditation) — met à jour le compteur ET le bandeau
+        // Rétablit les Points de Force au maximum (repos / méditation) : met à jour le compteur ET le bandeau
         function refillForce() {
             const c = appState.counters.force;
             c.current = c.max;
@@ -5162,9 +5171,9 @@
             5: '80 ft', 6: '120 ft', 7: '200 ft', 8: '400 ft'
         };
         function powerRange(p) {
-            if (p <= 0) return '—';
+            if (p <= 0) return '-';
             if (p >= 9) return 'À vue';
-            return POWER_RANGE[p] || '—';
+            return POWER_RANGE[p] || '-';
         }
         // Masse déplaçable par Mouvoir (catégorie nommée + repère concret).
         const MOVE_MASS = {
@@ -5208,10 +5217,10 @@
                 container.appendChild(d);
             });
             const cascSucc = r.casc.filter(Boolean).length;
-            const cascTxt = cascSucc === 0 ? '—' : (r.communion ? `${cascSucc} → +${cascSucc} P & −${cascSucc} PA` : `${cascSucc} → +${cascSucc} Puiss.`);
+            const cascTxt = cascSucc === 0 ? '-' : (r.communion ? `${cascSucc} → +${cascSucc} P & −${cascSucc} PA` : `${cascSucc} → +${cascSucc} Puiss.`);
             setStatLabels(['Coût PA', 'Effet incontrôlé', 'État', 'Cascade', 'Dissonance / Rupture']);
             document.getElementById('stat-successes').textContent = data.coutTotal;
-            document.getElementById('stat-failures').textContent = r.effet > 0 ? r.effet : '—';
+            document.getElementById('stat-failures').textContent = r.effet > 0 ? r.effet : '-';
             document.getElementById('stat-explosions').textContent = etatLbl;
             document.getElementById('stat-attribute-bonus').textContent = cascTxt;
             document.getElementById('stat-skill-bonus').textContent = `${r.bad1} / ${r.bad2}`;
@@ -5263,57 +5272,172 @@
         function updateRollButtons() {
             const skillBtn = document.getElementById('skill-page-roll-btn');
             if (skillBtn) skillBtn.disabled = !document.getElementById('skill-page-attr-select').value || !document.getElementById('skill-page-skill-select').value;
+            if (typeof updateSkillPoolPreview === 'function') updateSkillPoolPreview();
             const forceSimpleBtn = document.getElementById('force-simple-roll-btn');
             if (forceSimpleBtn && typeof updateForcePreview === 'function') updateForcePreview();
             const conjointBtn = document.getElementById('conjoint-roll-btn');
             if (conjointBtn) conjointBtn.disabled = !((document.getElementById('force-verb-select') || {}).value && (document.getElementById('conjoint-attr-select') || {}).value && (document.getElementById('conjoint-skill-select') || {}).value);
             if (typeof updateUnifiedPreview === 'function') updateUnifiedPreview();
         }
-        function rollDice(numDice, threshold, explosionThreshold = 12) {
-            const dice = [];
+        // ========== SYSTÈME DE FACES (jets de compétence) ==========
+        const FACE_INFO = {
+            eclat: { label: 'Éclat', sym: '✦', value: 1, explodes: true, color: '#D4AF37' },
+            succes: { label: 'Succès', sym: '●', value: 1, explodes: false, color: '#1D9E75' },
+            vide: { label: 'Vide', sym: '○', value: 0, explodes: false, color: '#8b949e' },
+            revers: { label: 'Revers', sym: '▼', value: -1, explodes: false, color: '#e05555' },
+            reversP: { label: 'Revers+', sym: '▼▼', value: -1, explodes: true, color: '#c03030' },
+        };
+        const FACE_ORDER = ['eclat', 'succes', 'vide', 'revers', 'reversP'];
+
+        // Construit le d12 du pire au meilleur : Revers+ en 1, Éclat en 12
+        function buildFaces(counts) {
+            const [e, s, v, r, x] = counts;
+            const faces = [];
+            for (let n = 0; n < x; n++) faces.push('reversP');
+            for (let n = 0; n < r; n++) faces.push('revers');
+            for (let n = 0; n < v; n++) faces.push('vide');
+            for (let n = 0; n < s; n++) faces.push('succes');
+            for (let n = 0; n < e; n++) faces.push('eclat');
+            return faces;
+        }
+        // Première face qui rapporte un succès (1 à 12)
+        function successFrom(counts) {
+            const [e, s, v, r, x] = counts;
+            return (s + e) > 0 ? x + r + v + 1 : null;
+        }
+        function rollFace(faces) {
+            const i = Math.floor(Math.random() * 12);
+            return { type: faces[i], value: i + 1 };
+        }
+        // Lance un lot de dés d'un même profil. Éclat et Revers+ relancent le dé.
+        function rollPool(counts, numDice, source, out) {
             for (let i = 0; i < numDice; i++) {
-                const value = Math.floor(Math.random() * 12) + 1;
-                const isExplosion = value >= explosionThreshold;
-                dice.push({ value, isExplosion: false });
-                // Maximum 1 explosion par dé
-                if (isExplosion) {
-                    const explosionValue = Math.floor(Math.random() * 12) + 1;
-                    dice.push({ value: explosionValue, isExplosion: true });
+                const faces = buildFaces(counts);
+                let chain = 0, again = true;
+                while (again && chain <= MAX_CHAIN) {
+                    again = false;
+                    const { type, value } = rollFace(faces);
+                    out.push({ type, value, source, isExplosion: chain > 0 });
+                    if (FACE_INFO[type].explodes && chain < MAX_CHAIN) { chain++; again = true; }
                 }
             }
-            return { dice, successes: dice.filter(d => d.value >= threshold && d.value <= 12).length, failures: dice.filter(d => d.value <= 2).length, explosions: dice.filter(d => d.isExplosion).length };
         }
+        // La formation supprime le risque et transforme la moitié des hésitations en gestes sûrs
+        function trainedFaces(counts) {
+            const [e, s, v, r, x] = counts;
+            const vide = v + r + x;
+            const gained = Math.ceil(vide / 2);
+            return [e, s + gained, vide - gained, 0, 0];
+        }
+        // Jet complet : socle pondéré par l'attribut + dés de compétence (ou de faiblesse)
+        function rollSkillCheck(attrValue, skillValue) {
+            const attr = getAttributeLevel(attrValue);
+            const add = getSkillLevel(skillValue).add || 0;
+            const results = [];
+            rollPool(attr.faces, SOCLE_DICE, 'socle', results);
+            if (add > 0) rollPool(trainedFaces(attr.faces), add, 'competence', results);
+            if (add < 0) {
+                const neg = NEGATIVE_DICE[Math.max(1, Math.min(2, skillValue))];
+                if (neg) rollPool(neg.faces, -add, 'faiblesse', results);
+            }
+            return results;
+        }
+        function sumFaces(dice) {
+            let total = 0, eclats = 0, revers = 0, explosions = 0;
+            dice.forEach(d => {
+                total += FACE_INFO[d.type].value;
+                if (d.type === 'eclat') eclats++;
+                if (d.type === 'revers' || d.type === 'reversP') revers++;
+                if (d.isExplosion) explosions++;
+            });
+            return { total, eclats, revers, explosions };
+        }
+        // « Réussite sur 7+ · ✦12 ●7-11 ○1-6 »
+        function facesSummary(counts) {
+            const [e, s, v, r, x] = counts;
+            const parts = [];
+            let lo = 1;
+            const seg = (n, info) => {
+                if (!n) return;
+                const hi = lo + n - 1;
+                parts.push(`<span style="color:${info.color}">${info.sym}${n > 1 ? lo + '-' + hi : lo}</span>`);
+                lo = hi + 1;
+            };
+            seg(x, FACE_INFO.reversP); seg(r, FACE_INFO.revers); seg(v, FACE_INFO.vide);
+            seg(s, FACE_INFO.succes); seg(e, FACE_INFO.eclat);
+            const from = successFrom(counts);
+            const head = from ? `<strong>Réussite sur ${from}+</strong> · ` : `<strong>Aucune réussite possible</strong> · `;
+            return head + parts.join(' ');
+        }
+        const FACE_LEGEND = `<div class="dice-legend">` +
+            FACE_ORDER.map(k => `<span style="color:${FACE_INFO[k].color}">${FACE_INFO[k].sym} ${FACE_INFO[k].label}</span>`).join(' · ') +
+            `</div>`;
+        function renderFaceDie(d, delay) {
+            const info = FACE_INFO[d.type];
+            const el = document.createElement('div');
+            el.className = 'die face-die'
+                + (d.isExplosion ? ' from-explosion' : '')
+                + (d.source === 'faiblesse' ? ' weak' : '')
+                + (d.source === 'competence' ? ' trained' : '');
+            el.style.animationDelay = `${delay}s`;
+            el.style.borderColor = info.color;
+            el.style.color = info.color;
+            const src = d.source === 'faiblesse' ? ' · dé de faiblesse'
+                : d.source === 'competence' ? ' · dé de compétence' : ' · socle';
+            el.title = info.label + src;
+            el.innerHTML = `<span class="fd-val">${d.value}</span><span class="fd-sym">${info.sym}</span>`;
+            return el;
+        }
+        // « 4 dé(s) Commun » ou « 3 dé(s) Commun + 1 dé(s) Maladroit »
+        function skillPoolText(skillValue, attrValue) {
+            const sk = getSkillLevel(skillValue);
+            const nb = SOCLE_DICE + Math.max(0, sk.add || 0);
+            const neg = sk.add < 0 ? -sk.add : 0;
+            const attrTxt = attrValue ? ' ' + getAttributeLevel(attrValue).name : '';
+            return `${nb} dé(s)${attrTxt}` + (neg ? ` + ${neg} dé(s) ${sk.name}` : '');
+        }
+        function updateSkillPoolPreview() {
+            const host = document.getElementById('skill-page-pool');
+            if (!host) return;
+            const attrName = document.getElementById('skill-page-attr-select').value;
+            const skill = appState.skills.find(s => s.name === document.getElementById('skill-page-skill-select').value);
+            if (!attrName || !skill) { host.innerHTML = ''; return; }
+            const attrValue = appState.attributes[attrName] || 4;
+            const sk = getSkillLevel(skill.level);
+            let html = `${skillPoolText(skill.level, attrValue)} · ${facesSummary(getAttributeLevel(attrValue).faces)}`;
+            if (sk.add < 0) html += `<br>Dés de faiblesse : ${facesSummary(NEGATIVE_DICE[Math.max(1, Math.min(2, skill.level))].faces)}`;
+            host.innerHTML = html;
+        }
+        function attrDisplay(id) { return ATTR_LABEL[id] || capitalize(id); }
+
         function rollSkillPage() {
             const attrName = document.getElementById('skill-page-attr-select').value;
             const skillName = document.getElementById('skill-page-skill-select').value;
+            const skill = appState.skills.find(s => s.name === skillName);
+            if (!skill || !attrName) return;
             const appliedS = consumeAppliedPowers();
             const bonus = (parseInt(document.getElementById('skill-page-bonus').value) || 0) + appliedS.bonus;
-            const explosionMod = parseInt(document.getElementById('skill-page-explosion').value) || 0;
-            const attr = appState.attributes[attrName];
-            const attrLevel = getAttributeLevel(attr);
-            const skill = appState.skills.find(s => s.name === skillName);
-            if (!skill) return;
+            const attrValue = appState.attributes[attrName];
+            const attrLevel = getAttributeLevel(attrValue);
             const skillLevel = getSkillLevel(skill.level);
-            const threshold = 13 - attrLevel.faces;
-            const baseExplosion = skillLevel.explosion;
-            const explosion = Math.max(3, Math.min(12, baseExplosion - explosionMod));
-            const result = rollDice(skillLevel.dice, threshold, explosion);
-            const attrBonus = attrLevel.bonus;
-            const skillBonus = skillLevel.bonus;
-            const explosionText = explosionMod !== 0 ? `Explosion ${explosion}+ (${explosionMod > 0 ? '+' : ''}${explosionMod})` : `Explosion ${explosion}+`;
-            const total = result.successes + attrBonus + skillBonus + bonus;
-            displayResult({ title: skill.name, subtitle: `${capitalize(attrName)} (${attrLevel.name}) | Seuil ${threshold}+ | ${explosionText}${appliedS.label}`, dice: result.dice, threshold, successes: result.successes, failures: result.failures, explosions: result.explosions, attributeBonus: attrBonus, skillBonus, total });
-            sendDiscordRoll(skill.name, skill.baseName, total, capitalize(attrName), { successes: result.successes, attrBonus, skillBonus, bonus });
+            const dice = rollSkillCheck(attrValue, skill.level);
+            const sum = sumFaces(dice);
+            const total = sum.total + bonus;
+            displayResult({
+                title: skill.name,
+                subtitle: `${attrDisplay(attrName)} (${attrLevel.name}) · ${skillLevel.name} | ${skillPoolText(skill.level, attrValue)}${appliedS.label}`,
+                dice, facesInfo: facesSummary(attrLevel.faces), sum, bonus, total
+            });
+            sendDiscordRoll(skill.name, skill.baseName, total, attrDisplay(attrName), { successes: sum.total, eclats: sum.eclats, revers: sum.revers, bonus });
         }
         function rollConjoint() {
-            // --- Partie Force (nouveau système de dé) ---
+            // --- Partie Force (dé de Force) ---
             const ctxF = nvGetContext('force-verb-select', 'force-attr-select', 'force-dice');
             const skillAttrName = document.getElementById('conjoint-attr-select').value;
             const skillName = document.getElementById('conjoint-skill-select').value;
             const skill = appState.skills.find(s => s.name === skillName);
             if (!ctxF || !skill) return;
             const bonus = parseInt(document.getElementById('force-bonus').value) || 0;
-            const explosionMod = parseInt(document.getElementById('force-explosion').value) || 0;
             const puissanceMod = parseInt(document.getElementById('power-puissance-mod').value) || 0;
             const target = appState.forceTargets.find(t => t.id === document.getElementById('force-target-select').value);
 
@@ -5324,66 +5448,53 @@
             consumeForce(forceCout);
             applySublimationDrift(ctxF.etat, ctxF.nDice);
 
-            // --- Partie Compétence (inchangée) ---
-            const skillAttr = appState.attributes[skillAttrName];
-            const skillAttrLevel = getAttributeLevel(skillAttr);
-            const skillThreshold = 13 - skillAttrLevel.faces;
-            const skillLevel = getSkillLevel(skill.level);
-            const skillExplosion = Math.max(3, Math.min(12, skillLevel.explosion - explosionMod));
-            const skillResult = rollDice(skillLevel.dice, skillThreshold, skillExplosion);
-            const skillAttrBonus = skillAttrLevel.bonus;
-            const skillBonus = skillLevel.bonus;
-            const skillTotal = skillResult.successes + skillAttrBonus + skillBonus;
+            // --- Partie Compétence (d12 à faces) ---
+            const skillAttrValue = appState.attributes[skillAttrName];
+            const skillAttrLevel = getAttributeLevel(skillAttrValue);
+            const skillDice = rollSkillCheck(skillAttrValue, skill.level);
+            const sum = sumFaces(skillDice);
 
             // On AJOUTE la Puissance du sort au jet de compétence
             const appliedC = consumeAppliedPowers();
-            const finalTotal = skillTotal + spellPuissance + bonus + appliedC.bonus;
+            const finalTotal = sum.total + spellPuissance + bonus + appliedC.bonus;
             _lastForceRoll = { name: `${ctxF.verb.name}${target ? ' + ' + target.name : ''}`, puissance: spellPuissance, nDice: ctxF.nDice };
 
             displayConjointResult({
                 title: `${ctxF.verb.name}${target ? ' + ' + target.name : ''} → ${skill.name}`,
-                subtitle: `Force: ${capitalize(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name}${appState.intentionOk ? ' + charge' : ''} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence: ${capitalize(skillAttrName)}${appliedC.label}`,
+                subtitle: `Force : ${attrDisplay(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name}${appState.intentionOk ? ' + charge' : ''} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence : ${attrDisplay(skillAttrName)} · ${getSkillLevel(skill.level).name} (${skillPoolText(skill.level, skillAttrValue)})${appliedC.label}`,
                 forceRoll: rollF,
                 forceEtat: ctxF.etat,
                 spellPuissance,
                 forceCout,
-                skillDice: skillResult.dice,
-                skillThreshold,
-                skillSuccesses: skillResult.successes,
-                skillFailures: skillResult.failures,
-                skillExplosions: skillResult.explosions,
-                skillAttrBonus,
-                skillBonus,
+                skillDice,
+                skillFacesInfo: facesSummary(skillAttrLevel.faces),
+                sum,
+                bonus: bonus + appliedC.bonus,
                 finalTotal
             });
-            sendDiscordRoll(skill.name, skill.baseName, finalTotal, capitalize(skillAttrName), { successes: skillResult.successes, attrBonus: skillAttrBonus, skillBonus, bonus, spellBonus: spellPuissance, spellLabel: 'Puissance' });
+            sendDiscordRoll(skill.name, skill.baseName, finalTotal, attrDisplay(skillAttrName), { successes: sum.total, eclats: sum.eclats, revers: sum.revers, bonus, spellBonus: spellPuissance, spellLabel: 'Puissance' });
+        }
+        function setSkillStats(sum, bonus) {
+            setStatLabels(['Succès', 'Éclats', 'Revers', 'Relances', 'Bonus / Malus']);
+            document.getElementById('stat-successes').textContent = sum.total;
+            document.getElementById('stat-failures').textContent = sum.eclats;
+            document.getElementById('stat-explosions').textContent = sum.revers;
+            document.getElementById('stat-attribute-bonus').textContent = sum.explosions;
+            document.getElementById('stat-skill-bonus').textContent = bonus > 0 ? '+' + bonus : bonus;
         }
         function displayResult(data) {
             _lastForceRoll = null;
             const _sc = document.getElementById('result-sustain'); if (_sc) _sc.innerHTML = '';
-            setStatLabels(['Succès', 'Échecs', 'Explosions', 'Bonus Attribut', 'Bonus Compétence']);
             document.getElementById('result-total-label').textContent = 'RÉSULTAT TOTAL';
             document.getElementById('result-total').style.color = '';
             document.getElementById('result-title').textContent = data.title;
             document.getElementById('result-subtitle').textContent = data.subtitle;
             const container = document.getElementById('dice-container');
             container.innerHTML = '';
-            data.dice.forEach((d, i) => {
-                const die = document.createElement('div');
-                die.className = 'die';
-                die.textContent = d.value;
-                die.style.animationDelay = `${i * 0.08}s`;
-                if (d.isExplosion) die.classList.add('explosion');
-                else if (d.value <= 2) die.classList.add('universal-failure');
-                else if (d.value >= data.threshold) die.classList.add('success');
-                else die.classList.add('failure');
-                container.appendChild(die);
-            });
-            document.getElementById('stat-successes').textContent = data.successes;
-            document.getElementById('stat-failures').textContent = data.failures;
-            document.getElementById('stat-explosions').textContent = data.explosions;
-            document.getElementById('stat-attribute-bonus').textContent = data.attributeBonus;
-            document.getElementById('stat-skill-bonus').textContent = data.skillBonus || 0;
+            if (data.facesInfo) container.insertAdjacentHTML('beforeend', `<div class="faces-summary">${data.facesInfo}</div>`);
+            data.dice.forEach((d, i) => container.appendChild(renderFaceDie(d, i * 0.08)));
+            container.insertAdjacentHTML('beforeend', FACE_LEGEND);
+            setSkillStats(data.sum, data.bonus);
             document.getElementById('result-total').textContent = data.total;
             document.getElementById('result-overlay').classList.add('active');
         }
@@ -5392,7 +5503,6 @@
                 const sc = document.getElementById('result-sustain');
                 if (sc) sc.innerHTML = sustainButtonsHtml();
             }
-            setStatLabels(['Succès', 'Échecs', 'Explosions', 'Bonus Attribut', 'Bonus Compétence']);
             document.getElementById('result-total-label').textContent = 'RÉSULTAT TOTAL';
             document.getElementById('result-total').style.color = '';
             document.getElementById('result-title').textContent = data.title;
@@ -5400,7 +5510,7 @@
             document.getElementById('result-subtitle').textContent = data.subtitle + ` · sort : Puissance +${data.spellPuissance}`;
             const container = document.getElementById('dice-container');
             container.innerHTML = '';
-            // Force — faces typées du nouveau système
+            // Force : faces typées du dé de Force
             const forceLabel = document.createElement('div');
             forceLabel.style.cssText = 'width: 100%; text-align: center; font-weight: 600; color: var(--saber-purple); margin-bottom: 8px; font-family: var(--font-display);';
             forceLabel.textContent = '⚡ Force';
@@ -5413,40 +5523,29 @@
                 forceDiceDiv.appendChild(d);
             });
             container.appendChild(forceDiceDiv);
-            // Compétence — dés classiques
+            // Compétence : d12 à faces
             const skillLabel = document.createElement('div');
             skillLabel.style.cssText = 'width: 100%; text-align: center; font-weight: 600; color: var(--success-green); margin-bottom: 8px; font-family: var(--font-display);';
             skillLabel.textContent = '⚔ Compétence';
             container.appendChild(skillLabel);
+            if (data.skillFacesInfo) container.insertAdjacentHTML('beforeend', `<div class="faces-summary">${data.skillFacesInfo}</div>`);
             const skillDiceDiv = document.createElement('div');
             skillDiceDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%;';
-            data.skillDice.forEach((d, i) => {
-                const die = document.createElement('div');
-                die.className = 'die';
-                die.textContent = d.value;
-                die.style.animationDelay = `${(data.forceRoll.rolled.length + i) * 0.08}s`;
-                if (d.isExplosion) die.classList.add('explosion');
-                else if (d.value <= 2) die.classList.add('universal-failure');
-                else if (d.value >= data.skillThreshold) die.classList.add('success');
-                else die.classList.add('failure');
-                skillDiceDiv.appendChild(die);
-            });
+            const offset = data.forceRoll.rolled.length;
+            data.skillDice.forEach((d, i) => skillDiceDiv.appendChild(renderFaceDie(d, (offset + i) * 0.08)));
             container.appendChild(skillDiceDiv);
+            container.insertAdjacentHTML('beforeend', FACE_LEGEND);
             // Résumé du sort
             const forceSummary = document.createElement('div');
             forceSummary.style.cssText = 'width:100%;margin-top:12px;padding:8px 12px;border-radius:4px;background:rgba(107,63,160,0.10);border:1px solid rgba(107,63,160,0.25);text-align:center;font-size:0.82rem;color:var(--saber-purple);font-family:var(--font-body);';
             const extra = data.forceRoll.effet > 0 ? ` · <span style="color:#ff4444">⚠ effet incontrôlé puissance ${data.forceRoll.effet}</span>` : '';
             const cSucc = data.forceRoll.casc.filter(Boolean).length;
-            const capNote = data.forceRoll.communion ? `<br><span style="color:#ffcc00">☀️ Communion : cascade ${cSucc} → +${cSucc} Puissance & −${cSucc} PA</span>`
+            const capNote = data.forceRoll.communion ? `<br><span style="color:#ffcc00">☀️ Communion : cascade ${cSucc} → +${cSucc} Puissance & -${cSucc} PA</span>`
                 : data.forceRoll.deferlante ? `<br><span style="color:#c06040">🌑 Déferlante : cascade ${cSucc} → +${cSucc} Puissance</span>` : '';
             forceSummary.innerHTML = `<strong>⚡ Sort</strong> (${etatLbl}) : <strong style="color:var(--saber-purple)">${data.spellPuissance} Puissance</strong> · coût ${data.forceCout} PA${extra}${capNote}<br><span style="color:var(--silver-chrome)">Puissance ajoutée au jet de compétence : +${data.spellPuissance}</span>${powerScaleHtml(data.spellPuissance, data.title)}`;
             container.appendChild(forceSummary);
             // Stats compétence + total
-            document.getElementById('stat-successes').textContent = data.skillSuccesses;
-            document.getElementById('stat-failures').textContent = data.skillFailures !== undefined ? data.skillFailures : '—';
-            document.getElementById('stat-explosions').textContent = data.skillExplosions !== undefined ? data.skillExplosions : '—';
-            document.getElementById('stat-attribute-bonus').textContent = data.skillAttrBonus;
-            document.getElementById('stat-skill-bonus').textContent = data.skillBonus || 0;
+            setSkillStats(data.sum, data.bonus);
             document.getElementById('result-total').textContent = data.finalTotal;
             document.getElementById('result-overlay').classList.add('active');
         }
@@ -5504,7 +5603,31 @@
             appState.forceTargets = carryLevel(FORCE_TARGETS, appState.forceTargets, LEGACY_TARGET_MAP);
         }
         function loadFromFile() { document.getElementById('file-input').click(); }
+        // Migration vers l'échelle Aequor (Inapte → Absolue, socle Ordinaire 3) :
+        // les niveaux 4 à 8 gardent leur nom ; Ignorant, Novice et Compétent
+        // deviennent Ordinaire. Bagarre devient Combat (le nom affiché est conservé).
+        function migrateSkills(loaded) {
+            const skills = Array.isArray(loaded.skills) ? loaded.skills : [];
+            const legacyScale = loaded.skillScale !== 'aequor';
+            skills.forEach(sk => {
+                if (sk.baseName === 'Bagarre') sk.baseName = 'Combat';
+                if (legacyScale && sk.name === 'Bagarre') sk.name = 'Combat';
+                if (sk.name === 'Bagarre' && !sk.baseName) sk.baseName = 'Combat';
+                if (!sk.baseName) { const b = getBaseSkillName(sk.name); if (b) sk.baseName = b; }
+                let lv = parseInt(sk.level) || 3;
+                if (legacyScale && lv < 3) lv = 3;
+                sk.level = Math.max(1, Math.min(8, lv));
+            });
+            // Compétences de base manquantes : ajoutées au socle
+            defaultSkills.forEach((name, i) => {
+                if (!skills.some(sk => (sk.baseName || sk.name) === name))
+                    skills.push({ id: `skill_m${i}_${Date.now()}`, name, level: 3, baseName: name });
+            });
+            loaded.skills = skills;
+            loaded.skillScale = 'aequor';
+        }
         function applyLoadedState(loaded) {
+            migrateSkills(loaded);
             Object.assign(appState, loaded);
             reconcileForceLists();
             // Combat de Force a été retiré du système : tout pouvoir se porte
@@ -5623,14 +5746,14 @@
                 let sha;
                 const head = await fetch(`${api}?ref=${GH_CFG.branch}&t=${Date.now()}`, { headers });
                 if (head.status === 200) sha = (await head.json()).sha;
-                else if (head.status === 401) { updateGhStatus('Jeton invalide'); showNotification('⚠️ Jeton GitHub refusé (401) — vérifie-le via ⚙️'); return; }
+                else if (head.status === 401) { updateGhStatus('Jeton invalide'); showNotification('⚠️ Jeton GitHub refusé (401), vérifie-le via ⚙️'); return; }
                 else if (head.status === 404 && !sha) { /* fichier neuf : on tente la création */ }
 
                 const res = await fetch(api, {
                     method: 'PUT',
                     headers,
                     body: JSON.stringify({
-                        message: `save ${name} — ${new Date().toISOString()}`,
+                        message: `save ${name} · ${new Date().toISOString()}`,
                         content,
                         branch: GH_CFG.branch,
                         ...(sha ? { sha } : {})
@@ -5762,12 +5885,14 @@
             const base = baseName || skillName;
             const custom = baseName && baseName !== skillName ? skillName : null;
             const attrLabel = attrName ? ` [${attrName}]` : '';
-            const text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} — Résultat : **${total}**`;
+            const text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} · Résultat : **${total}**`;
 
             // Build detail line
             let detailParts = [];
             if (details) {
                 detailParts.push(`Succès : ${details.successes}`);
+                if (details.eclats) detailParts.push(`✦ ${details.eclats}`);
+                if (details.revers) detailParts.push(`▼ ${details.revers}`);
                 if (details.attrBonus) detailParts.push(`Attr : +${details.attrBonus}`);
                 if (details.skillBonus) detailParts.push(`Comp : +${details.skillBonus}`);
                 if (details.bonus !== undefined && details.bonus !== 0) detailParts.push(`Mod : ${details.bonus > 0 ? '+' : ''}${details.bonus}`);
@@ -5801,7 +5926,7 @@
             }
         }
 
-        function capitalize(str) { return str.charAt(0).toUpperCase() + str.slice(1); }
+        function capitalize(str) { if (typeof ATTR_LABEL !== 'undefined' && ATTR_LABEL[str]) return ATTR_LABEL[str]; return str.charAt(0).toUpperCase() + str.slice(1); }
         // ── RÉSONANCE / CORRUPTION ──
         let resonanceValue = 0;
 
@@ -5945,7 +6070,7 @@
             badge.style.borderColor = stage.color;
             badge.style.background = stage.bg;
 
-            // Effects — on déduplique par groupe, on garde le dernier actif
+            // Effects : on déduplique par groupe, on garde le dernier actif
             const activeByGroup = {};
             for (const eff of RESONANCE_EFFECTS) {
                 const active = (eff.side === 'dark' && val <= eff.threshold) ||
@@ -6031,13 +6156,13 @@
             const delta = t.sign < 0 ? -Math.ceil(mag / 2) : 1;
             applyResonanceDelta(delta);
             const dir = delta < 0 ? '🔥 Corruption' : '✨ Harmonie';
-            showNotification(`${dir} ${delta > 0 ? '+' + delta : delta} — pouvoir ${t.name.toLowerCase()}`);
+            showNotification(`${dir} ${delta > 0 ? '+' + delta : delta} · pouvoir ${t.name.toLowerCase()}`);
             return delta;
         }
 
         document.addEventListener('DOMContentLoaded', function () {
             renderResonance();
-            defaultSkills.forEach((name, i) => appState.skills.push({ id: `skill_${i}`, name, level: 1, baseName: name }));
+            defaultSkills.forEach((name, i) => appState.skills.push({ id: `skill_${i}`, name, level: 3, baseName: name }));
             renderSkills();
             if (typeof renderActivePowers === 'function') renderActivePowers();
             if (typeof renderReceivedBuffs === 'function') renderReceivedBuffs();

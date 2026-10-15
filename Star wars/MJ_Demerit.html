@@ -865,6 +865,9 @@
             margin-top: 40px;
             letter-spacing: 0.06em;
         }
+            .attr-ico { display: inline-block; vertical-align: -3px; flex: none; margin-right: 6px; }
+        .attr-cell .an .attr-ico { margin-right: 5px; vertical-align: -2px; }
+        .ref-item .rt .attr-ico { margin-right: 5px; vertical-align: -2px; }
     </style>
 </head>
 
@@ -936,28 +939,31 @@
 
     <script>
         /* ===================================================================
-           RÉFÉRENTIELS — copiés à l'identique de la fiche joueur pour que
+           RÉFÉRENTIELS : copiés à l'identique de la fiche joueur pour que
            toutes les valeurs dérivées (Élan, passifs, vitesse) coïncident.
         =================================================================== */
+        // Faces du d12, pondérées par l'attribut : [Éclat, Succès, Vide, Revers, Revers+]
         const ATTRIBUTE_LEVELS = {
-            1: { name: 'Déficient', faces: 1, bonus: 0, color: '#c45c5c' },
-            2: { name: 'Faible', faces: 2, bonus: 1, color: '#d97a4a' },
-            3: { name: 'Médiocre', faces: 3, bonus: 1, color: '#c9a227' },
-            4: { name: 'Commun', faces: 4, bonus: 2, color: '#8b9dc3' },
-            5: { name: 'Élevé', faces: 5, bonus: 2, color: '#4a9b6e' },
-            6: { name: 'Supérieur', faces: 6, bonus: 3, color: '#4a90c2' },
-            7: { name: 'Exceptionnel', faces: 7, bonus: 3, color: '#6b4c9a' },
-            8: { name: 'Prodigieux', faces: 9, bonus: 4, color: '#d4a84b' }
+            1: { name: 'Déficient', faces: [0, 1, 4, 4, 3], color: '#c45c5c' },
+            2: { name: 'Faible', faces: [0, 3, 6, 2, 1], color: '#d97a4a' },
+            3: { name: 'Médiocre', faces: [0, 4, 7, 1, 0], color: '#c9a227' },
+            4: { name: 'Commun', faces: [1, 5, 6, 0, 0], color: '#8b9dc3' },
+            5: { name: 'Élevé', faces: [1, 6, 5, 0, 0], color: '#4a9b6e' },
+            6: { name: 'Supérieur', faces: [2, 6, 4, 0, 0], color: '#4a90c2' },
+            7: { name: 'Exceptionnel', faces: [2, 7, 3, 0, 0], color: '#6b4c9a' },
+            8: { name: 'Prodigieux', faces: [3, 7, 2, 0, 0], color: '#d4a84b' }
         };
+        // add : dés ajoutés au socle de 3. Ordinaire (3) est le niveau de départ.
+        const SOCLE_DICE = 3;
         const SKILL_LEVELS = {
-            1: { name: 'Ignorant', dice: 1, explosion: 12, bonus: 0, color: '#c45c5c' },
-            2: { name: 'Novice', dice: 2, explosion: 12, bonus: 0, color: '#d97a4a' },
-            3: { name: 'Compétent', dice: 3, explosion: 12, bonus: 1, color: '#c9a227' },
-            4: { name: 'Qualifié', dice: 4, explosion: 11, bonus: 1, color: '#8b9dc3' },
-            5: { name: 'Excellent', dice: 5, explosion: 11, bonus: 2, color: '#4a9b6e' },
-            6: { name: 'Expert', dice: 6, explosion: 10, bonus: 2, color: '#4a90c2' },
-            7: { name: 'Maître', dice: 8, explosion: 10, bonus: 3, color: '#6b4c9a' },
-            8: { name: 'Absolue', dice: 10, explosion: 8, bonus: 4, color: '#d4a84b' }
+            1: { name: 'Inapte', add: -1, color: '#c45c5c' },
+            2: { name: 'Maladroit', add: -1, color: '#d97a4a' },
+            3: { name: 'Ordinaire', add: 1, color: '#c9a227' },
+            4: { name: 'Qualifié', add: 2, color: '#8b9dc3' },
+            5: { name: 'Excellent', add: 3, color: '#4a9b6e' },
+            6: { name: 'Expert', add: 4, color: '#4a90c2' },
+            7: { name: 'Maître', add: 5, color: '#6b4c9a' },
+            8: { name: 'Absolue', add: 7, color: '#d4a84b' }
         };
         const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
         const VITESSE_TABLE = { 1: 10, 2: 15, 3: 20, 4: 30, 5: 35, 6: 40, 7: 50, 8: 60 };
@@ -978,11 +984,29 @@
         function getWoundDC(g) { return g >= 7 ? g * 3 : (WOUND_DC_TABLE[Math.max(1, g)] || WOUND_DC_TABLE[1]); }
         function getStabDC(g) { return g >= 7 ? 14 : (WOUND_STAB_TABLE[Math.max(1, g)] || WOUND_STAB_TABLE[1]); }
 
-        const ATTR_ORDER = ['puissance', 'vivacite', 'precision', 'endurance', 'intelligence', 'intuition', 'volonte', 'presence'];
+        // Ordre par axe : Imposer, Tenir, Réagir, Maîtriser (corps puis esprit)
+        const ATTR_ORDER = ['puissance', 'presence', 'endurance', 'volonte', 'vivacite', 'intuition', 'precision', 'intelligence'];
         const ATTR_LABEL = {
-            puissance: 'Puissance', vivacite: 'Vivacité', precision: 'Précision', endurance: 'Endurance',
-            intelligence: 'Intelligence', intuition: 'Intuition', volonte: 'Volonté', presence: 'Présence'
+            puissance: 'Force', presence: 'Charisme', endurance: 'Endurance', volonte: 'Volonté',
+            vivacite: 'Vivacité', intuition: 'Intuition', precision: 'Finesse', intelligence: 'Intelligence'
         };
+        // ── Axes des attributs : Imposer / Tenir / Réagir / Maîtriser (corps = disque plein, esprit = cercle) ──
+        const ATTR_AXES = [
+            { id: 'imposer', name: 'Imposer', color: '#E24B4A', corps: 'puissance', esprit: 'presence', g: '<path d="M-15 0H8"/><path d="M0 -9L9 0L0 9"/><path d="M15 -14V14"/>' },
+            { id: 'tenir', name: 'Tenir', color: '#378ADD', corps: 'endurance', esprit: 'volonte', g: '<path d="M0 -17L13 -11V0C13 9 7 14 0 17C-7 14 -13 9 -13 0V-11Z"/>' },
+            { id: 'reagir', name: 'Réagir', color: '#BA7517', corps: 'vivacite', esprit: 'intuition', g: '<path d="M4 -18L-9 2H0L-4 18L9 -2H0Z"/>' },
+            { id: 'maitriser', name: 'Maîtriser', color: '#7F77DD', corps: 'precision', esprit: 'intelligence', g: '<path d="M0 -17L15 0L0 17L-15 0Z"/><circle r="3" fill="FG" stroke="none"/>' }
+        ];
+        const ATTR_AXIS_OF = {};
+        ATTR_AXES.forEach(ax => { ATTR_AXIS_OF[ax.corps] = [ax, 'corps']; ATTR_AXIS_OF[ax.esprit] = [ax, 'esprit']; });
+        function attrIcon(id, size) {
+            size = size || 16;
+            const e = ATTR_AXIS_OF[id];
+            if (!e) return '';
+            const ax = e[0], corps = e[1] === 'corps', fg = corps ? '#FFFFFF' : ax.color;
+            const ring = corps ? `<circle r="30" fill="${ax.color}"/>` : `<circle r="28" fill="none" stroke="${ax.color}" stroke-width="4"/>`;
+            return `<svg class="attr-ico" width="${size}" height="${size}" viewBox="-32 -32 64 64" aria-hidden="true">${ring}<g transform="scale(0.85)" fill="none" stroke="${fg}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${ax.g.split('FG').join(fg)}</g></svg>`;
+        }
 
         const REGISTRE_LABELS = {
             neutre: '⚖️ Neutre', ardeur: '🔥 Ardeur', terreur: '😱 Terreur', lumiere: '✨ Lumière',
@@ -994,7 +1018,7 @@
         // Sert de point de départ « raisonnable » ; le MJ ajuste librement par compétence.
         const DEFAULT_PASSIVE_ATTR = {
             'art': 'intuition', 'athletisme': 'endurance', 'autorite': 'presence',
-            'bagarre': 'puissance', 'discretion': 'precision', 'dressage': 'presence',
+            'combat': 'puissance', 'discretion': 'precision', 'dressage': 'presence',
             'eloquence': 'presence', 'erudition': 'intelligence', 'escamotage': 'precision',
             'informatique': 'intelligence', 'ingenierie': 'intelligence', 'medecine': 'intelligence',
             'pilotage': 'vivacite', 'recherche': 'intelligence', 'resilience': 'volonte',
@@ -1024,6 +1048,10 @@
                 const sk = rec.skills.find(x => norm(x.name) === k);
                 if (sk && sk.passiveAttr) return sk.passiveAttr;
             }
+            if (rec && Array.isArray(rec.skills)) {
+                const sk = rec.skills.find(x => norm(x.name) === k);
+                if (sk && sk.baseName && DEFAULT_PASSIVE_ATTR[norm(sk.baseName)]) return DEFAULT_PASSIVE_ATTR[norm(sk.baseName)];
+            }
             return DEFAULT_PASSIVE_ATTR[k] || 'intuition';
         }
         function setPassiveAttr(skillName, attrId) {
@@ -1041,7 +1069,7 @@
                 rec.skills.forEach(s => {
                     const attrId = getPassiveAttr(s.name, rec);
                     const pass = getPassiveValue(rec, s.name, attrId);
-                    const pColor = pass >= 7 ? '#D4AF37' : pass >= 5 ? '#4a9b6e' : 'var(--silver-mist)';
+                    const pColor = passColor(pass);
                     const passEl = document.querySelector(`#pc-${key} [data-skill-pass="${norm(s.name)}"]`);
                     if (passEl) { passEl.textContent = pass; passEl.style.color = pColor; }
                     const selEl = document.querySelector(`#pc-${key} [data-skill-sel="${norm(s.name)}"]`);
@@ -1054,36 +1082,35 @@
 
         // ── Définitions (aide-mémoire), telles que fournies ──
         const ATTR_DEFS = [
-            ['Puissance', '', "Projeter de la force brute sur le monde matériel : frapper, soulever, briser, plier, contraindre par la masse."],
-            ['Présence', '', "Projeter son aura sur les esprits : marquer, inspirer, charmer, intimider, capter (ou détourner) l'attention."],
-            ['Vivacité', '', "Agir et réagir dans l'instant : réflexes, esquive, dégainer, saisir une fenêtre, devancer."],
-            ['Intelligence', '', "Traiter le monde par l'analyse : comprendre, déduire, planifier, calculer, déchiffrer, concevoir."],
-            ['Précision', '', "La justesse du geste produit : viser, crocheter, suturer, tenir l'équilibre ou se mouvoir en silence."],
-            ['Intuition', '', "La justesse de la perception reçue : sentir les intentions, remarquer le caché, anticiper, flairer."],
-            ['Endurance', '', "La résistance de la chair dans la durée : encaisser, persévérer malgré la douleur ou la fatigue, résister au poison, tenir l'effort long."],
-            ['Volonté', '', "La force de l'esprit qui ne cède pas : sang-froid, ne pas plier, imposer sa détermination, résister à la peur et à la manipulation."]
+            ['Force', "Projeter de la force brute sur le monde matériel : frapper, soulever, briser, plier, contraindre par la masse.", 'puissance'],
+            ['Charisme', "Projeter son aura sur les esprits : marquer, inspirer, charmer, intimider, capter (ou détourner) l'attention.", 'presence'],
+            ['Endurance', "La résistance de la chair dans la durée : encaisser, persévérer malgré la douleur ou la fatigue, résister au poison, tenir l'effort long.", 'endurance'],
+            ['Volonté', "La force de l'esprit qui ne cède pas : sang-froid, ne pas plier, imposer sa détermination, résister à la peur et à la manipulation.", 'volonte'],
+            ['Vivacité', "Agir et réagir dans l'instant : réflexes, esquive, dégainer, saisir une fenêtre, devancer.", 'vivacite'],
+            ['Intuition', "La justesse de la perception reçue : sentir les intentions, remarquer le caché, anticiper, flairer.", 'intuition'],
+            ['Finesse', "La justesse du geste produit : viser, crocheter, suturer, tenir l'équilibre ou se mouvoir en silence.", 'precision'],
+            ['Intelligence', "Traiter le monde par l'analyse : comprendre, déduire, planifier, calculer, déchiffrer, concevoir.", 'intelligence']
         ];
 
         const SKILL_DEFS = [
             ['Art', "Créer ou exécuter une œuvre esthétique ou expressive, et reconnaître la valeur d'une création."],
             ['Athlétisme', "Mouvoir et dépenser son corps dans l'effort physique global : courir, sauter, grimper, nager, garder l'équilibre, résister à des impacts."],
             ['Autorité', "Obtenir l'obéissance ou la soumission par le rapport de force : commander, diriger, intimider."],
-            ['Apothicairerie', "Transformer la matière vivante ou chimique en substances actives : remèdes, poisons, potions, herboristerie."],
-            ['Bagarre', "Le combat au corps à corps."],
-            ['Combat occulte', "La précision de l'énergie magique en combat."],
+            ['Combat', "Le combat au corps à corps : sabre laser, vibrolame, mains nues. Son niveau ouvre le répertoire des formes de sabre."],
             ['Discrétion', "Agir sans être détecté : se cacher, se déplacer en silence, effacer ses traces."],
-            ['Dressage', "La relation au vivant non humain : apprivoiser, dresser, monter et comprendre les animaux."],
+            ['Dressage', "La relation au vivant non humain : apprivoiser, dresser, monter et comprendre les créatures."],
             ['Éloquence', "Agir sur autrui par l'échange sincère : convaincre, négocier, séduire, apaiser."],
             ['Érudition', "Le savoir constitué que l'on possède ou que l'on retrouve dans les sources : histoire, théorie, lois, cultures."],
             ['Escamotage', "La dextérité fine sur les objets et les serrures : crocheter, subtiliser, dissimuler."],
-            ['Ésotérisme', "Technique magique et éngergie manipulable."],
+            ['Informatique', "Comprendre et détourner les systèmes : slicing, piratage, réseaux, bases de données, programmation de droïdes."],
+            ['Ingénierie', "Comprendre, fabriquer, réparer et modifier les machines : vaisseaux, droïdes, armes, dispositifs."],
             ['Médecine', "Intervenir sur le corps vivant pour le soigner : diagnostiquer, opérer, stabiliser une blessure."],
+            ['Pilotage', "Conduire et manœuvrer un véhicule : vaisseau, speeder, navette, en vol comme en combat."],
             ['Recherche', "Produire de l'information par l'investigation : enquêter, pister, fouiller, recouper des indices."],
             ['Résilience', "Continuer de fonctionner sous une pression qui devrait faire céder : peur, douleur, panique, conditions extrêmes."],
             ['Sagacité', "Lire les êtres, leurs émotions, leurs intentions et leurs mensonges."],
             ['Stratégie', "Organiser l'action vers un objectif : planifier, anticiper l'adversaire, coordonner."],
-            ['Technologie', "Comprendre, fabriquer et réparer les objets et les systèmes fonctionnels : machines, dispositifs, mécanismes."],
-            ['Tir', "Atteindre une cible à distance : armes à distance ou projectiles."],
+            ['Tir', "Atteindre une cible à distance : blaster, canon, armes de jet."],
             ['Tromperie', "Agir sur autrui par l'illusion : mentir, bluffer, manipuler, jouer un rôle."],
             ['Vigilance', "Capter son environnement immédiat et rester en alerte : repérer un détail, un danger, une présence."]
         ];
@@ -1098,8 +1125,9 @@
                 .normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
         }
         function clampLvl(v) { return Math.min(8, Math.max(1, parseInt(v) || 1)); }
+        function clampSkill(v) { return Math.min(8, Math.max(1, parseInt(v) || 3)); }
         function getAttributeLevel(v) { return ATTRIBUTE_LEVELS[clampLvl(v)] || ATTRIBUTE_LEVELS[4]; }
-        function getSkillLevel(v) { return SKILL_LEVELS[clampLvl(v)] || SKILL_LEVELS[1]; }
+        function getSkillLevel(v) { return SKILL_LEVELS[clampSkill(v)] || SKILL_LEVELS[3]; }
 
         function toast(msg, isErr) {
             const t = document.getElementById('toast');
@@ -1121,10 +1149,10 @@
             );
             ATTR_ORDER.forEach(a => attributes[a] = clampLvl(attributes[a]));
 
-            // Compétences : on garde nom + niveau, on ignore les compétences de niveau 1 "Ignorant" pour l'affichage compact
-            const skills = (obj.skills || [])
-                .filter(s => s && s.name)
-                .map(s => ({ name: s.name, level: clampLvl(s.level) }));
+            // Compétences : nom affiché, nom de base et niveau. Les sauvegardes antérieures
+            // à l'échelle Aequor (Ignorant / Novice / Compétent) passent au socle Ordinaire (3),
+            // et Bagarre devient Combat.
+            const skills = migrateSkills(obj.skills || [], obj.skillScale !== 'aequor');
 
             const wounds = (obj.wounds || []).map(w => ({
                 name: (w.name || '').toString(),
@@ -1151,6 +1179,7 @@
                 forceVerbs,
                 forceTargets,
                 registre,
+                skillScale: 'aequor',
                 vitesseBonus: parseInt(obj.vitesseBonus) || 0,
                 updatedAt: obj.ts || Date.now()
             };
@@ -1171,20 +1200,48 @@
         function getVitesse(rec) {
             return (VITESSE_TABLE[clampLvl(rec.attributes.vivacite)] || 30) + (rec.vitesseBonus || 0) * 5;
         }
+        // Passif = moyenne attendue du jet, arrondie :
+        // (3 + dés de compétence) × (Éclat + Succès - Revers - Revers+) / (12 - Éclat - Revers+)
         function getPassiveValue(rec, skillName, attrId) {
             const skill = rec.skills.find(s => norm(s.name) === norm(skillName));
             if (!skill) return null;
-            const attrLevel = getAttributeLevel(rec.attributes[attrId] || 4);
-            const skillLevel = getSkillLevel(skill.level);
-            return attrLevel.bonus + Math.floor(skillLevel.dice / 2);
+            const [e, sc, , r, x] = getAttributeLevel(rec.attributes[attrId] || 4).faces;
+            const add = Math.max(0, getSkillLevel(skill.level).add || 0);
+            return Math.round((SOCLE_DICE + add) * (e + sc - r - x) / (12 - e - x));
+        }
+        function passColor(pass) {
+            return pass >= 5 ? '#D4AF37' : pass >= 3 ? '#4a9b6e' : pass < 0 ? '#c45c5c' : 'var(--silver-mist)';
+        }
+        function migrateSkills(list, legacyScale) {
+            return list.filter(s => s && s.name).map(s => {
+                let name = s.name.toString();
+                let baseName = s.baseName ? s.baseName.toString() : '';
+                if (baseName === 'Bagarre') baseName = 'Combat';
+                if (legacyScale && name === 'Bagarre') name = 'Combat';
+                let level = parseInt(s.level) || 3;
+                if (legacyScale && level < 3) level = 3;
+                const out = { name, level: clampSkill(level) };
+                if (baseName) out.baseName = baseName;
+                if (s.passiveAttr) out.passiveAttr = s.passiveAttr;
+                return out;
+            });
         }
 
         /* ===================================================================
            STOCKAGE DU ROSTER
         =================================================================== */
         function loadRoster() {
-            try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
+            let r;
+            try { r = JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
             catch (e) { return {}; }
+            // Fiches mémorisées avant le passage à l'échelle Aequor
+            Object.values(r).forEach(rec => {
+                if (rec && rec.skillScale !== 'aequor' && Array.isArray(rec.skills)) {
+                    rec.skills = migrateSkills(rec.skills, true);
+                    rec.skillScale = 'aequor';
+                }
+            });
+            return r;
         }
         function saveRoster(r) {
             try { localStorage.setItem(STORE_KEY, JSON.stringify(r)); }
@@ -1232,12 +1289,12 @@
                 const v = rec.attributes[a];
                 const lvl = getAttributeLevel(v);
                 attrHtml += `<div class="attr-cell">
-                    <span class="an">${ATTR_LABEL[a]}</span>
+                    <span class="an">${attrIcon(a, 14)}${ATTR_LABEL[a]}</span>
                     <span class="av" style="color:${lvl.color}">${lvl.name}<sub>${v}</sub></span>
                 </div>`;
             });
 
-            // Blessures — détail
+            // Blessures : détail
             let woundHtml = '';
             if (rec.wounds && rec.wounds.length) {
                 const totalGrav = rec.wounds.reduce((s, w) => s + (w.gravity || 0), 0);
@@ -1266,7 +1323,7 @@
                 woundHtml = '<div class="skills-untrained">Aucune blessure.</div>';
             }
 
-            // Compétences — liste unique : niveau + passif (attribut ajustable)
+            // Compétences : liste unique : niveau + passif (attribut ajustable)
             const attrOptions = (sel) => ATTR_ORDER.map(a =>
                 `<option value="${a}"${a === sel ? ' selected' : ''}>${ATTR_LABEL[a]}</option>`).join('');
             const skillsSorted = rec.skills.slice().sort((a, b) => {
@@ -1278,20 +1335,20 @@
                 const lvl = getSkillLevel(s.level);
                 const attrId = getPassiveAttr(s.name, rec);
                 const pass = getPassiveValue(rec, s.name, attrId);
-                const pColor = pass >= 7 ? '#D4AF37' : pass >= 5 ? '#4a9b6e' : 'var(--silver-mist)';
+                const pColor = passColor(pass);
                 const isPow = false;   // plus de compétence dédiée aux pouvoirs
                 const safeName = s.name.replace(/'/g, "\\'");
                 const nk = norm(s.name);
                 skillHtml += `<div class="skill-row">
                     <span class="sr-name" title="${s.name}">${isPow ? '✨ ' : ''}${s.name}</span>
-                    <span class="sr-lvl" style="color:${lvl.color}" title="Niveau ${s.level}">${lvl.name}<sub>${s.level}</sub></span>
+                    <span class="sr-lvl" style="color:${lvl.color}" title="Niveau ${s.level} · ${SOCLE_DICE + Math.max(0, lvl.add)} dé(s)${lvl.add < 0 ? ' + ' + (-lvl.add) + ' dé(s) de faiblesse' : ''}">${lvl.name}<sub>${s.level}</sub></span>
                     <select class="pl-attr" data-skill-sel="${nk}" onchange="setPassiveAttr('${safeName}', this.value)" title="Attribut du passif">${attrOptions(attrId)}</select>
                     <span class="sr-pass" data-skill-pass="${nk}" style="color:${pColor}" title="Valeur passive">${pass}</span>
                 </div>`;
             });
             if (!skillHtml) skillHtml = '<span class="skills-untrained">Aucune compétence.</span>';
 
-            // Force — verbes & cibles avec niveaux
+            // Force : verbes & cibles avec niveaux
             const verbHtml = rec.forceVerbs.length
                 ? rec.forceVerbs.slice().sort((a, b) => b.level - a.level).map(v =>
                     `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 2px;border-bottom:1px solid rgba(139,157,195,0.08);font-size:0.82rem;">
@@ -1329,7 +1386,7 @@
                     </div>
                     <div class="keystat">
                         <div class="kl">Points de Force</div>
-                        <div class="kv">${rec.forcePoints ? rec.forcePoints.current : '—'}<span style="font-size:0.5em;opacity:0.6;">${rec.forcePoints ? ' / ' + rec.forcePoints.max : ''}</span></div>
+                        <div class="kv">${rec.forcePoints ? rec.forcePoints.current : '-'}<span style="font-size:0.5em;opacity:0.6;">${rec.forcePoints ? ' / ' + rec.forcePoints.max : ''}</span></div>
                     </div>
                 </div>
                 <button class="pcard-detail-toggle" onclick="(function(el){el.classList.toggle('open'); if(el.classList.contains('open')) expandedCards.add(el.id); else expandedCards.delete(el.id);})(document.getElementById('pc-${key}'))">
@@ -1371,10 +1428,11 @@
 
         function renderReference() {
             const aEl = document.getElementById('ref-attributes');
-            ATTR_DEFS.forEach(([name, axis, def]) => {
+            ATTR_DEFS.forEach(([name, def, id]) => {
                 const div = document.createElement('div');
                 div.className = 'ref-item';
-                div.innerHTML = `<span class="rt">${name}<span class="axis">${axis}</span></span><span class="rd"> - ${def}</span>`;
+                const ax = ATTR_AXIS_OF[id] ? ATTR_AXIS_OF[id][0].name : '';
+                div.innerHTML = `<span class="rt">${attrIcon(id, 14)}${name}<span class="axis">${ax}</span></span><span class="rd"> - ${def}</span>`;
                 aEl.appendChild(div);
             });
             const sEl = document.getElementById('ref-skills');
@@ -1387,7 +1445,7 @@
             });
             const note = document.createElement('div');
             note.className = 'ref-passive-note';
-            note.innerHTML = 'Passif = bonus d\'attribut + ⌊dés de compétence ÷ 2⌋. Chaque compétence a désormais un passif, calculé sur un attribut par défaut que tu peux changer directement sur la carte du joueur (le choix s\'applique à tout le groupe et reste mémorisé).';
+            note.innerHTML = 'Passif = moyenne attendue du jet : (3 + dés de compétence) × (Éclat + Succès - Revers - Revers+) ÷ (12 - Éclat - Revers+), arrondi. Niveaux : Inapte, Maladroit, Ordinaire (socle), Qualifié, Excellent, Expert, Maître, Absolue. Chaque compétence a désormais un passif, calculé sur un attribut par défaut que tu peux changer directement sur la carte du joueur (le choix s\'applique à tout le groupe et reste mémorisé).';
             sEl.appendChild(note);
         }
 
