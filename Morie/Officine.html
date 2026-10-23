@@ -1,0 +1,751 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Officine de Shuhui</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap">
+<style>
+/* Layout : un plan de travail d'apothicaire. Étapes de la cour à gauche, ordonnance scellée à droite. */
+:root{
+  --paper:#EDF0EB; --card:#F8FAF6; --ink:#1C2320; --muted:#5A6661; --line:#CBD4CE;
+  --jade:#2D6A55; --jade-soft:#DCE8E1; --cinnabar:#AE3A2A; --cinnabar-soft:#F3DFDA;
+  --gold:#8E7128; --gold-soft:#F1E8D0;
+  --t-2:#33669A; --t-1:#5E93B5; --t0:#7D8783; --t1:#BF8636; --t2:#B4462F;
+  --r-as:#2D6A55; --r-de:#A87A22; --r-hu:#2F7A86; --r-oc:#7A5A88;
+  --display:"Shippori Mincho","Noto Serif SC","Songti SC",Georgia,serif;
+  --body:"Alegreya Sans","Segoe UI",system-ui,sans-serif;
+  --radius:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#131816; --card:#1B211F; --ink:#E3E9E5; --muted:#97A39D; --line:#2D3632;
+  --jade:#71B89C; --jade-soft:#1D2E27; --cinnabar:#E27866; --cinnabar-soft:#3A221E;
+  --gold:#D3B262; --gold-soft:#332C19;
+  --t-2:#7FA9DA; --t-1:#93BED6; --t0:#9AA59F; --t1:#DCAA5E; --t2:#E57D63;
+  --r-as:#71B89C; --r-de:#D3A74E; --r-hu:#6BBAC6; --r-oc:#B596C3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#131816; --card:#1B211F; --ink:#E3E9E5; --muted:#97A39D; --line:#2D3632;
+  --jade:#71B89C; --jade-soft:#1D2E27; --cinnabar:#E27866; --cinnabar-soft:#3A221E;
+  --gold:#D3B262; --gold-soft:#332C19;
+  --t-2:#7FA9DA; --t-1:#93BED6; --t0:#9AA59F; --t1:#DCAA5E; --t2:#E57D63;
+  --r-as:#71B89C; --r-de:#D3A74E; --r-hu:#6BBAC6; --r-oc:#B596C3; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+.wrap{max-width:1240px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;font-weight:700}
+.hz{font-family:var(--display)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--jade);outline-offset:2px}
+
+/* En-tête */
+header.top{display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:space-between;margin-bottom:20px}
+.brand{display:flex;gap:14px;align-items:center}
+.seal{width:52px;height:52px;flex:none;background:var(--cinnabar);color:var(--paper);display:grid;place-items:center;
+  font-family:var(--display);font-size:30px;font-weight:800;border-radius:4px;transform:rotate(-3deg)}
+.brand h1{font-size:clamp(1.6rem,3.5vw,2.2rem);line-height:1.1}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:.95rem}
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+.tabs button{border:0;background:transparent;padding:8px 16px;border-radius:999px;cursor:pointer;font-weight:500}
+.tabs button[aria-selected="true"]{background:var(--jade);color:var(--paper)}
+
+/* Réserve */
+.reserve{display:flex;gap:8px 16px;align-items:center;flex-wrap:wrap;padding:10px 14px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:20px;font-size:.92rem}
+.reserve .lbl{font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.72rem;color:var(--muted)}
+.chk{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.chk input{accent-color:var(--jade)}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex:none}
+
+/* Grille compositeur */
+.compose{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+@media (min-width:980px){.compose{grid-template-columns:minmax(0,1fr) 360px;align-items:start}}
+.steps{display:grid;gap:16px;min-width:0}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;min-width:0}
+.step-h{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;margin-bottom:4px}
+.step-n{font-family:var(--display);font-weight:800;color:var(--jade);font-size:1.05rem;min-width:1.4em}
+.step-h h2{font-size:1.25rem}
+.step-h .role{font-family:var(--display);color:var(--muted);font-size:1rem}
+.step .hint{color:var(--muted);margin:0 0 12px;font-size:.95rem;max-width:68ch}
+.step.locked{opacity:.55}
+
+/* Maux */
+.mgroups{display:grid;gap:10px}
+.mgroup{display:flex;gap:6px 8px;flex-wrap:wrap;align-items:center}
+.mgroup .gl{font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700;width:100%}
+.mal{border:1px solid var(--line);background:var(--paper);padding:6px 12px;border-radius:999px;cursor:pointer;font-size:.92rem}
+.mal:hover{border-color:var(--jade)}
+.mal[aria-pressed="true"]{background:var(--jade);color:var(--paper);border-color:var(--jade)}
+.maldesc{margin-top:12px;padding:10px 12px;border-left:3px solid var(--jade);background:var(--jade-soft);font-size:.93rem;border-radius:0 var(--radius) var(--radius) 0}
+
+/* Cartes plantes candidates */
+.cands{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}
+.cand{text-align:left;border:1px solid var(--line);background:var(--paper);border-radius:var(--radius);padding:10px 12px;cursor:pointer;display:grid;gap:4px;min-width:0;position:relative}
+.cand:hover{border-color:var(--jade)}
+.cand[aria-pressed="true"]{border-color:var(--jade);box-shadow:inset 0 0 0 1px var(--jade);background:var(--jade-soft)}
+.cand .nm{font-weight:700;display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding-right:22px}
+.cand .py{color:var(--muted);font-size:.85rem}
+.cand .why{font-size:.84rem}
+.cand .tick{position:absolute;top:8px;right:10px;font-family:var(--display);color:var(--jade);font-weight:800;display:none}
+.cand[aria-pressed="true"] .tick{display:block}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font-size:.74rem;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.chip.risk{border-color:var(--cinnabar);color:var(--cinnabar)}
+.chip.fix{border-color:var(--jade);color:var(--jade)}
+.chip.gold{border-color:var(--gold);color:var(--gold)}
+.nat{font-size:.72rem;font-weight:700;padding:1px 7px;border-radius:999px;color:var(--paper);white-space:nowrap}
+.tox{font-size:.72rem;font-weight:700;color:var(--cinnabar)}
+.more{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.lnk{background:none;border:0;color:var(--jade);cursor:pointer;padding:0;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+.empty{color:var(--muted);font-style:italic;font-size:.93rem}
+.dim{opacity:.6}
+
+/* Contexte forme */
+.ctx{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tog{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:.9rem}
+.tog[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.forms{display:grid;gap:6px}
+.frow{display:grid;grid-template-columns:150px minmax(0,1fr) 34px;gap:10px;align-items:center;font-size:.9rem}
+.frow .fn{display:flex;gap:6px;align-items:baseline}
+.frow .fn .hz{font-size:1.05rem}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--jade);border-radius:4px}
+.frow.best .bar i{background:var(--gold)}
+.frow .sc{text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+.why-form{margin-top:12px;font-size:.92rem}
+.why-form ul{margin:6px 0 0;padding-left:18px}
+
+/* Ordonnance */
+.ord{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:grid;gap:14px;min-width:0}
+@media (min-width:980px){.ord{position:sticky;top:max(16px,env(safe-area-inset-top,0px));max-height:calc(100vh - 32px);overflow:auto}}
+.ord .eyebrow{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.ord h2{font-size:1.45rem;line-height:1.2}
+.ord .fhz{font-family:var(--display);color:var(--cinnabar);font-size:1.1rem}
+.court{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.court li{display:grid;grid-template-columns:88px minmax(0,1fr);gap:8px;align-items:start;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.court .rl{font-family:var(--display);font-weight:700;font-size:.92rem}
+.court .rl small{display:block;color:var(--muted);font-family:var(--body);font-weight:400;font-size:.76rem}
+.court .pl{min-width:0}
+.court .pl b{font-weight:700}
+.court .pl .py{color:var(--muted);font-size:.84rem}
+.court .pz{font-size:.82rem;color:var(--gold);margin-top:2px}
+.rm{border:0;background:none;color:var(--muted);cursor:pointer;font-size:.8rem;padding:0 0 0 4px}
+.rm:hover{color:var(--cinnabar)}
+.thermo{display:grid;gap:4px}
+.thermo .scale{position:relative;height:12px;border-radius:6px;background:linear-gradient(90deg,var(--t-2),var(--t-1),var(--t0),var(--t1),var(--t2))}
+.thermo .mk{position:absolute;top:-4px;width:4px;height:20px;background:var(--ink);border-radius:2px;transform:translateX(-2px)}
+.thermo .tg{position:absolute;top:-3px;height:18px;border:2px dashed var(--ink);border-radius:4px;opacity:.55}
+.thermo .lg{display:flex;justify-content:space-between;font-size:.74rem;color:var(--muted)}
+.alerts{display:grid;gap:6px}
+.alert{font-size:.88rem;padding:8px 10px;border-radius:var(--radius);border-left:3px solid var(--cinnabar);background:var(--cinnabar-soft)}
+.alert.ok{border-color:var(--jade);background:var(--jade-soft)}
+.alert.gold{border-color:var(--gold);background:var(--gold-soft)}
+.voice{display:grid;gap:6px}
+.voice p{margin:0;font-family:var(--display);font-size:.98rem;line-height:1.45;padding-left:12px;border-left:2px solid var(--jade)}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--jade);background:var(--jade);color:var(--paper);border-radius:var(--radius);padding:8px 14px;cursor:pointer;font-weight:500}
+.btn.ghost{background:transparent;color:var(--jade)}
+.copied{font-size:.85rem;color:var(--jade)}
+textarea.copyfb{width:100%;min-height:120px;font:inherit;font-size:.85rem;background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius);padding:8px}
+
+/* Herbier */
+.hfilters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.hfilters input[type=search],.hfilters select{font:inherit;font-size:.93rem;padding:7px 10px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);color:var(--ink);min-width:0}
+.hfilters input[type=search]{flex:1 1 220px}
+.rchips{display:flex;gap:6px;flex-wrap:wrap}
+.rchip{border:1px solid var(--line);background:var(--paper);padding:5px 11px;border-radius:999px;cursor:pointer;font-size:.88rem;display:inline-flex;gap:6px;align-items:center}
+.rchip[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--paper)}
+.hcount{color:var(--muted);font-size:.9rem;margin:0 0 10px}
+.hgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.hcard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:grid;gap:8px;align-content:start;min-width:0}
+.hcard.poison{border-color:var(--cinnabar)}
+.hcard .top{display:flex;justify-content:space-between;gap:8px;align-items:start}
+.hcard h3{font-size:1.12rem;line-height:1.25}
+.hcard .hz{font-size:1.35rem;color:var(--muted);flex:none}
+.hcard .py{color:var(--muted);font-size:.88rem;margin-top:-6px}
+.hcard .orig{font-size:.85rem;display:flex;gap:6px;align-items:baseline}
+.hcard .x{font-size:.9rem;margin:0}
+.hcard .pz{font-size:.84rem;color:var(--gold);margin:0}
+.hcard .add{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:.8rem;color:var(--muted);padding-top:6px;border-top:1px dashed var(--line)}
+.hcard .add button{border:1px solid var(--line);background:var(--paper);border-radius:999px;padding:2px 9px;cursor:pointer;font-size:.8rem}
+.hcard .add button:hover{border-color:var(--jade);color:var(--jade)}
+.kv{display:grid;grid-template-columns:76px minmax(0,1fr);gap:4px 8px;font-size:.84rem}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:8px 16px;border-radius:999px;font-size:.9rem;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+@media (max-width:520px){.frow{grid-template-columns:110px minmax(0,1fr) 30px}.court li{grid-template-columns:74px minmax(0,1fr)}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="seal" aria-hidden="true">藥</div>
+      <div>
+        <h1>Officine de Shuhui</h1>
+        <p>Composer un remède selon la cour <span class="hz">君臣佐使</span>, et consulter l'herbier.</p>
+      </div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-compose" aria-selected="true" data-tab="compose">Composer</button>
+      <button role="tab" id="tab-herbier" aria-selected="false" data-tab="herbier">Herbier</button>
+    </div>
+  </header>
+
+  <section id="view-compose">
+    <div class="reserve" id="reserve"></div>
+    <div class="compose">
+      <div class="steps">
+        <article class="step" id="s-mal"></article>
+        <article class="step" id="s-arb"></article>
+        <article class="step" id="s-cons"></article>
+        <article class="step" id="s-assi"></article>
+        <article class="step" id="s-env"></article>
+        <article class="step" id="s-form"></article>
+      </div>
+      <aside class="ord" id="ord" aria-live="polite"></aside>
+    </div>
+  </section>
+
+  <section id="view-herbier" hidden>
+    <div class="hfilters">
+      <input type="search" id="h-q" placeholder="Chercher une plante, un pinyin, un effet…" aria-label="Recherche">
+      <div class="rchips" id="h-reg"></div>
+      <select id="h-act" aria-label="Effet"></select>
+      <select id="h-nat" aria-label="Nature"></select>
+      <label class="chk"><input type="checkbox" id="h-pois"> Poisons seulement</label>
+    </div>
+    <p class="hcount" id="h-count"></p>
+    <div class="hgrid" id="h-grid"></div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- Référentiels ---------- */
+const REG={as:{n:"Asie",c:"--r-as"},de:{n:"Terres arides",c:"--r-de"},hu:{n:"Terres humides",c:"--r-hu"},oc:{n:"Occident",c:"--r-oc"}};
+const NAT={"-2":"froide","-1":"fraîche","0":"neutre","1":"tiède","2":"chaude"};
+const ACT={
+ "surf-froid":"Chasser le froid de surface","surf-chaud":"Chasser la chaleur de surface","chaleur":"Rafraîchir la chaleur",
+ "toxines":"Éliminer les toxines","purge":"Purger","humid":"Drainer l'humidité","digest":"Aider la digestion","nausee":"Arrêter la nausée",
+ "rechauf":"Réchauffer l'intérieur","qi":"Faire circuler le qi","sang-c":"Faire circuler le sang","sang-s":"Arrêter le sang",
+ "plaie":"Cicatriser","douleur":"Calmer la douleur","toux":"Calmer la toux","glaires":"Résoudre les glaires","reveil":"Réveiller, ouvrir les orifices",
+ "esprit":"Calmer l'esprit","t-qi":"Tonifier le qi","t-sang":"Tonifier le sang","t-yin":"Nourrir le yin","t-yang":"Tonifier le yang",
+ "retenir":"Retenir ce qui fuit","antidote":"Contrer un poison"};
+const RISK={
+ estomac:{n:"Blesse l'estomac",p:"blesse l'estomac"},froid:{n:"Refroidit trop",p:"refroidit trop le corps"},
+ desseche:{n:"Dessèche le yin",p:"dessèche et brûle le yin"},lourd:{n:"Lourd à digérer",p:"pèse sur la digestion"},
+ sueur:{n:"Épuise par la sueur",p:"épuise par la sueur"},toxique:{n:"Toxique",p:"est toxique"},
+ saigne:{n:"Peut faire saigner",p:"peut faire saigner"},stase:{n:"Laisse des stases",p:"risque de laisser une stase"},
+ epuise:{n:"Épuise un corps faible",p:"épuise un corps faible"},assech:{n:"Assèche les liquides",p:"assèche les liquides"},
+ torpeur:{n:"Alourdit l'esprit",p:"alourdit l'esprit"},violent:{n:"Brutal",p:"brutalise le corps"}};
+const ZONE={surface:"la surface, la peau",haut:"la gorge et les poumons",tete:"la tête",bas:"le bas du corps",membres:"les membres",foie:"le foie et les émotions",coeur:"le cœur et l'esprit",interieur:"l'intérieur"};
+const FORMS={
+ tang:{n:"Décoction",h:"湯",py:"tāng",d:"Bouillie longuement, bue chaude. Action rapide et forte."},
+ san:{n:"Poudre",h:"散",py:"sǎn",d:"Broyée fin. Se transporte, se délaie ou se saupoudre sur une plaie."},
+ wan:{n:"Pilule",h:"丸",py:"wán",d:"Poudre liée au miel. Action lente, dose maîtrisée."},
+ gao:{n:"Onguent",h:"膏",py:"gāo",d:"Pâte grasse ou cireuse appliquée sur la peau."},
+ jiu:{n:"Vin médicinal",h:"酒",py:"jiǔ",d:"Macéré dans l'alcool de riz. Fait circuler et réchauffe."},
+ inh:{n:"Inhalation",h:"嗅",py:"xiù",d:"Respirée, en vapeur ou en fumigation. Agit sur l'instant."},
+ dan:{n:"Élixir",h:"丹",py:"dān",d:"Raffiné en cycles répétés. Rare, précieux, nourrit la vie."}};
+
+/* ---------- Plantes ----------
+ r région · o origine · t nature (-2..2) · s saveur · a effets · f force (1..3)
+ k risques · c risques corrigés · e envoyé vers · fm formes adaptées · u usage (i interne, e externe, b les deux)
+ tox 1 toxique, 2 très toxique, 3 poison sans usage · g interdit grossesse · rare · pz préparation · x en jeu */
+const P=[];
+function p(id,n,h,py,r,o,t,s,a,f,x,opt){P.push(Object.assign({id,n,h,py,r,o,t,s,a,f,x,k:[],c:[],e:[],fm:["tang"],u:"i",tox:0,g:0,rare:0,pz:""},opt||{}))}
+
+// Surface
+p("mahuang","Éphédra","麻黃","Má huáng","de","Steppes arides du nord de la Chine et de Mongolie",1,"piquante, amère",["surf-froid","toux"],3,"Très puissante : jamais seule, jamais sur un corps affaibli.",{k:["sueur","epuise"],e:["surface"],fm:["tang","san"],g:1});
+p("guizhi","Rameau de cannelier","桂枝","Guì zhī","hu","Forêts chaudes du sud de la Chine",1,"piquante, douce",["surf-froid","rechauf","douleur"],2,"Avec la pivoine blanche, il équilibre surface et intérieur.",{k:["desseche"],c:["sueur"],e:["membres","surface"],fm:["tang","jiu"]});
+p("shengjiang","Gingembre frais","生薑","Shēng jiāng","hu","Asie du Sud-Est tropicale, cultivé dans tout le sud",1,"piquante",["surf-froid","nausee","digest"],1,"Correcteur universel : protège l'estomac et neutralise certaines toxicités.",{c:["estomac","froid","toxique"],e:["harmonie"],fm:["tang","jiu"]});
+p("congbai","Ciboule (blanc)","蔥白","Cōng bái","as","Potagers de toute l'Asie",1,"piquante",["surf-froid"],1,"Remède de cuisine, disponible partout, même en cavale.",{fm:["tang"]});
+p("fangfeng","Fáng fēng","防風","Fáng fēng","as","Prairies sèches du nord",1,"piquante, douce",["surf-froid","douleur"],1,"Littéralement « rempart contre le vent ».",{e:["surface"],fm:["tang","san"]});
+p("bohe","Menthe","薄荷","Bò hé","as","Bords de ruisseaux d'Asie et d'Europe",-1,"piquante",["surf-chaud","qi"],1,"Ajoutée en toute fin de cuisson, sinon elle s'évapore.",{e:["surface","tete"],fm:["tang","inh","san"],pz:"Ajouter dans les dernières minutes de cuisson."});
+p("sangye","Feuille de mûrier","桑葉","Sāng yè","as","Vergers à vers à soie",-2,"douce, amère",["surf-chaud","toux"],1,"Presque toujours avec le chrysanthème.",{e:["tete"]});
+p("juhua","Chrysanthème","菊花","Jú huā","as","Jardins de Chine centrale",-1,"douce, amère",["surf-chaud","chaleur"],1,"En tisane, à offrir à quelqu'un qui lit ou veille trop.",{e:["tete"],fm:["tang","inh"]});
+p("chaihu","Buplèvre","柴胡","Chái hú","as","Collines sèches du nord",-1,"amère, piquante",["surf-chaud","qi"],2,"Clé des formules d'émotions contrariées.",{k:["assech"],e:["foie"],fm:["tang","san"]});
+// Chaleur et toxines
+p("jinyinhua","Chèvrefeuille","金銀花","Jīn yín huā","as","Haies et lisières de Chine",-2,"douce",["toxines","chaleur","surf-chaud"],2,"Fleurs « d'or et d'argent », le duo classique avec le forsythia.",{k:["estomac"],fm:["tang","gao"]});
+p("lianqiao","Forsythia","連翹","Lián qiào","as","Coteaux de Chine centrale",-1,"amère",["toxines","chaleur"],2,"Partenaire du chèvrefeuille.",{k:["estomac"]});
+p("pugongying","Pissenlit","蒲公英","Pú gōng yīng","as","Partout en Eurasie",-2,"amère, douce",["toxines","chaleur","plaie"],1,"S'utilise aussi frais et écrasé en cataplasme.",{k:["estomac"],fm:["tang","gao"],u:"b"});
+p("huangqin","Scutellaire","黃芩","Huáng qín","as","Steppes du nord",-2,"amère",["chaleur","toxines","toux"],2,"Réputée pour calmer une grossesse agitée.",{k:["estomac","froid"],fm:["tang","wan"]});
+p("huanglian","Coptis","黃連","Huáng lián","as","Forêts humides du Sichuan",-2,"très amère",["chaleur","toxines","esprit"],3,"Amertume légendaire. Toujours protéger l'estomac.",{k:["estomac","froid","assech"],fm:["tang","wan"]});
+p("zhizi","Gardénia","梔子","Zhī zǐ","as","Jardins du sud",-2,"amère",["chaleur","esprit","sang-s"],2,"Carbonisé, il arrête les saignements.",{k:["estomac"],pz:"Grillé pour moins agresser, carbonisé pour arrêter le sang."});
+p("zhimu","Anémarrhène","知母","Zhī mǔ","as","Pentes sèches du nord",-2,"amère, douce",["chaleur","t-yin"],2,"Son nom : « connaître la mère ».",{k:["estomac"],c:["desseche"]});
+p("shigao","Gypse","石膏","Shí gāo","as","Minéral, carrières de tout le continent",-2,"douce, piquante",["chaleur"],3,"Minéral non toxique : l'un des rares que Shuhui emploie.",{k:["estomac","froid"],pz:"Concassé et cuit en premier, une demi-heure avant le reste."});
+p("banlangen","Isatis","板藍根","Bǎn lán gēn","as","Steppes d'Asie, cousine du pastel européen",-2,"amère",["toxines","chaleur"],2,"La plante des quartiers frappés par une épidémie.",{k:["estomac"],fm:["tang","san"]});
+p("lianzixin","Cœur de lotus","蓮子心","Lián zǐ xīn","hu","Étangs à lotus",-2,"amère",["chaleur","esprit"],1,"Le germe vert au centre de la graine.");
+p("ludou","Haricot mungo","綠豆","Lǜ dòu","as","Champs de toute l'Asie",-1,"douce",["antidote","chaleur"],1,"L'antidote du peuple : une soupe de haricots verts contre bien des poisons.",{c:["toxique"]});
+// Purger, drainer
+p("dahuang","Rhubarbe","大黃","Dà huáng","as","Hauts plateaux de l'ouest",-2,"amère",["purge","chaleur","sang-c"],3,"Crue elle purge fort, cuite au vin elle agit plus haut.",{k:["epuise","estomac","violent"],g:1,fm:["tang","wan"],pz:"Ajoutée en fin de cuisson pour purger, cuite au vin pour adoucir."});
+p("huomaren","Graine de chanvre","火麻仁","Huǒ má rén","as","Champs de chanvre",0,"douce",["purge"],1,"Pour les âgés et les affaiblis, à la place de la rhubarbe.",{fm:["wan","tang"]});
+p("fuling","Poria","茯苓","Fú líng","as","Racines des pins",0,"douce",["humid","digest","esprit"],1,"Champignon des racines de pin, assistant sans danger.",{c:["lourd","torpeur"],fm:["tang","wan","san"]});
+p("zexie","Alisma","澤瀉","Zé xiè","hu","Marais et rizières",-2,"douce",["humid"],2,"La plante des marais.",{k:["assech"],e:["bas"]});
+p("yiyiren","Larmes de Job","薏苡仁","Yì yǐ rén","hu","Bords d'eau tropicaux",-1,"douce",["humid","douleur","digest"],1,"Céréale : un remède déguisé en bouillie.",{fm:["tang"]});
+p("huoxiang","Agastache","藿香","Huò xiāng","as","Jardins du sud",1,"piquante, aromatique",["humid","nausee","digest"],1,"La plante des voyageurs et des marins.",{fm:["tang","san","inh"]});
+p("sharen","Amome","砂仁","Shā rén","hu","Forêts tropicales du sud",1,"piquante, aromatique",["digest","nausee","qi"],1,"Correcteur des tonifiants trop lourds.",{c:["lourd"],fm:["tang","san","wan"],pz:"Écrasée et ajoutée en fin de cuisson."});
+p("jingmi","Riz blanc","粳米","Jīng mǐ","hu","Rizières de tout le sud",0,"douce",["digest","t-qi"],1,"Une poignée de riz dans une décoction froide protège l'estomac.",{c:["estomac"]});
+p("haizao","Sargasse","海藻","Hǎi zǎo","hu","Algue des côtes rocheuses",-2,"salée",["glaires","humid"],1,"Ramollit les nodules et les ganglions durs.");
+// Réchauffer
+p("ganjiang","Gingembre sec","乾薑","Gān jiāng","hu","Sud tropical",2,"piquante",["rechauf","nausee"],2,"Le frais agit en surface, le sec à l'intérieur.",{k:["desseche"],c:["froid","estomac"],fm:["tang","wan"]});
+p("rougui","Écorce de cannelle","肉桂","Ròu guì","hu","Forêts chaudes du sud",2,"piquante, douce",["rechauf","t-yang","douleur"],2,"« Ramène le feu à sa source ».",{k:["desseche"],c:["froid"],g:1,fm:["tang","wan","jiu"]});
+p("fuzi","Aconit préparé","附子","Fù zǐ","as","Montagnes du Sichuan",2,"piquante",["rechauf","t-yang","reveil"],3,"Ranime le yang quand le corps s'effondre.",{k:["toxique","desseche"],tox:2,g:1,fm:["tang","wan"],pz:"Préparé au sel, puis cuit une à deux heures seul, jusqu'à ne plus engourdir la langue."});
+p("dingxiang","Clou de girofle","丁香","Dīng xiāng","hu","Îles aux épices (Moluques), par les ports",1,"piquante",["rechauf","nausee","douleur"],1,"Mâché pour engourdir une dent.",{fm:["san","tang","gao"],u:"b"});
+p("huajiao","Poivre du Sichuan","花椒","Huā jiāo","as","Montagnes du Sichuan",2,"piquante",["rechauf","douleur"],2,"Engourdit la langue.",{k:["desseche"],u:"b",fm:["tang","gao"]});
+p("wuzhuyu","Évodia","吳茱萸","Wú zhū yú","as","Collines du sud",2,"piquante, amère",["rechauf","nausee","douleur"],2,"Migraine au sommet du crâne avec nausées.",{k:["desseche"],tox:1,e:["foie"]});
+p("gaoliangjiang","Galanga","高良薑","Gāo liáng jiāng","hu","Île de Hainan et côtes tropicales",2,"piquante",["rechauf","douleur","nausee"],2,"Le gingembre des pays chauds.",{k:["desseche"],fm:["tang","san"]});
+// Qi
+p("chenpi","Écorce de mandarine","陳皮","Chén pí","as","Vergers du sud",1,"amère, piquante",["qi","digest","glaires"],1,"Plus elle est vieille, meilleure elle est.",{c:["lourd"],fm:["tang","wan","san"]});
+p("qingpi","Mandarine verte","青皮","Qīng pí","as","Vergers du sud",1,"amère, piquante",["qi","digest"],2,"La version jeune et vive de la même plante.",{k:["epuise"],e:["foie"]});
+p("zhishi","Orange amère","枳實","Zhǐ shí","as","Vergers du sud",-1,"amère",["qi","digest","purge"],3,"Énergique, à éviter chez les faibles.",{k:["epuise"],g:1});
+p("xiangfu","Souchet","香附","Xiāng fù","hu","Rizières et terres mouillées",0,"piquante",["qi","douleur"],2,"La plante de l'irritabilité et de la tristesse rentrée.",{e:["foie"],fm:["tang","wan","san"]});
+p("meiguihua","Rose","玫瑰花","Méi guī huā","as","Jardins",1,"douce",["qi","esprit","sang-c"],1,"Le remède que Shuhui offre à une personne en deuil.",{fm:["tang","jiu","inh"]});
+p("muxiang","Saussurée","木香","Mù xiāng","as","Pentes de l'Himalaya",1,"piquante, amère",["qi","digest","douleur"],2,"Grillée pour agir sur l'intestin.",{c:["lourd"],fm:["tang","wan"]});
+p("chenxiang","Bois d'aquilaria","沉香","Chén xiāng","hu","Forêts de Hainan et d'Asie du Sud-Est",1,"piquante, aromatique",["qi","nausee","toux"],2,"« Le parfum qui coule », marchandise précieuse des ports.",{rare:1,fm:["san","wan","inh"]});
+// Sang
+p("sanqi","Pseudo-ginseng","三七","Sān qī","as","Montagnes du Yunnan",1,"douce, amère",["sang-s","sang-c","plaie","douleur"],2,"La reine des blessures : arrête le sang sans laisser de caillot.",{c:["stase","saigne"],u:"b",g:1,fm:["san","wan","gao"]});
+p("baiji","Bletilla","白及","Bái jí","as","Sous-bois humides",-1,"amère",["sang-s","plaie"],1,"En poudre sur les plaies, avec le sān qī.",{k:["stase"],c:["saigne"],u:"b",fm:["san","gao"]});
+p("aiye","Armoise","艾葉","Ài yè","as","Talus de toute l'Eurasie",1,"amère, piquante",["sang-s","rechauf","douleur"],1,"La plante du moxa.",{u:"b",fm:["tang","gao","inh"],pz:"Carbonisée pour arrêter le sang, séchée et roulée pour le moxa."});
+p("honghua","Carthame","紅花","Hóng huā","de","Proche-Orient, venu par la Route de la soie",1,"piquante",["sang-c","douleur"],2,"Couple avec l'amande de pêche.",{k:["saigne"],g:1,fm:["tang","jiu"]});
+p("taoren","Amande de pêche","桃仁","Táo rén","as","Vergers de pêchers",0,"amère, douce",["sang-c","purge"],2,"Le pêcher d'Hezu diurne : sa graine fait circuler la vie.",{k:["saigne"],g:1,tox:1,fm:["tang","wan"]});
+p("danshen","Sauge rouge","丹參","Dān shēn","as","Collines de Chine centrale",-1,"amère",["sang-c","esprit","douleur"],2,"Agit sur le sang et sur le cœur à la fois.",{k:["saigne"],e:["coeur"]});
+p("chuanxiong","Livèche de Chine","川芎","Chuān xiōng","as","Plaine du Sichuan",1,"piquante",["sang-c","qi","douleur"],2,"Monte vers la tête.",{k:["desseche"],c:["stase"],e:["tete"],fm:["tang","jiu","san"]});
+p("danggui","Angélique chinoise","當歸","Dāng guī","as","Montagnes du Gansu",1,"douce, piquante",["t-sang","sang-c","douleur"],2,"Son nom se lit « doit revenir ».",{k:["lourd"],c:["saigne"],fm:["tang","jiu","wan"]});
+p("niuxi","Achyranthe","牛膝","Niú xī","as","Plaine du Henan",0,"amère, acide",["sang-c","douleur"],1,"Envoie la formule vers le bas.",{k:["saigne"],g:1,e:["bas"]});
+p("ruxiang","Encens","乳香","Rǔ xiāng","de","Corne de l'Afrique et sud de l'Arabie (Oman, Yémen)",1,"piquante, amère",["douleur","sang-c","plaie"],2,"Résine importée, toujours avec la myrrhe.",{k:["estomac"],u:"b",g:1,fm:["san","gao","wan","inh"]});
+p("moyao","Myrrhe","沒藥","Mò yào","de","Corne de l'Afrique et sud de l'Arabie",0,"amère",["douleur","sang-c","plaie"],2,"Le duo encens-myrrhe est l'onguent du soldat blessé.",{k:["estomac"],u:"b",g:1,fm:["san","gao","wan"]});
+p("xuejie","Sang-dragon","血竭","Xuè jié","hu","Palmier-rotin d'Indonésie, ou dragonnier de Socotra",0,"douce, salée",["sang-s","sang-c","plaie","douleur"],2,"Résine rouge sombre, au nom parfait pour Tiānhé.",{u:"b",rare:1,fm:["san","gao"]});
+p("puhuang","Pollen de massette","蒲黃","Pú huáng","hu","Étangs et marais",0,"douce",["sang-s","sang-c","douleur"],1,"Arrête et fait circuler à la fois.",{c:["stase","saigne"],u:"b",g:1,fm:["san","tang"]});
+p("jianghuang","Curcuma","薑黃","Jiāng huáng","hu","Forêts tropicales humides",1,"piquante, amère",["sang-c","qi","douleur"],2,"Teint les mains de Shuhui en jaune.",{k:["saigne"],g:1,e:["membres"],fm:["tang","san","gao"]});
+// Toux, réveil
+p("banxia","Pinellia préparée","半夏","Bàn xià","as","Champs humides de Chine",1,"piquante",["glaires","nausee","toux"],2,"Toujours préparée au gingembre.",{k:["toxique","desseche"],tox:1,g:1,pz:"Macérée puis cuite au gingembre et à l'alun : crue, elle brûle la gorge."});
+p("jiegeng","Platycodon","桔梗","Jié gěng","as","Collines du nord-est",0,"amère, piquante",["toux","glaires"],1,"« Le bateau qui porte les remèdes vers les poumons ».",{e:["haut"],fm:["tang","san"]});
+p("xingren","Amande d'abricot","苦杏仁","Kǔ xìng rén","as","Vergers du nord",1,"amère",["toux","purge"],1,"Assistant classique de l'éphédra.",{k:["toxique"],tox:1});
+p("chuanbei","Fritillaire","川貝母","Chuān bèi mǔ","as","Hautes montagnes du Sichuan",-1,"douce, amère",["toux","glaires","t-yin"],1,"Précieuse. Cuite dans une poire pour les enfants.",{rare:1,fm:["san","tang"]});
+p("kuandonghua","Tussilage","款冬花","Kuǎn dōng huā","as","Eurasie, du Sichuan aux talus d'Europe",1,"piquante",["toux"],1,"Fleurit en plein hiver, dans la neige.",{fm:["tang","inh"]});
+p("shichangpu","Acore","石菖蒲","Shí chāng pú","hu","Ruisseaux et marais",1,"piquante, aromatique",["reveil","esprit","humid"],2,"Éclaircit un esprit embrumé.",{c:["torpeur"],fm:["tang","inh","san"]});
+p("bingpian","Bornéol","冰片","Bīng piàn","hu","Arbres de Bornéo et Sumatra, par les ports",-1,"piquante, amère",["reveil","douleur","plaie"],2,"En inhalation : le sel de pâmoison de Shuhui.",{u:"b",g:1,rare:1,fm:["inh","san","gao"]});
+p("shexiang","Musc","麝香","Shè xiāng","as","Cervidé des montagnes himalayennes",1,"piquante",["reveil","sang-c","douleur"],3,"D'origine animale, très rare et très cher.",{g:1,rare:1,fm:["inh","wan","san"]});
+// Esprit
+p("suanzaoren","Graine de jujubier","酸棗仁","Suān zǎo rén","as","Collines sèches du nord",0,"acide, douce",["esprit","retenir"],1,"Le souverain des formules du sommeil.",{c:["torpeur"],fm:["tang","wan","san"],pz:"Légèrement grillée et écrasée avant cuisson."});
+p("yuanzhi","Polygala","遠志","Yuǎn zhì","as","Steppes du nord",1,"amère, piquante",["esprit","glaires"],1,"« Volonté lointaine » : relie le cœur et les reins.",{k:["estomac"],fm:["tang","wan"]});
+p("hehuanpi","Albizia","合歡皮","Hé huān pí","as","Arbre des jardins",0,"douce",["esprit","qi","sang-c"],1,"« Joie partagée » : la plante du chagrin.");
+p("longyan","Longane","龍眼肉","Lóng yǎn ròu","hu","Vergers tropicaux du sud",1,"douce",["esprit","t-sang"],1,"« Œil de dragon », se donne comme une friandise.",{k:["lourd"],fm:["tang","wan","dan"]});
+p("baihe","Bulbe de lis","百合","Bǎi hé","as","Montagnes de Chine",-1,"douce",["esprit","toux","t-yin"],1,"Contre la « maladie du lis » : un esprit qui ne sait plus ce qu'il veut.",{c:["desseche"]});
+p("lianzi","Graine de lotus","蓮子","Lián zǐ","hu","Étangs à lotus",0,"douce, astringente",["esprit","retenir","digest"],1,"Les lotus d'or de la pièce de Yue.",{fm:["tang","wan"]});
+p("longgu","Os de dragon","龍骨","Lóng gǔ","as","Fossiles anciens, déterrés",0,"douce, astringente",["esprit","retenir"],2,"Ancre l'esprit, presque toujours avec la coquille d'huître.",{k:["torpeur","estomac"],fm:["tang","san"],pz:"Concassé et cuit en premier."});
+p("muli","Coquille d'huître","牡蠣","Mǔ lì","hu","Côtes et estuaires",-1,"salée",["esprit","retenir"],2,"Partenaire de l'os de dragon.",{k:["torpeur","estomac"],pz:"Concassée et cuite en premier."});
+// Tonifier
+p("renshen","Ginseng","人參","Rén shēn","as","Forêts de Mandchourie",1,"douce, légèrement amère",["t-qi","reveil"],3,"Le roi, rare et cher.",{k:["lourd"],c:["epuise"],rare:1,fm:["tang","wan","jiu","dan"],pz:"Cuit à part, à feu doux, puis ajouté au reste."});
+p("dangshen","Codonopsis","黨參","Dǎng shēn","as","Montagnes du Shanxi",0,"douce",["t-qi","digest"],2,"Le « ginseng des pauvres ».",{k:["lourd"],c:["epuise"],fm:["tang","wan"]});
+p("huangqi","Astragale","黃芪","Huáng qí","as","Steppes de Mongolie intérieure",1,"douce",["t-qi","retenir","plaie"],2,"Avec l'angélique : le qi qui engendre le sang.",{k:["lourd"],c:["sueur"],fm:["tang","wan","dan"],pz:"Grillée au miel pour tonifier davantage."});
+p("baizhu","Atractylode blanc","白朮","Bái zhú","as","Collines du Zhejiang",1,"amère, douce",["t-qi","digest","humid"],1,"Ministre classique du ginseng.",{k:["desseche"],c:["lourd"],fm:["tang","wan","san"]});
+p("gancao","Réglisse","甘草","Gān cǎo","de","Steppes arides d'Asie centrale",0,"douce",["t-qi","toux","antidote","douleur"],1,"« Le vieux maître du royaume » : l'envoyé universel.",{c:["estomac","toxique","violent","epuise"],e:["harmonie"],fm:["tang","wan","san","gao","jiu","dan"]});
+p("dazao","Jujube","大棗","Dà zǎo","as","Vergers du nord",1,"douce",["t-qi","esprit","digest"],1,"Presque toujours avec le gingembre frais.",{c:["estomac","violent","torpeur"],e:["harmonie"],fm:["tang","wan"]});
+p("shanyao","Igname de Chine","山藥","Shān yào","as","Plaine du Henan",0,"douce",["t-qi","t-yin","digest","retenir"],1,"Un aliment autant qu'un remède.",{c:["assech","desseche"],fm:["tang","wan"]});
+p("shudi","Rehmannia préparée","熟地黃","Shú dì huáng","as","Plaine du Henan",1,"douce",["t-sang","t-yin"],2,"Le fruit des neuf cuissons et neuf séchages.",{k:["lourd"],fm:["tang","wan","dan"],pz:"Neuf cuissons à la vapeur au vin, neuf séchages au soleil."});
+p("baishao","Pivoine blanche","白芍","Bái sháo","as","Jardins du Zhejiang",-1,"acide, amère",["t-sang","douleur","retenir"],1,"Avec la réglisse : le remède des spasmes.",{c:["desseche","sueur","violent"],fm:["tang","wan"]});
+p("heshouwu","Renouée multiflore","何首烏","Hé shǒu wū","as","Collines du sud",1,"amère, douce",["t-sang","t-yang"],2,"Un vieillard nommé He retrouva des cheveux noirs.",{tox:1,k:["toxique"],fm:["wan","jiu","dan"],pz:"Cuite longuement avec des haricots noirs : crue, elle abîme le foie."});
+p("maidong","Ophiopogon","麥門冬","Mài mén dōng","as","Sous-bois du Sichuan",-1,"douce",["t-yin","toux","esprit"],1,"Pilier de la poudre « qui fait renaître le pouls ».",{c:["desseche","assech"]});
+p("gouqi","Baies de goji","枸杞子","Gǒu qǐ zǐ","de","Vallées arides du Ningxia, au bord du désert",0,"douce",["t-yin","t-sang"],1,"Se grignotent ou s'ajoutent au thé.",{c:["assech"],fm:["tang","jiu","wan","dan"]});
+p("huangjing","Sceau de Salomon","黃精","Huáng jīng","as","Sous-bois d'Asie et d'Europe",0,"douce",["t-yin","t-qi"],1,"La nourriture des ermites qui renonçaient aux céréales.",{k:["lourd"],fm:["wan","dan","jiu"]});
+p("baimuer","Trémelle","白木耳","Bái mù ěr","hu","Troncs pourrissants des forêts humides",0,"douce",["t-yin","toux"],1,"En dessert sucré : la gourmandise de Shuhui justifiée.");
+p("duzhong","Eucommia","杜仲","Dù zhòng","as","Montagnes de Chine centrale",1,"douce",["t-yang","douleur"],2,"Rompue, l'écorce laisse des fils blancs élastiques.",{fm:["tang","jiu","wan"]});
+p("roucongrong","Cistanche","肉蓯蓉","Ròu cōng róng","de","Dunes du Gobi et du Taklamakan",1,"douce, salée",["t-yang","purge"],1,"Le « ginseng du désert ».",{fm:["wan","jiu"]});
+p("dongchong","Cordyceps","冬蟲夏草","Dōng chóng xià cǎo","as","Hauts plateaux tibétains",1,"douce",["t-yang","t-yin","toux"],2,"« Ver en hiver, herbe en été ». Mythique et hors de prix.",{rare:1,fm:["dan","jiu","tang"]});
+p("wuweizi","Schisandra","五味子","Wǔ wèi zǐ","as","Forêts du nord-est",1,"acide",["retenir","esprit","toux"],1,"Le « fruit des cinq saveurs ».",{c:["sueur"],fm:["wan","tang","jiu"]});
+p("shanzhuyu","Cornouiller","山茱萸","Shān zhū yú","as","Collines du Zhejiang",1,"acide",["retenir","t-yin","t-yang"],1,"Pour les corps qui « fuient » après une grande perte.");
+p("wumei","Prune fumée","烏梅","Wū méi","as","Vergers du sud",0,"acide",["retenir","digest"],1,"Se suce comme un bonbon.",{c:["assech"]});
+p("sangzhi","Branche de mûrier","桑枝","Sāng zhī","as","Vergers à vers à soie",0,"amère",["douleur","humid"],1,"Envoie la formule vers les bras et les épaules.",{e:["membres"]});
+// Terres arides
+p("aloes","Aloès","蘆薈","Lú huì","de","Arabie, Corne de l'Afrique et Socotra",-2,"amère",["plaie","chaleur","purge"],2,"Le gel frais sur les brûlures, la sève séchée pour purger.",{k:["froid","epuise"],g:1,u:"b",fm:["gao","wan"]});
+p("datte","Datte","椰棗","Yē zǎo","de","Oasis d'Arabie et du Sahara",1,"douce",["t-qi","t-sang","digest"],1,"Le jujube des déserts : nourrit et adoucit.",{c:["estomac","violent","epuise"],e:["harmonie"],fm:["tang","wan","dan"]});
+p("gommearabique","Gomme arabique","阿拉伯膠","Ālābó jiāo","de","Acacias du Sahel",0,"douce",["toux","plaie"],1,"Liant parfait pour les pilules et apaisant de la gorge.",{c:["estomac"],fm:["wan","san"]});
+p("safran","Safran","西紅花","Xī hóng huā","de","Plateaux arides de Perse",0,"douce",["sang-c","esprit"],2,"« La fleur rouge de l'Ouest », plus chère que l'or au poids.",{k:["saigne"],g:1,rare:1,fm:["jiu","tang","dan"]});
+p("nigelle","Nigelle","黑種草子","Hēi zhǒng cǎo zǐ","de","Proche-Orient et Afrique du Nord",1,"piquante, amère",["digest","toux","t-qi"],1,"La graine noire des marchands du désert.",{fm:["san","jiu"]});
+p("henne","Henné","指甲花","Zhǐ jiǎ huā","de","Afrique du Nord et Arabie",-1,"amère",["plaie","chaleur"],1,"Rafraîchit la peau brûlée par le soleil.",{u:"e",fm:["gao"]});
+p("sene","Séné","番瀉葉","Fān xiè yè","de","Égypte et Arabie",-2,"amère",["purge"],2,"Purge sûre mais crampes à la clé.",{k:["epuise","estomac"],g:1});
+p("armoiseblanche","Armoise blanche","白蒿","Bái hāo","de","Hauts plateaux de l'Atlas et bords du Sahara",0,"amère, aromatique",["digest","toxines"],1,"Le thé amer des nomades.",{fm:["tang","inh"]});
+p("harmal","Harmal","駱駝蓬","Luò tuó péng","de","Steppes et déserts d'Asie centrale",1,"amère",["reveil","esprit"],2,"Brûlé en fumigation : visions et ivresse.",{k:["toxique"],tox:2,g:1,fm:["inh"]});
+p("coloquinte","Coloquinte","藥西瓜","Yào xī guā","de","Sables du Sahara",-2,"très amère",["purge"],3,"Purge d'une violence extrême.",{k:["toxique","violent","epuise"],tox:2,g:1,fm:["wan"]});
+// Terres humides d'Europe
+p("reinepres","Reine-des-prés","繡線菊","Xiù xiàn jú","hu","Prairies humides et berges d'Europe",-1,"amère, douce",["douleur","chaleur","digest"],1,"Calme la douleur et protège l'estomac à la fois.",{c:["estomac"],fm:["tang"]});
+p("saule","Écorce de saule blanc","柳樹皮","Liǔ shù pí","hu","Bords de rivières d'Europe",-1,"amère",["douleur","chaleur"],2,"L'écorce des fièvres et des douleurs.",{k:["estomac","saigne"],fm:["tang","san"]});
+p("valeriane","Valériane","纈草","Xié cǎo","hu","Fossés humides d'Europe",1,"piquante, amère",["esprit","douleur"],2,"Odeur forte, sommeil profond.",{k:["torpeur"],fm:["tang","jiu","wan"]});
+p("angeliqueoff","Angélique officinale","歐白芷","Ōu bái zhǐ","hu","Rives froides d'Europe du Nord",1,"piquante, douce",["digest","rechauf","toux"],1,"Cousine nordique de l'angélique chinoise.",{c:["lourd"],fm:["jiu","tang"]});
+// Occident
+p("achillee","Achillée millefeuille","蓍草","Shī cǎo","oc","Prairies sèches d'Europe",0,"amère, piquante",["sang-s","plaie","surf-chaud"],1,"L'herbe d'Achille, pansement des champs de bataille.",{c:["saigne"],u:"b",fm:["tang","gao","san"]});
+p("calendula","Souci","金盞花","Jīn zhǎn huā","oc","Jardins de la Méditerranée",0,"amère",["plaie","toxines"],1,"L'onguent des écorchures.",{u:"e",fm:["gao","tang"]});
+p("arnica","Arnica","山金車","Shān jīn chē","oc","Alpages des montagnes d'Europe",1,"amère",["sang-c","douleur"],2,"Jamais en interne.",{k:["toxique"],tox:2,u:"e",fm:["gao","jiu"]});
+p("consoude","Consoude","聚合草","Jù hé cǎo","oc","Fossés et prés d'Europe",0,"douce",["plaie","douleur"],2,"« Celle qui ressoude » les os et les chairs.",{k:["toxique"],tox:1,u:"e",fm:["gao"]});
+p("camomille","Camomille","洋甘菊","Yáng gān jú","oc","Champs d'Europe",0,"amère, douce",["esprit","digest","douleur"],1,"La tisane du soir des paysans d'Occident.",{c:["estomac"],fm:["tang","inh"]});
+p("sauge","Sauge officinale","鼠尾草","Shǔ wěi cǎo","oc","Garrigues méditerranéennes",1,"amère, aromatique",["retenir","toux","toxines"],1,"Coupe les sueurs et apaise la gorge.",{c:["sueur"],g:1,fm:["tang","inh","gao"]});
+p("thym","Thym","百里香","Bǎi lǐ xiāng","oc","Garrigues méditerranéennes",1,"piquante, aromatique",["toux","toxines","glaires","digest"],1,"Fumigation des maisons de malades.",{fm:["tang","inh","jiu"]});
+p("millepertuis","Millepertuis","貫葉連翹","Guàn yè lián qiào","oc","Talus ensoleillés d'Europe",0,"amère",["esprit","plaie","qi"],2,"Son huile rouge soigne les brûlures, sa tisane la mélancolie.",{u:"b",fm:["jiu","gao","tang"]});
+p("romarin","Romarin","迷迭香","Mí dié xiāng","oc","Côtes méditerranéennes",1,"piquante, aromatique",["qi","sang-c","reveil"],1,"Réveille la mémoire et la tête.",{c:["torpeur"],e:["tete"],fm:["jiu","inh","tang"]});
+p("lavande","Lavande","薰衣草","Xūn yī cǎo","oc","Collines de Provence",0,"piquante, aromatique",["esprit","reveil","plaie"],1,"Sous l'oreiller ou sur les brûlures.",{u:"b",fm:["inh","gao","tang"]});
+p("melisse","Mélisse","香蜂草","Xiāng fēng cǎo","oc","Jardins de monastères",-1,"aromatique",["esprit","digest"],1,"L'herbe des moines contre la mélancolie.",{fm:["tang","jiu"]});
+p("ortie","Ortie","蕁麻","Xún má","oc","Partout où l'homme a vécu",-1,"amère",["t-sang","sang-s","humid"],1,"En soupe pour refaire le sang.",{c:["saigne"],fm:["tang"]});
+p("sureau","Fleur de sureau","接骨木花","Jiē gǔ mù huā","oc","Haies d'Europe",0,"piquante, douce",["surf-chaud","surf-froid","toux"],1,"Fait transpirer doucement.",{e:["surface"],fm:["tang"]});
+p("aubepine","Aubépine","山楂","Shān zhā","oc","Haies d'Europe (cousine chinoise : shān zhā)",0,"acide, douce",["esprit","sang-c","digest"],1,"Fortifie le cœur, aide à digérer la viande.",{e:["coeur"],fm:["tang","jiu"]});
+p("fenouil","Fenouil","茴香","Huí xiāng","oc","Côtes méditerranéennes",1,"piquante",["digest","qi","nausee"],1,"Chasse les gaz et les ballonnements.",{c:["lourd"],fm:["tang","san"]});
+p("gentiane","Gentiane jaune","龍膽","Lóng dǎn","oc","Alpages d'Europe",-2,"très amère",["digest","chaleur"],2,"Amère au point d'ouvrir l'appétit.",{k:["froid","estomac"],fm:["jiu","tang"]});
+p("absinthe","Absinthe","苦艾","Kǔ ài","oc","Terrains secs d'Europe",-1,"très amère",["digest","toxines"],2,"Chasse les vers, trouble l'esprit à forte dose.",{k:["toxique"],tox:1,g:1,fm:["jiu"]});
+p("genevrier","Genévrier","杜松子","Dù sōng zǐ","oc","Landes d'Europe",1,"piquante",["humid","rechauf"],1,"Draine les eaux et réchauffe.",{k:["desseche"],g:1,fm:["jiu","tang","inh"]});
+p("hysope","Hysope","牛膝草","Niú xī cǎo","oc","Rocailles méditerranéennes",1,"amère, aromatique",["toux","glaires"],1,"La plante des purifications.",{fm:["tang","inh"]});
+p("pavot","Pavot","罌粟","Yīng sù","oc","Méditerranée orientale et Anatolie",0,"acide",["douleur","retenir","esprit","toux"],3,"Calme toute douleur, mais attache celui qui en prend.",{k:["toxique","torpeur"],tox:2,g:1,fm:["wan","jiu"]});
+// Poisons
+p("wutou","Aconit cru","烏頭","Wū tóu","as","Montagnes du Sichuan",2,"piquante",["douleur"],3,"Uniquement en liniment externe : le poison le plus redouté.",{k:["toxique"],tox:2,g:1,u:"e",fm:["jiu","gao"]});
+p("tiannanxing","Arisaema","天南星","Tiān nán xīng","as","Sous-bois humides",1,"amère, piquante",["glaires","douleur"],2,"Comme la pinellia, en plus fort.",{k:["toxique"],tox:2,g:1,pz:"Préparé au gingembre ou à la bile."});
+p("badou","Croton","巴豆","Bā dòu","hu","Forêts tropicales du sud",2,"piquante",["purge"],3,"Le poison de la mauvaise farce, ou du sabotage d'une armée.",{k:["toxique","violent","epuise"],tox:2,g:1,fm:["wan"],pz:"Graines pressées pour retirer l'huile."});
+p("maqianzi","Noix vomique","馬錢子","Mǎ qián zǐ","hu","Forêts d'Inde et d'Asie du Sud-Est",-2,"amère",["douleur"],3,"Raideurs et convulsions au moindre bruit.",{k:["toxique"],tox:2,g:1,u:"e",fm:["gao"]});
+p("yangjinhua","Datura","洋金花","Yáng jīn huā","de","Origine débattue, sans doute les Amériques",1,"piquante",["douleur","toux"],3,"Le « fleur d'or venue de l'océan » : délire et anesthésie.",{k:["toxique"],tox:2,g:1,fm:["inh","jiu"]});
+p("zhusha","Cinabre","朱砂","Zhū shā","as","Minéral rouge des mines du Hunan",-1,"douce",["esprit"],3,"La substance reine des alchimistes. Shuhui refuse de l'employer.",{k:["toxique"],tox:2,g:1,fm:["dan","wan"]});
+p("lilu","Vératre","藜蘆","Lí lú","as","Prés de montagne",-2,"amère, piquante",["glaires"],3,"Fait vomir violemment. Ennemi des racines de shen.",{k:["toxique","violent"],tox:2,g:1});
+p("gouwen","Gelsemium","鉤吻","Gōu wěn","hu","Collines du sud tropical",2,"piquante",[],3,"« L'herbe qui brise les entrailles ». Aucun usage interne.",{k:["toxique"],tox:3,g:1,fm:[]});
+p("belladone","Belladone","顛茄","Diān qié","oc","Sous-bois d'Europe",0,"amère",[],3,"« Belle dame » : pupilles dilatées, délire, mort.",{k:["toxique"],tox:3,g:1,fm:[]});
+p("digitale","Digitale","毛地黃","Máo dì huáng","oc","Lisières d'Europe",0,"amère",[],3,"Arrête le cœur à peine au-delà de la dose qui le soigne.",{k:["toxique"],tox:3,g:1,fm:[]});
+p("cigue","Grande ciguë","毒芹","Dú qín","oc","Fossés d'Europe",0,"âcre",[],3,"Le poison de Socrate : paralysie qui monte des pieds.",{k:["toxique"],tox:3,g:1,fm:[]});
+
+const BY=Object.fromEntries(P.map(x=>[x.id,x]));
+
+/* Incompatibilités (dix-huit oppositions, version courte) */
+const INCOMP=[["gancao",["haizao","badou","coloquinte"],"La réglisse s'oppose aux purgatifs violents et aux algues marines."],
+ ["fuzi",["banxia","chuanbei","baiji"],"L'aconit s'oppose à la pinellia, à la fritillaire et à la bletilla."],
+ ["wutou",["banxia","chuanbei","baiji"],"L'aconit s'oppose à la pinellia, à la fritillaire et à la bletilla."],
+ ["lilu",["renshen","dangshen","danshen","baishao"],"Le vératre s'oppose aux racines de shen et à la pivoine."]];
+
+/* Formules classiques reconnues */
+const CLASSIC=[
+ {n:"Décoction du Tigre blanc",h:"白虎湯",ids:["shigao","zhimu","jingmi","gancao"]},
+ {n:"Décoction d'éphédra",h:"麻黃湯",ids:["mahuang","guizhi","xingren","gancao"]},
+ {n:"Décoction du rameau de cannelier",h:"桂枝湯",ids:["guizhi","baishao","shengjiang","dazao","gancao"]},
+ {n:"Décoction des Quatre Gentilshommes",h:"四君子湯",ids:["renshen","baizhu","fuling","gancao"]},
+ {n:"Décoction des Quatre Substances",h:"四物湯",ids:["shudi","danggui","baishao","chuanxiong"]},
+ {n:"Poudre du Paravent de Jade",h:"玉屏風散",ids:["huangqi","baizhu","fangfeng"]},
+ {n:"Poudre qui fait renaître le pouls",h:"生脈散",ids:["renshen","maidong","wuweizi"]},
+ {n:"Décoction des Deux Anciens",h:"二陳湯",ids:["banxia","chenpi","fuling","gancao"]},
+ {n:"Décoction de la graine de jujubier",h:"酸棗仁湯",ids:["suanzaoren","fuling","zhimu","chuanxiong","gancao"]},
+ {n:"Pilule de l'union du Ciel et de la Terre",h:"交泰丸",ids:["huanglian","rougui"]},
+ {n:"Poudre de chèvrefeuille et forsythia",h:"銀翹散",ids:["jinyinhua","lianqiao","bohe","jiegeng"]}];
+
+/* Maux */
+const MAUX=[
+ {id:"refroid",g:"Fièvres et refroidissements",n:"Refroidissement",d:"Frissons, courbatures, nez pris, pas de sueur.",m:"surf-froid",s:["toux","douleur"],z:"surface",need:1},
+ {id:"fievrede",g:"Fièvres et refroidissements",n:"Fièvre naissante, gorge en feu",d:"Fièvre légère, gorge rouge et douloureuse, soif.",m:"surf-chaud",s:["toxines","toux"],z:"haut",need:-1},
+ {id:"fievrefort",g:"Fièvres et refroidissements",n:"Forte fièvre, grande soif",d:"Fièvre haute, sueurs abondantes, soif intense, visage rouge.",m:"chaleur",s:["t-yin","toxines"],z:"interieur",need:-2,urg:1},
+ {id:"cephalee",g:"Fièvres et refroidissements",n:"Maux de tête",d:"Douleur aux tempes ou au sommet du crâne.",m:"douleur",s:["qi","sang-c"],z:"tete",need:null},
+ {id:"hemor",g:"Blessures",n:"Plaie qui saigne",d:"Coupure ou entaille qui saigne encore.",m:"sang-s",s:["plaie","douleur"],z:"surface",need:0,ext:1,urg:1},
+ {id:"infection",g:"Blessures",n:"Abcès, plaie infectée",d:"Plaie rouge, chaude, gonflée, parfois du pus.",m:"toxines",s:["plaie","chaleur"],z:"surface",need:-1,ext:1},
+ {id:"contusion",g:"Blessures",n:"Coups et hématomes",d:"Bleus, enflures, douleur fixe après un choc.",m:"sang-c",s:["douleur"],z:"membres",need:null,ext:1},
+ {id:"fracture",g:"Blessures",n:"Fracture ou entorse",d:"Douleur vive, os ou articulation touchés.",m:"douleur",s:["sang-c","plaie"],z:"membres",need:null},
+ {id:"brulure",g:"Blessures",n:"Brûlure",d:"Peau rouge, cloques, chaleur qui reste.",m:"plaie",s:["chaleur","douleur"],z:"surface",need:-1,ext:1},
+ {id:"touxseche",g:"Souffle",n:"Toux sèche, voix cassée",d:"Toux sans crachat, gorge sèche, voix éraillée.",m:"toux",s:["t-yin"],z:"haut",need:-1},
+ {id:"glaires",g:"Souffle",n:"Toux grasse et glaires",d:"Crachats abondants, poitrine encombrée.",m:"glaires",s:["toux","digest"],z:"haut",need:null},
+ {id:"nausee",g:"Digestion",n:"Nausée, mal de mer",d:"Envie de vomir, vertiges en bateau ou en chariot.",m:"nausee",s:["digest"],z:"interieur",need:null},
+ {id:"ballon",g:"Digestion",n:"Ballonnements, digestion lente",d:"Ventre gonflé, repas qui pèse, rots.",m:"digest",s:["qi"],z:"interieur",need:null},
+ {id:"constip",g:"Digestion",n:"Constipation",d:"Selles rares et dures, ventre tendu.",m:"purge",s:["qi","t-yin"],z:"bas",need:null},
+ {id:"diarrhee",g:"Digestion",n:"Diarrhée chronique",d:"Selles molles qui durent, fatigue.",m:"retenir",s:["digest","t-qi"],z:"interieur",need:null},
+ {id:"oedeme",g:"Froid et humidité",n:"Œdèmes, jambes lourdes",d:"Chevilles gonflées, lourdeur, peu d'urine.",m:"humid",s:["t-qi"],z:"bas",need:null},
+ {id:"rhuma",g:"Froid et humidité",n:"Articulations douloureuses par temps humide",d:"Douleurs qui empirent sous la pluie, raideur.",m:"douleur",s:["humid","rechauf"],z:"membres",need:1},
+ {id:"froidprof",g:"Froid et humidité",n:"Froid profond, mains glacées",d:"Extrémités froides, pâleur, diarrhée aqueuse.",m:"rechauf",s:["t-yang"],z:"interieur",need:2},
+ {id:"insomnie",g:"Esprit",n:"Insomnie, anxiété",d:"Sommeil léger, pensées qui tournent, cœur qui bat vite.",m:"esprit",s:["t-sang","retenir"],z:"coeur",need:null},
+ {id:"chagrin",g:"Esprit",n:"Chagrin, deuil",d:"Oppression dans la poitrine, soupirs, larmes retenues.",m:"qi",s:["esprit"],z:"foie",need:null},
+ {id:"frayeur",g:"Esprit",n:"Frayeur, cauchemars",d:"Sursauts, palpitations, rêves violents.",m:"esprit",s:["retenir"],z:"coeur",need:null},
+ {id:"colere",g:"Esprit",n:"Irritabilité, colère rentrée",d:"Flancs tendus, humeur sombre, maux de tête.",m:"qi",s:["chaleur"],z:"foie",need:-1},
+ {id:"epuis",g:"Vides et fatigue",n:"Épuisement, convalescence",d:"Voix faible, appétit perdu, souffle court.",m:"t-qi",s:["digest","t-sang"],z:"interieur",need:1},
+ {id:"pertesang",g:"Vides et fatigue",n:"Pâleur après une perte de sang",d:"Vertiges, lèvres pâles, ongles cassants.",m:"t-sang",s:["t-qi","sang-s"],z:"interieur",need:1},
+ {id:"sueursnoc",g:"Vides et fatigue",n:"Sueurs nocturnes, chaleur du soir",d:"Paumes chaudes, bouche sèche, sueurs la nuit.",m:"t-yin",s:["retenir","esprit"],z:"interieur",need:-1},
+ {id:"evanoui",g:"Urgences",n:"Évanouissement, choc",d:"Perte de connaissance, souffle faible.",m:"reveil",s:["t-qi"],z:"coeur",need:null,urg:1},
+ {id:"poison",g:"Urgences",n:"Empoisonnement",d:"Lèvres engourdies, nausées, cœur irrégulier.",m:"antidote",s:["purge","chaleur"],z:"interieur",need:null,urg:1}];
+const MBY=Object.fromEntries(MAUX.map(m=>[m.id,m]));
+
+/* ---------- État ---------- */
+const DEMO={mal:"fievrefort",arb:"shigao",cons:["zhimu"],assi:["jingmi"],env:"gancao",ctx:{urgent:true,voyage:false,externe:false,long:false},preg:false,regions:["as","de","hu","oc"],demo:true};
+let S;
+try{S=JSON.parse(localStorage.getItem("officine-shuhui")||"null")}catch(e){S=null}
+if(!S||!S.regions)S=JSON.parse(JSON.stringify(DEMO));
+const show={arb:false,cons:false,assi:false,env:false};
+function save(){try{localStorage.setItem("officine-shuhui",JSON.stringify(S))}catch(e){}}
+
+/* ---------- Outils ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const natPill=t=>`<span class="nat" style="background:var(--t${t})">${NAT[t]}</span>`;
+const regDot=r=>`<span class="dot" style="background:var(${REG[r].c})" title="${REG[r].n}"></span>`;
+const toxTag=x=>x.tox>=3?'<span class="tox">poison</span>':x.tox==2?'<span class="tox">très toxique</span>':x.tox==1?'<span class="tox">toxique</span>':"";
+const inRes=x=>S.regions.includes(x.r);
+const selIds=()=>[S.arb,...S.cons,...S.assi,S.env].filter(Boolean);
+const deName=n=>{const l=n.charAt(0).toLowerCase()+n.slice(1);return /^[aeiouyhàâéèêîôûœ]/i.test(l)?"d'"+l:"de "+l};
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("on"),1600)}
+
+function riskSet(ids){const r=new Set();ids.forEach(id=>BY[id]&&BY[id].k.forEach(k=>r.add(k)));return r}
+function covers(ids){const c=new Set();ids.forEach(id=>BY[id]&&BY[id].c.forEach(k=>c.add(k)));return c}
+
+/* ---------- Scores ---------- */
+function scoreArb(x,m){
+  if(!x.a.includes(m.m))return show.arb?0.1+x.a.filter(a=>m.s.includes(a)).length:-1;
+  let s=10+x.f*2+3*x.a.filter(a=>m.s.includes(a)).length;
+  if(m.need!=null)s-=Math.abs(x.t-m.need)*1.5;
+  if(x.tox)s-=2*x.tox; if(S.preg&&x.g)s-=8; if(m.ext&&x.u==="e")s+=1; if(!m.ext&&x.u==="e")s-=6;
+  return s}
+function scoreCons(x,m,arb){
+  let s=0,why=[];
+  if(x.a.includes(m.m)){s+=6;why.push("Renforce : "+ACT[m.m])}
+  m.s.forEach(a=>{if(x.a.includes(a)){s+=4;why.push("Traite : "+ACT[a])}});
+  if(!s&&!show.cons)return{s:-1};
+  if(m.need!=null)s-=Math.abs(x.t-m.need);else if(arb&&Math.abs(x.t-arb.t)>=3)s-=3;
+  s-=x.k.length; if(x.tox)s-=2*x.tox; if(S.preg&&x.g)s-=8; if(!m.ext&&x.u==="e")s-=6;
+  return{s,why}}
+function scoreAssi(x,R,m){
+  const fixed=x.c.filter(k=>R.has(k));
+  if(!fixed.length&&!show.assi)return{s:-1};
+  let s=fixed.length*6+(x.f===1?1:0)-x.k.length*2-(x.tox?4:0);
+  if(m.need!=null)s-=Math.abs(x.t-m.need)*.6; if(S.preg&&x.g)s-=8; if(!m.ext&&x.u==="e")s-=6;
+  return{s,fixed}}
+function scoreEnv(x,m){
+  let s=0,why=[];
+  if(m.z&&x.e.includes(m.z)){s+=6;why.push("Vers "+ZONE[m.z])}
+  if(x.e.includes("harmonie")){s+=3;why.push("Harmonise l'ensemble")}
+  if(!s&&!show.env)return{s:-1};
+  if(x.a.includes(m.m)||m.s.some(a=>x.a.includes(a)))s+=1;
+  x.e.filter(z=>z!=="harmonie"&&z!==m.z).forEach(z=>why.push("Vers "+ZONE[z]));
+  if(x.tox)s-=4; if(S.preg&&x.g)s-=8;
+  return{s,why}}
+
+/* ---------- Rendu des cartes ---------- */
+function card(x,role,on,extra){
+  const risks=x.k.map(k=>`<span class="chip risk">${RISK[k].n}</span>`).join("");
+  const preg=S.preg&&x.g?'<span class="chip risk">Interdit grossesse</span>':"";
+  return `<button class="cand${inRes(x)?"":" dim"}" aria-pressed="${on}" data-role="${role}" data-id="${x.id}">
+   <span class="tick">✓</span>
+   <span class="nm">${regDot(x.r)}${esc(x.n)} ${natPill(x.t)} ${toxTag(x)}</span>
+   <span class="py"><span class="hz">${x.h}</span> · ${esc(x.py)}</span>
+   ${extra?`<span class="why">${extra}</span>`:""}
+   <span class="chips">${preg}${risks}</span></button>`}
+
+function list(role,items,limit){
+  if(!items.length)return `<p class="empty">Aucune plante de ta réserve ne convient. Élargis la réserve ou affiche toutes les plantes.</p>`;
+  const sh=show[role]?items:items.slice(0,limit);
+  return `<div class="cands">${sh.join("")}</div>`}
+function moreBtn(role,total,limit){
+  return `<div class="more">${total>limit&&!show[role]?`<button class="lnk" data-more="${role}">Voir les ${total} candidates</button>`:""}<button class="lnk" data-all="${role}">${show[role]?"Revenir aux suggestions":"Afficher toutes les plantes"}</button></div>`}
+
+/* ---------- Étapes ---------- */
+function rReserve(){
+  $("#reserve").innerHTML=`<span class="lbl">Réserve de Shuhui</span>`+
+   Object.entries(REG).map(([k,v])=>`<label class="chk"><input type="checkbox" data-reg="${k}" ${S.regions.includes(k)?"checked":""}> ${regDot(k)} ${v.n}</label>`).join("")+
+   `<label class="chk" style="margin-left:auto"><input type="checkbox" id="preg" ${S.preg?"checked":""}> Patiente enceinte</label>`}
+
+function rMal(){
+  const groups=[...new Set(MAUX.map(m=>m.g))];
+  const m=MBY[S.mal];
+  $("#s-mal").innerHTML=`<div class="step-h"><span class="step-n">1</span><h2>Le mal à traiter</h2></div>
+   <p class="hint">Shuhui commence toujours par le diagnostic : chaud ou froid, vide ou plénitude, surface ou intérieur.</p>
+   <div class="mgroups">${groups.map(g=>`<div class="mgroup"><span class="gl">${g}</span>${MAUX.filter(x=>x.g===g).map(x=>`<button class="mal" data-mal="${x.id}" aria-pressed="${x.id===S.mal}">${esc(x.n)}</button>`).join("")}</div>`).join("")}</div>
+   ${m?`<div class="maldesc"><b>${esc(m.n)}.</b> ${esc(m.d)} Effet principal recherché : <b>${ACT[m.m]}</b>${m.s.length?`, puis ${m.s.map(a=>ACT[a].toLowerCase()).join(", ")}`:""}.${m.need!=null?` Nature visée : ${NAT[m.need]}.`:""}${S.demo?" <i>(Exemple chargé : la Décoction du Tigre blanc.)</i>":""}</div>`:""}`}
+
+function rArb(){
+  const m=MBY[S.mal],el=$("#s-arb");
+  const head=`<div class="step-h"><span class="step-n">2</span><h2>L'Arbitre</h2><span class="role">君 jūn</span></div>
+   <p class="hint">La plante principale, celle qui s'attaque au mal central. Les suggestions sont triées par efficacité et par accord avec la nature visée.</p>`;
+  if(!m){el.classList.add("locked");el.innerHTML=head+`<p class="empty">Choisis d'abord un mal.</p>`;return}
+  el.classList.remove("locked");
+  const c=P.filter(x=>inRes(x)||show.arb).map(x=>({x,s:scoreArb(x,m)})).filter(o=>o.s>=0).sort((a,b)=>b.s-a.s);
+  const items=c.map(({x})=>card(x,"arb",x.id===S.arb,x.a.filter(a=>a===m.m||m.s.includes(a)).map(a=>ACT[a]).join(" · ")));
+  el.innerHTML=head+list("arb",items,8)+moreBtn("arb",items.length,8)}
+
+function rCons(){
+  const m=MBY[S.mal],arb=BY[S.arb],el=$("#s-cons");
+  const head=`<div class="step-h"><span class="step-n">3</span><h2>Les Conseillers</h2><span class="role">臣 chén</span></div>
+   <p class="hint">Un ou deux conseillers renforcent l'arbitre ou traitent un symptôme secondaire.</p>`;
+  if(!m||!arb){el.classList.add("locked");el.innerHTML=head+`<p class="empty">Choisis d'abord un arbitre.</p>`;return}
+  el.classList.remove("locked");
+  const c=P.filter(x=>x.id!==S.arb&&(inRes(x)||show.cons)).map(x=>({x,...scoreCons(x,m,arb)})).filter(o=>o.s>=-0.5||S.cons.includes(o.x.id)).sort((a,b)=>b.s-a.s);
+  const items=c.map(o=>card(o.x,"cons",S.cons.includes(o.x.id),(o.why||[]).join(" · ")));
+  el.innerHTML=head+list("cons",items,8)+moreBtn("cons",items.length,8)}
+
+function rAssi(){
+  const m=MBY[S.mal],el=$("#s-assi");
+  const head=`<div class="step-h"><span class="step-n">4</span><h2>Les Assistants</h2><span class="role">佐 zuǒ</span></div>
+   <p class="hint">Ils corrigent les défauts de l'arbitre et des conseillers. Chaque suggestion indique le risque qu'elle tempère.</p>`;
+  if(!m||!S.arb){el.classList.add("locked");el.innerHTML=head+`<p class="empty">Choisis d'abord un arbitre.</p>`;return}
+  el.classList.remove("locked");
+  const R=riskSet([S.arb,...S.cons]);
+  const covered=covers([...S.assi,S.env].filter(Boolean));
+  const open=[...R].filter(k=>!covered.has(k));
+  let msg="";
+  if(!R.size)msg=`<div class="alert ok">L'arbitre et les conseillers sont doux : aucun risque à corriger. Un assistant reste possible pour harmoniser.</div>`;
+  else msg=`<div class="chips" style="margin-bottom:10px">${[...R].map(k=>`<span class="chip ${covered.has(k)?"fix":"risk"}">${covered.has(k)?"✓ ":""}${RISK[k].n}</span>`).join("")}</div>`;
+  const RR=R.size?R:new Set(["estomac","violent"]);
+  const c=P.filter(x=>![S.arb,...S.cons].includes(x.id)&&(inRes(x)||show.assi)).map(x=>({x,...scoreAssi(x,RR,m)})).filter(o=>o.s>=0||S.assi.includes(o.x.id)).sort((a,b)=>b.s-a.s);
+  const items=c.map(o=>card(o.x,"assi",S.assi.includes(o.x.id),(o.fixed||[]).length?"Tempère : "+o.fixed.map(k=>RISK[k].n.toLowerCase()).join(", "):""));
+  el.innerHTML=head+msg+list("assi",items,8)+moreBtn("assi",items.length,8)}
+
+function rEnv(){
+  const m=MBY[S.mal],el=$("#s-env");
+  const head=`<div class="step-h"><span class="step-n">5</span><h2>L'Envoyé</h2><span class="role">使 shǐ</span></div>
+   <p class="hint">Il guide la formule vers ${m?ZONE[m.z]:"sa cible"} et harmonise l'ensemble. Par défaut : la réglisse.</p>`;
+  if(!m||!S.arb){el.classList.add("locked");el.innerHTML=head+`<p class="empty">Choisis d'abord un arbitre.</p>`;return}
+  el.classList.remove("locked");
+  const c=P.filter(x=>x.id!==S.arb&&(inRes(x)||show.env)).map(x=>({x,...scoreEnv(x,m)})).filter(o=>o.s>=0||o.x.id===S.env).sort((a,b)=>b.s-a.s);
+  const items=c.map(o=>card(o.x,"env",o.x.id===S.env,(o.why||[]).join(" · ")));
+  el.innerHTML=head+list("env",items,6)+moreBtn("env",items.length,6)}
+
+/* ---------- Forme ---------- */
+function formScores(){
+  const m=MBY[S.mal],ids=selIds(),sc={},why={};
+  Object.keys(FORMS).forEach(f=>{sc[f]=0;why[f]=[]});
+  const add=(f,v,r)=>{sc[f]+=v;if(r&&v>0)why[f].push(r)};
+  if(!m||!S.arb)return null;
+  ids.forEach(id=>{const x=BY[id],w=id===S.arb?2:1;(x.fm.length?x.fm:["tang"]).forEach(f=>add(f,2*w))});
+  const fitN=f=>ids.filter(id=>BY[id].fm.includes(f)).length;
+  Object.keys(FORMS).forEach(f=>{const n=fitN(f);if(n)why[f].push(`${n} plante${n>1?"s":""} sur ${ids.length} s'y prête${n>1?"nt":""}`)});
+  const c=S.ctx;
+  if(c.urgent){add("tang",4,"Urgence : la décoction agit vite");add("inh",m.m==="reveil"?3:0,"Urgence : une inhalation agit sur l'instant");add("san",1);add("wan",-3);add("dan",-5);add("jiu",-1)}
+  if(c.voyage){add("san",4,"En voyage : la poudre se transporte");add("wan",3,"En voyage : les pilules se gardent");add("tang",-3);add("dan",-3);add("jiu",-1);add("gao",1)}
+  if(c.externe){add("gao",7,"Usage externe : appliqué sur la peau");add("san",3,"Usage externe : saupoudré sur la plaie");add("jiu",1,"Usage externe : en liniment");add("tang",-5);add("wan",-8);add("dan",-8);add("inh",-2)}
+  if(c.long){add("wan",4,"Traitement long : action lente et régulière");add("jiu",3,"Traitement long : se conserve des mois");add("dan",3,"Traitement long : nourrit la vie en profondeur");add("inh",-3)}
+  if(m.m==="reveil")add("inh",5,"Il faut réveiller : on fait respirer");
+  if(["sang-s","plaie"].includes(m.m)){add("san",2,"Une plaie se couvre de poudre");add("gao",2,"Une plaie se couvre d'onguent")}
+  if(["chaleur","t-yin","surf-chaud"].includes(m.m))add("jiu",-4);
+  if(["sang-c","rechauf","t-yang"].includes(m.m)||(m.m==="douleur"&&m.need!==-1))add("jiu",3,"L'alcool fait circuler et réchauffe");
+  if(["t-qi","t-sang","t-yin","t-yang"].includes(m.m)){add("wan",2,"Un tonique se prend dans la durée");add("dan",1)}
+  const rare=ids.some(id=>BY[id].rare);
+  if(rare)add("dan",3,"Une plante précieuse justifie le raffinage");else add("dan",-3);
+  if(ids.some(id=>BY[id].tox))add("wan",2,"Une plante toxique se dose mieux en pilule");
+  if(ids.some(id=>BY[id].u==="e")){add("gao",3,"Une plante réservée à l'usage externe");add("tang",-6);add("wan",-6)}
+  if(m.ext&&!c.externe)add("gao",1);
+  return{sc,why}}
+
+function rForm(){
+  const el=$("#s-form"),r=formScores();
+  const head=`<div class="step-h"><span class="step-n">6</span><h2>La forme du remède</h2></div>
+   <p class="hint">Indique la situation : la forme se calcule d'après elle et d'après les plantes choisies.</p>
+   <div class="ctx">${[["urgent","Urgence"],["voyage","En voyage"],["externe","Usage externe"],["long","Traitement long"]].map(([k,l])=>`<button class="tog" data-ctx="${k}" aria-pressed="${!!S.ctx[k]}">${l}</button>`).join("")}</div>`;
+  if(!r){el.classList.add("locked");el.innerHTML=head+`<p class="empty">Choisis d'abord un arbitre.</p>`;return}
+  el.classList.remove("locked");
+  const order=Object.keys(FORMS).sort((a,b)=>r.sc[b]-r.sc[a]);
+  const max=Math.max(1,...Object.values(r.sc));
+  const best=order[0];
+  el.innerHTML=head+`<div class="forms">${order.map(f=>`<div class="frow${f===best?" best":""}"><span class="fn"><span class="hz">${FORMS[f].h}</span>${FORMS[f].n}</span><span class="bar"><i style="width:${Math.max(0,r.sc[f])/max*100}%"></i></span><span class="sc">${Math.max(0,Math.round(r.sc[f]))}</span></div>`).join("")}</div>
+   <div class="why-form"><b>${FORMS[best].n} (${FORMS[best].py} ${FORMS[best].h}).</b> ${FORMS[best].d}<ul>${r.why[best].slice(0,4).map(w=>`<li>${esc(w)}</li>`).join("")}</ul></div>`;
+  S._form=best}
+
+/* ---------- Ordonnance ---------- */
+function rOrd(){
+  const el=$("#ord"),m=MBY[S.mal];
+  if(!m||!S.arb){el.innerHTML=`<span class="eyebrow">Ordonnance</span><p class="empty">Choisis un mal et un arbitre : la formule s'écrira ici.</p>`;return}
+  const f=S._form||"tang",arb=BY[S.arb],ids=selIds();
+  const classic=CLASSIC.find(c=>c.ids.every(i=>ids.includes(i)));
+  const title=`${FORMS[f].n} ${deName(arb.n)}`;
+  const row=(lbl,hz,id,role)=>{const x=BY[id];return `<li><span class="rl">${lbl}<small>${hz}</small></span><span class="pl"><b>${esc(x.n)}</b> <span class="py">${x.h} · ${esc(x.py)}</span><button class="rm" data-rm="${role}" data-id="${id}" aria-label="Retirer ${esc(x.n)}">retirer</button>${x.pz?`<div class="pz">${esc(x.pz)}</div>`:""}</span></li>`};
+  let court=row("Arbitre","君 jūn",S.arb,"arb");
+  S.cons.forEach(id=>court+=row("Conseiller","臣 chén",id,"cons"));
+  S.assi.forEach(id=>court+=row("Assistant","佐 zuǒ",id,"assi"));
+  if(S.env)court+=row("Envoyé","使 shǐ",S.env,"env");
+  // nature
+  let tw=0,tt=0;ids.forEach(id=>{const w=id===S.arb?2:1;tw+=w;tt+=BY[id].t*w});
+  const avg=tt/tw,pos=v=>((v+2)/4*100);
+  const tgt=m.need!=null?`<span class="tg" style="left:calc(${pos(Math.max(-2,m.need-.5))}% );width:${pos(Math.min(2,m.need+.5))-pos(Math.max(-2,m.need-.5))}%"></span>`:"";
+  // alertes
+  const al=[];
+  INCOMP.forEach(([a,bs,t])=>{if(ids.includes(a)){const hit=bs.filter(b=>ids.includes(b));if(hit.length)al.push(`<div class="alert"><b>Incompatibilité.</b> ${t}</div>`)}});
+  if(S.preg){const g=ids.filter(id=>BY[id].g);if(g.length)al.push(`<div class="alert"><b>Grossesse.</b> ${g.map(id=>BY[id].n).join(", ")} : interdit.</div>`)}
+  const R=riskSet([S.arb,...S.cons]),C=covers([...S.assi,S.env].filter(Boolean));
+  const open=[...R].filter(k=>!C.has(k));
+  if(open.length)al.push(`<div class="alert"><b>Risques non tempérés :</b> ${open.map(k=>RISK[k].n.toLowerCase()).join(", ")}.</div>`);
+  ids.filter(id=>BY[id].tox>=2).forEach(id=>al.push(`<div class="alert"><b>${esc(BY[id].n)}.</b> ${BY[id].tox>=3?"Poison sans usage interne.":"Très toxique : préparation et dose exactes indispensables."}</div>`));
+  if(m.need!=null&&Math.abs(avg-m.need)>1.4)al.push(`<div class="alert"><b>Nature.</b> La formule est ${NAT[Math.round(Math.max(-2,Math.min(2,avg)))]} alors que le mal demande une formule ${NAT[m.need]}.</div>`);
+  if(!al.length)al.push(`<div class="alert ok">Formule équilibrée : aucun risque non tempéré.</div>`);
+  if(classic)al.unshift(`<div class="alert gold">Tu as retrouvé une formule classique : <b>${classic.n}</b> <span class="hz">${classic.h}</span>.</div>`);
+  // voix de Shuhui
+  const voice=[];
+  [S.arb,...S.cons].forEach(id=>BY[id].k.forEach(k=>{const by=[...S.assi,S.env].filter(Boolean).find(a=>BY[a].c.includes(k));if(by)voice.push(`« ${BY[id].n} ${RISK[k].p} : ${BY[by].n.toLowerCase()} le tempère. »`)}));
+  if(S.env&&BY[S.env].e.includes(m.z))voice.push(`« ${BY[S.env].n} portera le remède vers ${ZONE[m.z]}. »`);
+  const sv=[...new Set(voice)].slice(0,4);
+  el.innerHTML=`<span class="eyebrow">Ordonnance · ${esc(m.n)}</span>
+   <div><h2>${esc(title)}</h2><span class="fhz">${arb.h}${FORMS[f].h}</span></div>
+   <ul class="court">${court}</ul>
+   <div class="thermo"><span class="eyebrow">Nature de la formule</span><div class="scale">${tgt}<span class="mk" style="left:${pos(avg)}%"></span></div><div class="lg"><span>froide</span><span>neutre</span><span>chaude</span></div></div>
+   <div class="alerts">${al.join("")}</div>
+   ${sv.length?`<div class="voice"><span class="eyebrow">Shuhui raisonne</span>${sv.map(v=>`<p>${esc(v)}</p>`).join("")}</div>`:""}
+   <div class="actions"><button class="btn" id="copy">Copier l'ordonnance</button><button class="btn ghost" id="reset">Tout effacer</button></div>
+   <div id="copyfb"></div>`}
+
+function ordText(){
+  const m=MBY[S.mal],f=S._form||"tang",arb=BY[S.arb];
+  const L=[`${FORMS[f].n} ${deName(arb.n)} (${arb.h}${FORMS[f].h})`,`Pour : ${m.n}`];
+  const r=(l,id)=>{const x=BY[id];L.push(`${l} : ${x.n} (${x.py} ${x.h})${x.pz?" – "+x.pz:""}`)};
+  r("Arbitre",S.arb);S.cons.forEach(id=>r("Conseiller",id));S.assi.forEach(id=>r("Assistant",id));if(S.env)r("Envoyé",S.env);
+  L.push(`Forme : ${FORMS[f].n}. ${FORMS[f].d}`);return L.join("\n")}
+
+function renderCompose(){rReserve();rMal();rArb();rCons();rAssi();rEnv();rForm();rOrd();save()}
+
+/* ---------- Interactions ---------- */
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.tab){document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b===t));$("#view-compose").hidden=t.dataset.tab!=="compose";$("#view-herbier").hidden=t.dataset.tab!=="herbier";if(t.dataset.tab==="herbier")renderHerb();else renderCompose();return}
+  if(t.dataset.mal){S.demo=false;if(S.mal!==t.dataset.mal){S.mal=t.dataset.mal;S.arb=null;S.cons=[];S.assi=[];S.env=null;const m=MBY[S.mal];S.ctx.urgent=!!m.urg;S.ctx.externe=!!m.ext}renderCompose();return}
+  if(t.dataset.role){S.demo=false;const id=t.dataset.id,r=t.dataset.role;
+    if(r==="arb"){S.arb=S.arb===id?null:id;S.cons=S.cons.filter(x=>x!==id);S.assi=S.assi.filter(x=>x!==id);if(!S.arb){S.cons=[];S.assi=[];S.env=null}}
+    else if(r==="env")S.env=S.env===id?null:id;
+    else{const L=S[r],max=r==="cons"?2:3;if(L.includes(id))S[r]=L.filter(x=>x!==id);else{if(L.length>=max){toast(`${max} ${r==="cons"?"conseillers":"assistants"} au plus`);return}L.push(id);const o=r==="cons"?"assi":"cons";S[o]=S[o].filter(x=>x!==id)}}
+    renderCompose();return}
+  if(t.dataset.more){show[t.dataset.more]=true;renderCompose();return}
+  if(t.dataset.all){show[t.dataset.all]=!show[t.dataset.all];renderCompose();return}
+  if(t.dataset.ctx){const k=t.dataset.ctx;S.ctx[k]=!S.ctx[k];if(k==="voyage"&&S.ctx.voyage)S.ctx.urgent=S.ctx.urgent;renderCompose();return}
+  if(t.dataset.rm){const r=t.dataset.rm,id=t.dataset.id;if(r==="arb"){S.arb=null;S.cons=[];S.assi=[];S.env=null}else if(r==="env")S.env=null;else S[r]=S[r].filter(x=>x!==id);renderCompose();return}
+  if(t.id==="reset"){S={mal:null,arb:null,cons:[],assi:[],env:null,ctx:{urgent:false,voyage:false,externe:false,long:false},preg:S.preg,regions:S.regions};renderCompose();return}
+  if(t.id==="copy"){const txt=ordText();const fb=$("#copyfb");
+    const fall=()=>{fb.innerHTML=`<textarea class="copyfb" id="copytxt" readonly>${esc(txt)}</textarea>`;const a=$("#copytxt");a.focus();a.select()};
+    try{navigator.clipboard.writeText(txt).then(()=>toast("Ordonnance copiée"),fall)}catch(err){fall()}return}
+  if(t.dataset.hreg!==undefined){H.reg=t.dataset.hreg;renderHerb();return}
+  if(t.dataset.addto){const id=t.dataset.id,r=t.dataset.addto;
+    if(!S.mal){toast("Choisis d'abord un mal dans Composer");return}
+    if(r==="arb"){S.arb=id}else if(r==="env"){if(!S.arb){toast("Choisis d'abord un arbitre");return}S.env=id}
+    else{if(!S.arb){toast("Choisis d'abord un arbitre");return}if(!S[r].includes(id)&&id!==S.arb)S[r].push(id)}
+    S.demo=false;save();toast(`${BY[id].n} ajouté à la formule`);return}
+});
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.dataset.reg){const k=t.dataset.reg;S.regions=t.checked?[...new Set([...S.regions,k])]:S.regions.filter(x=>x!==k);renderCompose()}
+  if(t.id==="preg"){S.preg=t.checked;renderCompose()}
+  if(["h-act","h-nat","h-pois"].includes(t.id))renderHerb();
+});
+document.addEventListener("input",e=>{if(e.target.id==="h-q")renderHerb()});
+
+/* ---------- Herbier ---------- */
+const H={reg:"all"};
+$("#h-act").innerHTML=`<option value="">Tous les effets</option>`+Object.entries(ACT).map(([k,v])=>`<option value="${k}">${v}</option>`).join("");
+$("#h-nat").innerHTML=`<option value="">Toutes natures</option>`+[-2,-1,0,1,2].map(t=>`<option value="${t}">${NAT[t]}</option>`).join("");
+function renderHerb(){
+  $("#h-reg").innerHTML=[["all","Toutes"],...Object.entries(REG).map(([k,v])=>[k,v.n])].map(([k,n])=>`<button class="rchip" data-hreg="${k}" aria-pressed="${H.reg===k}">${k!=="all"?regDot(k):""}${n} <span style="opacity:.7">${k==="all"?P.length:P.filter(x=>x.r===k).length}</span></button>`).join("");
+  const q=$("#h-q").value.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  const act=$("#h-act").value,nat=$("#h-nat").value,pois=$("#h-pois").checked;
+  const norm=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+  const L=P.filter(x=>(H.reg==="all"||x.r===H.reg)&&(!act||x.a.includes(act))&&(nat===""||x.t==+nat)&&(!pois||x.tox>=2)&&
+    (!q||norm(x.n+" "+x.py+" "+x.h+" "+x.o+" "+x.x+" "+x.a.map(a=>ACT[a]).join(" ")).includes(q))).sort((a,b)=>a.n.localeCompare(b.n,"fr"));
+  $("#h-count").textContent=`${L.length} plante${L.length>1?"s":""}`;
+  $("#h-grid").innerHTML=L.map(x=>`<article class="hcard${x.tox>=2?" poison":""}">
+    <div class="top"><div><h3>${esc(x.n)}</h3></div><span class="hz">${x.h}</span></div>
+    <div class="py">${esc(x.py)} · ${natPill(x.t)} <span style="color:var(--muted)">${esc(x.s)}</span> ${toxTag(x)}</div>
+    <div class="orig">${regDot(x.r)}<span><b>${REG[x.r].n}.</b> ${esc(x.o)}</span></div>
+    <dl class="kv">
+      ${x.a.length?`<dt>Effets</dt><dd>${x.a.map(a=>ACT[a]).join(" · ")}</dd>`:""}
+      ${x.k.length?`<dt>Risques</dt><dd class="chips">${x.k.map(k=>`<span class="chip risk">${RISK[k].n}</span>`).join("")}</dd>`:""}
+      ${x.c.length?`<dt>Tempère</dt><dd class="chips">${x.c.map(k=>`<span class="chip fix">${RISK[k].n}</span>`).join("")}</dd>`:""}
+      ${x.e.length?`<dt>Envoie</dt><dd>${x.e.map(z=>z==="harmonie"?"harmonise":"vers "+ZONE[z]).join(" · ")}</dd>`:""}
+      ${x.fm.length?`<dt>Formes</dt><dd>${x.fm.map(f=>FORMS[f].n).join(" · ")}${x.u==="e"?" <b>(usage externe)</b>":""}</dd>`:""}
+      ${x.g||x.rare?`<dt>Notes</dt><dd class="chips">${x.g?'<span class="chip risk">Interdit grossesse</span>':""}${x.rare?'<span class="chip gold">Rare et précieuse</span>':""}</dd>`:""}
+    </dl>
+    <p class="x">${esc(x.x)}</p>
+    ${x.pz?`<p class="pz">${esc(x.pz)}</p>`:""}
+    ${x.tox<3?`<div class="add">Ajouter comme <button data-addto="arb" data-id="${x.id}">arbitre</button><button data-addto="cons" data-id="${x.id}">conseiller</button><button data-addto="assi" data-id="${x.id}">assistant</button><button data-addto="env" data-id="${x.id}">envoyé</button></div>`:""}
+  </article>`).join("")||`<p class="empty">Aucune plante ne correspond.</p>`;
+  renderCompose()}
+
+renderCompose();
+</script>
+
+</body></html>
