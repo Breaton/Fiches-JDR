@@ -4857,15 +4857,15 @@
                             </div>
                             <div class="form-group" id="hybrid-qi-group" style="display:none;">
                                 <label class="form-label" style="color:#1D9E75;"
-                                    title="Dés supplémentaires payés en Qi : au plus la moitié des dés de base">☯ Supplément
+                                    title="Yue : au plus la moitié des dés de base. Shuhui (soin) : la moitié haute de la Magnitude">☯ Dés de
                                     Qi <span id="hybrid-supp-cap" style="opacity:.6;font-weight:400"></span></label>
                                 <input id="hybrid-qi-supp" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
                             <div class="form-group" id="hybrid-elan-group" style="display:none;">
                                 <label class="form-label" style="color:var(--vitality-red);"
-                                    title="Dés supplémentaires payés en Élan : deviennent une blessure « Don de vie »">♥
-                                    Supplément Élan</label>
+                                    title="Moitié haute d'un soin payée en Élan : devient une blessure « Don de vie »">♥
+                                    Dés d'Élan</label>
                                 <input id="hybrid-elan-supp" class="bonus-input" type="number" value="0" min="0"
                                     oninput="updateHybridMagicInfo()">
                             </div>
@@ -7018,7 +7018,8 @@
             if (pair.cap <= 0) { el.textContent = 'Aucun couple ouvert'; return; }
             const plan = followUpPlan();
             let txt = `Magnitude max ${pair.cap} · ${plan.fuel === 'qi' ? 'Qi' : 'réserve'} ${plan.avail}`;
-            if (plan.suppAllowed) txt += ` · supplément max ${plan.suppMax}`;
+            if (plan.heal) txt += ` · ${plan.energyCap} max en énergie`;
+            if (plan.suppAllowed) txt += ` · ${plan.heal ? 'Qi ou Élan' : 'supplément'} max ${plan.suppMax}`;
             if (plan.role === 'yue' && plan.siphon) txt += ' · siphon';
             el.textContent = txt;
         }
@@ -7601,6 +7602,7 @@
             if (qiGroup) qiGroup.style.display = plan.suppAllowed ? '' : 'none';
             if (elanGroup) elanGroup.style.display = (plan.suppAllowed && plan.role === 'shuhui') ? '' : 'none';
             if (suppCap) suppCap.textContent = plan.suppAllowed ? `(max ${plan.suppMax}${plan.role === 'shuhui' ? ' avec l\'Élan' : ''})` : '';
+            if (capEl && plan.heal && cap > 0) capEl.textContent = `(max ${plan.energyCap} en énergie, ${cap} avec Qi)`;
             const qiInfo = planInfoHtml(plan);
 
             if (!pair.verb || !pair.target) {
@@ -7620,6 +7622,7 @@
                 <span style="font-size:0.92em;color:var(--silver-mist);">La Puissance obtenue s'ajoute au Résultat Final du jet de compétence.</span>
                 ${qiInfo}
                 ${requested > cap ? `<br><span style="color:var(--vitality-red)">⚠ Magnitude max ${cap} pour ce couple</span>` : ''}
+                ${plan.heal && requested > plan.energyCap && requested <= cap ? `<br><span style="color:var(--vitality-red)">⚠ Au-delà de ${plan.energyCap} dés, ce soin se paie en Qi ou en Élan</span>` : ''}
                 ${requested > plan.avail ? `<br><span style="color:var(--vitality-red)">⚠ ${plan.fuel === 'qi' ? 'Qi insuffisant' : 'Réserve insuffisante'} (${plan.avail} restants)</span>` : ''}
                 ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} dé(s) bonus (sans coût d'énergie) → ${engaged} dés lancés</span>` : ''}
             `;
@@ -8192,8 +8195,10 @@
         // ===== QI DES JUMELLES (Shu & Yue) =====
         // Yue récolte : sa réserve d'énergie ne sert qu'au siphon (Absorber × Vie), dont la
         // Puissance remplit le pool ; boire une mort ajoute ⌈Élan max ÷ 3⌉ en Qi.
-        // Ses autres sorts se paient en Qi. Shuhui donne : elle ajoute Qi ou Élan en supplément.
-        // Supplément : au plus ⌊dés de base ÷ 2⌋, aux faces du canal, compté dans le tribut au MJ.
+        // Ses autres sorts se paient en Qi, avec un supplément d'au plus ⌊dés de base ÷ 2⌋ au-delà de la Magnitude.
+        // Shuhui donne : sur un sort de Restaurer, l'énergie ne paie que ⌊Magnitude ÷ 2⌋ dés ; la moitié
+        // haute, jusqu'à la Magnitude max sans la dépasser, ne se paie qu'en Qi ou en Élan.
+        // Ses autres sorts se lancent en énergie seule. Les dés de Qi et d'Élan comptent dans le tribut au MJ.
         // Contenance : 3 × (Absorber + Vie) de Yue, le trop-plein est perdu.
         // Tombée de la nuit : −5 Qi. Ce qui dépasse la contenance est perdu.
         const QI_PATH = `${GH_CFG.dir}/shared/qi_pool.json`;
@@ -8308,7 +8313,7 @@
             if (note) note.textContent = role === 'yue'
                 ? 'Ta réserve ne sert qu\'au siphon (Absorber × Vie) : sa Puissance remplit le pool. Tes autres sorts se paient en Qi, avec un supplément d\'au plus la moitié des dés de base.'
                 : role === 'shuhui'
-                    ? 'Ajoute du Qi ou ton Élan en supplément d\'un sort : au plus la moitié des dés de base. Ces dés comptent dans le tribut au MJ.'
+                    ? 'Sur un sort de Restaurer, ton énergie ne paie que la moitié de la Magnitude : le reste, jusqu\'au max, se paie en Qi ou en Élan (Don de vie). Tes autres sorts se lancent en énergie seule.'
                     : 'Commun à Shu et Yue.';
         }
 
@@ -8440,17 +8445,22 @@
         function planMagic({ requested, cap, verbId, targetId, qiSupp, elanSupp }) {
             const role = qiRole();
             const siphon = isSiphonPair(verbId, targetId);
+            const heal = role === 'shuhui' && verbId === 'restaurer';
             const fuel = (role === 'yue' && !siphon) ? 'qi' : 'energy';
             const qiLeft = role ? qiAvailable() : 0;
             const avail = fuel === 'qi' ? qiLeft : getReserveLeft();
-            const base = Math.max(0, Math.min(requested || 0, cap || 0, avail));
-            const suppAllowed = !!role && !(role === 'yue' && siphon);
-            const suppMax = suppAllowed ? Math.floor(base / 2) : 0;
+            // Soin de Shuhui : l'énergie ne paie que la moitié basse de la Magnitude
+            const energyCap = heal ? Math.floor((cap || 0) / 2) : (cap || 0);
+            const base = Math.max(0, Math.min(requested || 0, energyCap, avail));
+            const suppAllowed = role === 'yue' ? !siphon : heal;
+            const suppMax = !suppAllowed ? 0
+                : heal ? Math.max(0, Math.min((cap || 0) - energyCap, (cap || 0) - base))
+                    : Math.floor(base / 2);
             const qiRoom = fuel === 'qi' ? qiLeft - base : qiLeft;
             const qi = Math.max(0, Math.min(qiSupp || 0, suppMax, qiRoom));
             const elanLeft = appState.counters.health.current || 0;
             const elan = role === 'shuhui' ? Math.max(0, Math.min(elanSupp || 0, suppMax - qi, elanLeft)) : 0;
-            return { role, siphon, fuel, avail, base, suppMax, suppAllowed, qi, elan, supp: qi + elan, requested, cap };
+            return { role, siphon, heal, fuel, avail, energyCap, base, suppMax, suppAllowed, qi, elan, supp: qi + elan, requested, cap };
         }
 
         // Ligne d'aide affichée sous les champs de magie
@@ -8459,7 +8469,9 @@
             const parts = [];
             if (plan.fuel === 'qi') parts.push(`☯ Payé en Qi : ${plan.base} dé(s) de base (Qi ${qiAvailable()})`);
             else if (plan.role === 'yue') parts.push('☯ Siphon : payé en énergie, sa Puissance remplit le pool');
-            if (plan.suppAllowed) parts.push(`supplément max ${plan.suppMax}`
+            else if (plan.heal) parts.push(`✚ Soin : ${plan.energyCap} dé(s) max en énergie, la suite jusqu'à ${plan.cap} en Qi ou Élan (Qi ${qiAvailable()})`);
+            else if (plan.role === 'shuhui') parts.push('Sort hors soin : énergie seule, sans Qi');
+            if (plan.suppAllowed) parts.push(`${plan.heal ? 'Qi ou Élan' : 'supplément'} max ${plan.suppMax}`
                 + (plan.supp ? ` · engagé ${plan.qi ? plan.qi + ' Qi' : ''}${plan.qi && plan.elan ? ' + ' : ''}${plan.elan ? plan.elan + ' Élan' : ''}` : ''));
             return parts.length ? `<br><span style="color:#085041;font-weight:600;">${parts.join(' · ')}</span>` : '';
         }
