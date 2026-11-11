@@ -810,15 +810,41 @@
       color: var(--gold-glow);
       font-family: var(--font-display);
     }
-  
+
     /* Icônes d'axe des attributs */
-    .attr-ico { display: inline-block; vertical-align: -3px; flex: none; margin-right: 6px; }
-    .attr-axis-head { display: flex; align-items: center; gap: 7px; margin: 14px 0 6px; padding: 0 2px 5px;
-      border-bottom: 1px solid var(--axis); color: var(--axis); font-size: 0.78em; font-weight: 700;
-      letter-spacing: 0.06em; text-transform: uppercase; }
-    .attr-axis-head:first-child { margin-top: 2px; }
-    .attr-axis-head .attr-ico { margin-right: 0; }
-    .cost-neg-num { color: #3fb950; font-weight: 700; }
+    .attr-ico {
+      display: inline-block;
+      vertical-align: -3px;
+      flex: none;
+      margin-right: 6px;
+    }
+
+    .attr-axis-head {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 14px 0 6px;
+      padding: 0 2px 5px;
+      border-bottom: 1px solid var(--axis);
+      color: var(--axis);
+      font-size: 0.78em;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .attr-axis-head:first-child {
+      margin-top: 2px;
+    }
+
+    .attr-axis-head .attr-ico {
+      margin-right: 0;
+    }
+
+    .cost-neg-num {
+      color: #3fb950;
+      font-weight: 700;
+    }
   </style>
 </head>
 
@@ -852,12 +878,12 @@
         <div class="setting-item"><label>Budget total</label><input type="number" id="s_budget" value="130" min="10"
             max="400" onchange="updateSettings()"></div>
         <div class="settings-section-title">Coûts : Attributs</div>
-        <div class="setting-item"><label>Déficient (1) remboursé</label><input type="number" id="s_ac1" value="-3" min="-20"
-            max="0" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Faible (2) remboursé</label><input type="number" id="s_ac2" value="-2" min="-20" max="0"
-            onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Médiocre (3) remboursé</label><input type="number" id="s_ac3" value="-1" min="-20"
-            max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Déficient (1) remboursé</label><input type="number" id="s_ac1" value="-3"
+            min="-20" max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Faible (2) remboursé</label><input type="number" id="s_ac2" value="-2"
+            min="-20" max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Médiocre (3) remboursé</label><input type="number" id="s_ac3" value="-1"
+            min="-20" max="0" onchange="updateSettings()"></div>
         <div class="setting-item"><label>Élevé (5)</label><input type="number" id="s_ac5" value="5" min="0" max="50"
             onchange="updateSettings()"></div>
         <div class="setting-item"><label>Supérieur (6)</label><input type="number" id="s_ac6" value="8" min="0" max="50"
@@ -867,10 +893,10 @@
         <div class="setting-item"><label>Prodigieux (8)</label><input type="number" id="s_ac8" value="18" min="0"
             max="50" onchange="updateSettings()"></div>
         <div class="settings-section-title">Coûts : Compétences</div>
-        <div class="setting-item"><label>Inapte (1) remboursé</label><input type="number" id="s_cc1" value="-3" min="-20"
-            max="0" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Maladroit (2) remboursé</label><input type="number" id="s_cc2" value="-1" min="-20"
-            max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Inapte (1) remboursé</label><input type="number" id="s_cc1" value="-3"
+            min="-20" max="0" onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Maladroit (2) remboursé</label><input type="number" id="s_cc2" value="-1"
+            min="-20" max="0" onchange="updateSettings()"></div>
         <div class="setting-item"><label>Qualifié (4)</label><input type="number" id="s_cc4" value="3" min="0" max="50"
             onchange="updateSettings()"></div>
         <div class="setting-item"><label>Excellent (5)</label><input type="number" id="s_cc5" value="5" min="0" max="50"
@@ -955,7 +981,7 @@
     <button class="reset-btn" onclick="resetAll()">↺ Réinitialiser</button>
 
     <div class="summary">
-      <h3>⚡ Résumé du Elysaria</h3>
+      <h3>⚡ Résumé du personnage</h3>
       <div id="summaryContent"></div>
     </div>
 
