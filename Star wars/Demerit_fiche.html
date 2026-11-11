@@ -2939,6 +2939,21 @@
         .force-roll-panel.active {
             display: block;
         }
+
+        /* ── IMMATERIUM ── */
+        .imm-toggle { display: flex; align-items: center; gap: 8px; margin-top: 16px; padding: 9px 12px; border: 1px solid rgba(138, 92, 255, 0.35); border-radius: 4px; background: rgba(138, 92, 255, 0.07); color: #c9a8ff; font-weight: 600; font-size: 0.88em; cursor: pointer; user-select: none; }
+        .imm-toggle input { accent-color: #8a5cff; cursor: pointer; width: 16px; height: 16px; }
+        .imm-toggle:has(input:checked) { background: rgba(138, 92, 255, 0.2); border-color: #8a5cff; box-shadow: 0 0 12px rgba(138, 92, 255, 0.35); }
+        .die.imm-elan-die { outline: 2px solid #8a5cff; box-shadow: 0 0 12px rgba(138, 92, 255, 0.8); }
+        .imm-result { width: 100%; margin-top: 12px; padding: 10px 12px; border-radius: 4px; border: 1px solid var(--tier, #8a5cff); background: rgba(138, 92, 255, 0.08); font-size: 0.82rem; color: var(--light-steel); text-align: left; }
+        .imm-result-head { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-display); font-size: 0.8rem; letter-spacing: 0.06em; color: #c9a8ff; margin-bottom: 8px; }
+        .imm-tier { color: var(--tier, #8a5cff); font-weight: 700; }
+        .imm-risk-row { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; margin-bottom: 8px; }
+        .imm-risk-die { width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border-radius: 3px; border: 1px solid var(--tier, #8a5cff); font-family: var(--font-display); font-weight: 700; font-size: 0.8rem; }
+        .imm-risk-die.extra { border-style: dashed; }
+        .imm-danger { margin-left: auto; font-family: var(--font-display); font-size: 0.9rem; }
+        .imm-danger strong { color: var(--tier, #8a5cff); font-size: 1.3rem; }
+        .imm-lines { display: flex; flex-direction: column; gap: 4px; line-height: 1.45; }
     </style>
 </head>
 
@@ -3029,6 +3044,7 @@
                                 <option value="Stratégique">
                                 <option value="Force">
                                 <option value="Fatigue"></option>
+                                <option value="Immaterium"></option>
                             </datalist></div>
                         <div class="add-wound-field" style="min-width: 80px; flex: 0;"><label>GRAVITÉ</label><input
                                 type="number" id="wound-gravity" min="1" value="1" style="width: 60px;"></div>
@@ -3209,6 +3225,7 @@
                         </div>
                         <div class="force-roll-preview" id="unified-preview"
                             style="margin:10px 0 4px; font-size:0.85em; line-height:1.5;"></div>
+                        <label class="imm-toggle"><input type="checkbox" class="imm-check" onchange="immSetActive(this.checked)"> 🕳 Puiser dans l'Immaterium</label>
                         <button class="roll-btn force" id="conjoint-roll-btn" onclick="rollConjoint()" disabled
                             style="margin-top: 20px;">
                             ⚡⚔ Lancer le jet Force + Compétence
@@ -3286,7 +3303,8 @@
                                 </div>
                             </div>
                             <div id="force-simple-preview" class="nv-preview"></div>
-                            <button class="roll-btn force" id="force-simple-roll-btn" onclick="rollForceSimple()"
+                            <label class="imm-toggle"><input type="checkbox" class="imm-check" onchange="immSetActive(this.checked)"> 🕳 Puiser dans l'Immaterium</label>
+                        <button class="roll-btn force" id="force-simple-roll-btn" onclick="rollForceSimple()"
                                 disabled style="margin-top: 16px;">
                                 ⚡ Lancer le jet de Force
                             </button>
@@ -3905,6 +3923,7 @@
             intentionOk: false,
             resonance: 0,
             privateRoll: false,
+            immaterium: false,
             currentModal: null
         };
         function toggleCtxBar() {
@@ -4691,7 +4710,7 @@
                 if (verbSelect) {
                     const currentValue = verbSelect.value;
                     verbSelect.innerHTML = '<option value="">- Sélectionner -</option>';
-                    appState.forceVerbs.forEach(verb => {
+                    immVerbList().forEach(verb => {
                         const opt = document.createElement('option');
                         opt.value = verb.id;
                         const fName = (typeof verbFace === 'function') ? verbFace(verb, appState.teinte) : verb.name;
@@ -4776,6 +4795,7 @@
             return 'jusqu\'à magnitude ' + cap;
         }
         function nvResolveEtat(teinteId, intentionOk, magnitude) {
+            if (immActive()) return 'compose';
             const sign = (TEINTES[teinteId] || TEINTES.neutre).sign;
             const renie = sign > 0 && resonanceValue <= LIGHT_CORRUPT_FLOOR;
             if (intentionOk) return renie ? 'compose' : 'sublime';
@@ -4788,6 +4808,7 @@
         // Nom que prend le verbe selon la teinte déclarée (racine, face claire, face sombre)
         function verbFace(verb, teinteId) {
             if (!verb) return '';
+            if (immActive()) return immVerbName(verb);
             const sign = (TEINTES[teinteId] || TEINTES.neutre).sign;
             if (sign > 0) return verb.light || verb.name;
             if (sign < 0) return verb.dark || verb.name;
@@ -4796,6 +4817,7 @@
         // Résumé lisible de la résolution, réutilisé par les aperçus et la barre de contexte.
         // La magnitude est facultative : sans elle, on affiche seulement la règle en vigueur.
         function teinteStatusText(magnitude) {
+            if (immActive()) return '🕳 Immaterium actif · chaque dé lance un dé de risque · teinte ignorée, aucune dérive d\'alignement → Composé';
             const t = TEINTES[appState.teinte] || TEINTES.neutre;
             const head = t.icon + ' ' + t.name;
             const arrow = etat => ' → ' + NV_ETAT_LABEL[etat][0];
@@ -4828,7 +4850,7 @@
             return 'Vide';
         }
         function nvGetContext(verbSelId, attrSelId, diceInputId) {
-            const verb = appState.forceVerbs.find(v => v.id === document.getElementById(verbSelId).value);
+            const verb = immFindVerb(document.getElementById(verbSelId).value);
             if (!verb) return null;
             // Attribut MODIFIABLE : celui sélectionné, sinon celui par défaut du verbe
             const defaultAttr = NV_ATTR_KEY[verb.attr];
@@ -4911,8 +4933,15 @@
         // Lance ctx.nDice dés et résout la Puissance, la cascade, le coût et l'effet incontrôlé
         function nvRoll(ctx) {
             let rolled = [], puissance = 0, bad1 = 0, bad2 = 0, cascade = 0, nRes = 0, nTr = 0;
-            for (let i = 0; i < ctx.nDice; i++) {
-                const f = nvRollDie(ctx.faces); rolled.push(f);
+            const immOn = immActive();
+            const immDefaire = immOn && !!(ctx.verb && /^defaire_/.test(ctx.verb.id));
+            let total = ctx.nDice; const elanFlags = [], riskFaces = [];
+            // Défaire : un dé de risque supplémentaire, lancé avant les autres
+            if (immDefaire) { const rf = immRiskFace(); rf.extra = true; riskFaces.push(rf); if (rf.aspire) total++; }
+            for (let i = 0; i < total; i++) {
+                const f = nvRollDie(ctx.faces); rolled.push(f); elanFlags.push(i >= ctx.nDice);
+                // Chaque dé de Force tiré de l'Immaterium lance son dé de risque ; une Aspiration en appelle un autre
+                if (immOn) { const rf = immRiskFace(); riskFaces.push(rf); if (rf.aspire && total < IMM_ELAN_CAP) total++; }
                 if (f === 'Succès') puissance++;
                 else if (f === 'Résonance') { puissance++; cascade += 1; nRes++; }
                 else if (f === 'Transcendance') { puissance++; cascade += 2; nTr++; }
@@ -4937,11 +4966,11 @@
                 if (recascade && d >= (deferlante ? 7 : 9)) pool++;          // recascade : Communion à ≥9, Déferlante à ≥7 (l'avalanche obscure s'emballe plus facilement)
             }
             // Coût : nombre de dés − (Résonance + Transcendance) − allègement Communion. Bad1 ajoute ; +3 hors-attribut en amont.
-            return { rolled, casc, puissance, bad1, bad2, nRes, nTr, communion, deferlante, cascReduc, coutDelta: bad1 - (nRes + nTr) - cascReduc, effet: bad2 > 0 ? 2 * bad2 : 0, etat: ctx.etat };
+            return { rolled, casc, puissance, bad1, bad2, nRes, nTr, communion, deferlante, cascReduc, coutDelta: bad1 - (nRes + nTr) - cascReduc, effet: bad2 > 0 ? 2 * bad2 : 0, etat: ctx.etat, nDiceTotal: total, elanFlags, elan: total - ctx.nDice, imm: immOn ? immResolve(riskFaces) : null };
         }
         // Choisir un verbe pré-remplit son attribut par défaut + son niveau en dés (modifiables ensuite)
         function onForceSimpleVerbChange() {
-            const verb = appState.forceVerbs.find(v => v.id === document.getElementById('force-simple-verb-select').value);
+            const verb = immFindVerb(document.getElementById('force-simple-verb-select').value);
             const attrSel = document.getElementById('force-simple-attr-select');
             const diceEl = document.getElementById('force-simple-dice');
             if (verb && attrSel) attrSel.value = NV_ATTR_KEY[verb.attr] || attrSel.value;
@@ -4950,7 +4979,7 @@
         }
         // Idem pour le jet conjoint
         function onForceConjointVerbChange() {
-            const verb = appState.forceVerbs.find(v => v.id === document.getElementById('force-verb-select').value);
+            const verb = immFindVerb(document.getElementById('force-verb-select').value);
             const attrSel = document.getElementById('force-attr-select');
             const diceEl = document.getElementById('force-dice');
             if (verb && attrSel) attrSel.value = NV_ATTR_KEY[verb.attr] || attrSel.value;
@@ -5211,7 +5240,7 @@
             document.getElementById('result-title').textContent = data.title;
             document.getElementById('result-subtitle').textContent = data.subtitle;
             const container = document.getElementById('dice-container'); container.innerHTML = '';
-            r.rolled.forEach((f, i) => container.appendChild(nvDieEl(f, i)));
+            r.rolled.forEach((f, i) => { const d = nvDieEl(f, i); if (r.elanFlags && r.elanFlags[i]) { d.classList.add('imm-elan-die'); d.title += ' · aspiré'; } container.appendChild(d); });
             r.casc.forEach((s, i) => {
                 const d = nvDieEl(s ? 'Succès' : 'Vide', r.rolled.length + i); d.style.opacity = '0.5';
                 container.appendChild(d);
@@ -5250,12 +5279,13 @@
             const roll = nvRoll(ctx);
             let puissance = roll.puissance + bonus;
             const offCost = ctx.offAttribute ? 3 : 0;
-            const coutTotal = Math.max(0, ctx.nDice + roll.coutDelta + offCost);   // base = nombre de dés ; + Bad1, −1 si Résonance, +3 si attribut incohérent
+            const coutTotal = Math.max(0, (roll.nDiceTotal || ctx.nDice) + roll.coutDelta + offCost);   // base = nombre de dés ; + Bad1, −1 si Résonance, +3 si attribut incohérent
             consumeForce(coutTotal);
+            immApply(roll);
             applySublimationDrift(ctx.etat, ctx.nDice);
             const attrLabel = capitalize(ctx.attrName);
             const etatLbl = NV_ETAT_LABEL[ctx.etat][0];
-            const titre = ctx.verb.name + (target ? ' + ' + target.name : '');
+            const titre = immTitleName(ctx.verb) + (target ? ' + ' + target.name : '');
             const applied = consumeAppliedPowers();
             puissance += applied.bonus;
             _lastForceRoll = { name: titre, puissance, nDice: ctx.nDice };
@@ -5266,7 +5296,8 @@
                 subtitle: `${attrLabel} ${ctx.attrValue} (${ctx.attrLevel.name}) · magnitude ${ctx.nDice} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name}${appState.intentionOk ? ' + charge' : ''} → ${etatLbl}${offTxt}${capTxt}`,
                 roll, puissance, coutTotal
             });
-            sendDiscordRoll(titre, null, puissance, attrLabel, { successes: roll.puissance, attrBonus: 0, bonus });
+            immShowResult(roll);
+            sendDiscordRoll(titre, null, puissance, attrLabel, { successes: roll.puissance, attrBonus: 0, bonus, extra: immDiscordLine(roll) });
         }
 
         function updateRollButtons() {
@@ -5444,8 +5475,9 @@
             const rollF = nvRoll(ctxF);
             const spellPuissance = rollF.puissance + puissanceMod;     // Puissance du sort
             const offCost = ctxF.offAttribute ? 3 : 0;
-            const forceCout = Math.max(0, ctxF.nDice + rollF.coutDelta + offCost);  // base = nombre de dés + modificateurs
+            const forceCout = Math.max(0, (rollF.nDiceTotal || ctxF.nDice) + rollF.coutDelta + offCost);  // base = nombre de dés + modificateurs
             consumeForce(forceCout);
+            immApply(rollF);
             applySublimationDrift(ctxF.etat, ctxF.nDice);
 
             // --- Partie Compétence (d12 à faces) ---
@@ -5457,10 +5489,10 @@
             // On AJOUTE la Puissance du sort au jet de compétence
             const appliedC = consumeAppliedPowers();
             const finalTotal = sum.total + spellPuissance + bonus + appliedC.bonus;
-            _lastForceRoll = { name: `${ctxF.verb.name}${target ? ' + ' + target.name : ''}`, puissance: spellPuissance, nDice: ctxF.nDice };
+            _lastForceRoll = { name: `${immTitleName(ctxF.verb)}${target ? ' + ' + target.name : ''}`, puissance: spellPuissance, nDice: ctxF.nDice };
 
             displayConjointResult({
-                title: `${ctxF.verb.name}${target ? ' + ' + target.name : ''} → ${skill.name}`,
+                title: `${immTitleName(ctxF.verb)}${target ? ' + ' + target.name : ''} → ${skill.name}`,
                 subtitle: `Force : ${attrDisplay(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name}${appState.intentionOk ? ' + charge' : ''} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence : ${attrDisplay(skillAttrName)} · ${getSkillLevel(skill.level).name} (${skillPoolText(skill.level, skillAttrValue)})${appliedC.label}`,
                 forceRoll: rollF,
                 forceEtat: ctxF.etat,
@@ -5472,7 +5504,8 @@
                 bonus: bonus + appliedC.bonus,
                 finalTotal
             });
-            sendDiscordRoll(skill.name, skill.baseName, finalTotal, attrDisplay(skillAttrName), { successes: sum.total, eclats: sum.eclats, revers: sum.revers, bonus, spellBonus: spellPuissance, spellLabel: 'Puissance' });
+            immShowResult(rollF);
+            sendDiscordRoll(skill.name, skill.baseName, finalTotal, attrDisplay(skillAttrName), { successes: sum.total, eclats: sum.eclats, revers: sum.revers, bonus, spellBonus: spellPuissance, spellLabel: 'Puissance', extra: immDiscordLine(rollF) });
         }
         function setSkillStats(sum, bonus) {
             setStatLabels(['Succès', 'Éclats', 'Revers', 'Relances', 'Bonus / Malus']);
@@ -5517,7 +5550,7 @@
             container.appendChild(forceLabel);
             const forceDiceDiv = document.createElement('div');
             forceDiceDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; width: 100%;';
-            data.forceRoll.rolled.forEach((f, i) => forceDiceDiv.appendChild(nvDieEl(f, i)));
+            data.forceRoll.rolled.forEach((f, i) => { const d = nvDieEl(f, i); if (data.forceRoll.elanFlags && data.forceRoll.elanFlags[i]) { d.classList.add('imm-elan-die'); d.title += ' · aspiré'; } forceDiceDiv.appendChild(d); });
             data.forceRoll.casc.forEach((s, i) => {
                 const d = nvDieEl(s ? 'Succès' : 'Vide', data.forceRoll.rolled.length + i); d.style.opacity = '0.5';
                 forceDiceDiv.appendChild(d);
@@ -5666,6 +5699,7 @@
             if (typeof syncCharAlignment === 'function') syncCharAlignment();
             renderResonance();
             setPrivateRoll(!!appState.privateRoll);
+            immSetActive(appState.immaterium === true);
         }
         function handleFileLoad(event) {
             const file = event.target.files[0];
@@ -5896,6 +5930,7 @@
                 if (details.attrBonus) detailParts.push(`Attr : +${details.attrBonus}`);
                 if (details.skillBonus) detailParts.push(`Comp : +${details.skillBonus}`);
                 if (details.bonus !== undefined && details.bonus !== 0) detailParts.push(`Mod : ${details.bonus > 0 ? '+' : ''}${details.bonus}`);
+                if (details.extra) detailParts.push(details.extra);
                 if (details.spellBonus) detailParts.push(`${details.spellLabel || 'Sort'} : +${details.spellBonus}`);
             }
             const detailLine = detailParts.length ? `
@@ -6150,6 +6185,7 @@
         // seul point d'Harmonie, quelle que soit sa magnitude. L'Harmonie se vit,
         // elle ne se lance pas. La racine neutre ne déplace rien.
         function applySublimationDrift(etat, magnitude) {
+            if (immActive()) return 0;
             const t = TEINTES[appState.teinte] || TEINTES.neutre;
             if (!t.sign) return 0;
             const mag = Math.max(1, magnitude || 1);
@@ -6158,6 +6194,151 @@
             const dir = delta < 0 ? '🔥 Corruption' : '✨ Harmonie';
             showNotification(`${dir} ${delta > 0 ? '+' + delta : delta} · pouvoir ${t.name.toLowerCase()}`);
             return delta;
+        }
+
+        // ═══════════════════ IMMATERIUM ═══════════════════
+        // Case « Puiser dans l'Immaterium » sur les jets de Force.
+        //   · Les verbes gardent leur nom neutre (racine), la teinte étant ignorée.
+        //   · Quatre effets « Défaire » s'ajoutent à la liste (+1 dé de risque).
+        // Chaque dé de Force engagé lance un d12 de risque, quel que soit son résultat.
+        // Ce sont les faces du dé de risque qui causent les problèmes :
+        //   · elles produisent le Danger, dont le total fixe le palier ;
+        //   · l'Aspiration fait lancer un dé de Force de plus (et donc un dé de risque) ;
+        //   · la Brèche déclenche une conséquence lourde parmi celles que le palier débloque.
+        // Deux effets au plus par jet : la perte d'Élan, toujours, et UN seul autre effet.
+        // Une conséquence lourde remplace l'émotion absente ; plusieurs Brèches n'en donnent qu'une.
+        // L'Immaterium ignore la teinte : état Composé, aucune dérive d'alignement.
+        const IMM_ELAN_CAP = 20;     // plafond de dés de Force, aspirés compris
+        // Faces du d12 de risque (le total des « count » vaut 12)
+        const IMM_RISK_FACES = [
+            { key: 'silence', name: 'Silence', glyph: '○', color: '#6e7681', count: 4, danger: 0, text: 'aucun effet' },
+            { key: 'murmure', name: 'Murmure', glyph: '●', color: '#9fa8c8', count: 4, danger: 1, text: '+1 Danger' },
+            { key: 'aspiration', name: 'Aspiration', glyph: '⟲', color: '#b38cff', count: 2, danger: 1, aspire: true, text: '+1 Danger, un dé de Force de plus est lancé (coût et risque compris)' },
+            { key: 'fissure', name: 'Fissure', glyph: '◆', color: '#ff5c8a', count: 1, danger: 2, text: '+2 Danger' },
+            { key: 'breche', name: 'Brèche', glyph: '✖', color: '#ff3355', count: 1, danger: 2, breche: true, text: '+2 Danger, déclenche une conséquence lourde débloquée par le palier, à la place de l\'émotion absente' }
+        ];
+        const IMM_DUREES = { round: 'la fin du round', scene: 'la fin de la scène', repos: 'le prochain repos long' };
+        // Paliers de Danger : l'affliction vaut toujours ⌊Danger ÷ 2⌋
+        const IMM_TIERS = [
+            { min: 0, key: 'silence', name: 'Silence', color: '#6e7681', emo: null, hard: [] },
+            { min: 1, key: 'fremissement', name: 'Frémissement', color: '#9fa8c8', emo: 'round', hard: [] },
+            { min: 3, key: 'reflux', name: 'Reflux', color: '#b38cff', emo: 'scene', hard: [] },
+            { min: 5, key: 'dechirure', name: 'Déchirure', color: '#d06cff', emo: 'repos', hard: ['souvenir'] },
+            { min: 7, key: 'appel', name: 'Appel', color: '#ff5c8a', emo: 'repos', hard: ['souvenir', 'starweird'] },
+            { min: 9, key: 'beance', name: 'Béance', color: '#ff3355', emo: 'repos', hard: ['souvenir', 'starweird', 'dystra'] }
+        ];
+        const IMM_HARD = {
+            souvenir: { icon: '🧠', label: 'Perte de souvenir', text: "Un souvenir s'efface définitivement. Le MJ et la joueuse choisissent lequel." },
+            starweird: { icon: '👁', label: 'StarWeird attiré', text: "Une présence StarWeird a perçu la brèche et converge vers le personnage. Le MJ décide quand elle se manifeste." },
+            dystra: { icon: '👑', label: 'Dystra perçoit', text: "Dystra a senti l'usage : il connaît désormais la position du personnage. Le MJ décide quand il agit." }
+        };
+        const IMM_EMOTIONS = [
+            ['Peur', "Ne ressent plus le danger : n'esquive ni ne recule par instinct"],
+            ['Colère', "Ne s'indigne plus et ne répond à aucune provocation"],
+            ['Attachement', "Ses proches ne comptent pas plus que des inconnus"],
+            ['Joie', "Rien ne lui procure de satisfaction, ni victoire ni réconfort"],
+            ['Culpabilité', "N'éprouve aucun remords pour ses actes"],
+            ['Compassion', "La souffrance d'autrui ne la touche plus"]
+        ];
+        // Défaire : ce que la Force ne permet pas, un aspect inversé par effet.
+        const IMM_DEFAIRE = [
+            { id: 'defaire_presence', name: 'Défaire une présence', attr: 'Volonté', level: 1 },
+            { id: 'defaire_instant', name: 'Défaire un instant', attr: 'Intuition', level: 1 },
+            { id: 'defaire_lien', name: 'Défaire un lien', attr: 'Charisme', level: 1 },
+            { id: 'defaire_forme', name: 'Défaire une forme', attr: 'Intelligence', level: 1 }
+        ];
+
+        function immActive() { return appState.immaterium === true; }
+        function immSetActive(v) {
+            appState.immaterium = !!v;
+            document.querySelectorAll('.imm-check').forEach(cb => { cb.checked = appState.immaterium; });
+            refreshTeinteDisplays();
+        }
+        function immVerbList() {
+            return immActive() ? appState.forceVerbs.concat(IMM_DEFAIRE) : appState.forceVerbs;
+        }
+        function immFindVerb(id) {
+            if (!id) return null;
+            return appState.forceVerbs.find(v => v.id === id) || IMM_DEFAIRE.find(v => v.id === id) || null;
+        }
+        function immVerbName(verb) {
+            return verb ? verb.name : '';
+        }
+        function immTitleName(verb) {
+            return verb.name;
+        }
+        function immTier(danger) {
+            let t = IMM_TIERS[0];
+            for (const tier of IMM_TIERS) if (danger >= tier.min) t = tier;
+            return t;
+        }
+        function immTierByKey(key) {
+            return IMM_TIERS.find(t => t.key === key) || IMM_TIERS[0];
+        }
+        // Lance un d12 de risque et renvoie une copie de la face obtenue.
+        function immRiskFace() {
+            let r = Math.floor(Math.random() * 12), acc = 0;
+            for (const f of IMM_RISK_FACES) { acc += f.count; if (r < acc) return Object.assign({}, f); }
+            return Object.assign({}, IMM_RISK_FACES[0]);
+        }
+        // Le Danger ne dépend que des faces de risque, jamais du résultat des dés de Force.
+        function immResolve(faces) {
+            const danger = faces.reduce((s, f) => s + f.danger, 0);
+            const tier = immTier(danger);
+            const gravity = Math.floor(danger / 2);
+            // Effet unique : une Brèche sur un palier qui débloque une conséquence lourde
+            // la déclenche (une seule, quel que soit le nombre de Brèches) ; sinon, l'émotion absente.
+            const breches = faces.filter(f => f.breche).length;
+            const hard = (breches && tier.hard.length) ? [tier.hard[Math.floor(Math.random() * tier.hard.length)]] : [];
+            let emotion = null;
+            if (!hard.length && tier.emo) {
+                const e = IMM_EMOTIONS[Math.floor(Math.random() * IMM_EMOTIONS.length)];
+                emotion = { name: e[0], text: e[1], duree: tier.emo };
+            }
+            const aspirations = faces.filter(f => f.aspire).length;
+            return { faces, danger, tierKey: tier.key, gravity, emotion, breches, hard, aspirations };
+        }
+        // La perte d'Élan s'inscrit directement dans les afflictions.
+        function immApply(roll) {
+            if (!roll || !roll.imm || roll.imm.gravity <= 0) return;
+            const tier = immTierByKey(roll.imm.tierKey);
+            appState.wounds.push({ name: "Reflux de l'Immaterium (" + tier.name + ')', type: 'Immaterium', gravity: roll.imm.gravity });
+            renderWounds(); recalcHealthFromWounds(); syncElanFromHealth();
+        }
+        function immShowResult(roll) {
+            if (!roll || !roll.imm) return;
+            const r = roll.imm, tier = immTierByKey(r.tierKey);
+            const container = document.getElementById('dice-container');
+            if (!container) return;
+            const dice = r.faces.map(f =>
+                `<span class="imm-risk-die${f.extra ? ' extra' : ''}" style="border-color:${f.color};color:${f.color}" title="${f.name}${f.extra ? ' (dé de Défaire)' : ''} : ${f.text}">${f.glyph}</span>`).join('');
+            const lines = [];
+            if (r.aspirations) {
+                const lost = r.aspirations - (roll.elan || 0);
+                lines.push(`⟲ <strong>Aspiration ×${r.aspirations}</strong> : ${roll.elan || 0} dé(s) de Force lancé(s) en plus, coût compris${lost > 0 ? ` (plafond de ${IMM_ELAN_CAP} dés atteint)` : ''}.`);
+            }
+            lines.push(r.gravity > 0 ? `🩸 Affliction de <strong>gravité ${r.gravity}</strong> ajoutée à l'Élan.` : `🩸 Aucune perte d'Élan.`);
+            if (r.emotion) lines.push(`🫥 Émotion absente : <strong>${r.emotion.name}</strong> jusqu'à ${IMM_DUREES[r.emotion.duree]}. ${r.emotion.text}.`);
+            r.hard.forEach(h => lines.push(`${IMM_HARD[h].icon} <strong>${IMM_HARD[h].label}</strong> : ${IMM_HARD[h].text}`));
+            if (r.breches && !r.hard.length) lines.push(`✖ Brèche sans conséquence lourde : le palier ${tier.name} n'en débloque aucune.`);
+            if (r.hard.length) lines.push(`<span style="opacity:0.7">La conséquence lourde remplace l'émotion absente.</span>`);
+            const box = document.createElement('div');
+            box.className = 'imm-result';
+            box.style.setProperty('--tier', tier.color);
+            box.innerHTML = `<div class="imm-result-head"><span>🕳 IMMATERIUM</span><span class="imm-tier">${tier.name}</span></div>
+                <div class="imm-risk-row">${dice}<span class="imm-danger">Danger <strong>${r.danger}</strong></span></div>
+                <div class="imm-lines">${lines.map(l => `<div>${l}</div>`).join('')}</div>`;
+            container.appendChild(box);
+        }
+        function immDiscordLine(roll) {
+            if (!roll || !roll.imm) return '';
+            const r = roll.imm, tier = immTierByKey(r.tierKey);
+            let s = `🕳 Danger ${r.danger} (${tier.name})`;
+            if (roll.elan) s += ` · Aspiration ×${roll.elan}`;
+            if (r.gravity) s += ` · gravité ${r.gravity}`;
+            if (r.emotion) s += ` · sans ${r.emotion.name}`;
+            r.hard.forEach(h => { s += ` · ${IMM_HARD[h].label}`; });
+            return s;
         }
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -6182,6 +6363,7 @@
             setTeinte(appState.teinte || 'neutre');
             setIntention(false);
             updateGhStatus();
+            immSetActive(false);
             document.addEventListener('click', closeSaveMenu);
             document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeResult(); } if (e.key === 'Enter' && document.getElementById('modal').classList.contains('active')) confirmModal(); });
             document.getElementById('modal-input').addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); confirmModal(); } });
