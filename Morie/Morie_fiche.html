@@ -6830,12 +6830,10 @@
             const attrValue = appState.attributes[attrName] || 4;
             const bonus = checkBonus(attrValue, skill.level, mod);
             const trained = skill.level >= TRAINED_LEVEL;
-            const open = rollStatsOpen[mode];
-            const head = `<button class="stats-toggle" onclick="toggleRollStats('${mode}')">${open ? '▾' : '▸'} <b>d10 ${fmtMod(bonus)}</b>`
+            host.innerHTML = `<div class="stats-toggle" style="cursor:default"><b>d10 ${fmtMod(bonus)}</b>`
                 + ` · ${ATTR_LABEL[attrName] || attrName} ${fmtMod(attrMod(attrValue))} · ${skill.name} ${fmtMod(skillMod(skill.level))}`
-                + ` · passive ${5 + checkBonus(attrValue, skill.level, 0)} · champ ${bonus + 1} à ${bonus + 10}`
-                + (dc ? ` · DC ${dc} : ${pct(successChance(bonus, dc, circ, trained))}` : '') + `</button>`;
-            if (!open) { host.innerHTML = head; return; }
+                + `${mod ? ` · modificateur ${fmtMod(mod)}` : ''}${trained ? ' · formé' : ''} · passive ${5 + checkBonus(attrValue, skill.level, 0)}</div>`;
+            return;
 
             const attr = getAttributeLevel(attrValue);
             const sk = getSkillLevel(skill.level);
@@ -7642,8 +7640,8 @@
                 <span style="color:var(--ombre-purple);font-weight:600;">${pair.verb.name} × ${pair.target.name}</span>
                 · Magnitude max ${cap} (${verbLevel(pair.verbId)} + ${targetLevel(pair.targetId)}) · ${fuelTxt}<br>
                 <span style="color:${col.color};font-weight:600;">Canal ${ATTR_LABEL[getCanal()]} ${canalLvl}</span> · ${describeFaces(canalLvl, isEmotionOn())}
-                · ${moy.toFixed(2)} Puissance/dé en moyenne<br>
-                <span style="font-size:0.92em;color:var(--silver-mist);">Puissance attendue ≈ ${(moy * engaged).toFixed(1)} · Valeur d'effet ≈ ${Math.round(effectValue(moy * engaged))} · la Puissance s'ajoute au Résultat Final du jet de compétence.</span>
+<br>
+                <span style="font-size:0.92em;color:var(--silver-mist);">La Puissance s'ajoute au Résultat Final du jet de compétence.</span>
                 ${qiInfo}
                 ${requested > cap ? `<br><span style="color:var(--vitality-red)">⚠ Magnitude max ${cap} pour ce couple</span>` : ''}
                 ${plan.heal && requested > plan.energyCap && requested <= cap ? `<br><span style="color:var(--vitality-red)">⚠ Au-delà de ${plan.energyCap} dés, ce soin se paie en Qi ou en Élan</span>` : ''}
