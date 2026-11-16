@@ -2230,6 +2230,10 @@
             animation: rollDie 0.5s ease-out;
         }
 
+        .die.dropped {
+            opacity: .32;
+        }
+
         .die.success {
             background: linear-gradient(135deg, var(--success-green), #2ea043);
             color: var(--void-black);
@@ -2954,6 +2958,154 @@
         .imm-danger { margin-left: auto; font-family: var(--font-display); font-size: 0.9rem; }
         .imm-danger strong { color: var(--tier, #8a5cff); font-size: 1.3rem; }
         .imm-lines { display: flex; flex-direction: column; gap: 4px; line-height: 1.45; }
+
+        /* ============ DENSITÉ : PUPITRE ET RÉSULTAT ============ */
+        .pw-detail { margin-top: 8px; text-align: center; }
+        .pw-detail-btn { padding: 4px 12px; background: var(--metal-gray); border: 1px solid var(--card-border); border-radius: 2px; color: var(--silver-chrome); font-family: var(--font-display); font-size: 0.74rem; letter-spacing: 0.05em; cursor: pointer; }
+        .pw-detail-btn::before { content: '▸ '; }
+        .pw-detail.open .pw-detail-btn::before { content: '▾ '; }
+        .pw-detail-btn:hover, .pw-detail.open .pw-detail-btn { color: var(--pure-white); border-color: var(--saber-purple); }
+        .pw-detail-body { display: none; margin-top: 7px; padding: 9px 10px; background: rgba(107, 63, 160, 0.10); border: 1px solid rgba(107, 63, 160, 0.25); border-radius: 4px; text-align: left; }
+        .pw-detail.open .pw-detail-body { display: block; }
+        .pw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 7px 12px; }
+        .pw-grid div { display: flex; flex-direction: column; gap: 1px; }
+        .pw-grid small { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--silver-chrome); }
+        .pw-grid b { font-size: 0.82rem; color: var(--pure-white); font-weight: 600; }
+        .pw-note { margin-top: 7px; font-size: 0.68rem; color: var(--silver-chrome); }
+        .eq-row { width: 100%; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 8px 10px; background: rgba(0, 168, 255, 0.05); border: 1px solid rgba(0, 168, 255, 0.18); border-radius: 4px; font-family: var(--font-display); }
+        .eq-dice { display: inline-flex; gap: 4px; }
+        .eq-die { min-width: 36px; height: 36px; padding: 0 5px; display: inline-flex; align-items: center; justify-content: center; gap: 2px; border: 2px solid; border-radius: 4px; font-weight: 700; font-size: 1.2em; background: rgba(255, 255, 255, 0.04); }
+        .eq-die.dropped { opacity: .32; }
+        .eq-die i { font-style: normal; font-size: 0.55em; }
+        .eq-op { color: var(--silver-chrome); }
+        .eq-term, .eq-total, .eq-dc { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1; }
+        .eq-term { font-weight: 700; color: var(--pure-white); }
+        .eq-term small, .eq-total small, .eq-dc small { font-size: 0.58em; font-weight: 400; text-transform: uppercase; color: var(--silver-chrome); }
+        .eq-total { font-weight: 800; font-size: 1.8em; color: var(--saber-blue-glow); padding: 0 4px; }
+        .eq-total small { font-size: 0.32em; }
+        .eq-dc { margin-left: 4px; padding: 3px 9px; border: 1px solid; border-radius: 4px; font-weight: 700; font-size: 0.82em; }
+        .eq-dc i { font-style: normal; font-weight: 400; opacity: .8; }
+        .eq-dc.ok { color: #3fb950; border-color: rgba(63, 185, 80, .5); background: rgba(63, 185, 80, .08); }
+        .eq-dc.ko { color: #ff4444; border-color: rgba(255, 68, 68, .5); background: rgba(255, 68, 68, .08); }
+        .eq-meta { margin-left: auto; font-size: 0.72em; }
+        .eq-note { width: 100%; text-align: center; font-size: 0.8rem; margin-top: 6px; }
+        .res-simple .result-total, .res-nostats .result-stats { display: none !important; }
+        .result-container { display: flex; flex-direction: column; max-width: 580px; padding: 16px 18px; }
+        .result-header { order: 0; margin-bottom: 6px; }
+        .result-title { font-size: 1.2em; margin-bottom: 3px; }
+        .result-subtitle { font-size: 0.78em; line-height: 1.4; }
+        .result-container .result-total { order: 1; margin: 4px 0 10px; padding: 8px 12px; display: flex; align-items: center; justify-content: center; gap: 14px; }
+        .result-container .result-total-label { margin: 0; font-size: 0.78em; }
+        .result-container .result-total-value { font-size: 2em; line-height: 1; }
+        .result-container .dice-container { order: 2; margin-bottom: 6px; gap: 5px; }
+        .result-container .die { width: 36px; height: 36px; font-size: 1em; }
+        .result-container .result-stats { order: 3; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 5px; margin: 4px 0 8px; }
+        .result-container .stat-item { padding: 4px 6px; }
+        .result-container .stat-label { font-size: 0.6em; margin-bottom: 1px; }
+        .result-container .stat-value { font-size: 0.95em; }
+        #result-sustain { order: 4; }
+        .result-container .result-close-btn { order: 5; padding: 8px; }
+        .roll-foot { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px 16px; margin-top: 10px; }
+        .roll-foot .private-roll-toggle { margin-top: 0; }
+        .circ-btns { display: inline-flex; gap: 6px; }
+        .circ-btn { padding: 5px 12px; background: var(--metal-gray); border: 1px solid var(--card-border); border-radius: 2px; color: var(--silver-chrome); font-family: var(--font-display); font-size: 0.75em; letter-spacing: 0.05em; cursor: pointer; transition: all .15s; }
+        .circ-btn:hover { color: var(--pure-white); }
+        .circ-btn.adv.active { color: #3fb950; border-color: #3fb950; background: rgba(63, 185, 80, .14); }
+        .circ-btn.dis.active { color: #ff4444; border-color: #ff4444; background: rgba(255, 68, 68, .14); }
+
+        /* === COUCHE UI : mode Jeu / Édition, bande de ressources, règles repliées === */
+        .mode-seg { display: inline-flex; border: 1px solid var(--ui-line); border-radius: 6px; overflow: hidden; flex: none; }
+        .mode-seg button, .save-controls .mode-seg button { padding: 5px 11px; border: none; border-radius: 0; background: transparent; color: var(--ui-dim);
+            font: inherit; font-size: 0.78em; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; box-shadow: none; transform: none; }
+        .mode-seg button.on, .save-controls .mode-seg button.on { background: var(--ui-accent); color: var(--ui-on-accent); }
+        .mode-seg button:hover, .save-controls .mode-seg button:hover { transform: none; box-shadow: none; }
+        .res-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 6px 16px; background: var(--ui-strip-bg);
+            border-top: 1px solid var(--ui-line); font-size: 0.82em; }
+        .rs-item { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border: 1px solid var(--ui-line); border-radius: 999px;
+            background: var(--ui-chip-bg); color: var(--ui-text); white-space: nowrap; }
+        .rs-item[hidden] { display: none; }
+        .rs-label { font-size: 0.86em; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ui-dim); }
+        .rs-val b { font-size: 1.12em; color: var(--rs-color, var(--ui-text)); font-variant-numeric: tabular-nums; }
+        .rs-val small { color: var(--ui-dim); font-size: 0.9em; }
+        .rs-item.low .rs-val b { color: var(--ui-warn); }
+        .rs-btn { width: 22px; height: 22px; padding: 0; border: 1px solid var(--ui-line); border-radius: 50%; background: transparent; color: var(--ui-text);
+            font-size: 14px; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+        .rs-btn:hover { background: var(--ui-accent); color: var(--ui-on-accent); border-color: var(--ui-accent); }
+        .rs-btn.rs-reset { font-size: 12px; }
+        .rule-fold { margin-top: 10px; }
+        .rule-fold > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; font-size: 0.76em; font-weight: 600;
+            color: var(--ui-fold); user-select: none; }
+        .rule-fold > summary::-webkit-details-marker { display: none; }
+        .rule-fold .rf-q { display: inline-flex; align-items: center; justify-content: center; width: 17px; height: 17px; border-radius: 50%;
+            border: 1px solid currentColor; font-size: 0.9em; }
+        .rule-fold[open] > summary { opacity: 0.75; }
+        .quick-hint { opacity: 0; margin-left: 6px; font-size: 0.8em; transition: opacity 0.15s; }
+
+        :root { --ui-line: rgba(0,168,255,0.3); --ui-dim: #8b98a8; --ui-text: #e6edf3; --ui-accent: #00c8ff; --ui-on-accent: #05121c;
+            --ui-strip-bg: rgba(0,0,0,0.3); --ui-chip-bg: rgba(0,168,255,0.06); --ui-warn: #ff7744; --ui-fold: #58a6ff; }
+        .container { overflow: clip; }
+        .container > .header { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px 20px 0; position: sticky; top: 0; z-index: 60;
+            overflow: visible; background-color: #0d1117; }
+        .container > .header h1 { font-size: 1.05em; margin: 0; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 26%; flex: 0 1 auto; letter-spacing: 0.12em; }
+        .container > .header .nav-tabs { flex: 1 1 auto; margin: 0; gap: 6px; justify-content: center; flex-wrap: nowrap; }
+        .container > .header .nav-tab { padding: 6px 12px; font-size: 0.8em; white-space: nowrap; }
+        .container > .header .save-controls { margin: 0; display: flex; align-items: center; gap: 8px; flex: none; }
+        .container > .header .save-controls > .save-menu-wrap > button { padding: 6px 12px; font-size: 0.82em; }
+        .container > .header .res-strip { flex: 1 0 100%; margin: 4px -20px 0; }
+        .rs-elan { --rs-color: #ff8a80; } .rs-pf { --rs-color: #ffcc00; } .rs-foc { --rs-color: #7fd4ff; }
+        @media (max-width: 1100px) {
+            .container > .header h1 { flex: 1 1 0; max-width: none; min-width: 0; }
+            .container > .header .nav-tabs { order: 3; flex: 1 0 100%; flex-direction: row; justify-content: flex-start; overflow-x: auto;
+                scrollbar-width: none; padding-bottom: 2px; }
+            .container > .header .nav-tabs::-webkit-scrollbar { display: none; }
+            .container > .header .nav-tab { flex: none; }
+            .container > .header .res-strip { order: 4; }
+        }
+        @media (max-width: 760px) {
+            .container > .header { padding: 8px 12px 0; top: -46px; }
+            .container > .header .res-strip { margin: 4px -12px 0; padding: 5px 12px; }
+            .res-strip { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+            .res-strip::-webkit-scrollbar { display: none; }
+            .rs-item { flex: none; }
+            .add-object-section { flex-wrap: wrap; }
+            .add-object-field { min-width: 0 !important; flex: 1 1 120px !important; }
+            .add-object-field input { width: 100% !important; }
+            .add-object-btn { flex: 1 1 100%; }
+        }
+        /* Débordement mobile */
+        .rolls-page > *, .attributes-page > *, .force-page > *, .saber-page > *, .skills-page > * { min-width: 0; }
+        @media (max-width: 900px) {
+            .attributes-page, .rolls-page, .force-page, .saber-page { grid-template-columns: minmax(0, 1fr) !important; }
+        }
+        @media (max-width: 640px) {
+            #unified-roll-module div[style*="grid-template-columns"] { grid-template-columns: minmax(0, 1fr) !important; gap: 12px !important; }
+            #unified-roll-module .force-roll-tabs { flex-wrap: wrap; }
+            #unified-roll-module .force-roll-tab { flex: 1 1 30%; min-width: 0; font-size: 0.72em; padding: 8px 4px; }
+            .skills-list-wide { grid-template-columns: minmax(0, 1fr); }
+            body { padding: 0 !important; }
+        }
+        /* Verbes et cibles : la carte prend sa hauteur, plus de cadre tronqué */
+        #force-verbs-list, #force-targets-list { max-height: none; overflow: visible; }
+        /* Pupitre : bouton pleine largeur, pied aligné comme sur la fiche ACI */
+        #unified-roll-module .roll-btn { width: 100%; margin-top: 12px !important; }
+        #unified-roll-module .roll-foot { justify-content: space-between; }
+        .ui-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .ui-pair .form-group { margin-bottom: 0; }
+        #skill-page-pool:not(:empty), #unified-preview:not(:empty) { padding: 8px 12px; border: 1px solid rgba(0,168,255,0.2); border-radius: 4px; background: rgba(0,168,255,0.05); }
+        /* La bande porte déjà les Points de Force */
+        #force-pa-readout, #unified-roll-module .force-refill-btn { display: none !important; }
+        /* Mode Jeu */
+        body.play-mode .attribute-btn, body.play-mode .skill-level-btn, body.play-mode .rename-hint { display: none !important; }
+        body.play-mode .attribute-controls { display: none; }
+        body.play-mode #skills-list .skill-item { cursor: pointer; }
+        body.play-mode #skills-list .skill-item:hover { border-color: rgba(0,200,255,0.5); background: rgba(0,168,255,0.07); }
+        body.play-mode #skills-list .skill-item:hover .quick-hint { opacity: 0.8; }
+        body.play-mode .skill-passive-attr { appearance: none; -webkit-appearance: none; border: none; background: transparent; pointer-events: none; padding: 0; text-align: right; }
+        body.play-mode .saber-color-item:not(.selected), body.play-mode .saber-type-item:not(.selected),
+        body.play-mode .form-mastery-item:not(.known) { display: none; }
+        body.play-mode .posture-forms:not(:has(.known)) { display: none; }
+        body.play-mode .posture-header:not(:has(+ .posture-forms .known)) { display: none; }
+        body.play-mode .form-mastery-item { cursor: default; pointer-events: none; }
     </style>
 </head>
 
@@ -3218,7 +3370,7 @@
                                         <option value="">- Sélectionner -</option>
                                     </select>
                                 </div>
-                                <div class="form-group"><label class="form-label">Bonus / Malus Global</label>
+                                <div class="form-group"><label class="form-label">Bonus / Malus (compétence)</label>
                                     <input id="force-bonus" class="bonus-input" type="number" value="0">
                                 </div>
                             </div>
@@ -3230,8 +3382,7 @@
                             style="margin-top: 20px;">
                             ⚡⚔ Lancer le jet Force + Compétence
                         </button>
-                        <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
-                                onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
+                        <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="2d10, on garde le meilleur">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="2d10, on garde le pire">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
 
                     </div>
                     <div id="urm-panel-comp" class="force-roll-panel">
@@ -3253,13 +3404,12 @@
                                     <option value="">- Sélectionner -</option>
                                 </select></div>
                             <div class="form-group"><label class="form-label">Bonus / Malus</label><input
-                                    id="skill-page-bonus" class="bonus-input" type="number" value="0"></div>
+                                    id="skill-page-bonus" class="bonus-input" type="number" value="0" oninput="updateRollButtons()"></div>
                             <div id="skill-page-pool" class="faces-summary" style="text-align:left;"></div>
                             <button class="roll-btn skill" id="skill-page-roll-btn" onclick="rollSkillPage()"
                                 disabled>🎲 LANCER
                                 LE JET</button>
-                            <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
-                                    onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
+                            <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="2d10, on garde le meilleur">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="2d10, on garde le pire">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
 
                         </div>
 
@@ -3308,8 +3458,7 @@
                                 disabled style="margin-top: 16px;">
                                 ⚡ Lancer le jet de Force
                             </button>
-                            <label class="private-roll-toggle"><input type="checkbox" class="private-roll-check"
-                                    onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label>
+                            <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="2d10, on garde le meilleur">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="2d10, on garde le pire">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
                         </div>
 
                     </div>
@@ -3675,41 +3824,29 @@
             }
         };
         // ========== NIVEAUX D'ATTRIBUTS ==========
-        // Faces du d12, pondérées par l'attribut : [Éclat, Succès, Vide, Revers, Revers+]
-        // Éclat : +1 et relance · Succès : +1 · Vide : 0 · Revers : -1 · Revers+ : -1 et relance
+        // Attribut : niveau 1 à 8, bonus au jet = niveau − 4 (Commun = 0)
         const ATTRIBUTE_LEVELS = {
-            1: { name: 'Déficient', faces: [0, 1, 4, 4, 3], color: '#ff4444' },
-            2: { name: 'Faible', faces: [0, 3, 6, 2, 1], color: '#ff7744' },
-            3: { name: 'Médiocre', faces: [0, 4, 7, 1, 0], color: '#ddaa33' },
-            4: { name: 'Commun', faces: [1, 5, 6, 0, 0], color: '#8b949e' },
-            5: { name: 'Élevé', faces: [1, 6, 5, 0, 0], color: '#3fb950' },
-            6: { name: 'Supérieur', faces: [2, 6, 4, 0, 0], color: '#4dc3ff' },
-            7: { name: 'Exceptionnel', faces: [2, 7, 3, 0, 0], color: '#b366ff' },
-            8: { name: 'Prodigieux', faces: [3, 7, 2, 0, 0], color: '#ffcc00' }
-        };
-
-        // Socle commun à tous les jets de compétence
-        const SOCLE_DICE = 3;
-        // Une seule relance par dé : le maximum reste prévisible
-        const MAX_CHAIN = 1;
-        // Dés ajoutés par les compétences sous Ordinaire : uniquement Vide / Revers / Revers+
-        const NEGATIVE_DICE = {
-            1: { faces: [0, 0, 3, 6, 3] },   // Inapte
-            2: { faces: [0, 0, 6, 4, 2] }    // Maladroit
+            1: { name: 'Déficient', color: '#ff4444' },
+            2: { name: 'Faible', color: '#ff7744' },
+            3: { name: 'Médiocre', color: '#ddaa33' },
+            4: { name: 'Commun', color: '#8b949e' },
+            5: { name: 'Élevé', color: '#3fb950' },
+            6: { name: 'Supérieur', color: '#4dc3ff' },
+            7: { name: 'Exceptionnel', color: '#b366ff' },
+            8: { name: 'Prodigieux', color: '#ffcc00' }
         };
 
         // ========== NIVEAUX DE COMPÉTENCES ==========
-        // add : dés ajoutés au socle. Négatif = dés défavorables du profil correspondant.
-        // Ordinaire (3) est le niveau de départ de toute compétence.
+        // Bonus au jet = niveau − 3 (Ordinaire = 0). Ordinaire (3) est le niveau de départ de toute compétence.
         const SKILL_LEVELS = {
-            1: { name: 'Inapte', add: -1, color: '#ff4444' },
-            2: { name: 'Maladroit', add: -1, color: '#ff7744' },
-            3: { name: 'Ordinaire', add: 1, color: '#ddaa33' },
-            4: { name: 'Qualifié', add: 2, color: '#8b949e' },
-            5: { name: 'Excellent', add: 3, color: '#3fb950' },
-            6: { name: 'Expert', add: 4, color: '#4dc3ff' },
-            7: { name: 'Maître', add: 5, color: '#b366ff' },
-            8: { name: 'Absolue', add: 7, color: '#ffcc00' }
+            1: { name: 'Inapte', color: '#ff4444' },
+            2: { name: 'Maladroit', color: '#ff7744' },
+            3: { name: 'Ordinaire', color: '#ddaa33' },
+            4: { name: 'Qualifié', color: '#8b949e' },
+            5: { name: 'Excellent', color: '#3fb950' },
+            6: { name: 'Expert', color: '#4dc3ff' },
+            7: { name: 'Maître', color: '#b366ff' },
+            8: { name: 'Absolue', color: '#ffcc00' }
         };
 
         // ── AXES DES ATTRIBUTS ──────────────────────────────────────────────
@@ -3754,8 +3891,8 @@
 
         // ── PASSIFS DE COMPÉTENCE ───────────────────────────────────────────
         // Chaque compétence possède une valeur passive, employée quand aucun jet
-        // n'est demandé : la moyenne attendue du jet, arrondie.
-        // passif = (3 + dés de compétence) × (Éclat + Succès - Revers - Revers+) / (12 - Éclat - Revers+)
+        // n'est demandé : le scénario ordinaire, d10 pris à 5.
+        // passif = 5 + bonus d'attribut + bonus de compétence
         // L'attribut de calcul est réglable par compétence et voyage avec la fiche,
         // ce qui permet au dashboard MJ d'afficher les mêmes valeurs sans réglage.
         const PASSIVE_ATTRS = ['puissance', 'presence', 'endurance', 'volonte', 'vivacite', 'intuition', 'precision', 'intelligence'];
@@ -3774,23 +3911,13 @@
         }
         function getSkillPassiveValue(skill) {
             const attrId = getSkillPassiveAttr(skill);
-            const [e, s, , r, x] = getAttributeLevel(appState.attributes[attrId] || 4).faces;
-            const add = Math.max(0, getSkillLevel(skill.level).add || 0);
-            return Math.round((SOCLE_DICE + add) * (e + s - r - x) / (12 - e - x));
+            return 5 + checkBonus(appState.attributes[attrId] || 4, skill.level, 0);
         }
         function setSkillPassiveAttr(skillId, attrId) {
             const skill = appState.skills.find(x => x.id === skillId);
             if (!skill) return;
             skill.passiveAttr = attrId;
             renderSkills();
-        }
-
-        // Fonction pour calculer l'explosion d'un niveau de Force combiné
-        function getForceExplosion(combinedLevel) {
-            if (combinedLevel >= 9) return 8;
-            if (combinedLevel >= 7) return 10;
-            if (combinedLevel >= 5) return 11;
-            return 12;
         }
 
         // ========== NIVEAUX DE MAGIE ==========
@@ -4256,9 +4383,8 @@
                 const el = document.getElementById(`attr-${attr}`);
                 const val = appState.attributes[attr];
                 const level = getAttributeLevel(val);
-                el.innerHTML = `<span style="color: ${level.color}">${level.name}</span><sub style="opacity: 0.6; font-size: 0.6em; margin-left: 2px;">${val}</sub>`;
-                const [e, sc, v, r, x] = level.faces;
-                el.title = `${ATTR_LABEL[attr] || attr} ${val} · ✦${e} ●${sc} ○${v}` + (r ? ` ▼${r}` : '') + (x ? ` ▼▼${x}` : '');
+                el.innerHTML = `<span style="color: ${level.color}">${level.name}</span><sub style="opacity: 0.6; font-size: 0.6em; margin-left: 2px;">${fmtMod(attrMod(val))}</sub>`;
+                el.title = `${ATTR_LABEL[attr] || attr} ${val} · ${fmtMod(attrMod(val))} au jet`;
             });
             if (typeof updateForceMax === 'function') updateForceMax();
             if (typeof updateElan === 'function') updateElan();
@@ -4473,7 +4599,7 @@
                 const hasAlts = !!(skill.baseName ? SKILL_ALTERNATIVES[skill.baseName] : getBaseSkillName(skill.name));
                 const pAttr = getSkillPassiveAttr(skill);
                 const pVal = getSkillPassiveValue(skill);
-                const pColor = pVal >= 5 ? '#ffcc00' : pVal >= 3 ? '#3fb950' : pVal < 0 ? '#ff7744' : 'var(--silver-chrome)';
+                const pColor = pVal >= 11 ? '#ffcc00' : pVal >= 8 ? '#3fb950' : pVal <= 3 ? '#ff7744' : 'var(--silver-chrome)';
                 const attrOpts = PASSIVE_ATTRS.map(a => `<option value="${a}"${a === pAttr ? ' selected' : ''}>${ATTR_LABEL[a]}</option>`).join('');
                 item.innerHTML = `
                     <div class="skill-name ${hasAlts ? 'skill-renameable' : ''}" id="skill-name-${skill.id}"
@@ -4482,10 +4608,10 @@
                     </div>
                     <select class="skill-passive-attr" title="Attribut du passif"
                             onchange="setSkillPassiveAttr('${skill.id}', this.value)">${attrOpts}</select>
-                    <span class="skill-passive-value" style="color:${pColor}" title="Valeur passive : moyenne attendue du jet (socle + dés de compétence)">${pVal}</span>
+                    <span class="skill-passive-value" style="color:${pColor}" title="Valeur passive : 5 + bonus d'attribut + bonus de compétence">${pVal}</span>
                     <div class="skill-level">
                         <button class="skill-level-btn" onclick="modifySkillById('${skill.id}', -1)" ${skill.level <= 1 ? 'disabled' : ''}>−</button>
-                        <span class="skill-level-value" title="Niveau ${skill.level} • ${skillPoolText(skill.level)}" style="color: ${level.color}">${level.name}<sub style="opacity:0.6;font-size:0.7em;margin-left:2px;">${skill.level}</sub></span>
+                        <span class="skill-level-value" title="Niveau ${skill.level} • ${fmtMod(skillMod(skill.level))} au jet" style="color: ${level.color}">${level.name}<sub style="opacity:0.6;font-size:0.7em;margin-left:2px;">${skill.level}</sub></span>
                         <button class="skill-level-btn" onclick="modifySkillById('${skill.id}', 1)" ${skill.level >= 8 ? 'disabled' : ''}>+</button>
                     </div>`;
                 list.appendChild(item);
@@ -4749,14 +4875,37 @@
             if (typeof updateForcePreview === 'function') updateForcePreview();
         }
 
-        // ===================== NOUVEAU SYSTÈME DE FORCE =====================
-        // Table de dés rééquilibrée, indexée par valeur d'attribut (1-8)
-        // [Bad2, Bad1, Vide, Succès, Résonance, Transcendance] sur 12
-        const FORCE_DIE_TABLE = {
-            1: [2, 2, 5, 3, 0, 0], 2: [2, 1, 5, 4, 0, 0], 3: [1, 1, 5, 4, 1, 0], 4: [1, 1, 4, 5, 1, 0],
-            5: [0, 1, 4, 6, 1, 0], 6: [0, 1, 3, 7, 1, 0], 7: [0, 0, 3, 7, 2, 0], 8: [0, 0, 2, 7, 2, 1]
-        };
+        // ===================== SYSTÈME DE FORCE (d10) =====================
+        // Un d10 par point de Magnitude. Réussite sur 10 − niveau de l'attribut du verbe.
+        // 1 = Rupture (−1, effet incontrôlé) · 10 = Résonance (+2, allège le coût).
+        // Sublimé : le seuil baisse d'un cran et le 9 devient aussi une Résonance.
+        // Corrompu : le seuil monte d'un cran et le 2 devient une Dissonance (0, +1 PF).
+        // Ruptures et Résonances s'annulent par paires : seules celles qui restent produisent leur effet.
         const NV_FACE_ORDER = ['Bad2', 'Bad1', 'Vide', 'Succès', 'Résonance', 'Transcendance'];
+        const NV_FACE_VALUE = { 'Bad2': -1, 'Bad1': 0, 'Vide': 0, 'Succès': 1, 'Résonance': 2, 'Transcendance': 2 };
+        function nvThreshold(attrValue, etat) {
+            const L = Math.max(1, Math.min(8, parseInt(attrValue) || 4));
+            const shift = etat === 'sublime' ? -1 : etat === 'corrompu' ? 1 : 0;
+            return Math.max(2, Math.min(10, 10 - L + shift));
+        }
+        function nvFaceOf(v, attrValue, etat) {
+            if (v === 1) return 'Bad2';
+            if (v === 10 || (etat === 'sublime' && v === 9)) return 'Résonance';
+            if (etat === 'corrompu' && v === 2) return 'Bad1';
+            return v >= nvThreshold(attrValue, etat) ? 'Succès' : 'Vide';
+        }
+        // Répartition des dix faces, dans l'ordre de NV_FACE_ORDER (sert aux aperçus)
+        function nvBuildFaces(attrValue, etat) {
+            const counts = [0, 0, 0, 0, 0, 0];
+            for (let v = 1; v <= 10; v++) counts[NV_FACE_ORDER.indexOf(nvFaceOf(v, attrValue, etat))]++;
+            return counts;
+        }
+        function nvRollDie(faces) {
+            const tot = faces.reduce((a, b) => a + b, 0) || 10;
+            let r = Math.floor(Math.random() * tot), acc = 0;
+            for (let i = 0; i < faces.length; i++) { acc += faces[i]; if (r < acc) return NV_FACE_ORDER[i]; }
+            return 'Vide';
+        }
         const NV_FACE_STYLE = { 'Transcendance': '#ffcc00', 'Résonance': '#b366ff', 'Succès': '#3fb950', 'Vide': '#8b949e', 'Bad1': '#ff9944', 'Bad2': '#ff4444' };
         const NV_ATTR_KEY = { 'Charisme': 'presence', 'Présence': 'presence', 'Intelligence': 'intelligence', 'Intuition': 'intuition', 'Volonté': 'volonte' };
         const NV_ETAT_LABEL = { compose: ['Composé', '#8b949e'], sublime: ['Sublimé', '#ffcc00'], corrompu: ['Corrompu', '#ff4444'] };
@@ -4764,6 +4913,14 @@
         // Libellés affichés (les IDs internes restent Bad1/Bad2 pour le moteur) :
         // Dissonance = miroir négatif de Résonance (la Force se désaccorde, +coût) ; Rupture = la Force se déchire (effet incontrôlé).
         const NV_FACE_LABEL = { 'Transcendance': 'Transcendance', 'Résonance': 'Résonance', 'Succès': 'Succès', 'Vide': 'Vide', 'Bad1': 'Dissonance', 'Bad2': 'Rupture' };
+        // Résumé du d10 de Force (aperçus)
+        function nvFacesText(ctx) {
+            const T = nvThreshold(ctx.attrValue, ctx.etat);
+            return `d10 · réussite sur <strong>${T}+</strong> · <span style="color:${NV_FACE_STYLE.Bad2}">1 Rupture −1</span>`
+                + (ctx.etat === 'corrompu' ? ` · <span style="color:${NV_FACE_STYLE.Bad1}">2 Dissonance +1 PA</span>` : '')
+                + ` · <span style="color:${NV_FACE_STYLE['Résonance']}">${ctx.etat === 'sublime' ? '9-10' : '10'} Résonance +2</span>`
+                + ` · Valeur d'effet = 5 + Puissance`;
+        }
         // ── RÉSOLUTION DE L'ÉTAT ────────────────────────────────────────────
         // La lumière et l'ombre n'empruntent pas le même chemin.
         //   · La CHARGE ÉMOTIONNELLE sublime dans tous les cas, quelle que soit la
@@ -4837,17 +4994,6 @@
                 return head + ' · ' + capTxt;
             }
             return head + ' (racine) · seule la charge sublime' + arrow('compose');
-        }
-        function nvBuildFaces(attrValue, etat) {
-            let [b2, b1, vi, su, re, tr] = FORCE_DIE_TABLE[Math.max(1, Math.min(8, attrValue))].slice();
-            if (etat === 'sublime') { tr = tr + re; re = su; su = 0; }            // Succès→Réson, Réson→Transc
-            else if (etat === 'corrompu') { b1 = b1 + vi; vi = su; su = 0; } // Succès→Vide, Vide→Bad1 (Bad2 inchangé)
-            return [b2, b1, vi, su, re, tr];
-        }
-        function nvRollDie(faces) {
-            let r = Math.floor(Math.random() * 12), acc = 0;
-            for (let i = 0; i < faces.length; i++) { acc += faces[i]; if (r < acc) return NV_FACE_ORDER[i]; }
-            return 'Vide';
         }
         function nvGetContext(verbSelId, attrSelId, diceInputId) {
             const verb = immFindVerb(document.getElementById(verbSelId).value);
@@ -4930,43 +5076,45 @@
             syncForceFatigue();
             showNotification('⚡ Points de Force rétablis au maximum');
         }
-        // Lance ctx.nDice dés et résout la Puissance, la cascade, le coût et l'effet incontrôlé
+        // Lance ctx.nDice d10 de Force et résout la Puissance, les paires, le coût et l'effet incontrôlé
         function nvRoll(ctx) {
-            let rolled = [], puissance = 0, bad1 = 0, bad2 = 0, cascade = 0, nRes = 0, nTr = 0;
+            const rolled = [];
             const immOn = immActive();
             const immDefaire = immOn && !!(ctx.verb && /^defaire_/.test(ctx.verb.id));
             let total = ctx.nDice; const elanFlags = [], riskFaces = [];
             // Défaire : un dé de risque supplémentaire, lancé avant les autres
             if (immDefaire) { const rf = immRiskFace(); rf.extra = true; riskFaces.push(rf); if (rf.aspire) total++; }
             for (let i = 0; i < total; i++) {
-                const f = nvRollDie(ctx.faces); rolled.push(f); elanFlags.push(i >= ctx.nDice);
+                rolled.push(nvRollDie(ctx.faces)); elanFlags.push(i >= ctx.nDice);
                 // Chaque dé de Force tiré de l'Immaterium lance son dé de risque ; une Aspiration en appelle un autre
                 if (immOn) { const rf = immRiskFace(); riskFaces.push(rf); if (rf.aspire && total < IMM_ELAN_CAP) total++; }
-                if (f === 'Succès') puissance++;
-                else if (f === 'Résonance') { puissance++; cascade += 1; nRes++; }
-                else if (f === 'Transcendance') { puissance++; cascade += 2; nTr++; }
-                else if (f === 'Bad1') bad1++;
-                else if (f === 'Bad2') bad2++;
             }
-            // Capstones d'alignement : à ±90, sublimer un pouvoir de SON camp débloque la RECASCADE (Communion : dé ≥ 9 ; Déferlante : dé ≥ 7).
+            let puissance = rolled.reduce((s, f) => s + (NV_FACE_VALUE[f] || 0), 0);
+            const nB2 = rolled.filter(f => f === 'Bad2').length;
+            const bad1 = rolled.filter(f => f === 'Bad1').length;
+            const nResAll = rolled.filter(f => f === 'Résonance').length;
+            const pairs = Math.min(nB2, nResAll);
+            const bad2 = nB2 - pairs, nRes = nResAll - pairs;
+
+            // Capstones d'alignement : à ±90, sublimer un pouvoir de SON camp ouvre une cascade sur chaque Résonance restante.
+            // Chaque dé de cascade rapporte +1 s'il atteint le seuil ; Communion allège aussi le coût, Déferlante relance sur 9-10.
             const tSign = (TEINTES[appState.teinte] || TEINTES.neutre).sign;
             const subl = ctx.etat === 'sublime';
-            const communion = subl && tSign > 0 && resonanceValue >= 90;    // Harmonie : la cascade allège le coût (plancher 0)
-            const deferlante = subl && tSign < 0 && resonanceValue <= -90;  // Corruption : la cascade ajoute de la Puissance
-            const recascade = communion || deferlante;
-
-            // Dés de cascade : succès à ≥ 5. Sans capstone, pas de recascade ; Communion relance à ≥ 9, Déferlante à ≥ 7.
-            let casc = [], cascReduc = 0, pool = cascade, guard = 0;
-            while (pool > 0 && guard < 500) {
+            const communion = subl && tSign > 0 && resonanceValue >= 90;
+            const deferlante = subl && tSign < 0 && resonanceValue <= -90;
+            const T = nvThreshold(ctx.attrValue, ctx.etat);
+            const casc = []; let cascReduc = 0, pool = (communion || deferlante) ? nRes : 0, guard = 0;
+            while (pool > 0 && guard < 200) {
                 pool--; guard++;
-                const d = Math.floor(Math.random() * 12) + 1;
-                const success = d >= 5;
+                const d = Math.floor(Math.random() * 10) + 1;
+                const success = d >= T;
                 casc.push(success);
-                if (success) { puissance++; if (communion) cascReduc++; }   // cascade : toujours +Puissance ; Communion ajoute −coût par-dessus
-                if (recascade && d >= (deferlante ? 7 : 9)) pool++;          // recascade : Communion à ≥9, Déferlante à ≥7 (l'avalanche obscure s'emballe plus facilement)
+                if (success) { puissance++; if (communion) cascReduc++; }
+                if (d >= (deferlante ? 9 : 10)) pool++;
             }
-            // Coût : nombre de dés − (Résonance + Transcendance) − allègement Communion. Bad1 ajoute ; +3 hors-attribut en amont.
-            return { rolled, casc, puissance, bad1, bad2, nRes, nTr, communion, deferlante, cascReduc, coutDelta: bad1 - (nRes + nTr) - cascReduc, effet: bad2 > 0 ? 2 * bad2 : 0, etat: ctx.etat, nDiceTotal: total, elanFlags, elan: total - ctx.nDice, imm: immOn ? immResolve(riskFaces) : null };
+            puissance = Math.max(0, puissance);
+            // Coût : nombre de dés + Dissonances − Résonances restantes − allègement Communion ; +3 hors-attribut en amont.
+            return { rolled, casc, puissance, bad1, bad2, pairs, nRes, nTr: 0, communion, deferlante, cascReduc, coutDelta: bad1 - nRes - cascReduc, effet: bad2 > 0 ? 2 * bad2 : 0, etat: ctx.etat, nDiceTotal: total, elanFlags, elan: total - ctx.nDice, imm: immOn ? immResolve(riskFaces) : null };
         }
         // Choisir un verbe pré-remplit son attribut par défaut + son niveau en dés (modifiables ensuite)
         function onForceSimpleVerbChange() {
@@ -4998,7 +5146,7 @@
             const tObj = TEINTES[appState.teinte] || TEINTES.neutre;
             const faceName = verbFace(ctx.verb, appState.teinte);
             const rootTxt = faceName !== ctx.verb.name ? ` <span style="opacity:0.6;font-size:0.9em">(${ctx.verb.name})</span>` : '';
-            const facesTxt = NV_FACE_ORDER.map((f, i) => ctx.faces[i] ? `<span style="color:${NV_FACE_STYLE[f]}">${ctx.faces[i]} ${NV_FACE_LABEL[f]}</span>` : null).filter(Boolean).join(' · ');
+            const facesTxt = nvFacesText(ctx);
             prev.innerHTML = `<strong style="color:${tObj.color}">${faceName}</strong>${rootTxt} → <strong>${capitalize(ctx.attrName)} ${ctx.attrValue}</strong> · magnitude <strong>${ctx.nDice}</strong>${ctx.offAttribute ? ' <span style="color:#ff9944">(attribut différent +3 PA)</span>' : ''} → <span class="etat-badge" style="background:${col}22;color:${col}">${lbl}</span><br><span style="font-size:0.85em;color:var(--silver-chrome)">${teinteStatusText(ctx.nDice)}</span><br><span style="font-size:0.9em">${facesTxt}</span>`;
         }
         function updateForcePreview() {
@@ -5013,7 +5161,7 @@
             const faceName = verbFace(ctx.verb, appState.teinte);
             const rootTxt = faceName !== ctx.verb.name ? ` <span style="opacity:0.6;font-size:0.9em">(${ctx.verb.name})</span>` : '';
             const attrLabel = capitalize(ctx.attrName);
-            const facesTxt = NV_FACE_ORDER.map((f, i) => ctx.faces[i] ? `<span style="color:${NV_FACE_STYLE[f]}">${ctx.faces[i]} ${NV_FACE_LABEL[f]}</span>` : null).filter(Boolean).join(' · ');
+            const facesTxt = nvFacesText(ctx);
             prev.innerHTML = `<strong style="color:${tObj.color}">${faceName}</strong>${rootTxt} → <strong>${attrLabel} ${ctx.attrValue}</strong> (${ctx.attrLevel.name}) · magnitude <strong>${ctx.nDice}</strong>${ctx.offAttribute ? ' <span style="color:#ff9944">(attribut différent +3 PA)</span>' : ''}<br>` +
                 `<span style="font-size:0.9em">${teinteStatusText(ctx.nDice)}</span> → <span class="etat-badge" style="background:${col}22;color:${col}">${lbl}</span><br>` +
                 `<span style="font-size:0.9em">Dé : ${facesTxt}</span>`;
@@ -5204,39 +5352,78 @@
             if (p >= 9) return 'À vue';
             return POWER_RANGE[p] || '-';
         }
-        // Masse déplaçable par Mouvoir (catégorie nommée + repère concret).
-        const MOVE_MASS = {
-            1: ['Menu', 'arme, pierre, datapad'],
-            2: ['Encombrant', 'caisse, un corps'],
-            3: ['Lourd', 'rocher, porte blindée'],
-            4: ['Massif', 'statue, speeder'],
-            5: ['Véhicule', 'chasseur stellaire'],
-            6: ['Structure', 'navette, pan de mur'],
-            7: ['Bâtiment', 'maison, transport blindé'],
-            8: ['Édifice', 'grand bâtiment, vaisseau moyen']
+        // ----- Lecture de la Puissance (Demerit : la Force) -----
+        // Ligne lue = Puissance + décalage d'alignement. L'alignement change l'ampleur de l'effet
+        // (masse, zone, nombre de cibles), jamais la gravité individuelle ni la résistance.
+        // Tableau de lecture de Demerit : [poids max, portée, zone] par ligne lue
+        const FORCE_LINE_TABLE = {
+            1: ['60 kg', '5 ft', '5 ft'], 2: ['120 kg', '15 ft', '5 ft'], 3: ['250 kg', '30 ft', '10 ft'],
+            4: ['500 kg', '50 ft', '15 ft'], 5: ['1 t', '80 ft', '20 ft'], 6: ['2 t', '120 ft', '30 ft'],
+            7: ['4 t', '200 ft', '40 ft'], 8: ['8 t', '400 ft', '60 ft'], 9: ['15 t', '800 ft', '80 ft'],
+            10: ['150 t', '1 500 ft', '150 ft'], 11: ['1 500 t', '1 km', '300 ft'], 12: ['15 000 t', '3 km', '1 000 ft'],
+            13: ['150 000 t', '10 km', '1 km'], 14: ['1,5 Mt', '30 km', '5 km'], 15: ['15 Mt', '100 km', '20 km'],
+            16: ['une station', 'orbite basse', '500 km'], 17: ['une lune', 'orbite haute', '2 000 km'],
+            18: ['hors barème', 'système', 'une planète']
         };
-        function moveMass(p) {
-            if (p <= 0) return null;
-            if (p >= 9) return ['Croiseur', 'les plus grandes masses qu\'un être puisse mouvoir'];
-            return MOVE_MASS[p] || null;
+        const FORCE_LINE_TERMS = [[18, 'Hors barème'], [15, 'Mythe'], [12, 'Grand Maître'], [10, 'Maître'], [7, 'Vétéran'], [6, 'Chevalier accompli'], [4, 'Chevalier'], [3, 'Initié'], [1, 'Éveil']];
+        const GRAVITY_NAMES = ['', 'Superficielle', 'Légère', 'Modérée', 'Sérieuse', 'Grave', 'Critique', 'Terminale'];
+        // Décalage d'alignement : seul un pouvoir sublimé (de son camp) en profite
+        function alignShift(etat) {
+            if (etat === 'corrompu') return { shift: -2, label: 'Corrompu' };
+            if (etat !== 'sublime') return { shift: 0, label: 'Neutre' };
+            const a = Math.abs(resonanceValue || 0);
+            if (a >= 90) return { shift: 6, label: 'Absolu' };
+            if (a >= 60) return { shift: 4, label: 'Fervent' };
+            if (a >= 30) return { shift: 2, label: 'Engagé' };
+            return { shift: 0, label: 'Neutre' };
         }
-        // Un pouvoir emploie-t-il le verbe Mouvoir ? (par nom, robuste au titre composé)
-        function usesMouvoir(name) {
-            return typeof name === 'string' && /mouvoir/i.test(name);
+        function forceReading(puissance, etat) {
+            if (!puissance || puissance <= 0) return null;
+            const al = alignShift(etat);
+            const line = Math.max(1, puissance + al.shift);
+            const g = Math.min(7, Math.ceil(2 * puissance / 3));
+            return {
+                line, shift: al.shift, align: al.label,
+                term: FORCE_LINE_TERMS.find(t => line >= t[0])[1],
+                mass: FORCE_LINE_TABLE[Math.min(18, line)][0],
+                range: FORCE_LINE_TABLE[Math.min(18, line)][1],
+                zone: FORCE_LINE_TABLE[Math.min(18, line)][2],
+                grav: g, gravName: GRAVITY_NAMES[g]
+            };
         }
-        // Encart d'échelle inséré dans le résumé d'un sort.
-        function powerScaleHtml(puissance, spellName) {
-            if (!puissance || puissance <= 0) return '';
-            let rows = `<span title="Portée maximale d'action du pouvoir">📏 Portée <strong>${powerRange(puissance)}</strong></span>`;
-            if (usesMouvoir(spellName)) {
-                const m = moveMass(puissance);
-                if (m) rows += ` &nbsp;·&nbsp; <span title="Masse maximale déplaçable">🪨 Masse <strong>${m[0]}</strong> <span style="opacity:0.7">(${m[1]})</span></span>`;
-            }
-            return `<div style="margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,0.08);font-size:0.78rem;color:var(--light-steel);">${rows}</div>`;
+        function fmtDist(ft) {
+            const r = Number(ft.toPrecision(2));
+            if (r >= 3300) return '≈ ' + Number((r * 0.3048 / 1000).toPrecision(2)).toString().replace('.', ',') + ' km';
+            return (r < 100 ? Math.max(5, Math.round(r / 5) * 5) : r) + ' ft';
+        }
+        // Encart replié par défaut : ordres de grandeur maximum accessibles à cette Puissance
+        function powerDetailHtml(rows, note) {
+            return `<div class="pw-detail">
+                <button type="button" class="pw-detail-btn" onclick="this.parentElement.classList.toggle('open')">Détail de la Puissance</button>
+                <div class="pw-detail-body">
+                    <div class="pw-grid">${rows.map(r => `<div><small>${r[0]}</small><b>${r[1]}</b></div>`).join('')}</div>
+                    ${note ? `<div class="pw-note">${note}</div>` : ''}
+                </div>
+            </div>`;
+        }
+        // Encart d'échelle inséré dans le résumé d'un pouvoir : replié par défaut.
+        function powerScaleHtml(puissance, spellName, etat) {
+            const r = forceReading(puissance, etat);
+            if (!r) return '';
+            const shiftTxt = r.shift ? ` (${r.align} ${r.shift > 0 ? '+' : '−'}${Math.abs(r.shift)})` : ` (${r.align})`;
+            return powerDetailHtml([
+                ['Ligne lue', r.line + shiftTxt],
+                ['Palier', r.term],
+                ['Poids max', r.mass],
+                ['Portée', r.range],
+                ['Zone', r.zone],
+                ['Résistance', 'DC ' + effectValue(puissance)]
+            ], 'Ordres de grandeur maximum. La ligne lue = Puissance + alignement ; la résistance se calcule sur la Puissance.');
         }
         function displayForceResult(data) {
             const r = data.roll;
             const etatLbl = NV_ETAT_LABEL[r.etat][0];
+            document.querySelector('#result-overlay .result-container').classList.remove('res-simple', 'res-nostats');
             document.getElementById('result-title').textContent = data.title;
             document.getElementById('result-subtitle').textContent = data.subtitle;
             const container = document.getElementById('dice-container'); container.innerHTML = '';
@@ -5247,12 +5434,12 @@
             });
             const cascSucc = r.casc.filter(Boolean).length;
             const cascTxt = cascSucc === 0 ? '-' : (r.communion ? `${cascSucc} → +${cascSucc} P & −${cascSucc} PA` : `${cascSucc} → +${cascSucc} Puiss.`);
-            setStatLabels(['Coût PA', 'Effet incontrôlé', 'État', 'Cascade', 'Dissonance / Rupture']);
+            setStatLabels(['Coût PA', 'Effet incontrôlé', 'État', 'Valeur d\'effet', 'Paires · Dissonance / Rupture']);
             document.getElementById('stat-successes').textContent = data.coutTotal;
             document.getElementById('stat-failures').textContent = r.effet > 0 ? r.effet : '-';
             document.getElementById('stat-explosions').textContent = etatLbl;
-            document.getElementById('stat-attribute-bonus').textContent = cascTxt;
-            document.getElementById('stat-skill-bonus').textContent = `${r.bad1} / ${r.bad2}`;
+            document.getElementById('stat-attribute-bonus').textContent = effectValue(data.puissance) || '-';
+            document.getElementById('stat-skill-bonus').textContent = `${r.pairs || 0} · ${r.bad1} / ${r.bad2}` + (cascSucc ? ` · cascade ${cascTxt}` : '');
             document.getElementById('result-total-label').textContent = 'PUISSANCE DU SORT';
             document.getElementById('result-total').textContent = data.puissance;
             document.getElementById('result-total').style.color = r.effet > 0 ? '#ff9944' : '';
@@ -5264,7 +5451,7 @@
                 scaleBox.style.cssText = 'width:100%;margin-top:10px;text-align:center;';
                 document.getElementById('dice-container').appendChild(scaleBox);
             }
-            scaleBox.innerHTML = powerScaleHtml(data.puissance, data.title);
+            scaleBox.innerHTML = powerScaleHtml(data.puissance, data.title, r.etat);
             const sc = document.getElementById('result-sustain');
             if (sc) sc.innerHTML = sustainButtonsHtml();
             document.getElementById('result-overlay').classList.add('active');
@@ -5277,7 +5464,7 @@
             const bonus = parseInt(document.getElementById('force-simple-bonus').value) || 0;
             const target = appState.forceTargets.find(t => t.id === document.getElementById('force-simple-target-select').value);
             const roll = nvRoll(ctx);
-            let puissance = roll.puissance + bonus;
+            let puissance = Math.max(0, roll.puissance + bonus);
             const offCost = ctx.offAttribute ? 3 : 0;
             const coutTotal = Math.max(0, (roll.nDiceTotal || ctx.nDice) + roll.coutDelta + offCost);   // base = nombre de dés ; + Bad1, −1 si Résonance, +3 si attribut incohérent
             consumeForce(coutTotal);
@@ -5297,7 +5484,7 @@
                 roll, puissance, coutTotal
             });
             immShowResult(roll);
-            sendDiscordRoll(titre, null, puissance, attrLabel, { successes: roll.puissance, attrBonus: 0, bonus, extra: immDiscordLine(roll) });
+            sendDiscordRoll(titre, null, puissance, attrLabel, { force: true, effect: effectValue(puissance), pairs: roll.pairs, bonus, extra: immDiscordLine(roll) });
         }
 
         function updateRollButtons() {
@@ -5310,123 +5497,144 @@
             if (conjointBtn) conjointBtn.disabled = !((document.getElementById('force-verb-select') || {}).value && (document.getElementById('conjoint-attr-select') || {}).value && (document.getElementById('conjoint-skill-select') || {}).value);
             if (typeof updateUnifiedPreview === 'function') updateUnifiedPreview();
         }
-        // ========== SYSTÈME DE FACES (jets de compétence) ==========
-        const FACE_INFO = {
-            eclat: { label: 'Éclat', sym: '✦', value: 1, explodes: true, color: '#D4AF37' },
-            succes: { label: 'Succès', sym: '●', value: 1, explodes: false, color: '#1D9E75' },
-            vide: { label: 'Vide', sym: '○', value: 0, explodes: false, color: '#8b949e' },
-            revers: { label: 'Revers', sym: '▼', value: -1, explodes: false, color: '#e05555' },
-            reversP: { label: 'Revers+', sym: '▼▼', value: -1, explodes: true, color: '#c03030' },
-        };
-        const FACE_ORDER = ['eclat', 'succes', 'vide', 'revers', 'reversP'];
+        // ========== JETS DE COMPÉTENCE (d10 du jet) ==========
+        /* ==========================================================
+           MOTEUR DE DÉS (d10 du jet + d10 de magie)
+           ========================================================== */
+        // Jet = d10 (le monde, le scénario) + Attribut + Compétence + modificateur, contre une DC.
+        // Commun et Ordinaire valent 0 : la personne moyenne lance un d10 sec.
+        // Le d10 ne dit pas si le personnage est bon, il dit dans quelles conditions il agit.
+        const TRAINED_LEVEL = 6;     // Expert et plus : un 1 naturel est relancé une fois
+        const POWER_FACTOR = 1;      // Valeur d'effet = 5 + Puissance : la Puissance compte telle quelle partout
 
-        // Construit le d12 du pire au meilleur : Revers+ en 1, Éclat en 12
-        function buildFaces(counts) {
-            const [e, s, v, r, x] = counts;
-            const faces = [];
-            for (let n = 0; n < x; n++) faces.push('reversP');
-            for (let n = 0; n < r; n++) faces.push('revers');
-            for (let n = 0; n < v; n++) faces.push('vide');
-            for (let n = 0; n < s; n++) faces.push('succes');
-            for (let n = 0; n < e; n++) faces.push('eclat');
-            return faces;
-        }
-        // Première face qui rapporte un succès (1 à 12)
-        function successFrom(counts) {
-            const [e, s, v, r, x] = counts;
-            return (s + e) > 0 ? x + r + v + 1 : null;
-        }
-        function rollFace(faces) {
-            const i = Math.floor(Math.random() * 12);
-            return { type: faces[i], value: i + 1 };
-        }
-        // Lance un lot de dés d'un même profil. Éclat et Revers+ relancent le dé.
-        function rollPool(counts, numDice, source, out) {
-            for (let i = 0; i < numDice; i++) {
-                const faces = buildFaces(counts);
-                let chain = 0, again = true;
-                while (again && chain <= MAX_CHAIN) {
-                    again = false;
-                    const { type, value } = rollFace(faces);
-                    out.push({ type, value, source, isExplosion: chain > 0 });
-                    if (FACE_INFO[type].explodes && chain < MAX_CHAIN) { chain++; again = true; }
-                }
-            }
-        }
-        // La formation supprime le risque et transforme la moitié des hésitations en gestes sûrs
-        function trainedFaces(counts) {
-            const [e, s, v, r, x] = counts;
-            const vide = v + r + x;
-            const gained = Math.ceil(vide / 2);
-            return [e, s + gained, vide - gained, 0, 0];
-        }
-        // Jet complet : socle pondéré par l'attribut + dés de compétence (ou de faiblesse)
-        function rollSkillCheck(attrValue, skillValue) {
-            const attr = getAttributeLevel(attrValue);
-            const add = getSkillLevel(skillValue).add || 0;
-            const results = [];
-            rollPool(attr.faces, SOCLE_DICE, 'socle', results);
-            if (add > 0) rollPool(trainedFaces(attr.faces), add, 'competence', results);
-            if (add < 0) {
-                const neg = NEGATIVE_DICE[Math.max(1, Math.min(2, skillValue))];
-                if (neg) rollPool(neg.faces, -add, 'faiblesse', results);
-            }
-            return results;
-        }
-        function sumFaces(dice) {
-            let total = 0, eclats = 0, revers = 0, explosions = 0;
-            dice.forEach(d => {
-                total += FACE_INFO[d.type].value;
-                if (d.type === 'eclat') eclats++;
-                if (d.type === 'revers' || d.type === 'reversP') revers++;
-                if (d.isExplosion) explosions++;
-            });
-            return { total, eclats, revers, explosions };
-        }
-        // « Réussite sur 7+ · ✦12 ●7-11 ○1-6 »
-        function facesSummary(counts) {
-            const [e, s, v, r, x] = counts;
-            const parts = [];
-            let lo = 1;
-            const seg = (n, info) => {
-                if (!n) return;
-                const hi = lo + n - 1;
-                parts.push(`<span style="color:${info.color}">${info.sym}${n > 1 ? lo + '-' + hi : lo}</span>`);
-                lo = hi + 1;
+        function attrMod(v) { return Math.min(8, Math.max(1, parseInt(v) || 4)) - 4; }
+        function skillMod(v) { v = parseInt(v) || 0; return v <= 0 ? -3 : Math.min(8, v) - 3; }
+        function fmtMod(n) { return n > 0 ? '+' + n : n < 0 ? '−' + Math.abs(n) : '+0'; }
+        function d10() { return Math.floor(Math.random() * 10) + 1; }
+
+        const SCENARIOS = [
+            { min: 10, label: 'Meilleur scénario', color: '#d9a441' },
+            { min: 8, label: 'Favorable', color: '#3fb27f' },
+            { min: 4, label: 'Ordinaire', color: '#9fb0c4' },
+            { min: 2, label: 'Défavorable', color: '#e08a4a' },
+            { min: 1, label: 'Pire scénario', color: '#e05c52' }
+        ];
+        function scenarioOf(n) { return SCENARIOS.find(s => n >= s.min) || SCENARIOS[4]; }
+
+        const CIRC_LABEL = { normal: 'Circonstances normales', adv: 'Avantage', dis: 'Désavantage' };
+
+        // Avantage : 2d10, on garde le meilleur. Désavantage : 2d10, on garde le pire.
+        function rollFortune(mode, trained) {
+            const one = () => {
+                const first = d10();
+                return (trained && first === 1) ? { v: d10(), rerolled: 1 } : { v: first };
             };
-            seg(x, FACE_INFO.reversP); seg(r, FACE_INFO.revers); seg(v, FACE_INFO.vide);
-            seg(s, FACE_INFO.succes); seg(e, FACE_INFO.eclat);
-            const from = successFrom(counts);
-            const head = from ? `<strong>Réussite sur ${from}+</strong> · ` : `<strong>Aucune réussite possible</strong> · `;
-            return head + parts.join(' ');
+            const dice = [one()];
+            if (mode === 'adv' || mode === 'dis') dice.push(one());
+            let keep = 0;
+            if (dice.length === 2) keep = (mode === 'adv' ? dice[1].v > dice[0].v : dice[1].v < dice[0].v) ? 1 : 0;
+            dice.forEach((d, i) => { d.kept = i === keep; });
+            return { dice, nat: dice[keep].v };
         }
-        const FACE_LEGEND = `<div class="dice-legend">` +
-            FACE_ORDER.map(k => `<span style="color:${FACE_INFO[k].color}">${FACE_INFO[k].sym} ${FACE_INFO[k].label}</span>`).join(' · ') +
-            `</div>`;
-        function renderFaceDie(d, delay) {
-            const info = FACE_INFO[d.type];
+
+        function checkBonus(attrValue, skillValue, mod) {
+            return attrMod(attrValue) + skillMod(skillValue) + (parseInt(mod) || 0);
+        }
+
+        function rollCheck(attrValue, skillValue, mod, mode) {
+            const bonus = checkBonus(attrValue, skillValue, mod);
+            const trained = (parseInt(skillValue) || 0) >= TRAINED_LEVEL;
+            const f = rollFortune(mode, trained);
+            return { ...f, bonus, trained, mode, total: f.nat + bonus };
+        }
+
+        // Chance de réussite contre une DC : 10 % par point, avantage et formation compris
+        function successChance(bonus, dc, mode, trained) {
+            const k = dc - bonus;
+            let p = k <= 1 ? 1 : k > 10 ? 0 : (11 - k) / 10;
+            if (trained && k > 1 && k <= 10) p += 0.1 * p;
+            if (mode === 'adv') return 1 - (1 - p) * (1 - p);
+            if (mode === 'dis') return p * p;
+            return p;
+        }
+        function pct(p) { return Math.round(p * 100) + ' %'; }
+
+        const DC_SCALE = [
+            ['Facile', 3], ['Normal', 5], ['Difficile', 8], ['Très difficile', 11],
+            ['Maîtrise', 14], ['Élite', 17], ['Sommet humain', 19], ['Surhumain', 20]
+        ];
+        function dcLabel(dc) {
+            let name = 'Trivial';
+            DC_SCALE.forEach(([n, v]) => { if (dc >= v) name = n; });
+            return name;
+        }
+
+
+        function effectValue(p) { return p > 0 ? 5 + POWER_FACTOR * p : 0; }
+        // Avantage / Désavantage : deux interrupteurs exclusifs, communs à tous les jets
+        let rollCirc = 'normal';
+        function circMode() { return rollCirc; }
+        function toggleCirc(mode) {
+            rollCirc = rollCirc === mode ? 'normal' : mode;
+            document.querySelectorAll('.circ-btn').forEach(b => b.classList.toggle('active', b.dataset.circ === rollCirc));
+            updateRollButtons();
+        }
+        function dcValue(id) { return Math.max(0, parseInt((document.getElementById(id) || {}).value) || 0); }
+
+        function fortuneDieEl(d, i) {
+            const sc = scenarioOf(d.v);
             const el = document.createElement('div');
-            el.className = 'die face-die'
-                + (d.isExplosion ? ' from-explosion' : '')
-                + (d.source === 'faiblesse' ? ' weak' : '')
-                + (d.source === 'competence' ? ' trained' : '');
-            el.style.animationDelay = `${delay}s`;
-            el.style.borderColor = info.color;
-            el.style.color = info.color;
-            const src = d.source === 'faiblesse' ? ' · dé de faiblesse'
-                : d.source === 'competence' ? ' · dé de compétence' : ' · socle';
-            el.title = info.label + src;
-            el.innerHTML = `<span class="fd-val">${d.value}</span><span class="fd-sym">${info.sym}</span>`;
+            el.className = 'die face-die' + (d.kept ? '' : ' dropped');
+            el.style.animationDelay = `${i * 0.08}s`;
+            el.style.borderColor = sc.color;
+            el.style.color = sc.color;
+            el.title = sc.label + (d.rerolled ? ' · 1 relancé (formation)' : '') + (d.kept ? '' : ' · écarté');
+            el.innerHTML = `<span class="fd-val">${d.v}</span><span class="fd-sym">${d.rerolled ? '↻' : 'd10'}</span>`;
             return el;
         }
-        // « 4 dé(s) Commun » ou « 3 dé(s) Commun + 1 dé(s) Maladroit »
-        function skillPoolText(skillValue, attrValue) {
-            const sk = getSkillLevel(skillValue);
-            const nb = SOCLE_DICE + Math.max(0, sk.add || 0);
-            const neg = sk.add < 0 ? -sk.add : 0;
-            const attrTxt = attrValue ? ' ' + getAttributeLevel(attrValue).name : '';
-            return `${nb} dé(s)${attrTxt}` + (neg ? ` + ${neg} dé(s) ${sk.name}` : '');
+        // Ligne de calcul compacte : dé(s) + modificateurs = total, puis la DC
+        function equationHtml(r, parts, total, dc, label) {
+            const dice = r.dice.map(d => {
+                const sc = scenarioOf(d.v);
+                return `<span class="eq-die${d.kept ? '' : ' dropped'}" style="border-color:${sc.color};color:${sc.color}" title="${sc.label}${d.rerolled ? ' · 1 relancé (formation)' : ''}${d.kept ? '' : ' · écarté'}">${d.v}${d.rerolled ? '<i>↻</i>' : ''}</span>`;
+            }).join('');
+            const terms = parts.filter(p => p.always || p.v).map(p =>
+                `<span class="eq-op">+</span><span class="eq-term"><small>${p.l}</small>${fmtMod(p.v)}</span>`).join('');
+            let dcHtml = '';
+            if (dc) {
+                const m = total - dc;
+                const deg = m >= 5 ? 'Réussite remarquable' : m >= 0 ? 'Réussite' : m <= -5 ? 'Échec grave' : 'Échec';
+                dcHtml = `<span class="eq-dc ${m >= 0 ? 'ok' : 'ko'}"><small>DC ${dc} · ${dcLabel(dc)}</small>${deg} <i>${m >= 0 ? '+' : '−'}${Math.abs(m)}</i></span>`;
+            }
+            const sc = scenarioOf(r.nat);
+            return `<div class="eq-row">
+                <span class="eq-dice">${dice}</span>${terms}
+                <span class="eq-op">=</span><span class="eq-total">${label ? `<small>${label}</small>` : ''}${total}</span>
+                ${dcHtml}
+                <span class="eq-meta" style="color:${sc.color}">${sc.label}${r.mode !== 'normal' ? ' · ' + CIRC_LABEL[r.mode] : ''}${r.trained ? ' · formé' : ''}</span>
+            </div>`;
         }
+        function natNoteHtml(nat) {
+            if (nat === 10) return `<div class="eq-note" style="color:#ffcc00">✦ 10 naturel · <strong>Opportunité</strong> : un avantage s'ouvre en plus du résultat</div>`;
+            if (nat === 1) return `<div class="eq-note" style="color:#ff7744">▼ 1 naturel · <strong>Complication</strong> : le pire scénario laisse une trace</div>`;
+            return '';
+        }
+        function fortuneInfo(r) {
+            const sc = scenarioOf(r.nat);
+            return `<strong style="color:${sc.color}">${sc.label}</strong> · ${CIRC_LABEL[r.mode]}${r.trained ? ' · formé, un 1 est relancé' : ''}`;
+        }
+        function checkNotesHtml(total, dc, nat) {
+            const parts = [];
+            if (dc) {
+                const m = total - dc;
+                const deg = m >= 5 ? 'Réussite remarquable' : m >= 0 ? 'Réussite' : m <= -5 ? 'Échec grave' : 'Échec';
+                parts.push(`<span style="color:${m >= 0 ? '#3fb950' : '#ff4444'}">DC ${dc} (${dcLabel(dc)}) · <strong>${deg}</strong> · marge ${m >= 0 ? '+' : '−'}${Math.abs(m)}</span>`);
+            }
+            if (nat === 10) parts.push(`<span style="color:#ffcc00">✦ 10 naturel · <strong>Opportunité</strong> : un avantage s'ouvre en plus du résultat</span>`);
+            if (nat === 1) parts.push(`<span style="color:#ff7744">▼ 1 naturel · <strong>Complication</strong> : le pire scénario laisse une trace</span>`);
+            return parts.length ? `<div style="width:100%;margin-top:10px;text-align:center;font-size:0.82rem;line-height:1.7;">${parts.join('<br>')}</div>` : '';
+        }
+
         function updateSkillPoolPreview() {
             const host = document.getElementById('skill-page-pool');
             if (!host) return;
@@ -5434,10 +5642,15 @@
             const skill = appState.skills.find(s => s.name === document.getElementById('skill-page-skill-select').value);
             if (!attrName || !skill) { host.innerHTML = ''; return; }
             const attrValue = appState.attributes[attrName] || 4;
-            const sk = getSkillLevel(skill.level);
-            let html = `${skillPoolText(skill.level, attrValue)} · ${facesSummary(getAttributeLevel(attrValue).faces)}`;
-            if (sk.add < 0) html += `<br>Dés de faiblesse : ${facesSummary(NEGATIVE_DICE[Math.max(1, Math.min(2, skill.level))].faces)}`;
-            host.innerHTML = html;
+            const mod = parseInt(document.getElementById('skill-page-bonus').value) || 0;
+            const mode = circMode('skill-page-circ');
+            const dc = dcValue('skill-page-dc');
+            const bonus = checkBonus(attrValue, skill.level, mod);
+            const trained = skill.level >= TRAINED_LEVEL;
+            host.innerHTML = `<strong>d10 ${fmtMod(bonus)}</strong> · ${getAttributeLevel(attrValue).name} ${fmtMod(attrMod(attrValue))}`
+                + ` · ${getSkillLevel(skill.level).name} ${fmtMod(skillMod(skill.level))}${trained ? ' · formé' : ''}`
+                + ` · passive ${5 + checkBonus(attrValue, skill.level, 0)} · champ ${bonus + 1} à ${bonus + 10}`
+                + (dc ? ` · <strong>DC ${dc} : ${pct(successChance(bonus, dc, mode, trained))}</strong>` : '');
         }
         function attrDisplay(id) { return ATTR_LABEL[id] || capitalize(id); }
 
@@ -5447,22 +5660,22 @@
             const skill = appState.skills.find(s => s.name === skillName);
             if (!skill || !attrName) return;
             const appliedS = consumeAppliedPowers();
-            const bonus = (parseInt(document.getElementById('skill-page-bonus').value) || 0) + appliedS.bonus;
+            const mod = (parseInt(document.getElementById('skill-page-bonus').value) || 0) + appliedS.bonus;
+            const mode = circMode('skill-page-circ');
+            const dc = dcValue('skill-page-dc');
             const attrValue = appState.attributes[attrName];
             const attrLevel = getAttributeLevel(attrValue);
             const skillLevel = getSkillLevel(skill.level);
-            const dice = rollSkillCheck(attrValue, skill.level);
-            const sum = sumFaces(dice);
-            const total = sum.total + bonus;
+            const chk = rollCheck(attrValue, skill.level, mod, mode);
             displayResult({
                 title: skill.name,
-                subtitle: `${attrDisplay(attrName)} (${attrLevel.name}) · ${skillLevel.name} | ${skillPoolText(skill.level, attrValue)}${appliedS.label}`,
-                dice, facesInfo: facesSummary(attrLevel.faces), sum, bonus, total
+                subtitle: `${attrDisplay(attrName)} (${attrLevel.name}) · ${skillLevel.name} | d10 ${fmtMod(chk.bonus)}${appliedS.label}`,
+                check: chk, attrModV: attrMod(attrValue), skillModV: skillMod(skill.level), mod, dc, total: chk.total
             });
-            sendDiscordRoll(skill.name, skill.baseName, total, attrDisplay(attrName), { successes: sum.total, eclats: sum.eclats, revers: sum.revers, bonus });
+            sendDiscordRoll(skill.name, skill.baseName, chk.total, attrDisplay(attrName), { nat: chk.nat, checkBonus: chk.bonus, mode, dc });
         }
         function rollConjoint() {
-            // --- Partie Force (dé de Force) ---
+            // --- Partie Force (d10 de Force) ---
             const ctxF = nvGetContext('force-verb-select', 'force-attr-select', 'force-dice');
             const skillAttrName = document.getElementById('conjoint-attr-select').value;
             const skillName = document.getElementById('conjoint-skill-select').value;
@@ -5470,50 +5683,43 @@
             if (!ctxF || !skill) return;
             const bonus = parseInt(document.getElementById('force-bonus').value) || 0;
             const puissanceMod = parseInt(document.getElementById('power-puissance-mod').value) || 0;
+            const mode = circMode('conjoint-circ');
+            const dc = dcValue('conjoint-dc');
             const target = appState.forceTargets.find(t => t.id === document.getElementById('force-target-select').value);
 
             const rollF = nvRoll(ctxF);
-            const spellPuissance = rollF.puissance + puissanceMod;     // Puissance du sort
+            const spellPuissance = Math.max(0, rollF.puissance + puissanceMod);
             const offCost = ctxF.offAttribute ? 3 : 0;
-            const forceCout = Math.max(0, (rollF.nDiceTotal || ctxF.nDice) + rollF.coutDelta + offCost);  // base = nombre de dés + modificateurs
+            const forceCout = Math.max(0, (rollF.nDiceTotal || ctxF.nDice) + rollF.coutDelta + offCost);
             consumeForce(forceCout);
             immApply(rollF);
             applySublimationDrift(ctxF.etat, ctxF.nDice);
 
-            // --- Partie Compétence (d12 à faces) ---
+            // --- Partie Compétence (d10 du jet) ---
             const skillAttrValue = appState.attributes[skillAttrName];
-            const skillAttrLevel = getAttributeLevel(skillAttrValue);
-            const skillDice = rollSkillCheck(skillAttrValue, skill.level);
-            const sum = sumFaces(skillDice);
-
-            // On AJOUTE la Puissance du sort au jet de compétence
             const appliedC = consumeAppliedPowers();
-            const finalTotal = sum.total + spellPuissance + bonus + appliedC.bonus;
+            const chk = rollCheck(skillAttrValue, skill.level, bonus + appliedC.bonus, mode);
+            // Amplification : la Puissance s'ajoute telle quelle au jet de compétence
+            const finalTotal = chk.total + spellPuissance;
             _lastForceRoll = { name: `${immTitleName(ctxF.verb)}${target ? ' + ' + target.name : ''}`, puissance: spellPuissance, nDice: ctxF.nDice };
 
             displayConjointResult({
                 title: `${immTitleName(ctxF.verb)}${target ? ' + ' + target.name : ''} → ${skill.name}`,
-                subtitle: `Force : ${attrDisplay(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name}${appState.intentionOk ? ' + charge' : ''} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence : ${attrDisplay(skillAttrName)} · ${getSkillLevel(skill.level).name} (${skillPoolText(skill.level, skillAttrValue)})${appliedC.label}`,
-                forceRoll: rollF,
-                forceEtat: ctxF.etat,
-                spellPuissance,
-                forceCout,
-                skillDice,
-                skillFacesInfo: facesSummary(skillAttrLevel.faces),
-                sum,
-                bonus: bonus + appliedC.bonus,
-                finalTotal
+                subtitle: `Force : ${attrDisplay(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name}${appState.intentionOk ? ' + charge' : ''} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence : ${attrDisplay(skillAttrName)} · ${getSkillLevel(skill.level).name} (d10 ${fmtMod(chk.bonus)})${appliedC.label}`,
+                forceRoll: rollF, forceEtat: ctxF.etat, spellPuissance, forceCout,
+                check: chk, attrModV: attrMod(skillAttrValue), skillModV: skillMod(skill.level), mod: bonus + appliedC.bonus,
+                dc, finalTotal
             });
             immShowResult(rollF);
-            sendDiscordRoll(skill.name, skill.baseName, finalTotal, attrDisplay(skillAttrName), { successes: sum.total, eclats: sum.eclats, revers: sum.revers, bonus, spellBonus: spellPuissance, spellLabel: 'Puissance', extra: immDiscordLine(rollF) });
+            sendDiscordRoll(skill.name, skill.baseName, finalTotal, attrDisplay(skillAttrName), { nat: chk.nat, checkBonus: chk.bonus, mode, dc, application: chk.total, spellBonus: spellPuissance, effect: effectValue(spellPuissance), extra: immDiscordLine(rollF) });
         }
-        function setSkillStats(sum, bonus) {
-            setStatLabels(['Succès', 'Éclats', 'Revers', 'Relances', 'Bonus / Malus']);
-            document.getElementById('stat-successes').textContent = sum.total;
-            document.getElementById('stat-failures').textContent = sum.eclats;
-            document.getElementById('stat-explosions').textContent = sum.revers;
-            document.getElementById('stat-attribute-bonus').textContent = sum.explosions;
-            document.getElementById('stat-skill-bonus').textContent = bonus > 0 ? '+' + bonus : bonus;
+        function setSkillStats(data) {
+            setStatLabels(['Dé', 'Attribut', 'Compétence', 'Circonstances', 'Modificateur']);
+            document.getElementById('stat-successes').textContent = data.check.nat;
+            document.getElementById('stat-failures').textContent = fmtMod(data.attrModV);
+            document.getElementById('stat-explosions').textContent = fmtMod(data.skillModV);
+            document.getElementById('stat-attribute-bonus').textContent = data.check.mode === 'normal' ? '-' : CIRC_LABEL[data.check.mode];
+            document.getElementById('stat-skill-bonus').textContent = fmtMod(data.mod || 0);
         }
         function displayResult(data) {
             _lastForceRoll = null;
@@ -5522,12 +5728,15 @@
             document.getElementById('result-total').style.color = '';
             document.getElementById('result-title').textContent = data.title;
             document.getElementById('result-subtitle').textContent = data.subtitle;
+            const box = document.querySelector('#result-overlay .result-container');
+            box.classList.add('res-simple', 'res-nostats');
             const container = document.getElementById('dice-container');
-            container.innerHTML = '';
-            if (data.facesInfo) container.insertAdjacentHTML('beforeend', `<div class="faces-summary">${data.facesInfo}</div>`);
-            data.dice.forEach((d, i) => container.appendChild(renderFaceDie(d, i * 0.08)));
-            container.insertAdjacentHTML('beforeend', FACE_LEGEND);
-            setSkillStats(data.sum, data.bonus);
+            container.innerHTML = equationHtml(data.check, [
+                { l: 'Attribut', v: data.attrModV, always: true },
+                { l: 'Compétence', v: data.skillModV, always: true },
+                { l: 'Mod.', v: data.mod }
+            ], data.total, data.dc, 'Résultat') + natNoteHtml(data.check.nat);
+            setSkillStats(data);
             document.getElementById('result-total').textContent = data.total;
             document.getElementById('result-overlay').classList.add('active');
         }
@@ -5536,14 +5745,13 @@
                 const sc = document.getElementById('result-sustain');
                 if (sc) sc.innerHTML = sustainButtonsHtml();
             }
-            document.getElementById('result-total-label').textContent = 'RÉSULTAT TOTAL';
+            document.getElementById('result-total-label').textContent = 'RÉSULTAT TOTAL (AMPLIFIÉ)';
             document.getElementById('result-total').style.color = '';
             document.getElementById('result-title').textContent = data.title;
             const etatLbl = NV_ETAT_LABEL[data.forceEtat][0];
-            document.getElementById('result-subtitle').textContent = data.subtitle + ` · sort : Puissance +${data.spellPuissance}`;
+            document.getElementById('result-subtitle').textContent = data.subtitle + ` · sort : Puissance ${data.spellPuissance}`;
             const container = document.getElementById('dice-container');
             container.innerHTML = '';
-            // Force : faces typées du dé de Force
             const forceLabel = document.createElement('div');
             forceLabel.style.cssText = 'width: 100%; text-align: center; font-weight: 600; color: var(--saber-purple); margin-bottom: 8px; font-family: var(--font-display);';
             forceLabel.textContent = '⚡ Force';
@@ -5556,29 +5764,26 @@
                 forceDiceDiv.appendChild(d);
             });
             container.appendChild(forceDiceDiv);
-            // Compétence : d12 à faces
-            const skillLabel = document.createElement('div');
-            skillLabel.style.cssText = 'width: 100%; text-align: center; font-weight: 600; color: var(--success-green); margin-bottom: 8px; font-family: var(--font-display);';
-            skillLabel.textContent = '⚔ Compétence';
-            container.appendChild(skillLabel);
-            if (data.skillFacesInfo) container.insertAdjacentHTML('beforeend', `<div class="faces-summary">${data.skillFacesInfo}</div>`);
-            const skillDiceDiv = document.createElement('div');
-            skillDiceDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; width: 100%;';
-            const offset = data.forceRoll.rolled.length;
-            data.skillDice.forEach((d, i) => skillDiceDiv.appendChild(renderFaceDie(d, (offset + i) * 0.08)));
-            container.appendChild(skillDiceDiv);
-            container.insertAdjacentHTML('beforeend', FACE_LEGEND);
-            // Résumé du sort
+            container.insertAdjacentHTML('beforeend', equationHtml(data.check, [
+                { l: 'Attribut', v: data.attrModV, always: true },
+                { l: 'Compétence', v: data.skillModV, always: true },
+                { l: 'Mod.', v: data.mod }
+            ], data.check.total, 0, 'Compétence'));
             const forceSummary = document.createElement('div');
             forceSummary.style.cssText = 'width:100%;margin-top:12px;padding:8px 12px;border-radius:4px;background:rgba(107,63,160,0.10);border:1px solid rgba(107,63,160,0.25);text-align:center;font-size:0.82rem;color:var(--saber-purple);font-family:var(--font-body);';
-            const extra = data.forceRoll.effet > 0 ? ` · <span style="color:#ff4444">⚠ effet incontrôlé puissance ${data.forceRoll.effet}</span>` : '';
-            const cSucc = data.forceRoll.casc.filter(Boolean).length;
-            const capNote = data.forceRoll.communion ? `<br><span style="color:#ffcc00">☀️ Communion : cascade ${cSucc} → +${cSucc} Puissance & -${cSucc} PA</span>`
-                : data.forceRoll.deferlante ? `<br><span style="color:#c06040">🌑 Déferlante : cascade ${cSucc} → +${cSucc} Puissance</span>` : '';
-            forceSummary.innerHTML = `<strong>⚡ Sort</strong> (${etatLbl}) : <strong style="color:var(--saber-purple)">${data.spellPuissance} Puissance</strong> · coût ${data.forceCout} PA${extra}${capNote}<br><span style="color:var(--silver-chrome)">Puissance ajoutée au jet de compétence : +${data.spellPuissance}</span>${powerScaleHtml(data.spellPuissance, data.title)}`;
+            const r = data.forceRoll;
+            const extra = r.effet > 0 ? ` · <span style="color:#ff4444">⚠ effet incontrôlé puissance ${r.effet}</span>` : '';
+            const cSucc = r.casc.filter(Boolean).length;
+            const capNote = r.communion ? `<br><span style="color:#ffcc00">☀️ Communion : cascade ${cSucc} → +${cSucc} Puissance & −${cSucc} PA</span>`
+                : r.deferlante ? `<br><span style="color:#c06040">🌑 Déferlante : cascade ${cSucc} → +${cSucc} Puissance</span>` : '';
+            const pairNote = r.pairs ? ` · ${r.pairs} paire(s) Rupture/Résonance annulée(s)` : '';
+            forceSummary.innerHTML = `<strong>⚡ Sort</strong> (${etatLbl}) : <strong style="color:var(--saber-purple)">${data.spellPuissance} Puissance</strong> · Valeur d'effet <strong>${effectValue(data.spellPuissance) || '-'}</strong> · coût ${data.forceCout} PA${extra}${pairNote}${capNote}`
+                + `<br><span style="color:var(--silver-chrome)">Amplification : compétence ${data.check.total} + Puissance ${data.spellPuissance} · si le sort agit seul, la compétence sert d'Application contre la Complexité</span>${powerScaleHtml(data.spellPuissance, data.title, data.forceEtat)}`;
             container.appendChild(forceSummary);
-            // Stats compétence + total
-            setSkillStats(data.sum, data.bonus);
+            container.insertAdjacentHTML('beforeend', checkNotesHtml(data.finalTotal, data.dc, data.check.nat));
+            const box = document.querySelector('#result-overlay .result-container');
+            box.classList.remove('res-simple'); box.classList.add('res-nostats');
+            setSkillStats(data);
             document.getElementById('result-total').textContent = data.finalTotal;
             document.getElementById('result-overlay').classList.add('active');
         }
@@ -5919,19 +6124,22 @@
             const base = baseName || skillName;
             const custom = baseName && baseName !== skillName ? skillName : null;
             const attrLabel = attrName ? ` [${attrName}]` : '';
-            const text = `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} · Résultat : **${total}**`;
+            const text = details && details.force
+                ? `⚡ **${base}**${attrLabel} · Puissance : **${total}** · Valeur d'effet **${details.effect || 0}**`
+                : `🎲 **${base}**${custom ? ` *(${custom})*` : ''}${attrLabel} · Résultat : **${total}**`;
 
             // Build detail line
             let detailParts = [];
             if (details) {
-                detailParts.push(`Succès : ${details.successes}`);
-                if (details.eclats) detailParts.push(`✦ ${details.eclats}`);
-                if (details.revers) detailParts.push(`▼ ${details.revers}`);
-                if (details.attrBonus) detailParts.push(`Attr : +${details.attrBonus}`);
-                if (details.skillBonus) detailParts.push(`Comp : +${details.skillBonus}`);
-                if (details.bonus !== undefined && details.bonus !== 0) detailParts.push(`Mod : ${details.bonus > 0 ? '+' : ''}${details.bonus}`);
+                if (details.nat) detailParts.push(`d10 ${details.nat} ${fmtMod(details.checkBonus || 0)} · ${scenarioOf(details.nat).label}`);
+                if (details.mode && details.mode !== 'normal') detailParts.push(CIRC_LABEL[details.mode]);
+                if (details.nat === 10) detailParts.push('✦ Opportunité');
+                if (details.nat === 1) detailParts.push('▼ Complication');
+                if (details.dc) detailParts.push(`DC ${details.dc} ${total >= details.dc ? '✅' : '❌'}`);
+                if (details.force && details.bonus) detailParts.push(`Mod : ${fmtMod(details.bonus)}`);
+                if (details.pairs) detailParts.push(`${details.pairs} paire(s) annulée(s)`);
                 if (details.extra) detailParts.push(details.extra);
-                if (details.spellBonus) detailParts.push(`${details.spellLabel || 'Sort'} : +${details.spellBonus}`);
+                if (details.spellBonus !== undefined) detailParts.push(`Puissance +${details.spellBonus} · Valeur d'effet ${details.effect || 0} · Application ${details.application}`);
             }
             const detailLine = detailParts.length ? `
 ┈ ${detailParts.join(' │ ')}` : '';
@@ -6002,7 +6210,7 @@
             { threshold: -70, group: 'no_conc', side: 'dark', icon: '🔗', text: "Les pouvoirs obscurs de type durée n'exigent plus de jet de concentration lors d'une perte d'Élan" },
             { threshold: -80, group: 'kill_pf', side: 'dark', icon: '🖤', text: "Chaque créature tuée par le personnage rend 5 Points de Force" },
             { threshold: -80, group: 'anti_obscurite', side: 'dark', kind: 'cost', icon: '☠️', text: "Les pouvoirs ciblant l'Obscurité employés contre le personnage infligent un minimum de blessure ou de résistance égal à leur Puissance" },
-            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: "Déferlante : lorsqu'un pouvoir obscur est sublimé, les faces de Résonance et de Transcendance se relancent sur 7 ou plus, et chaque relance ajoute sa Puissance" },
+            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: "Déferlante : lorsqu'un pouvoir obscur est sublimé, chaque Résonance restante lance un dé de cascade (+1 Puissance s'il atteint le seuil), qui se relance sur 9 ou 10" },
             // ─── Harmonie : récompense lente, sans contrepartie ───
             { threshold: 20, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse jusqu'à une magnitude de 2" },
             { threshold: 30, group: 'protect_half', side: 'light', icon: '🛡', text: "Lorsqu'un point de focalisation est dépensé pour protéger une créature, le coût en Points de Force du pouvoir lumineux employé est réduit de moitié (arrondi à l'inférieur)" },
@@ -6011,7 +6219,7 @@
             { threshold: 60, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse jusqu'à une magnitude de 7", updates: true },
             { threshold: 70, group: 'no_focus', side: 'light', icon: '🎯', text: "Un pouvoir lumineux sublimé de type durée n'immobilise pas de point de focalisation. Un seul pouvoir peut être maintenu de cette façon à la fois" },
             { threshold: 80, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse sans limite de magnitude", updates: true },
-            { threshold: 90, group: 'communion', side: 'light', icon: '☀️', text: "Communion : lorsqu'un pouvoir lumineux est sublimé, les faces de Résonance et de Transcendance se relancent sur 9 ou plus, et chaque relance réduit le coût du pouvoir en Points de Force (plancher 0)" },
+            { threshold: 90, group: 'communion', side: 'light', icon: '☀️', text: "Communion : lorsqu'un pouvoir lumineux est sublimé, chaque Résonance restante lance un dé de cascade (+1 Puissance et −1 Point de Force s'il atteint le seuil), qui se relance sur 10" },
         ];
 
         function getResonanceStage(val) {
@@ -6369,6 +6577,144 @@
             document.getElementById('modal-input').addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); confirmModal(); } });
             ['attribute-select', 'skill-select', 'skill-page-attr-select', 'skill-page-skill-select', 'force-attr-select', 'force-verb-select', 'force-target-select', 'force-simple-attr-select', 'force-simple-verb-select', 'force-simple-target-select', 'conjoint-attr-select', 'conjoint-skill-select'].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('change', updateRollButtons); });
         });
+    </script>
+
+    <script>
+    function UI_CONFIG($, val) {
+        const rollsTab = () => [...document.querySelectorAll('.nav-tab')].find(t => /'rolls'/.test(t.getAttribute('onclick') || ''));
+        return {
+            placeMode: seg => document.querySelector('.header .save-controls').prepend(seg),
+            placeStrip: strip => document.querySelector('.header .save-controls').after(strip),
+            strip: [
+                { id: 'elan', label: 'Élan', title: 'Élan restant : il baisse avec les afflictions', get: () => [val('elan-current'), val('elan-total')] },
+                { id: 'pf', label: 'Force', title: 'Points de Force', get: () => [val('force-current'), val('force-max')],
+                  dec: () => modifyCounter('force', -1), inc: () => modifyCounter('force', 1), reset: () => refillForce(), resetTitle: 'Régénérer les Points de Force' },
+                { id: 'foc', label: 'Focalisation', get: () => [val('focalisation-current'), val('focalisation-max')],
+                  dec: () => modFocalisation(-1), inc: () => modFocalisation(1), reset: () => refillFocalisation(), resetTitle: 'Nouveau round' }
+            ],
+            syncExtra: () => {
+                const h = document.querySelector('.header h1'), n = ($('character-name') || {}).value || '';
+                const t = n.trim() || 'Fiche de Personnage';
+                if (h && h.textContent !== t) h.textContent = t;
+            },
+            quickHit: (target, play) => {
+                if (!play) return null;
+                const it = target.closest('#skills-list .skill-item');
+                const n = it && it.querySelector('.skill-name');
+                return n ? n.id.replace('skill-name-', '') : null;
+            },
+            quickRoll: id => {
+                const skill = appState.skills.find(x => String(x.id) === String(id)); if (!skill) return;
+                switchPage('rolls', rollsTab());
+                switchUnifiedRoll('comp', $('urm-tab-comp'));
+                $('skill-page-attr-select').value = getSkillPassiveAttr(skill);
+                $('skill-page-skill-select').value = skill.name;
+                updateRollButtons();
+            },
+            init: () => {
+                // Magnitude et modificateur de Puissance côte à côte
+                const a = $('force-dice'), b = $('power-puissance-mod');
+                if (a && b) {
+                    const ga = a.closest('.form-group'), gb = b.closest('.form-group');
+                    const pair = document.createElement('div'); pair.className = 'ui-pair';
+                    ga.before(pair); pair.appendChild(ga); pair.appendChild(gb);
+                }
+                const list = $('skills-list');
+                const hint = () => list.querySelectorAll('.skill-name').forEach(n => { if (!n.querySelector('.quick-hint')) n.insertAdjacentHTML('beforeend', '<span class="quick-hint">🎲</span>'); });
+                new MutationObserver(hint).observe(list, { childList: true }); hint();
+            }
+        };
+    }
+    </script>
+
+    <script>
+    /* === COUCHE UI : mode Jeu / Édition, bande de ressources, jet en un clic, règles repliées === */
+    (function () {
+        const $ = id => document.getElementById(id);
+        const val = id => { const e = $(id); if (!e) return ''; return (e.tagName === 'INPUT' ? e.value : e.textContent).trim(); };
+        function start() {
+            const CFG = UI_CONFIG($, val);
+
+            /* ----- Mode Jeu / Édition ----- */
+            function getMode() { try { return localStorage.getItem('sheetMode') === 'edit' ? 'edit' : 'play'; } catch (e) { return 'play'; } }
+            function applyMode(m) {
+                document.body.classList.toggle('play-mode', m === 'play');
+                document.querySelectorAll('.mode-seg button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+            }
+            window.setSheetMode = function (m) { try { localStorage.setItem('sheetMode', m); } catch (e) { } applyMode(m); };
+            const seg = document.createElement('div');
+            seg.className = 'mode-seg';
+            seg.innerHTML = '<button type="button" data-mode="play" onclick="setSheetMode(\'play\')" title="Fiche compacte pour la partie : cliquer une compétence prépare son jet">Jeu</button>'
+                + '<button type="button" data-mode="edit" onclick="setSheetMode(\'edit\')" title="Affiche les boutons de création et de progression">Édition</button>';
+            CFG.placeMode(seg);
+            applyMode(getMode());
+
+            /* ----- Bande de ressources ----- */
+            const strip = document.createElement('div');
+            strip.className = 'res-strip'; strip.id = 'res-strip';
+            strip.innerHTML = CFG.strip.map(r => '<div class="rs-item rs-' + r.id + '" data-rs="' + r.id + '" title="' + (r.title || r.label) + '">'
+                + '<span class="rs-label">' + r.label + '</span>'
+                + (r.dec ? '<button type="button" class="rs-btn" data-act="dec">−</button>' : '')
+                + '<span class="rs-val"><b></b><small></small></span>'
+                + (r.inc ? '<button type="button" class="rs-btn" data-act="inc">+</button>' : '')
+                + (r.reset ? '<button type="button" class="rs-btn rs-reset" data-act="reset" title="' + (r.resetTitle || 'Rétablir') + '">↻</button>' : '')
+                + '</div>').join('');
+            CFG.placeStrip(strip);
+            strip.addEventListener('click', e => {
+                const b = e.target.closest('.rs-btn'); if (!b) return;
+                const r = CFG.strip.find(x => x.id === b.closest('.rs-item').dataset.rs);
+                if (r && r[b.dataset.act]) r[b.dataset.act]();
+                sync();
+            });
+            function sync() {
+                CFG.strip.forEach(r => {
+                    const el = strip.querySelector('[data-rs="' + r.id + '"]');
+                    let v = null; try { v = r.get(); } catch (e) { }
+                    const hide = !v;
+                    if (el.hidden !== hide) el.hidden = hide;
+                    if (hide) return;
+                    const b = el.querySelector('b'), s = el.querySelector('small');
+                    const a = String(v[0]), m = (v[1] !== undefined && v[1] !== '') ? ' / ' + v[1] : '';
+                    if (b.textContent !== a) b.textContent = a;
+                    if (s.textContent !== m) s.textContent = m;
+                    const low = m && parseFloat(v[1]) > 0 && parseFloat(v[0]) / parseFloat(v[1]) <= 0.25;
+                    if (el.classList.contains('low') !== !!low) el.classList.toggle('low', !!low);
+                });
+                if (CFG.syncExtra) try { CFG.syncExtra(); } catch (e) { }
+            }
+            let pending = false;
+            const schedule = () => { if (pending) return; pending = true; setTimeout(() => { pending = false; sync(); }, 40); };
+            new MutationObserver(schedule).observe(document.body, { subtree: true, childList: true, characterData: true });
+            ['click', 'input', 'change'].forEach(ev => document.addEventListener(ev, schedule, true));
+            setInterval(sync, 1500);
+            sync();
+
+            /* ----- Règles repliées derrière un « ? » ----- */
+            window.uiFold = function (el, label) {
+                if (!el || el.closest('.rule-fold')) return;
+                const d = document.createElement('details');
+                d.className = 'rule-fold';
+                const s = document.createElement('summary');
+                s.innerHTML = '<span class="rf-q">?</span> ' + label;
+                el.before(d); d.appendChild(s); d.appendChild(el);
+                el.style.marginTop = '6px';
+            };
+            if (CFG.folds) CFG.folds();
+
+            /* ----- Jet en un clic ----- */
+            document.addEventListener('click', e => {
+                const hit = CFG.quickHit(e.target, document.body.classList.contains('play-mode'));
+                if (!hit) return;
+                e.preventDefault(); e.stopPropagation();
+                CFG.quickRoll(hit);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, true);
+
+            if (CFG.init) CFG.init();
+            sync();
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+    })();
     </script>
 </body>
 

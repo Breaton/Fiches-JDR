@@ -1954,6 +1954,26 @@
             background: rgba(224, 92, 82, .08);
         }
 
+        .die.dropped {
+            opacity: .32;
+        }
+
+        .circ-sel {
+            width: 100%;
+            background: var(--panel-3);
+            border: 1px solid var(--line);
+            border-radius: 2px;
+            color: var(--ink);
+            font-family: var(--font-mono);
+            font-size: 0.78em;
+            padding: 8px 6px;
+        }
+
+        .circ-sel:focus {
+            outline: none;
+            border-color: var(--aci);
+        }
+
         .die.chain {
             box-shadow: 0 0 10px rgba(217, 164, 65, .3);
         }
@@ -2083,6 +2103,70 @@
             border-color: var(--aci);
             color: var(--aci-bright);
         }
+
+        /* ============ AVANTAGE / DÉSAVANTAGE ============ */
+        .roll-foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .roll-foot .private-toggle { margin-top: 0; }
+        .circ-btns { display: inline-flex; gap: 6px; }
+        .circ-btn { padding: 6px 12px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 2px; color: var(--ink-3); font-family: var(--font-mono); font-size: 0.72em; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: all .15s; }
+        .circ-btn:hover { color: var(--ink-2); border-color: var(--ink-4); }
+        .circ-btn.adv.active { color: var(--ok); border-color: var(--ok); background: rgba(63, 178, 127, .12); }
+        .circ-btn.dis.active { color: var(--bad); border-color: var(--bad); background: rgba(224, 92, 82, .12); }
+
+        /* ============ DENSITÉ : PUPITRE ET RÉSULTAT ============ */
+        .result { max-width: 680px; }
+        .result-head { padding: 9px 14px; }
+        .result-body { padding: 12px 14px; }
+        #r-verdicts { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        #r-verdicts .verdict { margin: 0; padding: 9px 10px; flex: 1 1 150px; }
+        #r-verdicts .verdict-v { font-size: 1.85em; margin-top: 2px; }
+        #r-verdicts .verdict-n { font-size: 0.66em; line-height: 1.45; }
+        #r-verdicts .verdict-n b { color: var(--ink-2); font-weight: 600; }
+        #r-verdicts .verdict:first-child:not(:only-child) .verdict-v { font-size: 2.3em; }
+        .eq-row { flex: 1 1 100%; display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 8px 10px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 2px; font-family: var(--font-mono); }
+        .eq-dice { display: inline-flex; gap: 4px; }
+        .eq-die { min-width: 34px; height: 34px; padding: 0 5px; display: inline-flex; align-items: center; justify-content: center; gap: 2px; border: 1px solid; border-radius: 2px; font-weight: 700; font-size: 1.15em; background: var(--panel-3); }
+        .eq-die.dropped { opacity: .32; }
+        .eq-die i { font-style: normal; font-size: 0.6em; }
+        .eq-op { color: var(--ink-4); font-size: 0.9em; }
+        .eq-term, .eq-total, .eq-dc { display: inline-flex; flex-direction: column; align-items: center; line-height: 1.1; }
+        .eq-term { font-weight: 700; color: var(--ink); font-size: 1em; }
+        .eq-term small, .eq-total small, .eq-dc small { font-size: 0.56em; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4); }
+        .eq-total { font-family: var(--font-head); font-weight: 700; font-size: 1.9em; color: var(--aci-bright); padding: 0 4px; }
+        .eq-total small { font-family: var(--font-mono); font-size: 0.32em; }
+        .eq-dc { margin-left: 6px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 2px; font-weight: 700; font-size: 0.82em; }
+        .eq-dc i { font-style: normal; font-weight: 400; opacity: .8; }
+        .eq-dc.ok { color: var(--ok); border-color: rgba(63, 178, 127, .5); background: rgba(63, 178, 127, .08); }
+        .eq-dc.ko { color: var(--bad); border-color: rgba(224, 92, 82, .5); background: rgba(224, 92, 82, .08); }
+        .eq-meta { margin-left: auto; font-size: 0.68em; }
+        #r-dice:empty, #r-stats:empty { display: none; }
+        .pw-detail { flex: 1 1 100%; }
+        .pw-detail-btn { padding: 5px 11px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 2px; color: var(--ink-3); font-family: var(--font-mono); font-size: 0.7em; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+        .pw-detail-btn::before { content: '▸ '; }
+        .pw-detail.open .pw-detail-btn::before { content: '▾ '; }
+        .pw-detail-btn:hover, .pw-detail.open .pw-detail-btn { color: var(--vector); border-color: var(--vector); }
+        .pw-detail-body { display: none; margin-top: 7px; padding: 9px 10px; background: var(--panel-2); border: 1px solid var(--line-soft); border-left: 2px solid var(--vector); border-radius: 2px; }
+        .pw-detail.open .pw-detail-body { display: block; }
+        .pw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 7px 12px; }
+        .pw-grid div { display: flex; flex-direction: column; gap: 1px; }
+        .pw-grid small { font-family: var(--font-mono); font-size: 0.6em; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4); }
+        .pw-grid b { font-size: 0.88em; color: var(--ink); font-weight: 600; }
+        .pw-note { margin-top: 7px; font-size: 0.68em; color: var(--ink-4); }
+        .vchips { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 6px; }
+        .vchip { font-family: var(--font-mono); font-size: 0.7em; padding: 4px 9px; border: 1px solid var(--line); border-radius: 2px; color: var(--ink-3); background: var(--panel-2); cursor: help; }
+        .vchip b { color: var(--ink); font-weight: 700; }
+        .vchip.ok { color: var(--ok); border-color: rgba(63, 178, 127, .5); }
+        .vchip.ko { color: var(--bad); border-color: rgba(224, 92, 82, .5); }
+        #r-dice { display: flex; flex-wrap: wrap; gap: 4px 22px; align-items: flex-start; }
+        #r-dice .dice-block { margin-bottom: 8px; }
+        #r-dice .dice-label { margin-bottom: 5px; text-transform: none; letter-spacing: 0.04em; font-size: 0.68em; }
+        #r-dice .die { width: 34px; height: 34px; }
+        #r-dice .dice-row { gap: 4px; }
+        .stats { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 12px; }
+        .stat { display: flex; align-items: baseline; gap: 7px; padding: 4px 9px; text-align: left; }
+        .stat-l { margin: 0; }
+        .stat-v { font-size: 0.95em; }
+        .result-close { padding: 8px; font-size: 0.95em; }
 
         /* ============ OBJETS / NOTES ============ */
         .gear-list {
@@ -2658,6 +2742,79 @@
             display: flex;
             align-items: center;
         }
+
+        /* === COUCHE UI : mode Jeu / Édition, bande de ressources, règles repliées === */
+        .mode-seg { display: inline-flex; border: 1px solid var(--ui-line); border-radius: 6px; overflow: hidden; flex: none; }
+        .mode-seg button, .save-controls .mode-seg button { padding: 5px 11px; border: none; border-radius: 0; background: transparent; color: var(--ui-dim);
+            font: inherit; font-size: 0.78em; font-weight: 600; letter-spacing: 0.04em; cursor: pointer; box-shadow: none; transform: none; }
+        .mode-seg button.on, .save-controls .mode-seg button.on { background: var(--ui-accent); color: var(--ui-on-accent); }
+        .mode-seg button:hover, .save-controls .mode-seg button:hover { transform: none; box-shadow: none; }
+        .res-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 6px 16px; background: var(--ui-strip-bg);
+            border-top: 1px solid var(--ui-line); font-size: 0.82em; }
+        .rs-item { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border: 1px solid var(--ui-line); border-radius: 999px;
+            background: var(--ui-chip-bg); color: var(--ui-text); white-space: nowrap; }
+        .rs-item[hidden] { display: none; }
+        .rs-label { font-size: 0.86em; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ui-dim); }
+        .rs-val b { font-size: 1.12em; color: var(--rs-color, var(--ui-text)); font-variant-numeric: tabular-nums; }
+        .rs-val small { color: var(--ui-dim); font-size: 0.9em; }
+        .rs-item.low .rs-val b { color: var(--ui-warn); }
+        .rs-btn { width: 22px; height: 22px; padding: 0; border: 1px solid var(--ui-line); border-radius: 50%; background: transparent; color: var(--ui-text);
+            font-size: 14px; line-height: 1; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+        .rs-btn:hover { background: var(--ui-accent); color: var(--ui-on-accent); border-color: var(--ui-accent); }
+        .rs-btn.rs-reset { font-size: 12px; }
+        .rule-fold { margin-top: 10px; }
+        .rule-fold > summary { list-style: none; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; font-size: 0.76em; font-weight: 600;
+            color: var(--ui-fold); user-select: none; }
+        .rule-fold > summary::-webkit-details-marker { display: none; }
+        .rule-fold .rf-q { display: inline-flex; align-items: center; justify-content: center; width: 17px; height: 17px; border-radius: 50%;
+            border: 1px solid currentColor; font-size: 0.9em; }
+        .rule-fold[open] > summary { opacity: 0.75; }
+        .quick-hint { opacity: 0; margin-left: 6px; font-size: 0.8em; transition: opacity 0.15s; }
+
+        :root { --ui-line: var(--line, #24384d); --ui-dim: var(--ink-3, #7d8ea1); --ui-text: var(--ink, #e8eef5); --ui-accent: var(--aci, #3f9fe0); --ui-on-accent: #06121d;
+            --ui-strip-bg: rgba(0,0,0,0.25); --ui-chip-bg: rgba(63,159,224,0.05); --ui-warn: #ff8a65; --ui-fold: var(--aci, #3f9fe0); }
+        .container { overflow: clip; }
+        .container > .header { position: sticky; z-index: 60; background: var(--hull, #0d141c); }
+        .header-actions { display: flex; align-items: center; gap: 8px; flex: none; }
+        .mode-seg { border-radius: 2px; }
+        .mode-seg button { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.66em; padding: 7px 10px; }
+        .res-strip { font-family: var(--font-mono); font-size: 0.74em; }
+        .rs-item { border-radius: 2px; }
+        .rs-elan { --rs-color: #ef6f5e; } .rs-charge { --rs-color: #3fd0c0; } .rs-foc { --rs-color: #6bb8f0; }
+        .header-top { flex-wrap: wrap; }
+        .agency-id { flex: 1 1 200px; min-width: 0; }
+        @media (max-width: 900px) {
+            .header-top { gap: 10px 12px; padding: 10px 12px; }
+            .agency-name { font-size: 0.92em; letter-spacing: 0.08em; }
+            .agency-sub { display: none; }
+            .header-stamps { display: none; }
+            .container > .header .nav-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 0 6px; }
+            .container > .header .nav-tabs::-webkit-scrollbar { display: none; }
+            .container > .header .nav-tab { flex: none; padding-left: 12px; padding-right: 12px; }
+            .nav-spacer { display: none; }
+            .res-strip { padding: 5px 12px; }
+            .res-strip { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+            .res-strip::-webkit-scrollbar { display: none; }
+            .rs-item { flex: none; }
+            .gear-add, .wound-add { grid-template-columns: minmax(0, 1fr) 64px 46px !important; }
+            .gear-add > .btn-add, .wound-add > .btn-add { grid-column: 1 / -1; }
+            .gear-add input, .wound-add input { min-width: 0; }
+            body { padding: 0 !important; }
+        }
+        .page > *, .page .col { min-width: 0; }
+        /* La bande porte déjà Élan et Charge : la carte État opérationnel de la page Jets est retirée */
+        #page-rolls .ui-dup { display: none !important; }
+        /* Mode Jeu */
+        body.play-mode #attr-grid .step, body.play-mode #skills-grid .step, body.play-mode .vd .step, body.play-mode .skill-del,
+        body.play-mode #page-skills .gear-add { display: none !important; }
+        body.play-mode .skill-attr { pointer-events: none; }
+        body.play-mode #skills-grid .skill { cursor: pointer; }
+        body.play-mode #skills-grid .skill:hover { border-color: var(--aci); background: rgba(63,159,224,0.08); }
+        body.play-mode #vectors-list, body.play-mode #domains-list { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        body.play-mode .vd.trained { grid-column: 1 / -1; order: -1; }
+        body.play-mode .vd:not(.trained) { grid-template-columns: auto 1fr; padding: 4px 8px; opacity: 0.55; }
+        body.play-mode .vd:not(.trained) .vd-desc, body.play-mode .vd:not(.trained) .vd-lv { display: none; }
+        body.play-mode .vd:not(.trained) .vd-name { font-size: 0.82em; }
     </style>
 </head>
 
@@ -2817,8 +2974,8 @@
                 <div class="card-body">
                     <div class="attr-grid" id="attr-grid"></div>
                     <div class="hint" style="margin-top:11px;">
-                        Chaque attribut définit la <strong>composition du d12</strong> utilisé sur les jets qui en
-                        dépendent. Survolez une valeur pour voir sa répartition de faces.
+                        Chaque attribut ajoute son <strong>bonus au d10</strong> des jets qui en dépendent :
+                        Commun vaut +0, chaque niveau au-dessus +1, chaque niveau en dessous −1.
                     </div>
                 </div>
             </div>
@@ -2950,8 +3107,8 @@
                         <div class="readout" id="canal-info" style="flex:1;margin-top:0;"></div>
                     </div>
                     <div class="hint" style="margin-top:11px;">
-                        Tous les vecteurs de l'agent passent par ce seul attribut : c'est lui qui donne aux
-                        dés de Puissance leur profil de faces, quel que soit le pouvoir employé. Chacun canalise à sa
+                        Tous les vecteurs de l'agent passent par ce seul attribut : c'est lui qui fixe le seuil
+                        de réussite des d10 de Puissance (10 − niveau du canal), quel que soit le pouvoir employé. Chacun canalise à sa
                         manière : par la volonté, l'instinct, l'analyse ou la présence - et cette
                         manière ne change pas d'un vecteur à l'autre.
                     </div>
@@ -3165,9 +3322,12 @@
                             <button class="roll-go" id="c-go" onclick="rollCombo()">Résoudre l'intervention</button>
                         </div>
 
-                        <label class="private-toggle">
-                            <input type="checkbox" id="private-roll"> Jet confidentiel (pas de transmission)
-                        </label>
+                        <div class="roll-foot">
+                            <span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="2d10, on garde le meilleur">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="2d10, on garde le pire">▼ Désavantage</button></span>
+                            <label class="private-toggle">
+                                <input type="checkbox" id="private-roll"> Jet confidentiel (pas de transmission)
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -3412,9 +3572,9 @@
                 </div>
             </div>
             <div class="result-body">
+                <div id="r-verdicts"></div>
                 <div id="r-dice"></div>
                 <div class="stats" id="r-stats"></div>
-                <div id="r-verdicts"></div>
                 <button class="result-close" onclick="closeResult()">Fermer</button>
             </div>
         </div>
@@ -3478,51 +3638,47 @@
             { id: 'intelligence', name: 'Intelligence', short: 'INT' }
         ];
 
-        // Composition du d12 : [Éclat, Succès, Vide, Revers, Revers+]
+        // Attribut : niveau 1 à 8, bonus au jet = niveau − 4 (Commun = 0)
         const ATTRIBUTE_LEVELS = {
-            1: { name: 'Déficient', faces: [0, 1, 4, 4, 3], color: '#e05c52' },
-            2: { name: 'Faible', faces: [0, 3, 6, 2, 1], color: '#e08a4a' },
-            3: { name: 'Médiocre', faces: [0, 4, 7, 1, 0], color: '#d9a441' },
-            4: { name: 'Commun', faces: [1, 5, 6, 0, 0], color: '#9fb0c4' },
-            5: { name: 'Élevé', faces: [1, 6, 5, 0, 0], color: '#3fb27f' },
-            6: { name: 'Supérieur', faces: [2, 6, 4, 0, 0], color: '#3f9fe0' },
-            7: { name: 'Exceptionnel', faces: [2, 7, 3, 0, 0], color: '#8b7ae0' },
-            8: { name: 'Prodigieux', faces: [3, 7, 2, 0, 0], color: '#6fc0f5' }
+            1: { name: 'Déficient', color: '#e05c52' },
+            2: { name: 'Faible', color: '#e08a4a' },
+            3: { name: 'Médiocre', color: '#d9a441' },
+            4: { name: 'Commun', color: '#9fb0c4' },
+            5: { name: 'Élevé', color: '#3fb27f' },
+            6: { name: 'Supérieur', color: '#3f9fe0' },
+            7: { name: 'Exceptionnel', color: '#8b7ae0' },
+            8: { name: 'Prodigieux', color: '#6fc0f5' }
         };
 
-        const SOCLE_DICE = 3;   // socle commun à tous les jets
-        const MAX_CHAIN = 1;    // une seule relance par dé
-
-        const NEGATIVE_DICE = {
-            1: { faces: [0, 0, 3, 6, 3] },
-            2: { faces: [0, 0, 6, 4, 2] }
-        };
-
+        // Aptitude : niveau 1 à 8, bonus au jet = niveau − 3 (Ordinaire = 0). Inapte est le plancher.
         const SKILL_LEVELS = {
-            1: { name: 'Inapte', add: -1, color: '#e05c52' },
-            2: { name: 'Maladroit', add: -1, color: '#e08a4a' },
-            3: { name: 'Ordinaire', add: 1, color: '#d9a441' },
-            4: { name: 'Qualifié', add: 2, color: '#9fb0c4' },
-            5: { name: 'Excellent', add: 3, color: '#3fb27f' },
-            6: { name: 'Expert', add: 4, color: '#3f9fe0' },
-            7: { name: 'Maître', add: 5, color: '#8b7ae0' },
-            8: { name: 'Absolue', add: 7, color: '#6fc0f5' }
+            1: { name: 'Inapte', color: '#e05c52' },
+            2: { name: 'Maladroit', color: '#e08a4a' },
+            3: { name: 'Ordinaire', color: '#d9a441' },
+            4: { name: 'Qualifié', color: '#9fb0c4' },
+            5: { name: 'Excellent', color: '#3fb27f' },
+            6: { name: 'Expert', color: '#3f9fe0' },
+            7: { name: 'Maître', color: '#8b7ae0' },
+            8: { name: 'Absolue', color: '#6fc0f5' }
         };
-        const SKILL_LEVEL_NONE = { name: 'Aucune', add: 0, color: '#45566a' };
-
         function getAttributeLevel(v) { return ATTRIBUTE_LEVELS[Math.min(8, Math.max(1, v))] || ATTRIBUTE_LEVELS[4]; }
-        function getSkillLevel(v) { return v <= 0 ? SKILL_LEVEL_NONE : (SKILL_LEVELS[Math.min(8, Math.max(1, v))] || SKILL_LEVELS[1]); }
+        function getSkillLevel(v) { return SKILL_LEVELS[Math.min(8, Math.max(1, parseInt(v) || 1))]; }
 
-        // Échelons d'habilitation (vecteurs et domaines) : 0 à 5.
-        // Un couple au sommet ouvre donc une Magnitude maximum de 10.
-        const MAX_CLEARANCE = 5;
+        // Échelons d'habilitation (vecteurs et domaines) : 0 à 10.
+        // Un couple au sommet ouvre donc une Magnitude maximum de 20.
+        const MAX_CLEARANCE = 10;
         const CLEARANCE_LEVELS = {
             0: { name: 'Non habilité', color: '#45566a' },
             1: { name: 'Éveillé', color: '#9fb0c4' },
             2: { name: 'Habilité', color: '#3fb27f' },
-            3: { name: 'Confirmé', color: '#3f9fe0' },
-            4: { name: 'Certifié', color: '#8b7ae0' },
-            5: { name: 'Référent', color: '#6fc0f5' }
+            3: { name: 'Confirmé', color: '#33bfae' },
+            4: { name: 'Certifié', color: '#3f9fe0' },
+            5: { name: 'Référent', color: '#6fc0f5' },
+            6: { name: 'Émérite', color: '#8b7ae0' },
+            7: { name: 'Éminent', color: '#a58cf0' },
+            8: { name: 'Majeur', color: '#d9a441' },
+            9: { name: 'Souverain', color: '#e0a23c' },
+            10: { name: 'Absolu', color: '#f0d27a' }
         };
         function getClearance(v) { return CLEARANCE_LEVELS[Math.min(MAX_CLEARANCE, Math.max(0, v))] || CLEARANCE_LEVELS[0]; }
 
@@ -3566,11 +3722,6 @@
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1509003659407524041/plYUTg3J6tuwaSDM32dEhjjH3n9kj9JQm1e-Okit0vFT66ivfBuIsH6DULNJgkIR9iiN';
 
         const MAX_BONUS_DICE = 3;          // dés de Puissance obtenus hors habilitation
-
-        const DC_SCALE = [
-            ['Très facile', 1], ['Facile', 2], ['Standard', 3], ['Difficile', 5],
-            ['Très difficile', 7], ['Quasi impossible', 10], ['Hors barème', 13]
-        ];
 
         /* ---------- VECTEURS D'EFFET (10) ---------- */
         const VECTORS = [
@@ -3694,124 +3845,185 @@
         }
 
         /* ==========================================================
-           C · MOTEUR DE DÉS (socle de 3 dés, faces pondérées)
+           C · MOTEUR DE DÉS (d10 du jet + d10 de pouvoir)
            ========================================================== */
+        // Jet = d10 (le monde, le scénario) + Attribut + Aptitude + modificateur, contre une DC.
+        // Commun et Ordinaire valent 0 : la personne moyenne lance un d10 sec.
+        // Le d10 ne dit pas si le personnage est bon, il dit dans quelles conditions il agit.
+        const TRAINED_LEVEL = 6;     // Expert et plus : un 1 naturel est relancé une fois
+        const POWER_FACTOR = 1;      // Valeur d'effet = 5 + Puissance : la Puissance compte telle quelle partout
 
-        const FACE_INFO = {
-            eclat: { label: 'Éclat', sym: '✦', value: 1, explodes: true, color: '#d9a441' },
-            succes: { label: 'Succès', sym: '●', value: 1, explodes: false, color: '#3fb27f' },
-            vide: { label: 'Vide', sym: '○', value: 0, explodes: false, color: '#6a7d92' },
-            revers: { label: 'Revers', sym: '▼', value: -1, explodes: false, color: '#e05c52' },
-            reversP: { label: 'Revers+', sym: '▼▼', value: -1, explodes: true, color: '#b83a32' }
-        };
-        const FACE_ORDER = ['eclat', 'succes', 'vide', 'revers', 'reversP'];
+        function attrMod(v) { return Math.min(8, Math.max(1, parseInt(v) || 4)) - 4; }
+        function skillMod(v) { return Math.min(8, Math.max(1, parseInt(v) || 1)) - 3; }
+        function fmtMod(n) { return n > 0 ? '+' + n : n < 0 ? '−' + Math.abs(n) : '+0'; }
+        function d10() { return Math.floor(Math.random() * 10) + 1; }
 
-        function buildFaces(counts) {
-            const [e, s, v, r, x] = counts;
-            const f = [];
-            for (let n = 0; n < x; n++) f.push('reversP');
-            for (let n = 0; n < r; n++) f.push('revers');
-            for (let n = 0; n < v; n++) f.push('vide');
-            for (let n = 0; n < s; n++) f.push('succes');
-            for (let n = 0; n < e; n++) f.push('eclat');
-            return f;
+        const SCENARIOS = [
+            { min: 10, label: 'Meilleur scénario', color: '#d9a441' },
+            { min: 8, label: 'Favorable', color: '#3fb27f' },
+            { min: 4, label: 'Ordinaire', color: '#9fb0c4' },
+            { min: 2, label: 'Défavorable', color: '#e08a4a' },
+            { min: 1, label: 'Pire scénario', color: '#e05c52' }
+        ];
+        function scenarioOf(n) { return SCENARIOS.find(s => n >= s.min) || SCENARIOS[4]; }
+
+        const CIRC_LABEL = { normal: 'Circonstances normales', adv: 'Avantage', dis: 'Désavantage' };
+
+        // Avantage : 2d10, on garde le meilleur. Désavantage : 2d10, on garde le pire.
+        function rollFortune(mode, trained) {
+            const one = () => {
+                const first = d10();
+                return (trained && first === 1) ? { v: d10(), rerolled: 1 } : { v: first };
+            };
+            const dice = [one()];
+            if (mode === 'adv' || mode === 'dis') dice.push(one());
+            let keep = 0;
+            if (dice.length === 2) keep = (mode === 'adv' ? dice[1].v > dice[0].v : dice[1].v < dice[0].v) ? 1 : 0;
+            dice.forEach((d, i) => { d.kept = i === keep; });
+            return { dice, nat: dice[keep].v };
         }
 
-        function successFrom(counts) {
-            const [e, s, v, r, x] = counts;
-            return (s + e) > 0 ? x + r + v + 1 : null;
+        function checkBonus(attrValue, skillValue, mod) {
+            return attrMod(attrValue) + skillMod(skillValue) + (parseInt(mod) || 0);
         }
 
-        function rollFace(faces) {
-            const i = Math.floor(Math.random() * 12);
-            return { type: faces[i], value: i + 1 };
+        function rollCheck(attrValue, skillValue, mod, mode) {
+            const bonus = checkBonus(attrValue, skillValue, mod);
+            const trained = (parseInt(skillValue) || 0) >= TRAINED_LEVEL;
+            const f = rollFortune(mode, trained);
+            return { ...f, bonus, trained, mode, total: f.nat + bonus };
         }
 
-        function rollPool(counts, numDice, source, out) {
-            const faces = buildFaces(counts);
-            for (let i = 0; i < numDice; i++) {
-                let chain = 0, again = true;
-                while (again && chain <= MAX_CHAIN) {
-                    again = false;
-                    const { type, value } = rollFace(faces);
-                    out.push({ type, value, source, isChain: chain > 0 });
-                    if (FACE_INFO[type].explodes && chain < MAX_CHAIN) { chain++; again = true; }
-                }
-            }
+        // Chance de réussite contre une DC : 10 % par point, avantage et formation compris
+        function successChance(bonus, dc, mode, trained) {
+            const k = dc - bonus;
+            let p = k <= 1 ? 1 : k > 10 ? 0 : (11 - k) / 10;
+            if (trained && k > 1 && k <= 10) p += 0.1 * p;
+            if (mode === 'adv') return 1 - (1 - p) * (1 - p);
+            if (mode === 'dis') return p * p;
+            return p;
+        }
+        function pct(p) { return Math.round(p * 100) + ' %'; }
+
+        const DC_SCALE = [
+            ['Facile', 3], ['Normal', 5], ['Difficile', 8], ['Très difficile', 11],
+            ['Maîtrise', 14], ['Élite', 17], ['Sommet humain', 19], ['Surhumain', 20]
+        ];
+        function dcLabel(dc) {
+            let name = 'Trivial';
+            DC_SCALE.forEach(([n, v]) => { if (dc >= v) name = n; });
+            return name;
         }
 
-        // La formation supprime le risque et convertit la moitié des hésitations
-        function trainedFaces(counts) {
-            const [e, s, v, r, x] = counts;
-            const vide = v + r + x;
-            const gained = Math.ceil(vide / 2);
-            return [e, s + gained, vide - gained, 0, 0];
-        }
-
-        function sumFaces(dice) {
-            let total = 0, eclats = 0, revers = 0, chains = 0;
-            dice.forEach(d => {
-                total += FACE_INFO[d.type].value;
-                if (d.type === 'eclat') eclats++;
-                if (d.type === 'revers' || d.type === 'reversP') revers++;
-                if (d.isChain) chains++;
-            });
-            return { total, eclats, revers, chains };
-        }
-
-        /* ----- Jet d'aptitude : socle + dés d'aptitude ----- */
-        function rollSkillCheck(attrValue, skillValue) {
-            const attr = getAttributeLevel(attrValue);
-            const lvl = getSkillLevel(skillValue);
-            const out = [];
-            const add = lvl.add || 0;
-            rollPool(attr.faces, SOCLE_DICE, 'socle', out);
-            if (add > 0) rollPool(trainedFaces(attr.faces), add, 'aptitude', out);
-            if (add < 0) {
-                const neg = NEGATIVE_DICE[Math.max(1, Math.min(2, skillValue))];
-                if (neg) rollPool(neg.faces, -add, 'faiblesse', out);
-            }
-            return out;
-        }
-
-        /* ----- Jet de pouvoir -----
-           Le couple Vecteur + Domaine fixe la Magnitude maximum ; la Magnitude déclarée
-           est le nombre de dés lancés, et leurs faces dépendent de l'attribut de canal.
-           La somme des faces est la Puissance de l'effet : elle varie d'un jet à l'autre. */
+        /* ----- Dés de pouvoir -----
+           1 d10 par point de Magnitude. Réussite sur 10 − niveau du canal.
+           1 = −1 et Incident · 10 = +2 et Pic de rendement.
+           Les 1 et les 10 s'annulent par paires : seuls ceux qui restent déclenchent leur effet. */
         function magnitudeMax(vLv, dLv) {
             return Math.max(0, vLv) + Math.max(0, dLv);
         }
-
-        function rollPuissance(attrValue, magnitude, bonusDice) {
-            const attr = getAttributeLevel(attrValue);
-            const out = [];
-            if (magnitude > 0) rollPool(attr.faces, magnitude, 'puissance', out);
-            if (bonusDice > 0) rollPool(attr.faces, bonusDice, 'bonus', out);
-            return out;
+        function canalLevel(v) { return Math.min(8, Math.max(1, parseInt(v) || 4)); }
+        function magicThreshold(canalValue) { return 10 - canalLevel(canalValue); }
+        function magicYield(canalValue) { return (canalLevel(canalValue) + 1) / 10; }
+        function magicFace(v, T) {
+            if (v === 1) return { k: 'one', val: -1 };
+            if (v === 10) return { k: 'ten', val: 2 };
+            return v >= T ? { k: 'hit', val: 1 } : { k: 'miss', val: 0 };
         }
+        function rollMagic(canalValue, n, bonusN) {
+            const T = magicThreshold(canalValue);
+            const dice = [];
+            const total = Math.max(0, n) + Math.max(0, bonusN || 0);
+            for (let i = 0; i < total; i++) {
+                const v = d10();
+                dice.push({ v, ...magicFace(v, T), bonus: i >= n });
+            }
+            const raw = dice.reduce((s, d) => s + d.val, 0);
+            const ones = dice.filter(d => d.k === 'one').length;
+            const tens = dice.filter(d => d.k === 'ten').length;
+            const pairs = Math.min(ones, tens);
+            return { dice, T, raw, ones, tens, pairs, mishaps: ones - pairs, surges: tens - pairs };
+        }
+        // Valeur d'effet : ce que la Puissance vaut sur l'échelle des DC
+        function effectValue(p) { return p > 0 ? 5 + POWER_FACTOR * p : 0; }
 
-        function facesSummary(counts) {
-            const [e, s, v, r, x] = counts;
-            const parts = [];
-            let lo = 1;
-            const seg = (n, sym, color) => {
-                if (!n) return;
-                const hi = lo + n - 1;
-                parts.push(`<span style="color:${color}">${sym}${n > 1 ? lo + '-' + hi : lo}</span>`);
-                lo = hi + 1;
+        const MAGIC_STYLE = {
+            one: { c: '#e05c52', s: '▼', l: 'Incident (−1)' },
+            miss: { c: '#6a7d92', s: '○', l: 'Sans effet (0)' },
+            hit: { c: '#8b7ae0', s: '●', l: 'Réussite (+1)' },
+            ten: { c: '#d9a441', s: '✦', l: 'Pic (+2)' }
+        };
+        /* ----- Lecture de la Puissance (ACI : l'Habilitation) -----
+           L'effet double à chaque point, puis est multiplié par 10 par point au-delà de P12.
+           Gravité d'un pouvoir offensif : ⌈2P ÷ 3⌉, plafonnée à Terminale. */
+        const GRAVITY_NAMES = ['', 'Superficielle', 'Légère', 'Modérée', 'Sérieuse', 'Grave', 'Critique', 'Terminale'];
+        const POWER_CLASSES = [[15, 'Ω Omega'], [11, 'α Alpha'], [7, 'β Beta'], [4, 'γ Gamma'], [2, 'δ Delta'], [1, 'ε Epsilon']];
+        function fmtMass(kg) {
+            const n = v => Number(v.toPrecision(2)).toString().replace('.', ',');   // deux chiffres significatifs
+            if (kg >= 1e9) return n(kg / 1e9) + ' Mt';
+            if (kg >= 1e6) return n(kg / 1e6) + ' kt';
+            if (kg >= 1000) return n(kg / 1000) + ' t';
+            return Math.round(kg / 10) * 10 + ' kg';
+        }
+        function powerReading(p) {
+            if (p <= 0) return null;
+            const cls = POWER_CLASSES.find(c => p >= c[0])[1];
+            const kg = p <= 12 ? 50 * Math.pow(2, p) : 50 * Math.pow(2, 12) * Math.pow(10, p - 12);
+            const g = Math.min(7, Math.ceil(2 * p / 3));
+            const row = POWER_TABLE[p];
+            return {
+                cls, grav: g, gravName: GRAVITY_NAMES[g],
+                mass: row ? row[0] : fmtMass(kg),
+                range: row ? row[1] : fmtDist(30 * Math.pow(2, p / 2)),
+                zone: 5 * p + ' ft'
             };
-            seg(x, FACE_INFO.reversP.sym, FACE_INFO.reversP.color);
-            seg(r, FACE_INFO.revers.sym, FACE_INFO.revers.color);
-            seg(v, FACE_INFO.vide.sym, FACE_INFO.vide.color);
-            seg(s, FACE_INFO.succes.sym, FACE_INFO.succes.color);
-            seg(e, FACE_INFO.eclat.sym, FACE_INFO.eclat.color);
-            const from = successFrom(counts);
-            return (from ? `<strong>Réussite sur ${from}+</strong> · ` : `<strong>Aucune réussite possible</strong> · `) + parts.join(' ');
+        }
+        // Tableau de lecture de l'ACI : [poids max, portée] par point de Puissance ; rayon de zone = 5 ft par point
+        const POWER_TABLE = {
+            1: ['100 kg', '40 ft'], 2: ['200 kg', '60 ft'], 3: ['400 kg', '85 ft'], 4: ['800 kg', '120 ft'],
+            5: ['1,6 t', '170 ft'], 6: ['3,2 t', '240 ft'], 7: ['6,4 t', '340 ft'], 8: ['13 t', '480 ft'],
+            9: ['26 t', '680 ft'], 10: ['51 t', '960 ft'], 11: ['100 t', '1 400 ft'], 12: ['200 t', '1 900 ft'],
+            13: ['2 kt', '2 700 ft'], 14: ['20 kt', '1,2 km'], 15: ['200 kt', '1,6 km'], 16: ['2 Mt', '2,3 km']
+        };
+        function fmtDist(ft) {
+            const r = Number(ft.toPrecision(2));
+            if (r >= 3300) return '≈ ' + Number((r * 0.3048 / 1000).toPrecision(2)).toString().replace('.', ',') + ' km';
+            return (r < 100 ? Math.max(5, Math.round(r / 5) * 5) : r) + ' ft';
+        }
+        // Encart replié par défaut : ordres de grandeur maximum accessibles à cette Puissance
+        function powerDetailHtml(rows, note) {
+            return `<div class="pw-detail">
+                <button type="button" class="pw-detail-btn" onclick="this.parentElement.classList.toggle('open')">Détail de la Puissance</button>
+                <div class="pw-detail-body">
+                    <div class="pw-grid">${rows.map(r => `<div><small>${r[0]}</small><b>${r[1]}</b></div>`).join('')}</div>
+                    ${note ? `<div class="pw-note">${note}</div>` : ''}
+                </div>
+            </div>`;
+        }
+        function powerDetail(p) {
+            const r = powerReading(p);
+            if (!r) return '';
+            return powerDetailHtml([
+                ['Palier', r.cls],
+                ['Poids max', r.mass],
+                ['Portée', r.range],
+                ['Zone (rayon)', r.zone],
+                ['Résistance', 'DC ' + effectValue(p)]
+            ], 'Ordres de grandeur : le maximum accessible à cette Puissance, à ajuster par le MJ selon la situation.');
         }
 
-        const FACE_LEGEND = '<div class="legend">' +
-            FACE_ORDER.map(k => `<span style="color:${FACE_INFO[k].color}">${FACE_INFO[k].sym} ${FACE_INFO[k].label}</span>`).join('') +
-            '</div>';
+        const MISHAP_NAME = 'Incident';
+        const SURGE_NAME = 'Pic de rendement';
+
+        function magicSummary(canalValue) {
+            const T = magicThreshold(canalValue);
+            return `<strong>Réussite sur ${T}+</strong> · <span style="color:${MAGIC_STYLE.one.c}">1 ▼ −1</span>`
+                + ` · <span style="color:${MAGIC_STYLE.ten.c}">10 ✦ +2</span> · rendement ${magicYield(canalValue).toFixed(1).replace('.', ',')} par dé`;
+        }
+
+        const FACE_LEGEND = '<div class="legend">'
+            + ['one', 'miss', 'hit', 'ten'].map(k => `<span style="color:${MAGIC_STYLE[k].c}">${MAGIC_STYLE[k].s} ${MAGIC_STYLE[k].l}</span>`).join('')
+            + '</div>';
 
         /* ==========================================================
            D · VALEURS DÉRIVÉES
@@ -3863,14 +4075,9 @@
             renderGauges();
         }
 
-        // Valeur passive : espérance du jet, arrondie
+        // Valeur passive : le scénario ordinaire, d10 pris à 5
         function getPassiveValue(skill) {
-            const attrValue = appState.attributes[skill.attr] || 4;
-            const [e, s, v, r, x] = getAttributeLevel(attrValue).faces;
-            const lvl = getSkillLevel(skill.level);
-            const perDie = (e + s - r - x) / (12 - e - x);
-            const nb = SOCLE_DICE + Math.max(0, lvl.add || 0);
-            return Math.max(0, Math.round(nb * perDie));
+            return 5 + checkBonus(appState.attributes[skill.attr] || 4, skill.level, 0);
         }
 
         /* ==========================================================
@@ -3905,13 +4112,12 @@
                 }
                 const val = appState.attributes[a.id];
                 const lv = getAttributeLevel(val);
-                const [e, s, v, r, x] = lv.faces;
                 const row = document.createElement('div');
                 row.className = 'attr-row';
-                row.title = `${a.name} ${val} · ✦${e} ●${s} ○${v}` + (r ? ` ▼${r}` : '') + (x ? ` ▼▼${x}` : '');
+                row.title = `${a.name} ${lv.name} · ${fmtMod(attrMod(val))} au jet`;
                 row.innerHTML = `
                     <span class="attr-name">${attrIcon(a.id)}${a.short} · ${a.name}</span>
-                    <span class="attr-val" style="color:${lv.color}">${lv.name}<sub>${val}</sub></span>
+                    <span class="attr-val" style="color:${lv.color}">${lv.name}<sub>${fmtMod(attrMod(val))}</sub></span>
                     <span class="step">
                         <button onclick="modAttr('${a.id}',-1)">−</button>
                         <button onclick="modAttr('${a.id}',1)">+</button>
@@ -4056,6 +4262,7 @@
                 const attr = ATTRIBUTES.find(a => a.id === sk.attr);
                 const el = document.createElement('div');
                 el.className = 'skill';
+                el.dataset.skill = sk.id;
                 el.innerHTML = `
                     <span class="skill-name" title="${sk.name}">${sk.name}</span>
                     <button class="skill-attr" onclick="cycleSkillAttr('${sk.id}')" title="Attribut de référence">${attr ? attr.short : '-'}</button>
@@ -4075,7 +4282,7 @@
         function modSkill(id, d) {
             const sk = appState.skills.find(s => s.id === id);
             if (!sk) return;
-            sk.level = Math.max(0, Math.min(8, sk.level + d));
+            sk.level = Math.max(1, Math.min(8, sk.level + d));
             renderSkills(); renderPassives(); renderSpecialties(); renderGauges(); refreshRollUI();
         }
 
@@ -4170,18 +4377,18 @@
             const el = document.getElementById('passives');
             if (!el) return;
             const rows = appState.skills
-                .filter(s => s.level > 0)
+                .filter(s => s.level >= 1)
                 .map(s => ({ s, v: getPassiveValue(s) }))
                 .sort((a, b) => b.v - a.v || a.s.name.localeCompare(b.s.name));
             el.innerHTML = rows.map(({ s, v }) => {
-                const tier = v >= 7 ? 'high' : v >= 5 ? 'mid' : 'low';
+                const tier = v >= 9 ? 'high' : v >= 6 ? 'mid' : 'low';
                 const attr = ATTRIBUTES.find(a => a.id === s.attr);
                 return `<div class="passive ${tier}"><span>${s.name}</span><span class="pa">${attr ? attr.short : ''}</span><span class="pv">${v}</span></div>`;
             }).join('') || '<div class="empty">Aucune aptitude acquise</div>';
         }
 
         /* ---------- Canal de manifestation ---------- */
-        // Un seul attribut pour tous les vecteurs : il donne aux dés de Puissance leur profil de faces.
+        // Un seul attribut pour tous les vecteurs : il fixe le seuil de réussite des d10 de Puissance.
         function getCanal() {
             const id = appState.canal;
             return ATTRIBUTES.some(a => a.id === id) ? id : 'volonte';
@@ -4203,10 +4410,10 @@
             if (info) {
                 const a = ATTRIBUTES.find(x => x.id === getCanal());
                 const lv = getAttributeLevel(appState.attributes[getCanal()]);
-                const [e, su, v, r, x] = lv.faces;
-                const perDie = (e + su - r - x) / (12 - e - x);
-                info.innerHTML = `<b style="color:${lv.color}">${a.name} ${lv.name}</b> · ${facesSummary(lv.faces)}`
-                    + `<br>Rendement moyen <b>${(Math.round(perDie * 100) / 100).toFixed(2)}</b> de Puissance par dé engagé.`;
+                const val = appState.attributes[getCanal()];
+                info.innerHTML = `<b style="color:${lv.color}">${a.name} ${lv.name}</b> · ${magicSummary(val)}`
+                    + `<br>Chaque d10 engagé rapporte en moyenne <b>${magicYield(val).toFixed(1).replace('.', ',')}</b> de Puissance. `
+                    + `Valeur d'effet = 5 + Puissance.`;
             }
         }
 
@@ -4661,7 +4868,7 @@
             // ----- Bloc APTITUDE (jet simple)
             const sAttr = document.getElementById('s-attr').value;
             const sk = appState.skills.find(s => s.id === document.getElementById('s-skill').value);
-            document.getElementById('s-pool').innerHTML = poolbarSkill(sk, sAttr);
+            document.getElementById('s-pool').innerHTML = poolbarSkill(sk, sAttr, parseInt(document.getElementById('s-bonus').value) || 0, circMode('s-circ'), dcValue('s-dc'));
             setReadout('s-readout', skillReadout(sk, sAttr));
             document.getElementById('s-go').disabled = !sk;
 
@@ -4686,7 +4893,7 @@
             // ----- Blocs du jet combiné
             const cAttr = document.getElementById('c-sattr').value;
             const csk = appState.skills.find(s => s.id === document.getElementById('c-skill').value);
-            document.getElementById('c-pool').innerHTML = poolbarSkill(csk, cAttr);
+            document.getElementById('c-pool').innerHTML = poolbarSkill(csk, cAttr, parseInt(document.getElementById('c-bonus').value) || 0, circMode('c-circ'), dcValue('c-dc'));
             setReadout('c-readout-skill', skillReadout(csk, cAttr));
 
             const cpAttr = getCanal();
@@ -4709,17 +4916,30 @@
             renderGauges();
         }
 
-        function poolbarSkill(sk, attrId) {
-            if (!sk) return '<span class="pb-empty">Choisir une aptitude pour composer la réserve</span>';
+        // Avantage / Désavantage : deux interrupteurs exclusifs, communs à tous les jets
+        let rollCirc = 'normal';
+        function circMode() { return rollCirc; }
+        function toggleCirc(mode) {
+            rollCirc = rollCirc === mode ? 'normal' : mode;
+            document.querySelectorAll('.circ-btn').forEach(b => b.classList.toggle('active', b.dataset.circ === rollCirc));
+            refreshRollUI();
+        }
+        function dcValue(id) { return Math.max(0, parseInt((document.getElementById(id) || {}).value) || 0); }
+
+        function poolbarSkill(sk, attrId, mod, mode, dc) {
+            if (!sk) return '<span class="pb-empty">Choisir une aptitude pour composer le jet</span>';
             const al = getAttributeLevel(appState.attributes[attrId]);
             const sl = getSkillLevel(sk.level);
-            const nb = SOCLE_DICE + Math.max(0, sl.add);
-            return `<span class="pb-n">${nb}</span><span class="pb-l">dés<br>lancés</span>`
-                + `<span class="pb-chip">Profil <b style="color:${al.color}">${al.name}</b></span>`
-                + `<span class="pb-chip">Maîtrise <b style="color:${sl.color}">${sl.name}</b></span>`
-                + (sl.add < 0 ? `<span class="pb-chip bad">${-sl.add} dé(s) défavorable(s)</span>` : '')
+            const bonus = checkBonus(appState.attributes[attrId], sk.level, mod);
+            const trained = sk.level >= TRAINED_LEVEL;
+            return `<span class="pb-n">${fmtMod(bonus)}</span><span class="pb-l">d10<br>${fmtMod(bonus)}</span>`
+                + `<span class="pb-chip">Attribut <b style="color:${al.color}">${al.name} ${fmtMod(attrMod(appState.attributes[attrId]))}</b></span>`
+                + `<span class="pb-chip">Aptitude <b style="color:${sl.color}">${sl.name} ${fmtMod(skillMod(sk.level))}</b></span>`
+                + (trained ? `<span class="pb-chip">Formé : 1 relancé</span>` : '')
+                + (mode !== 'normal' ? `<span class="pb-chip ${mode === 'dis' ? 'bad' : ''}">${CIRC_LABEL[mode]}</span>` : '')
                 + `<span class="pb-chip">Passive <b>${getPassiveValue(sk)}</b></span>`
-                + `<span class="pb-faces">${facesSummary(al.faces)}</span>`;
+                + (dc ? `<span class="pb-chip warn">DC ${dc} · <b>${pct(successChance(bonus, dc, mode, trained))}</b></span>` : '')
+                + `<span class="pb-faces">Champ d'action <strong>${bonus + 1} à ${bonus + 10}</strong></span>`;
         }
 
         function poolbarPower(v, d, attrId, magnitude, bonusDice, powerMod) {
@@ -4727,15 +4947,16 @@
             const al = getAttributeLevel(appState.attributes[attrId]);
             const nb = magnitude + bonusDice;
             const left = getChargeLeft();
-            const [e, su, vd, rv, x] = al.faces;
-            const esp = Math.round(nb * ((e + su - rv - x) / (12 - e - x)) * 10) / 10;
+            const esp = Math.max(0, nb * magicYield(appState.attributes[attrId]) + (powerMod || 0));
             const canal = ATTRIBUTES.find(a => a.id === attrId);
-            return `<span class="pb-n">${nb}</span><span class="pb-l">dés de<br>puissance</span>`
-                + `<span class="pb-chip">Canal <b style="color:${al.color}">${canal ? canal.name : '-'}</b></span>`
-                + `<span class="pb-chip">Attendu <b>≈ ${esp}</b>${powerMod ? ` ${powerMod > 0 ? '+' : '−'} ${Math.abs(powerMod)}` : ''}</span>`
+            const espTxt = (Math.round(esp * 10) / 10).toString().replace('.', ',');
+            return `<span class="pb-n">${nb}</span><span class="pb-l">d10 de<br>puissance</span>`
+                + `<span class="pb-chip">Canal <b style="color:${al.color}">${canal ? canal.name : '-'} ${al.name}</b></span>`
+                + `<span class="pb-chip">Puissance attendue <b>≈ ${espTxt}</b></span>`
+                + `<span class="pb-chip">Valeur d'effet <b>≈ ${Math.round(effectValue(esp))}</b></span>`
                 + `<span class="pb-chip${nb > left ? ' warn' : ''}" style="${nb > left ? '' : 'color:var(--charge)'}">`
                 + `Coût <b>${nb}</b> / ${left} Charge</span>`
-                + `<span class="pb-faces">${facesSummary(al.faces)}</span>`;
+                + `<span class="pb-faces">${magicSummary(appState.attributes[attrId])}</span>`;
         }
 
         function skillReadout(sk, attrId) {
@@ -4748,51 +4969,56 @@
 
         function powerReadout(v, d, attrId, magnitude, bonusDice, powerMod) {
             if (!v || !d || !attrId) return 'Sélectionner un vecteur et un domaine.';
-            const al = getAttributeLevel(appState.attributes[attrId]);
             const cap = magnitudeMax(v.level, d.level);
             const nb = magnitude + bonusDice;
-            const cost = nb;
             const left = getChargeLeft();
             const missing = [];
             if (v.level === 0) missing.push('vecteur ' + v.name);
             if (d.level === 0) missing.push('domaine ' + d.name);
-
-            // Espérance de Puissance sur ce profil de faces
-            const [e, su, vd, rv, x] = al.faces;
-            const perDie = (e + su - rv - x) / (12 - e - x);
-            const esp = Math.round(nb * perDie * 10) / 10;
-
             return `<b>${v.glyph} ${v.name}</b> ${v.level} × <b>${d.glyph} ${d.name}</b> ${d.level}`
                 + ` · Magnitude <b>${magnitude}</b> sur ${cap} autorisée`
                 + (bonusDice ? ` · ${bonusDice} dé(s) bonus hors plafond` : '')
                 + (missing.length ? `<br><span class="badline">Habilitation absente : ${missing.join(' et ')}</span>`
                     : magnitude > cap ? `<br><span class="badline">Magnitude au-delà du plafond d'habilitation</span>` : '')
-                + (!missing.length && cost > left ? `<br><span class="warnline">Réserve insuffisante : seuls ${left} dé(s) seront réellement payés</span>` : '');
+                + (!missing.length && nb > left ? `<br><span class="warnline">Réserve insuffisante : seuls ${left} dé(s) seront réellement payés</span>` : '');
         }
 
         /* ==========================================================
            G · RÉSOLUTION
            ========================================================== */
 
-        function diceBlockHtml(label, facesInfo, dice) {
-            const cells = dice.map((d, i) => {
-                const info = FACE_INFO[d.type];
-                const cls = 'die'
-                    + (d.source === 'faiblesse' ? ' weak' : '')
-                    + (d.source !== 'socle' ? ' trained' : '')
-                    + (d.isChain ? ' chain' : '');
-                const src = d.source === 'socle' ? 'socle'
-                    : d.source === 'aptitude' ? 'dé d\'aptitude'
-                        : d.source === 'habilitation' ? 'dé d\'habilitation'
-                            : d.source === 'surtension' ? 'dé de surtension' : 'dé défavorable';
-                return `<div class="${cls}" style="border-color:${info.color};color:${info.color};animation-delay:${(i * 0.05).toFixed(2)}s" title="${info.label} · ${src}">
-                    <span class="dv">${d.value}</span><span class="ds">${info.sym}</span></div>`;
+        // Ligne de calcul compacte : dé(s) + modificateurs = total, puis la DC
+        function equationHtml(r, parts, total, dc, label) {
+            const dice = r.dice.map(d => {
+                const sc = scenarioOf(d.v);
+                return `<span class="eq-die${d.kept ? '' : ' dropped'}" style="border-color:${sc.color};color:${sc.color}" title="${sc.label}${d.rerolled ? ' · 1 relancé (formation)' : ''}${d.kept ? '' : ' · écarté'}">${d.v}${d.rerolled ? '<i>↻</i>' : ''}</span>`;
+            }).join('');
+            const terms = parts.filter(p => p.always || p.v).map(p =>
+                `<span class="eq-op">+</span><span class="eq-term"><small>${p.l}</small>${fmtMod(p.v)}</span>`).join('');
+            let dcHtml = '';
+            if (dc) {
+                const m = total - dc;
+                const deg = m >= 5 ? 'Réussite remarquable' : m >= 0 ? 'Réussite' : m <= -5 ? 'Échec grave' : 'Échec';
+                dcHtml = `<span class="eq-dc ${m >= 0 ? 'ok' : 'ko'}"><small>DC ${dc} · ${dcLabel(dc)}</small>${deg} <i>${m >= 0 ? '+' : '−'}${Math.abs(m)}</i></span>`;
+            }
+            const sc = scenarioOf(r.nat);
+            return `<div class="eq-row">
+                <span class="eq-dice">${dice}</span>${terms}
+                <span class="eq-op">=</span><span class="eq-total">${label ? `<small>${label}</small>` : ''}${total}</span>
+                ${dcHtml}
+                <span class="eq-meta" style="color:${sc.color}">${sc.label}${r.mode !== 'normal' ? ' · ' + CIRC_LABEL[r.mode] : ''}${r.trained ? ' · formé' : ''}</span>
+            </div>`;
+        }
+
+        function magicBlockHtml(label, canalValue, m) {
+            const cells = m.dice.map((d, i) => {
+                const st = MAGIC_STYLE[d.k];
+                return `<div class="die${d.bonus ? ' trained' : ''}" style="border-color:${st.c};color:${st.c};animation-delay:${(i * 0.04).toFixed(2)}s" title="${st.l}${d.bonus ? ' · dé bonus' : ''}">
+                    <span class="dv">${d.v}</span><span class="ds">${st.s}</span></div>`;
             }).join('');
             return `<div class="dice-block">
-                <div class="dice-label">${label}</div>
-                <div class="faces-line">${facesInfo}</div>
-                <div class="dice-row">${cells}</div>
-                ${FACE_LEGEND}
+                <div class="dice-label">${label} · réussite sur ${magicThreshold(canalValue)}+</div>
+                <div class="dice-row">${cells || '<span class="pb-empty">Aucun dé engagé</span>'}</div>
             </div>`;
         }
 
@@ -4811,6 +5037,32 @@
             </div>`;
         }
 
+        // Tuile principale : le total, et la DC fusionnée (réussite, degré, marge)
+        function mainVerdict(label, total, note, dc) {
+            if (!dc) return verdictHtml(label, total, note);
+            const m = total - dc;
+            const deg = m >= 5 ? 'Réussite remarquable' : m >= 0 ? 'Réussite' : m <= -5 ? 'Échec grave' : 'Échec';
+            return verdictHtml(label, total, `${note}<br><b>DC ${dc} ${dcLabel(dc)} · ${deg} · marge ${m >= 0 ? '+' : '−'}${Math.abs(m)}</b>`, m >= 0);
+        }
+
+        // Marqueurs narratifs (1 et 10 naturels, effets du pouvoir) : une ligne de puces, pas des tuiles
+        function chipsHtml(list) {
+            const items = list.filter(Boolean);
+            return items.length ? `<div class="vchips">${items.join('')}</div>` : '';
+        }
+        function naturalChip(nat) {
+            if (nat === 10) return `<span class="vchip ok" title="Le meilleur scénario : un avantage s'ouvre en plus du résultat">✦ 10 naturel · Opportunité</span>`;
+            if (nat === 1) return `<span class="vchip ko" title="Le pire scénario : quelque chose se complique, même en cas de réussite">▼ 1 naturel · Complication</span>`;
+            return '';
+        }
+        function magicChips(m) {
+            return [
+                m.mishaps ? `<span class="vchip ko" title="1 non compensé par un 10 · gravité selon le niveau de danger de l'agent">▼ ${MISHAP_NAME} ×${m.mishaps}</span>` : '',
+                m.surges ? `<span class="vchip ok" title="10 non compensé par un 1 : effet secondaire favorable">✦ ${SURGE_NAME} ×${m.surges}</span>` : '',
+                m.pairs ? `<span class="vchip" title="Un 1 et un 10 annulent leurs effets ; leurs valeurs restent comptées">${m.pairs} paire${m.pairs > 1 ? 's' : ''} 1/10 annulée${m.pairs > 1 ? 's' : ''}</span>` : ''
+            ];
+        }
+
         function showResult(title, sub, diceHtml, stats, verdicts) {
             document.getElementById('r-title').textContent = title;
             document.getElementById('r-sub').textContent = sub;
@@ -4823,59 +5075,54 @@
 
         function isPrivate() { return document.getElementById('private-roll').checked; }
 
+        function natTag(nat) { return nat === 10 ? ' · ✦ Opportunité' : nat === 1 ? ' · ▼ Complication' : ''; }
+
         /* ---------- Jet d'aptitude ---------- */
         function rollSkill() {
             const attrId = document.getElementById('s-attr').value;
             const sk = appState.skills.find(s => s.id === document.getElementById('s-skill').value);
             if (!sk) return;
-            const bonus = parseInt(document.getElementById('s-bonus').value) || 0;
+            const mod = parseInt(document.getElementById('s-bonus').value) || 0;
+            const mode = circMode('s-circ');
+            const dc = dcValue('s-dc');
             const al = getAttributeLevel(appState.attributes[attrId]);
             const sl = getSkillLevel(sk.level);
-
-            const dice = rollSkillCheck(appState.attributes[attrId], sk.level);
-            const c = sumFaces(dice);
-            const total = c.total + bonus;
+            const r = rollCheck(appState.attributes[attrId], sk.level, mod, mode);
             const attrName = ATTRIBUTES.find(a => a.id === attrId).name;
 
             showResult(
                 'Jet d\'aptitude',
                 `${sk.name} · ${attrName} (${al.name}) · ${sl.name}`,
-                diceBlockHtml('Faces obtenues', facesSummary(al.faces), dice),
-                statsHtml([
-                    { l: 'Éclats', v: c.eclats, c: FACE_INFO.eclat.color },
-                    { l: 'Revers', v: c.revers, c: FACE_INFO.revers.color },
-                    { l: 'Relances', v: c.chains },
-                    { l: 'Modificateur', v: bonus ? (bonus > 0 ? '+' + bonus : bonus) : 0 }
-                ]),
-                verdictHtml('Degré de réussite', total, `${dice.length} dé(s) lancé(s)`)
+                '',
+                '',
+                equationHtml(r, [
+                    { l: 'Attribut', v: attrMod(appState.attributes[attrId]), always: true },
+                    { l: 'Aptitude', v: skillMod(sk.level), always: true },
+                    { l: 'Mod.', v: mod }
+                ], r.total, dc, 'Résultat')
+                + chipsHtml([naturalChip(r.nat)])
             );
             transmit({
                 kind: 'Aptitude',
-                line: `**${sk.name}** [${attrName}] - Résultat : **${total}**`,
-                detail: `Éclats ${c.eclats} · Revers ${c.revers}` + (bonus ? ` · Mod ${bonus > 0 ? '+' : ''}${bonus}` : '')
+                line: `**${sk.name}** [${attrName}] - Résultat : **${r.total}**${dc ? (r.total >= dc ? ` ✅ DC ${dc}` : ` ❌ DC ${dc}`) : ''}`,
+                detail: `d10 ${r.nat} ${fmtMod(r.bonus)} · ${scenarioOf(r.nat).label}` + (mode !== 'normal' ? ` · ${CIRC_LABEL[mode]}` : '') + natTag(r.nat)
             });
         }
 
         /* ---------- Jet de pouvoir ---------- */
-        // La Magnitude est un nombre de dés, plafonné par Vecteur + Domaine.
-        // La Puissance obtenue est la somme des faces, plus le modificateur de puissance.
+        // La Magnitude est un nombre de d10, plafonné par Vecteur + Domaine.
+        // La Puissance est la somme des dés, plus le modificateur de puissance, plancher 0.
         function resolvePower(attrId, vector, domain, magnitude, bonusDice, powerMod) {
             const cap = magnitudeMax(vector.level, domain.level);
             const mag = Math.max(0, Math.min(cap, magnitude));
             const bonus = Math.max(0, Math.min(MAX_BONUS_DICE, bonusDice || 0));
-
-            const dice = rollPuissance(appState.attributes[attrId], mag, bonus);
-            const c = sumFaces(dice);
-            const raw = c.total;
-            const puissance = Math.max(0, raw + (powerMod || 0));
-
-            // Coût : 1 Charge par dé engagé, dés bonus compris.
-            // La réserve ne descend jamais sous zéro ; c'est le surmenage qui sanctionne.
+            const m = rollMagic(appState.attributes[attrId], mag, bonus);
+            const puissance = Math.max(0, m.raw + (powerMod || 0));
+            // Coût : 1 Charge par dé engagé, dés bonus compris. La réserve ne descend jamais sous zéro.
             const cost = mag + bonus;
             const paid = Math.min(cost, getChargeLeft());
             spendCharge(paid);
-
-            return { dice, c, raw, puissance, magnitude: mag, cap, bonus, cost, paid };
+            return { m, raw: m.raw, puissance, effect: effectValue(puissance), magnitude: mag, cap, bonus, cost, paid };
         }
 
         function rollPower() {
@@ -4895,28 +5142,32 @@
             showResult(
                 'Activation de pouvoir',
                 `${v.name} × ${d.name} · canal ${attrName} (${al.name}) · Magnitude ${r.magnitude}/${r.cap}`,
-                diceBlockHtml(`${r.magnitude} dé(s) de Magnitude${r.bonus ? ' + ' + r.bonus + ' bonus' : ''}`, facesSummary(al.faces), r.dice),
+                magicBlockHtml(`${r.magnitude} d10 de Magnitude${r.bonus ? ' + ' + r.bonus + ' bonus' : ''}`, appState.attributes[attrId], r.m),
                 statsHtml([
-                    { l: 'Faces', v: r.raw, always: true },
-                    { l: 'Mod. puissance', v: powerMod ? (powerMod > 0 ? '+' + powerMod : powerMod) : 0, c: 'var(--vector)' },
-                    { l: 'Éclats', v: r.c.eclats, c: FACE_INFO.eclat.color },
-                    { l: 'Revers', v: r.c.revers, c: FACE_INFO.revers.color },
+                    { l: 'Dés', v: r.raw, always: true },
+                    { l: 'Mod. puissance', v: powerMod ? fmtMod(powerMod) : 0, c: 'var(--vector)' },
                     { l: 'Charge', v: '−' + r.paid, always: true, c: 'var(--charge)' },
                     { l: 'Zone max', v: zoneText(r.puissance).env + ' ft', always: true, c: 'var(--vector)' }
                 ]),
-                verdictHtml('Puissance de l\'effet', r.puissance,
-                    `${r.magnitude} dé(s) de Magnitude${r.bonus ? ' + ' + r.bonus + ' bonus' : ''} sur le profil ${al.name}`
-                    + (powerMod ? ` · ${r.raw} ${powerMod > 0 ? '+' : '−'} ${Math.abs(powerMod)}` : ''),
-                    r.puissance > 0)
+                verdictHtml('Puissance', r.puissance,
+                    `${r.magnitude} d10 · canal ${al.name}` + (powerMod ? ` · ${r.raw} ${fmtMod(powerMod)}` : ''), r.puissance > 0)
+                + verdictHtml('Valeur d\'effet', r.effect || '-',
+                    r.puissance > 0 ? `5 + ${r.puissance} · ${dcLabel(r.effect)} · DC de résistance` : 'Aucun effet')
+                + chipsHtml(magicChips(r.m)) + powerDetail(r.puissance)
             );
             transmit({
                 kind: 'Pouvoir',
-                line: `⚡ **${v.name} × ${d.name}** - Puissance **${r.puissance}**`,
-                detail: `Canal ${attrName} · Magnitude ${r.magnitude}/${r.cap}${r.bonus ? ' +' + r.bonus + ' bonus' : ''}${powerMod ? ` · Mod ${powerMod > 0 ? '+' : ''}${powerMod}` : ''} · Charge −${r.paid}`
+                line: `⚡ **${v.name} × ${d.name}** - Puissance **${r.puissance}** · Valeur d'effet **${r.effect}**`,
+                detail: `Canal ${attrName} · Magnitude ${r.magnitude}/${r.cap}${r.bonus ? ' +' + r.bonus + ' bonus' : ''}${powerMod ? ` · Mod ${fmtMod(powerMod)}` : ''} · Charge −${r.paid}`
+                    + (r.m.mishaps ? ` · ▼ ${MISHAP_NAME} ×${r.m.mishaps}` : '') + (r.m.surges ? ` · ✦ ${SURGE_NAME} ×${r.m.surges}` : '')
             });
         }
 
-        /* ---------- Jet combiné ---------- */
+        /* ---------- Jet combiné ----------
+           Un seul d10 du jet et les d10 de pouvoir. Trois lectures :
+           Amplification = aptitude + Puissance (la magie aide l'action) ;
+           Application = aptitude seule, contre la Complexité (le pouvoir va-t-il où je veux ?) ;
+           Valeur d'effet = 5 + Puissance (ce que fait le pouvoir une fois là). */
         function rollCombo() {
             const sAttrId = document.getElementById('c-sattr').value;
             const sk = appState.skills.find(s => s.id === document.getElementById('c-skill').value);
@@ -4926,18 +5177,15 @@
             const magnitude = parseInt(document.getElementById('c-mag').value) || 0;
             const bonusDice = parseInt(document.getElementById('c-surge').value) || 0;
             const powerMod = parseInt(document.getElementById('c-pbonus').value) || 0;
-            const sBonus = parseInt(document.getElementById('c-bonus').value) || 0;
+            const sMod = parseInt(document.getElementById('c-bonus').value) || 0;
+            const mode = circMode('c-circ');
+            const dc = dcValue('c-dc');
             if (!sk || !v || !d) return;
 
-            const sAl = getAttributeLevel(appState.attributes[sAttrId]);
-            const sDice = rollSkillCheck(appState.attributes[sAttrId], sk.level);
-            const sc = sumFaces(sDice);
-            const skillTotal = sc.total + sBonus;
-
+            const chk = rollCheck(appState.attributes[sAttrId], sk.level, sMod, mode);
             const r = resolvePower(pAttrId, v, d, magnitude, bonusDice, powerMod);
             setZonePow(r.puissance);
-            // La Puissance obtenue s'ajoute au jet d'aptitude
-            const finalTotal = skillTotal + r.puissance;
+            const amp = chk.total + r.puissance;   // Amplification : la Puissance s'ajoute telle quelle
 
             const pAl = getAttributeLevel(appState.attributes[pAttrId]);
             const sName = ATTRIBUTES.find(a => a.id === sAttrId).name;
@@ -4945,23 +5193,27 @@
 
             showResult(
                 'Intervention combinée',
-                `${sk.name} (${sName}) + ${v.name} × ${d.name} (${pName}) · Magnitude ${r.magnitude}/${r.cap}`,
-                diceBlockHtml(`Aptitude · ${sk.name}`, facesSummary(sAl.faces), sDice)
-                + diceBlockHtml(`Pouvoir · ${r.magnitude} dé(s) de Magnitude${r.bonus ? ' + ' + r.bonus + ' bonus' : ''}`, facesSummary(pAl.faces), r.dice),
+                `${sk.name} (${sName}) + ${v.name} × ${d.name} (${pName} ${pAl.name}) · Magnitude ${r.magnitude}/${r.cap}`,
+                magicBlockHtml(`Pouvoir · ${r.magnitude} d10 de Magnitude${r.bonus ? ' + ' + r.bonus + ' bonus' : ''}`, appState.attributes[pAttrId], r.m),
                 statsHtml([
-                    { l: 'Aptitude', v: skillTotal, always: true, c: 'var(--aci-bright)' },
                     { l: 'Puissance', v: r.puissance, always: true, c: 'var(--vector)' },
                     { l: 'Magnitude', v: r.magnitude + ' / ' + r.cap, always: true, c: 'var(--warn)' },
                     { l: 'Charge', v: '−' + r.paid, always: true, c: 'var(--charge)' }
                 ]),
-                verdictHtml('Résultat final', finalTotal, `Aptitude ${skillTotal} + Puissance ${r.puissance}`)
-                + verdictHtml('Puissance de l\'effet', r.puissance,
-                    `${r.magnitude} dé(s) de Magnitude sur le profil ${pAl.name}`, r.puissance > 0)
+                equationHtml(chk, [
+                    { l: 'Attribut', v: attrMod(appState.attributes[sAttrId]), always: true },
+                    { l: 'Aptitude', v: skillMod(sk.level), always: true },
+                    { l: 'Mod.', v: sMod }
+                ], chk.total, 0, 'Application')
+                + mainVerdict('Amplification', amp, `${chk.total} + Puissance ${r.puissance} · la magie aide l'action`, dc)
+                + verdictHtml('Valeur d\'effet', r.effect || '-', r.puissance > 0 ? `5 + ${r.puissance} · DC de résistance` : 'Aucun effet', r.puissance > 0)
+                + chipsHtml([naturalChip(chk.nat), ...magicChips(r.m)]) + powerDetail(r.puissance)
             );
             transmit({
                 kind: 'Combiné',
-                line: `**${sk.name}** [${sName}] + ⚡ **${v.name} × ${d.name}** - Résultat : **${finalTotal}**`,
-                detail: `Aptitude ${skillTotal} + Puissance ${r.puissance} (Magnitude ${r.magnitude}/${r.cap}) · Charge −${r.paid}`
+                line: `**${sk.name}** [${sName}] + ⚡ **${v.name} × ${d.name}** - Amplification **${amp}** · Application **${chk.total}** · Effet **${r.effect}**`,
+                detail: `d10 ${chk.nat} ${fmtMod(chk.bonus)} + Puissance ${r.puissance} (Magnitude ${r.magnitude}/${r.cap}) · Charge −${r.paid}`
+                    + natTag(chk.nat) + (r.m.mishaps ? ` · ▼ ${MISHAP_NAME} ×${r.m.mishaps}` : '') + (r.m.surges ? ` · ✦ ${SURGE_NAME} ×${r.m.surges}` : '')
             });
         }
 
@@ -5125,6 +5377,8 @@
             if (Array.isArray(appState.skills))
                 appState.skills.forEach(sk => {
                     if (sk && typeof sk.custom !== 'boolean') sk.custom = !baseNames.has(sk.name);
+                    // Le niveau « Aucune » (0) n'existe plus : Inapte est le plancher
+                    if (sk) sk.level = Math.max(1, Math.min(8, parseInt(sk.level) || 1));
                 });
             if (!Array.isArray(appState.specialties)) appState.specialties = [];
             if (!ATTRIBUTES.some(a => a.id === appState.canal)) appState.canal = 'volonte';
@@ -5384,6 +5638,142 @@
         document.addEventListener('change', scheduleAutosave, true);
         document.addEventListener('click', scheduleAutosave, true);
         window.addEventListener('beforeunload', autosave);
+    </script>
+
+    <script>
+    function UI_CONFIG($, val) {
+        const rollsTab = () => [...document.querySelectorAll('.nav-tab')].find(t => /'rolls'/.test(t.getAttribute('onclick') || ''));
+        const pair = id => { const m = val(id).match(/(-?\d+)\s*\/\s*(-?\d+)/); return m ? [m[1], m[2]] : [val(id)]; };
+        const header = document.querySelector('.container > .header');
+        return {
+            placeMode: seg => {
+                // Sauvegarde et mode quittent la rangée d'onglets pour que celle-ci puisse défiler sur téléphone
+                const box = document.createElement('div'); box.className = 'header-actions';
+                document.querySelector('.header-top').appendChild(box);
+                box.appendChild(seg);
+                const sv = document.querySelector('.nav-tabs .save-controls'); if (sv) box.appendChild(sv);
+            },
+            placeStrip: strip => header.appendChild(strip),
+            strip: [
+                { id: 'elan', label: 'Élan', title: 'Élan disponible : il baisse avec les incidents', get: () => pair('elan-num') },
+                { id: 'charge', label: 'Charge', title: "Réserve d'activation", get: () => pair('charge-num'),
+                  dec: () => adjustCharge(-1), inc: () => adjustCharge(1), reset: () => restCharge(), resetTitle: 'Récupération complète' },
+                { id: 'foc', label: 'Focalisation', get: () => [val('foc-current'), val('foc-max')],
+                  dec: () => modFocalisation(-1), inc: () => modFocalisation(1) }
+            ],
+            folds: () => {
+                document.querySelectorAll('.hint').forEach(el => uiFold(el, 'Règle'));
+            },
+            quickHit: (target, play) => {
+                if (!play) return null;
+                const it = target.closest('#skills-grid .skill');
+                return it ? it.dataset.skill : null;
+            },
+            quickRoll: id => {
+                switchPage('rolls', rollsTab());
+                switchRoll('skill', document.querySelector('#page-rolls .roll-tab'));
+                $('s-skill').value = id;
+                onSkillPick();
+            },
+            init: () => {
+                const dup = $('elan-num-2'); if (dup) dup.closest('.card').classList.add('ui-dup');
+                // Seuls les onglets et la bande restent collés en haut
+                const top = document.querySelector('.header-top');
+                const fix = () => { header.style.top = (-top.offsetHeight) + 'px'; };
+                fix(); window.addEventListener('resize', fix);
+            }
+        };
+    }
+    </script>
+
+    <script>
+    /* === COUCHE UI : mode Jeu / Édition, bande de ressources, jet en un clic, règles repliées === */
+    (function () {
+        const $ = id => document.getElementById(id);
+        const val = id => { const e = $(id); if (!e) return ''; return (e.tagName === 'INPUT' ? e.value : e.textContent).trim(); };
+        function start() {
+            const CFG = UI_CONFIG($, val);
+
+            /* ----- Mode Jeu / Édition ----- */
+            function getMode() { try { return localStorage.getItem('sheetMode') === 'edit' ? 'edit' : 'play'; } catch (e) { return 'play'; } }
+            function applyMode(m) {
+                document.body.classList.toggle('play-mode', m === 'play');
+                document.querySelectorAll('.mode-seg button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+            }
+            window.setSheetMode = function (m) { try { localStorage.setItem('sheetMode', m); } catch (e) { } applyMode(m); };
+            const seg = document.createElement('div');
+            seg.className = 'mode-seg';
+            seg.innerHTML = '<button type="button" data-mode="play" onclick="setSheetMode(\'play\')" title="Fiche compacte pour la partie : cliquer une compétence prépare son jet">Jeu</button>'
+                + '<button type="button" data-mode="edit" onclick="setSheetMode(\'edit\')" title="Affiche les boutons de création et de progression">Édition</button>';
+            CFG.placeMode(seg);
+            applyMode(getMode());
+
+            /* ----- Bande de ressources ----- */
+            const strip = document.createElement('div');
+            strip.className = 'res-strip'; strip.id = 'res-strip';
+            strip.innerHTML = CFG.strip.map(r => '<div class="rs-item rs-' + r.id + '" data-rs="' + r.id + '" title="' + (r.title || r.label) + '">'
+                + '<span class="rs-label">' + r.label + '</span>'
+                + (r.dec ? '<button type="button" class="rs-btn" data-act="dec">−</button>' : '')
+                + '<span class="rs-val"><b></b><small></small></span>'
+                + (r.inc ? '<button type="button" class="rs-btn" data-act="inc">+</button>' : '')
+                + (r.reset ? '<button type="button" class="rs-btn rs-reset" data-act="reset" title="' + (r.resetTitle || 'Rétablir') + '">↻</button>' : '')
+                + '</div>').join('');
+            CFG.placeStrip(strip);
+            strip.addEventListener('click', e => {
+                const b = e.target.closest('.rs-btn'); if (!b) return;
+                const r = CFG.strip.find(x => x.id === b.closest('.rs-item').dataset.rs);
+                if (r && r[b.dataset.act]) r[b.dataset.act]();
+                sync();
+            });
+            function sync() {
+                CFG.strip.forEach(r => {
+                    const el = strip.querySelector('[data-rs="' + r.id + '"]');
+                    let v = null; try { v = r.get(); } catch (e) { }
+                    const hide = !v;
+                    if (el.hidden !== hide) el.hidden = hide;
+                    if (hide) return;
+                    const b = el.querySelector('b'), s = el.querySelector('small');
+                    const a = String(v[0]), m = (v[1] !== undefined && v[1] !== '') ? ' / ' + v[1] : '';
+                    if (b.textContent !== a) b.textContent = a;
+                    if (s.textContent !== m) s.textContent = m;
+                    const low = m && parseFloat(v[1]) > 0 && parseFloat(v[0]) / parseFloat(v[1]) <= 0.25;
+                    if (el.classList.contains('low') !== !!low) el.classList.toggle('low', !!low);
+                });
+                if (CFG.syncExtra) try { CFG.syncExtra(); } catch (e) { }
+            }
+            let pending = false;
+            const schedule = () => { if (pending) return; pending = true; setTimeout(() => { pending = false; sync(); }, 40); };
+            new MutationObserver(schedule).observe(document.body, { subtree: true, childList: true, characterData: true });
+            ['click', 'input', 'change'].forEach(ev => document.addEventListener(ev, schedule, true));
+            setInterval(sync, 1500);
+            sync();
+
+            /* ----- Règles repliées derrière un « ? » ----- */
+            window.uiFold = function (el, label) {
+                if (!el || el.closest('.rule-fold')) return;
+                const d = document.createElement('details');
+                d.className = 'rule-fold';
+                const s = document.createElement('summary');
+                s.innerHTML = '<span class="rf-q">?</span> ' + label;
+                el.before(d); d.appendChild(s); d.appendChild(el);
+                el.style.marginTop = '6px';
+            };
+            if (CFG.folds) CFG.folds();
+
+            /* ----- Jet en un clic ----- */
+            document.addEventListener('click', e => {
+                const hit = CFG.quickHit(e.target, document.body.classList.contains('play-mode'));
+                if (!hit) return;
+                e.preventDefault(); e.stopPropagation();
+                CFG.quickRoll(hit);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, true);
+
+            if (CFG.init) CFG.init();
+            sync();
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+    })();
     </script>
 </body>
 
