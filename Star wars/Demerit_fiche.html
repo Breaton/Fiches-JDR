@@ -3474,7 +3474,7 @@
                             style="margin-top: 20px;">
                             ⚡⚔ Lancer le jet Force + Compétence
                         </button>
-                        <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="2d10, on garde le meilleur">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="2d10, on garde le pire">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
+                        <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="3d4, on garde les 2 meilleurs">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="3d4, on garde les 2 pires">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
 
                     </div>
                     <div id="urm-panel-comp" class="force-roll-panel">
@@ -3501,7 +3501,7 @@
                             <button class="roll-btn skill" id="skill-page-roll-btn" onclick="rollSkillPage()"
                                 disabled>🎲 LANCER
                                 LE JET</button>
-                            <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="2d10, on garde le meilleur">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="2d10, on garde le pire">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
+                            <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="3d4, on garde les 2 meilleurs">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="3d4, on garde les 2 pires">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
 
                         </div>
 
@@ -3550,7 +3550,7 @@
                                 disabled style="margin-top: 16px;">
                                 ⚡ Lancer le jet de Force
                             </button>
-                            <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="2d10, on garde le meilleur">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="2d10, on garde le pire">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
+                            <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="3d4, on garde les 2 meilleurs">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="3d4, on garde les 2 pires">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
                         </div>
 
                     </div>
@@ -3983,7 +3983,7 @@
 
         // ── PASSIFS DE COMPÉTENCE ───────────────────────────────────────────
         // Chaque compétence possède une valeur passive, employée quand aucun jet
-        // n'est demandé : le scénario ordinaire, d10 pris à 5.
+        // n'est demandé : le scénario ordinaire, 2d4 pris à 5.
         // passif = 5 + bonus d'attribut + bonus de compétence
         // L'attribut de calcul est réglable par compétence et voyage avec la fiche,
         // ce qui permet au dashboard MJ d'afficher les mêmes valeurs sans réglage.
@@ -4545,8 +4545,8 @@
 
         // ===================== SOINS DES BLESSURES =====================
         // Une seule DC par blessure. C'est la marge du jet qui décide :
-        // −4 ou pire = échec · −3 à −1 = stabilisée · 0 et plus = soignée.
-        // Sans pouvoir : −1 cran. Avec pouvoir : 1 cran, plus 1 tous les 3 points de marge.
+        // −3 ou pire = échec · −2 à −1 = stabilisée · 0 et plus = soignée.
+        // Sans pouvoir : −1 cran. Avec pouvoir : 1 cran, plus 1 tous les 2 points de marge.
         const WOUND_REFERENCE = [
             { g: 1, name: 'Superficielle', conval: '24h', guerison: '3 jours', aggr: '-' },
             { g: 2, name: 'Légère', conval: '3 jours', guerison: '1 semaine', aggr: '2 semaines' },
@@ -4556,17 +4556,17 @@
             { g: 6, name: 'Critique', conval: '1 mois', guerison: '2 mois', aggr: '12 heures' },
             { g: 7, name: 'Terminale', conval: '2 mois', guerison: 'Ne guérit pas', aggr: '1 heure' },
         ];
-        const WOUND_DC_TABLE = { 1: 3, 2: 5, 3: 8, 4: 11, 5: 14, 6: 17 };
-        const STAB_MARGIN = 3;
+        const WOUND_DC_TABLE = { 1: 4, 2: 6, 3: 8, 4: 11, 5: 13, 6: 15 };
+        const STAB_MARGIN = 2;
         function getWoundRef(gravity) { return WOUND_REFERENCE[Math.min(7, Math.max(1, gravity)) - 1]; }
-        function getWoundDC(gravity) { return gravity >= 7 ? 20 : (WOUND_DC_TABLE[Math.max(1, gravity)] || WOUND_DC_TABLE[1]); }
+        function getWoundDC(gravity) { return gravity >= 7 ? 18 : (WOUND_DC_TABLE[Math.max(1, gravity)] || WOUND_DC_TABLE[1]); }
         function getStabDC(gravity) { return getWoundDC(gravity) - STAB_MARGIN; }
         // Crans retirés selon la marge : null = échec, 0 = stabilisée seulement
         function healOutcome(result, gravity, isMagic) {
             const margin = result - getWoundDC(gravity);
             if (margin < -STAB_MARGIN) return null;
             if (margin < 0) return 0;
-            return isMagic ? 1 + Math.floor(margin / 3) : 1;
+            return isMagic ? 1 + Math.floor(margin / 2) : 1;
         }
         let openHealFormId = null;
         function ensureWoundIds() {
@@ -4576,7 +4576,7 @@
         function woundTagsHtml(w) {
             const dc = getWoundDC(w.gravity);
             return `<span class="wt sev">${getWoundRef(w.gravity).name}</span>`
-                + `<span class="wt dc" title="Réussir : −1 cran. Rater de 1 à 3 : stabilisée (dès ${getStabDC(w.gravity)}).">DC ${dc}</span>`
+                + `<span class="wt dc" title="Réussir : −1 cran. Rater de 1 ou 2 : stabilisée (dès ${getStabDC(w.gravity)}).">DC ${dc}</span>`
                 + `<span class="wt ${w.stabilized ? 'ok' : 'unstable'}">${w.stabilized ? '✓ Stabilisée' : '⚠ Instable'}</span>`;
         }
         function woundExtrasHtml(w) {
@@ -4648,8 +4648,8 @@
                 <div class="heal-table-wrap"><table class="heal-table"><thead><tr><th>Gravité</th><th>Blessure</th><th>DC</th><th>Stabilise dès</th><th>Convalescence</th><th>Guérison naturelle</th><th>S'aggrave au bout de</th></tr></thead>
                 <tbody>${WOUND_REFERENCE.map(r => `<tr><td>${r.g}${r.g === 7 ? '+' : ''}</td><td>${r.name}</td><td class="hdc">${getWoundDC(r.g)}</td><td>${Math.max(0, getStabDC(r.g))}</td><td>${r.conval}</td><td>${r.guerison}</td><td>${r.aggr}</td></tr>`).join('')}</tbody></table></div>
                 <div class="heal-note">Jet de soin (Médecine en général) contre la DC de la blessure ; avec ${HEAL_MAGIC_LOWER}, la Puissance s'ajoute au jet.<br>
-                <b>Rater de 1 à 3</b> : stabilisée, gravité inchangée. <b>Rater de 4 ou plus</b> : échec.<br>
-                <b>Réussir</b> : stabilisée et <b>−1 cran</b>. Avec ${HEAL_MAGIC_LOWER} : <b>−1 cran de plus tous les 3 points de marge</b>, puis convalescence avant le prochain soin de ce type.<br>
+                <b>Rater de 1 ou 2</b> : stabilisée, gravité inchangée. <b>Rater de 3 ou plus</b> : échec.<br>
+                <b>Réussir</b> : stabilisée et <b>−1 cran</b>. Avec ${HEAL_MAGIC_LOWER} : <b>−1 cran de plus tous les 2 points de marge</b>, puis convalescence avant le prochain soin de ce type.<br>
                 Une blessure qui s'aggrave redevient instable.</div></details>`;
         }
         function addWound() {
@@ -5992,44 +5992,46 @@
             if (conjointBtn) conjointBtn.disabled = !((document.getElementById('force-target-select') || {}).value) || !((document.getElementById('force-verb-select') || {}).value && (document.getElementById('conjoint-attr-select') || {}).value && (document.getElementById('conjoint-skill-select') || {}).value);
             if (typeof updateUnifiedPreview === 'function') updateUnifiedPreview();
         }
-        // ========== JETS DE COMPÉTENCE (d10 du jet) ==========
+        // ========== JETS DE COMPÉTENCE (2d4 du jet) ==========
         /* ==========================================================
            MOTEUR DE DÉS (d10 du jet + d10 de magie)
            ========================================================== */
-        // Jet = d10 (le monde, le scénario) + Attribut + Compétence + modificateur, contre une DC.
-        // Commun et Ordinaire valent 0 : la personne moyenne lance un d10 sec.
-        // Le d10 ne dit pas si le personnage est bon, il dit dans quelles conditions il agit.
-        const TRAINED_LEVEL = 6;     // Expert et plus : un 1 naturel est relancé une fois
+        // Jet = 2d4 (le monde, le scénario) + Attribut + Compétence + modificateur, contre une DC.
+        // Commun et Ordinaire valent 0 : la personne moyenne lance 2d4 secs.
+        // Les 2d4 ne disent pas si le personnage est bon, il dit dans quelles conditions il agit.
         const POWER_FACTOR = 1;      // Valeur d'effet = 5 + Puissance : la Puissance compte telle quelle partout
+        // Le jet de compétence se fait sur 2d4 (2 à 8, moyenne 5) : du hasard, mais en cloche.
+        // Aucune relance liée au niveau de compétence.
+        const NAT_LOW = 2;           // double 1 : pire scénario, Complication
+        const NAT_TOP = 8;           // double 4 : meilleur scénario, Opportunité
 
         function attrMod(v) { return Math.min(8, Math.max(1, parseInt(v) || 4)) - 4; }
-        function skillMod(v) { v = parseInt(v) || 0; return v <= 0 ? -3 : Math.min(8, v) - 3; }
+        function skillMod(v) { return Math.min(8, Math.max(1, parseInt(v) || 1)) - 3; }
         function fmtMod(n) { return n > 0 ? '+' + n : n < 0 ? '−' + Math.abs(n) : '+0'; }
         function d10() { return Math.floor(Math.random() * 10) + 1; }
+        function d4() { return Math.floor(Math.random() * 4) + 1; }
 
+        // Lecture du scénario sur la somme des 2d4
         const SCENARIOS = [
-            { min: 10, label: 'Meilleur scénario', color: '#d9a441' },
-            { min: 8, label: 'Favorable', color: '#3fb27f' },
-            { min: 4, label: 'Ordinaire', color: '#9fb0c4' },
-            { min: 2, label: 'Défavorable', color: '#e08a4a' },
-            { min: 1, label: 'Pire scénario', color: '#e05c52' }
+            { min: 8, label: 'Meilleur scénario', color: '#d9a441' },
+            { min: 6, label: 'Favorable', color: '#3fb27f' },
+            { min: 5, label: 'Ordinaire', color: '#9fb0c4' },
+            { min: 3, label: 'Défavorable', color: '#e08a4a' },
+            { min: 2, label: 'Pire scénario', color: '#e05c52' }
         ];
         function scenarioOf(n) { return SCENARIOS.find(s => n >= s.min) || SCENARIOS[4]; }
 
         const CIRC_LABEL = { normal: 'Circonstances normales', adv: 'Avantage', dis: 'Désavantage' };
 
-        // Avantage : 2d10, on garde le meilleur. Désavantage : 2d10, on garde le pire.
-        function rollFortune(mode, trained) {
-            const one = () => {
-                const first = d10();
-                return (trained && first === 1) ? { v: d10(), rerolled: 1 } : { v: first };
-            };
-            const dice = [one()];
-            if (mode === 'adv' || mode === 'dis') dice.push(one());
-            let keep = 0;
-            if (dice.length === 2) keep = (mode === 'adv' ? dice[1].v > dice[0].v : dice[1].v < dice[0].v) ? 1 : 0;
-            dice.forEach((d, i) => { d.kept = i === keep; });
-            return { dice, nat: dice[keep].v };
+        // 2d4. Avantage : 3d4, on garde les 2 meilleurs. Désavantage : 3d4, on garde les 2 pires.
+        function rollFortune(mode) {
+            const n = (mode === 'adv' || mode === 'dis') ? 3 : 2;
+            const dice = Array.from({ length: n }, () => ({ v: d4(), kept: true }));
+            if (n === 3) {
+                const order = dice.map((d, i) => i).sort((a, b) => dice[a].v - dice[b].v);
+                dice[mode === 'adv' ? order[0] : order[2]].kept = false;
+            }
+            return { dice, nat: dice.filter(d => d.kept).reduce((s, d) => s + d.v, 0) };
         }
 
         function checkBonus(attrValue, skillValue, mod) {
@@ -6038,25 +6040,38 @@
 
         function rollCheck(attrValue, skillValue, mod, mode) {
             const bonus = checkBonus(attrValue, skillValue, mod);
-            const trained = (parseInt(skillValue) || 0) >= TRAINED_LEVEL;
-            const f = rollFortune(mode, trained);
-            return { ...f, bonus, trained, mode, total: f.nat + bonus };
+            const f = rollFortune(mode);
+            return { ...f, bonus, trained: false, mode, total: f.nat + bonus };
         }
 
-        // Chance de réussite contre une DC : 10 % par point, avantage et formation compris
-        function successChance(bonus, dc, mode, trained) {
-            const k = dc - bonus;
-            let p = k <= 1 ? 1 : k > 10 ? 0 : (11 - k) / 10;
-            if (trained && k > 1 && k <= 10) p += 0.1 * p;
-            if (mode === 'adv') return 1 - (1 - p) * (1 - p);
-            if (mode === 'dis') return p * p;
-            return p;
+        // Répartition exacte de la somme gardée (2d4, ou 3d4 en avantage / désavantage)
+        const FORTUNE_DIST = (() => {
+            const out = { normal: {}, adv: {}, dis: {} };
+            for (let a = 1; a <= 4; a++) for (let b = 1; b <= 4; b++) {
+                out.normal[a + b] = (out.normal[a + b] || 0) + 1 / 16;
+                for (let c = 1; c <= 4; c++) {
+                    const s = [a, b, c].sort((x, y) => x - y);
+                    out.adv[s[1] + s[2]] = (out.adv[s[1] + s[2]] || 0) + 1 / 64;
+                    out.dis[s[0] + s[1]] = (out.dis[s[0] + s[1]] || 0) + 1 / 64;
+                }
+            }
+            return out;
+        })();
+        function successChance(bonus, dc, mode) {
+            const dist = FORTUNE_DIST[mode] || FORTUNE_DIST.normal;
+            return Object.entries(dist).reduce((p, [v, q]) => p + (parseInt(v) + bonus >= dc ? q : 0), 0);
         }
         function pct(p) { return Math.round(p * 100) + ' %'; }
 
+        // Degrés : marge de +3 ou plus = réussite remarquable, −3 ou moins = échec grave
+        const DEGREE_MARGIN = 3;
+        function degreeOf(m) {
+            return m >= DEGREE_MARGIN ? 'Réussite remarquable' : m >= 0 ? 'Réussite' : m <= -DEGREE_MARGIN ? 'Échec grave' : 'Échec';
+        }
+
         const DC_SCALE = [
-            ['Facile', 3], ['Normal', 5], ['Difficile', 8], ['Très difficile', 11],
-            ['Maîtrise', 14], ['Élite', 17], ['Sommet humain', 19], ['Surhumain', 20]
+            ['Très facile', 4], ['Facile', 6], ['Standard', 8], ['Difficile', 11],
+            ['Très difficile', 13], ['Quasi impossible', 15], ['Absurde', 18]
         ];
         function dcLabel(dc) {
             let name = 'Trivial';
@@ -6083,22 +6098,23 @@
             el.style.animationDelay = `${i * 0.08}s`;
             el.style.borderColor = sc.color;
             el.style.color = sc.color;
-            el.title = sc.label + (d.rerolled ? ' · 1 relancé (formation)' : '') + (d.kept ? '' : ' · écarté');
-            el.innerHTML = `<span class="fd-val">${d.v}</span><span class="fd-sym">${d.rerolled ? '↻' : 'd10'}</span>`;
+            el.title = sc.label + (d.kept ? '' : ' · écarté');
+            el.innerHTML = `<span class="fd-val">${d.v}</span><span class="fd-sym">d4</span>`;
             return el;
         }
         // Ligne de calcul compacte : dé(s) + modificateurs = total, puis la DC
         function equationHtml(r, parts, total, dc, label) {
+            const dsc = scenarioOf(r.nat);
             const dice = r.dice.map(d => {
-                const sc = scenarioOf(d.v);
-                return `<span class="eq-die${d.kept ? '' : ' dropped'}" style="border-color:${sc.color};color:${sc.color}" title="${sc.label}${d.rerolled ? ' · 1 relancé (formation)' : ''}${d.kept ? '' : ' · écarté'}">${d.v}${d.rerolled ? '<i>↻</i>' : ''}</span>`;
+                const sc = d.kept ? dsc : { color: '#888', label: 'dé écarté' };
+                return `<span class="eq-die${d.kept ? '' : ' dropped'}" style="border-color:${sc.color};color:${sc.color}" title="${sc.label}${d.kept ? '' : ' · écarté'}">${d.v}</span>`;
             }).join('');
             const terms = parts.filter(p => p.always || p.v).map(p =>
                 `<span class="eq-op">+</span><span class="eq-term"><small>${p.l}</small>${fmtMod(p.v)}</span>`).join('');
             let dcHtml = '';
             if (dc) {
                 const m = total - dc;
-                const deg = m >= 5 ? 'Réussite remarquable' : m >= 0 ? 'Réussite' : m <= -5 ? 'Échec grave' : 'Échec';
+                const deg = degreeOf(m);
                 dcHtml = `<span class="eq-dc ${m >= 0 ? 'ok' : 'ko'}"><small>DC ${dc} · ${dcLabel(dc)}</small>${deg} <i>${m >= 0 ? '+' : '−'}${Math.abs(m)}</i></span>`;
             }
             const sc = scenarioOf(r.nat);
@@ -6106,27 +6122,27 @@
                 <span class="eq-dice">${dice}</span>${terms}
                 <span class="eq-op">=</span><span class="eq-total">${label ? `<small>${label}</small>` : ''}${total}</span>
                 ${dcHtml}
-                <span class="eq-meta" style="color:${sc.color}">${sc.label}${r.mode !== 'normal' ? ' · ' + CIRC_LABEL[r.mode] : ''}${r.trained ? ' · formé' : ''}</span>
+                <span class="eq-meta" style="color:${sc.color}">${sc.label}${r.mode !== 'normal' ? ' · ' + CIRC_LABEL[r.mode] : ''}</span>
             </div>`;
         }
         function natNoteHtml(nat) {
-            if (nat === 10) return `<div class="eq-note" style="color:#ffcc00">✦ 10 naturel · <strong>Opportunité</strong> : un avantage s'ouvre en plus du résultat</div>`;
-            if (nat === 1) return `<div class="eq-note" style="color:#ff7744">▼ 1 naturel · <strong>Complication</strong> : le pire scénario laisse une trace</div>`;
+            if (nat === NAT_TOP) return `<div class="eq-note" style="color:#ffcc00">✦ Double 4 · <strong>Opportunité</strong> : un avantage s'ouvre en plus du résultat</div>`;
+            if (nat === NAT_LOW) return `<div class="eq-note" style="color:#ff7744">▼ Double 1 · <strong>Complication</strong> : le pire scénario laisse une trace</div>`;
             return '';
         }
         function fortuneInfo(r) {
             const sc = scenarioOf(r.nat);
-            return `<strong style="color:${sc.color}">${sc.label}</strong> · ${CIRC_LABEL[r.mode]}${r.trained ? ' · formé, un 1 est relancé' : ''}`;
+            return `<strong style="color:${sc.color}">${sc.label}</strong> · ${CIRC_LABEL[r.mode]}`;
         }
         function checkNotesHtml(total, dc, nat) {
             const parts = [];
             if (dc) {
                 const m = total - dc;
-                const deg = m >= 5 ? 'Réussite remarquable' : m >= 0 ? 'Réussite' : m <= -5 ? 'Échec grave' : 'Échec';
+                const deg = degreeOf(m);
                 parts.push(`<span style="color:${m >= 0 ? '#3fb950' : '#ff4444'}">DC ${dc} (${dcLabel(dc)}) · <strong>${deg}</strong> · marge ${m >= 0 ? '+' : '−'}${Math.abs(m)}</span>`);
             }
-            if (nat === 10) parts.push(`<span style="color:#ffcc00">✦ 10 naturel · <strong>Opportunité</strong> : un avantage s'ouvre en plus du résultat</span>`);
-            if (nat === 1) parts.push(`<span style="color:#ff7744">▼ 1 naturel · <strong>Complication</strong> : le pire scénario laisse une trace</span>`);
+            if (nat === NAT_TOP) parts.push(`<span style="color:#ffcc00">✦ Double 4 · <strong>Opportunité</strong> : un avantage s'ouvre en plus du résultat</span>`);
+            if (nat === NAT_LOW) parts.push(`<span style="color:#ff7744">▼ Double 1 · <strong>Complication</strong> : le pire scénario laisse une trace</span>`);
             return parts.length ? `<div style="width:100%;margin-top:10px;text-align:center;font-size:0.82rem;line-height:1.7;">${parts.join('<br>')}</div>` : '';
         }
 
@@ -6141,9 +6157,9 @@
             const mode = circMode('skill-page-circ');
             const dc = dcValue('skill-page-dc');
             const bonus = checkBonus(attrValue, skill.level, mod);
-            const trained = skill.level >= TRAINED_LEVEL;
-            host.innerHTML = `<strong>d10 ${fmtMod(bonus)}</strong> · ${getAttributeLevel(attrValue).name} ${fmtMod(attrMod(attrValue))}`
-                + ` · ${getSkillLevel(skill.level).name} ${fmtMod(skillMod(skill.level))}${trained ? ' · formé' : ''}`
+            const trained = skill.level >= 99;
+            host.innerHTML = `<strong>2d4 ${fmtMod(bonus)}</strong> · ${getAttributeLevel(attrValue).name} ${fmtMod(attrMod(attrValue))}`
+                + ` · ${getSkillLevel(skill.level).name} ${fmtMod(skillMod(skill.level))}`
                 + ` · passive ${5 + checkBonus(attrValue, skill.level, 0)}`;
         }
         function attrDisplay(id) { return ATTR_LABEL[id] || capitalize(id); }
@@ -6163,7 +6179,7 @@
             const chk = rollCheck(attrValue, skill.level, mod, mode);
             displayResult({
                 title: skill.name,
-                subtitle: `${attrDisplay(attrName)} (${attrLevel.name}) · ${skillLevel.name} | d10 ${fmtMod(chk.bonus)}${appliedS.label}`,
+                subtitle: `${attrDisplay(attrName)} (${attrLevel.name}) · ${skillLevel.name} | 2d4 ${fmtMod(chk.bonus)}${appliedS.label}`,
                 check: chk, attrModV: attrMod(attrValue), skillModV: skillMod(skill.level), mod, dc, total: chk.total
             });
             sendDiscordRoll(skill.name, skill.baseName, chk.total, attrDisplay(attrName), { nat: chk.nat, checkBonus: chk.bonus, mode, dc });
@@ -6190,7 +6206,7 @@
             applyRougeOverload(ctxF);
             applySublimationDrift(ctxF.etat, ctxF.nDice);
 
-            // --- Partie Compétence (d10 du jet) ---
+            // --- Partie Compétence (2d4 du jet) ---
             const skillAttrValue = appState.attributes[skillAttrName];
             const appliedC = consumeAppliedPowers();
             const chk = rollCheck(skillAttrValue, skill.level, bonus + appliedC.bonus, mode);
@@ -6627,10 +6643,10 @@
             // Build detail line
             let detailParts = [];
             if (details) {
-                if (details.nat) detailParts.push(`d10 ${details.nat} ${fmtMod(details.checkBonus || 0)} · ${scenarioOf(details.nat).label}`);
+                if (details.nat) detailParts.push(`2d4 ${details.nat} ${fmtMod(details.checkBonus || 0)} · ${scenarioOf(details.nat).label}`);
                 if (details.mode && details.mode !== 'normal') detailParts.push(CIRC_LABEL[details.mode]);
-                if (details.nat === 10) detailParts.push('✦ Opportunité');
-                if (details.nat === 1) detailParts.push('▼ Complication');
+                if (details.nat === NAT_TOP) detailParts.push('✦ Opportunité');
+                if (details.nat === NAT_LOW) detailParts.push('▼ Complication');
                 if (details.dc) detailParts.push(`DC ${details.dc} ${total >= details.dc ? '✅' : '❌'}`);
                 if (details.force && details.bonus) detailParts.push(`Mod : ${fmtMod(details.bonus)}`);
                 if (details.pairs) detailParts.push(`${details.pairs} paire(s) annulée(s)`);
