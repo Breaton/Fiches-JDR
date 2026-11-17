@@ -4434,6 +4434,69 @@
         body.play-mode .vd-row:not(.open) .vd-name { font-size: 0.88em; }
         /* La bande porte déjà le Qi : le panneau de la page Jets est retiré */
         #page-rolls #qi-panel { display: none !important; }
+
+        /* === EFFETS DE MAGIE : AVANTAGES ET ACCROCS === */
+        .fx { width: 100%; margin-top: 10px; display: flex; flex-direction: column; gap: 6px; text-align: left; font-size: 0.86em; }
+        .fx-row { display: flex; align-items: flex-start; gap: 8px; flex-wrap: wrap; padding: 6px 10px; border-radius: var(--fx-rad, 6px);
+            border: 1px solid var(--fx-line, rgba(127,127,127,0.25)); }
+        .fx-row.fx-bad { background: var(--fx-bad-bg, rgba(224,92,82,0.08)); border-color: var(--fx-bad-line, rgba(224,92,82,0.35)); }
+        .fx-row.fx-good { background: var(--fx-good-bg, rgba(217,164,65,0.08)); border-color: var(--fx-good-line, rgba(217,164,65,0.4)); }
+        .fx-row.fx-calm { color: var(--fx-dim, #888); justify-content: center; font-size: 0.92em; }
+        .fx-title { font-weight: 700; white-space: nowrap; padding-top: 2px; min-width: 92px; }
+        .fx-bad .fx-title { color: var(--fx-bad, #e05c52); }
+        .fx-good .fx-title { color: var(--fx-good, #b8862b); }
+        .fx-chips { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; flex: 1; }
+        .fx-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 999px; font: inherit; font-size: 0.92em; font-weight: 600;
+            border: 1px solid transparent; line-height: 1.5; }
+        .fx-chip.ko { background: var(--fx-bad-bg2, rgba(224,92,82,0.16)); color: var(--fx-bad, #e05c52); }
+        .fx-chip.ok { background: var(--fx-good-bg2, rgba(217,164,65,0.18)); color: var(--fx-good, #b8862b); cursor: pointer; }
+        .fx-chip.ok.locked { cursor: default; }
+        .fx-chip.ok:not(.locked):hover { border-color: var(--fx-good, #b8862b); }
+        .fx-left { font-size: 0.9em; font-weight: 700; color: var(--fx-good, #b8862b); padding: 2px 4px; animation: fxPulse 1.6s ease-in-out infinite; }
+        @keyframes fxPulse { 50% { opacity: 0.45; } }
+        .fx-options { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 0 2px; }
+        .fx-ask { font-weight: 700; color: var(--fx-good, #b8862b); margin-right: 2px; }
+        .fx-opt { display: inline-flex; align-items: center; gap: 5px; padding: 6px 11px; border-radius: var(--fx-rad, 6px); cursor: pointer; font: inherit; font-size: 0.92em; font-weight: 600;
+            background: var(--fx-opt-bg, rgba(255,255,255,0.6)); color: var(--fx-text, inherit); border: 1px solid var(--fx-good-line, rgba(217,164,65,0.5)); transition: background 0.15s, transform 0.1s; }
+        .fx-opt:hover { background: var(--fx-good-bg2, rgba(217,164,65,0.18)); transform: translateY(-1px); }
+        .fx-opt .fx-ic { color: var(--fx-good, #b8862b); }
+        .fx-opt.ghost { border-style: dashed; opacity: 0.8; }
+        .fx-opt.prodige { border-color: var(--fx-good, #b8862b); color: var(--fx-good, #b8862b); }
+        .fx-validate { padding: 7px 14px; border-radius: var(--fx-rad, 6px); border: none; cursor: pointer; font: inherit; font-weight: 700; font-size: 0.92em;
+            background: var(--fx-good, #b8862b); color: var(--fx-on-good, #fff); }
+        .fx-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+        .fx-tag { padding: 1px 8px; border-radius: 999px; font-size: 0.86em; font-weight: 700; letter-spacing: 0.02em; }
+        .fx-tag.ok { background: var(--fx-good-bg2, rgba(217,164,65,0.18)); color: var(--fx-good, #b8862b); }
+        .fx-tag.ko { background: var(--fx-bad-bg2, rgba(224,92,82,0.16)); color: var(--fx-bad, #e05c52); }
+        .fx-mod-dot { color: var(--fx-good, #b8862b); font-size: 0.8em; }
+        .pw-grid .fx-up b { color: var(--fx-good, #b8862b); }
+        .pw-grid .fx-down b { color: var(--fx-bad, #e05c52); }
+        @media (max-width: 560px) { .fx-title { min-width: 0; width: 100%; } }
+
+        #result-overlay .fx { --fx-rad: 8px; --fx-line: var(--moonlight, #d8dce6); --fx-dim: var(--silver-mist); --fx-text: var(--deep-navy, #1a2744);
+            --fx-bad: #A32D2D; --fx-bad-bg: rgba(163,45,45,0.05); --fx-bad-bg2: rgba(163,45,45,0.11); --fx-bad-line: rgba(163,45,45,0.25);
+            --fx-good: #5b4bb0; --fx-good-bg: rgba(127,119,221,0.07); --fx-good-bg2: rgba(127,119,221,0.16); --fx-good-line: rgba(127,119,221,0.4);
+            --fx-opt-bg: #fff; --fx-on-good: #fff; }
+        /* === PERTURBATION DU MJ === */
+        .pp-row { display: inline-flex; align-items: center; gap: 3px; flex-wrap: wrap; }
+        .pp-die { width: 13px; height: 13px; border-radius: 3px; background: #A32D2D; box-shadow: inset 0 0 0 2px rgba(255,255,255,0.35); transform: rotate(45deg) scale(0.82); }
+        .pp-more { font-size: 0.8em; font-weight: 700; color: #A32D2D; margin-left: 2px; }
+        .pp-empty { font-size: 0.78em; color: var(--silver-mist); font-style: italic; }
+        @keyframes ppPulse { 0% { box-shadow: 0 0 0 0 rgba(163,45,45,0.55); } 100% { box-shadow: 0 0 0 10px rgba(163,45,45,0); } }
+        .pp-pulse { animation: ppPulse 0.9s ease-out 2; }
+        .perturb-inject { flex-wrap: wrap; cursor: default; gap: 8px 10px; padding: 8px 11px; margin: 10px 0 0; }
+        .perturb-inject-text { flex: none; font-weight: 700; }
+        .perturb-inject .pi-ctrl { display: inline-flex; align-items: center; gap: 4px; margin-left: auto; }
+        .perturb-inject .pi-step { width: 22px; height: 22px; border-radius: 5px; border: 1px solid rgba(163,45,45,0.3); background: rgba(163,45,45,0.08);
+            color: var(--vitality-red); font-weight: 700; cursor: pointer; line-height: 1; padding: 0; }
+        .perturb-inject input[type="number"] { width: 38px; }
+        .perturb-inject .pi-arm { padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(163,45,45,0.4); background: #fff; color: var(--vitality-red);
+            font: inherit; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .perturb-inject.armed { background: rgba(163,45,45,0.12); border-color: rgba(163,45,45,0.5); }
+        .perturb-inject.armed .pi-arm { background: var(--vitality-red); color: #fff; }
+        .rs-perturb { --rs-color: #ff9a8a; }
+        /* La bande porte déjà la Perturbation et le repos */
+        .mrb-perturb { display: none !important; }
     </style>
 </head>
 
@@ -4644,6 +4707,7 @@
                                             <span id="mj-dice-val">0</span>
                                             <span class="perturb-reserve-unit">dés</span>
                                         </div>
+                                        <span class="pp-row" id="mj-dice-pips"></span>
                                         <button class="perturb-step" onclick="adjustMjDice(1)">+</button>
                                     </div>
                                     <div class="perturb-reserve-spend">
@@ -4651,7 +4715,7 @@
                                         <button onclick="usePerturbation()">🎲 Lancer</button>
                                     </div>
                                 </div>
-                                <div class="perturb-reserve-hint">Alimentée par les Ruptures et Fractures. Se vide au
+                                <div class="perturb-reserve-hint">Alimentée par l'Accroc Perturbation, allégée par l'Avantage Stabilité. Se vide au
                                     repos.</div>
                                 <div id="mj-dice-result"></div>
                             </div>
@@ -4897,13 +4961,18 @@
                 </div>
 
                 <!-- Perturbation appliquée par le MJ -->
-                <label id="perturb-inject-bar" class="perturb-inject">
-                    <input type="checkbox" id="perturb-inject-toggle">
-                    <span class="perturb-inject-text">⚠ Appliquer la Perturbation à ce jet</span>
-                    <input type="number" id="perturb-inject-count" value="1" min="1"
-                        onclick="event.preventDefault(); this.focus();">
-                    <span class="perturb-inject-avail">/ <span id="perturb-inject-avail">0</span></span>
-                </label>
+                <div id="perturb-inject-bar" class="perturb-inject" title="Le MJ lance ces dés de Perturbation contre le prochain jet de compétence">
+                    <input type="checkbox" id="perturb-inject-toggle" hidden>
+                    <span class="perturb-inject-text">⚠ Perturbation du MJ</span>
+                    <span class="pp-row" id="perturb-pips"></span>
+                    <span class="perturb-inject-avail"><span id="perturb-inject-avail">0</span> en réserve</span>
+                    <span class="pi-ctrl">
+                        <button type="button" class="pi-step" onclick="perturbInjectStep(-1)">−</button>
+                        <input type="number" id="perturb-inject-count" value="1" min="1" oninput="perturbInjectSync()">
+                        <button type="button" class="pi-step" onclick="perturbInjectStep(1)">+</button>
+                    </span>
+                    <button type="button" class="pi-arm" id="perturb-inject-btn" onclick="perturbInjectToggle()">Injecter dans ce jet</button>
+                </div>
 
 
                 <!-- Tabs pour switcher entre jet simple, jet+magie, magie pure -->
@@ -5056,15 +5125,14 @@
                             Avec une compétence, la <strong>Puissance</strong> s'ajoute au résultat. Valeur d'effet = 5 + Puissance.<br>
                             Sans compétence, le jet ne produit qu'une <strong>Puissance</strong> : la magie agit seule,
                             et sa Valeur d'effet est la DC à battre pour lui résister.<br>
-                            <strong>Coût :</strong> 1 point d'énergie par dé engagé. Chaque jet cède au MJ
-                            ⌈dés ÷ 4⌉ dés de Perturbation, plus si l'on dépasse son plafond.<br>
+                            <strong>Coût :</strong> 1 point d'énergie par dé engagé.<br>
                             <strong>Puissance :</strong> Rupture −1 · Vide 0 · Succès +1 · Résonance +2<br>
-                            <strong>Effets secondaires (1d12)</strong>, seulement pour les Ruptures et Résonances non annulées ·
-                            Résonance : Stabilité (fréquent), Fluidité, Amplification, Cascade (rare).
-                            Rupture : Résistance (fréquent), Fuite, Dissipation, Contrecoup (rare).<br>
-                            <strong>Tribut au MJ :</strong> proportionnel au ratio dés engagés / dés maximum ;
-                            rester sous son plafond limite le risque.<br>
-                            <strong>Moment d'émotion :</strong> le seuil baisse d'un cran, le 2 devient une Rupture et le 9 une Résonance.
+                            <strong>Ruptures et Résonances restantes</strong> (après les paires) :
+                            chaque Résonance donne un <strong>Avantage</strong> à choisir dans le résultat (Ampleur, Économie, Précision,
+                            Discrétion, Durée, Stabilité) ; chaque Rupture donne un <strong>Accroc</strong> tiré au hasard
+                            (Ampleur, Coût, Débordement, Trace, Fugacité, Perturbation). 3 Accrocs : Contrecoup, une blessure de gravité 3 ou plus.
+                            3 Avantages : Prodige possible, un dé de plus hors plafond.<br>
+                            <strong>Moment d'émotion :</strong> magie volatile, les faces 1 à 3 deviennent des Ruptures et 8 à 10 des Résonances.
                         </div>
                     </div>
                 </div>
@@ -7103,13 +7171,10 @@
             const resEl = document.getElementById('followup-magic-result');
             if (resEl) {
                 let html = `<div class="followup-dice-row" id="followup-dice-row"></div>`;
-                html += `<div class="followup-puissance">✨ ${pair.verb.name} × ${pair.target.name} · Puissance : <strong>${successes}</strong>`
-                    + ` · Valeur d'effet <strong>${effectValue(successes) || '-'}</strong>`
-                    + (lastRollContext ? ` · Résultat Final porté à <strong>${(lastRollContext.total || 0) + successes}</strong>` : '')
-                    + `</div>` + powerReadingHtml(successes);
-                const notes = [];
-                if (mjGain > 0) notes.push(`<span style="color:var(--vitality-red);">⚠ +${mjGain} dé(s) de Perturbation au MJ</span>`);
-                if (notes.length) html += `<div class="followup-notes">${notes.join(' · ')}</div>`;
+                html += `<div class="followup-puissance">✨ ${pair.verb.name} × ${pair.target.name} · Puissance : <strong>${fxBind(out.fx, 'p', successes)}</strong>`
+                    + ` · Valeur d'effet <strong>${fxBind(out.fx, 'effect', effectValue(successes) || '-')}</strong>`
+                    + (lastRollContext ? ` · Résultat Final porté à <strong>${fxBind(out.fx, 'sum', (lastRollContext.total || 0) + successes, lastRollContext.total || 0)}</strong>` : '')
+                    + `</div>` + fxPanelHtml(out.fx);
 
                 html += qiResultHtml(out);
                 html += sustainButtonsHtml();
@@ -7125,7 +7190,7 @@
                     bonus: lastRollContext.bonus, mode: lastRollContext.mode,
                     magic: {
                         level: canalLvl, results, puissance: successes, effect: effectValue(successes), emotion: out.emotion,
-                        ruptures, pairs: out.pairs, mjGain, followUp: true, qiNotes: out.qiNotes,
+                        ruptures, pairs: out.pairs, mjGain, followUp: true, qiNotes: out.qiNotes, fxText: fxDiscordText(out.fx),
                         pair: `${pair.verb.name} × ${pair.target.name}`, cap: pair.cap,
                         canalName: ATTR_LABEL[getCanal()],
                         inTotal: true
@@ -7154,18 +7219,18 @@
 
         // Dé magique : un d10 par point de Magnitude.
         // Réussite sur 10 − niveau du canal · 1 = Rupture (−1) · 10 = Résonance (+2).
-        // Sous émotion, le seuil baisse d'un cran, le 2 devient aussi une Rupture et le 9 une Résonance.
+        // Sous émotion (état Volatile), les faces 1 à 3 sont des Ruptures et 8 à 10 des Résonances ; le seuil ne change pas.
         // Les Ruptures et les Résonances s'annulent par paires : seules celles qui restent tirent un effet.
         const MAGIC_FACE_VALUE = { 'rupture': -1, 'vide': 0, 'succès': 1, 'résonance': 2 };
 
         function magicThreshold(level, emotion) {
             const L = Math.min(8, Math.max(1, level || 1));
-            return Math.max(2, 10 - L - (emotion ? 1 : 0));
+            return Math.max(2, 10 - L);
         }
 
         function magicFaceType(v, level, emotion) {
-            if (v === 1 || (emotion && v === 2)) return 'rupture';
-            if (v === 10 || (emotion && v === 9)) return 'résonance';
+            if (v === 1 || (emotion && v <= 3)) return 'rupture';
+            if (v === 10 || (emotion && v >= 8)) return 'résonance';
             return v >= magicThreshold(level, emotion) ? 'succès' : 'vide';
         }
 
@@ -7470,10 +7535,9 @@
             const emo = emotion;
 
             const effLvl = getEffectiveMagicLevel();
-            // Les dés payés (énergie ou Qi) portent le coût ; base + supplément portent le tribut ;
-            // les dés bonus extérieurs restent gratuits et discrets.
+            // Les dés payés (énergie ou Qi) portent le coût ; les dés bonus extérieurs restent gratuits.
             const paid = plan.fuel === 'qi' ? plan.base + plan.qi : plan.base;
-            const res = resolveMagicDice(effLvl, dice, emo, paid, top, plan.base + plan.supp);
+            const res = resolveMagicDice(effLvl, dice, emo, paid);
 
             const qiNotes = [];
             if (plan.fuel === 'qi') {
@@ -7491,9 +7555,17 @@
                     + (harvest.lost ? ` · ${harvest.lost} perdu${harvest.lost > 1 ? 's' : ''}, pool plein` : ''));
             }
 
-            if (res.mjGain > 0) addMjDice(res.mjGain);
-            lastMagicRoll = { puissance: res.successes, dice, fuel: plan.fuel };
-            return { ...res, dice, baseDice: plan.base, plan, emotion: emo, harvest, qiNotes, effLvl, fuel: plan.fuel };
+            const fuelQi = plan.fuel === 'qi';
+            const vName = (VERBS.find(x => x.id === verbId) || {}).name, tName = (TARGETS.find(x => x.id === targetId) || {}).name;
+            const fx = fxResolve({
+                tens: res.resonances, ones: res.ruptures, puissance: res.successes, resName: fuelQi ? 'Qi' : 'énergie',
+                label: vName && tName ? `${vName} × ${tName}` : 'Sort', isPrivate: isPrivateRoll(),
+                spend: n => { if (fuelQi) { qiSpend(n); return n; } const b = getReserveLeft(); spendReserve(n); return b - getReserveLeft(); },
+                refund: n => { if (fuelQi) return qiGain(n).gained; const b = getReserveLeft(); adjustReserve(n); return getReserveLeft() - b; },
+                rollExtra: () => { const d = rollMagicDie(effLvl, emo); return { label: String(d.value), val: MAGIC_FACE_VALUE[d.type] }; }
+            });
+            lastMagicRoll = { puissance: res.successes, dice, fuel: plan.fuel, fxId: fx.id };
+            return { ...res, dice, baseDice: plan.base, plan, emotion: emo, harvest, qiNotes, effLvl, fuel: plan.fuel, fx };
         }
 
         function updateMagicState() {
@@ -7540,6 +7612,11 @@
             const mjVal = document.getElementById('mj-dice-val');
             const mjBlock = document.getElementById('mj-dice-block');
             if (mjVal) mjVal.textContent = getMjDice();
+            const pips = document.getElementById('mj-dice-pips'), pips2 = document.getElementById('perturb-pips');
+            if (pips) pips.innerHTML = perturbPipsHtml(getMjDice());
+            if (pips2) pips2.innerHTML = perturbPipsHtml(getMjDice());
+            if (getMjDice() <= 0) { const t = document.getElementById('perturb-inject-toggle'); if (t) t.checked = false; }
+            if (typeof perturbInjectSync === 'function') perturbInjectSync();
             if (mjBlock) mjBlock.style.display = maxDice > 0 ? 'block' : 'none';
 
             const pBar = document.getElementById('perturb-inject-bar');
@@ -7583,7 +7660,7 @@
 
         function describeFaces(level, emotion) {
             const T = magicThreshold(level, emotion);
-            return `d10 · réussite sur ${T}+ · ${emotion ? '1-2' : '1'} ✗ Rupture −1 · ${emotion ? '9-10' : '10'} ✧ Résonance +2`;
+            return `d10 · réussite sur ${T}+ · ${emotion ? '1-3' : '1'} ✗ Rupture −1 · ${emotion ? '8-10' : '10'} ✧ Résonance +2`;
         }
 
         // Couple sélectionné sur le pupitre magique
@@ -7653,55 +7730,295 @@
 
         // Résolution complète d'un jet magique.
         // Puissance = somme des dés : Rupture −1 · Vide 0 · Succès +1 · Résonance +2.
-        // Les Ruptures et les Résonances s'annulent par paires ; chacune qui reste tire un d12 d'effet secondaire.
+        // Les Ruptures et les Résonances s'annulent par paires ; celles qui restent donnent des Accrocs et des Avantages.
         // paidDice : dés qui consomment la réserve (les dés bonus sont gratuits).
-        function resolveMagicDice(level, count, emotion, paidDice, cap, tributeDice) {
+        function resolveMagicDice(level, count, emotion, paidDice) {
             const results = [];
             const billable = (paidDice === undefined || paidDice === null) ? count : paidDice;
-            let energyCost = billable;               // 1 point par dé payé
-            const maxDiceForLevel = (cap === undefined || cap === null) ? bestPair().cap : cap;
-            let mjGain = baseMjDice((tributeDice === undefined || tributeDice === null) ? billable : tributeDice, maxDiceForLevel);
-            const effects = [];
-            let powerMod = 0, elanLoss = 0;
-
             for (let i = 0; i < count; i++) results.push(rollMagicDie(level, emotion));
-
             const rup = results.filter(d => d.type === 'rupture');
             const res = results.filter(d => d.type === 'résonance');
             const pairs = Math.min(rup.length, res.length);
             rup.slice(0, pairs).forEach(d => { d.cancelled = true; });
             res.slice(0, pairs).forEach(d => { d.cancelled = true; });
-
-            res.slice(pairs).forEach(die => {
-                const e = rollD12Effect(RESONANCE_EFFECTS);
-                die.effect = e; die.boost = 1;
-                effects.push({ ...e, boost: 1, from: 'résonance' });
-                if (e.key === 'stabilite') mjGain -= 1;
-                else if (e.key === 'fluidite') energyCost -= 1;
-                else if (e.key === 'amplification') powerMod += 1;
-                else if (e.key === 'cascade') {
-                    const extra = rollMagicDie(level, emotion);
-                    extra.isBonus = true;
-                    results.push(extra);
-                }
-            });
-            rup.slice(pairs).forEach(die => {
-                const e = rollD12Effect(RUPTURE_EFFECTS);
-                die.effect = e; die.boost = 1;
-                effects.push({ ...e, boost: 1, from: 'rupture' });
-                if (e.key === 'resistance') energyCost += 1;
-                else if (e.key === 'contrecoup') elanLoss += 1;
-                else if (e.key === 'fuite') mjGain += 1;
-                else if (e.key === 'dissipation') powerMod -= 1;
-            });
-
+            rup.slice(pairs).forEach(d => { d.left = 'Accroc'; });
+            res.slice(pairs).forEach(d => { d.left = 'Avantage'; });
             const basePower = results.reduce((s, d) => s + MAGIC_FACE_VALUE[d.type], 0);
-            const successes = Math.max(0, basePower + powerMod);
             return {
-                results, successes, basePower, powerMod, pairs,
+                results, successes: Math.max(0, basePower), basePower, powerMod: 0, pairs,
                 ruptures: rup.length - pairs, fractures: 0, resonances: res.length - pairs,
-                energyCost: Math.max(0, energyCost), mjGain: Math.max(0, mjGain), elanLoss, effects
+                energyCost: Math.max(0, billable), mjGain: 0, elanLoss: 0, effects: []
             };
+        }
+
+
+        /* ===================== EFFETS DE MAGIE : AVANTAGES ET ACCROCS =====================
+           Moteur commun aux trois fiches.
+           Chaque 10 qui reste après les paires donne un Avantage, choisi par le joueur dans le résultat.
+           Chaque 1 qui reste donne un Accroc, tiré automatiquement et appliqué tout de suite.
+           3 Accrocs ou plus : Contrecoup, une affliction de gravité égale au nombre d'Accrocs, à la place des Accrocs.
+           3 Avantages ou plus : le joueur peut les convertir en Prodige (un dé de plus, hors plafond).
+           Chaque fiche fournit FX_CONF : lecture de la Puissance, blessures, Discord, entrées propres. */
+        const FX_COLS = [
+            { k: 'mass', l: 'poids' },
+            { k: 'range', l: 'portée' },
+            { k: 'zone', l: 'zone' }
+        ];
+        const FX_AVANTAGES_BASE = [
+            { k: 'ampleur', icon: '⤢', l: 'Ampleur', d: '+1 ligne de lecture sur le poids, la portée ou la zone', cols: true },
+            { k: 'economie', icon: '↺', l: 'Économie', d: 'rembourse 1 point de ressource' },
+            { k: 'precision', icon: '◎', l: 'Précision', d: "l'effet épargne les cibles que tu choisis" },
+            { k: 'discretion', icon: '◌', l: 'Discrétion', d: "l'effet ne laisse aucune trace" },
+            { k: 'duree', icon: '⧗', l: 'Durée', d: 'durée doublée' }
+        ];
+        const FX_ACCROCS_BASE = [
+            { k: 'ampleur', l: 'Ampleur', d: '−1 ligne de lecture' },
+            { k: 'cout', l: 'Coût', d: '+1 point de ressource' },
+            { k: 'debordement', l: 'Débordement', d: "l'effet touche une cible imprévue ou s'étend au-delà du voulu" },
+            { k: 'trace', l: 'Trace', d: "l'effet est visible, bruyant ou détectable" },
+            { k: 'fugacite', l: 'Fugacité', d: 'durée divisée par 2' }
+        ];
+        const FX_CONTRECOUP_AT = 3;
+        const FX_PRODIGE_AT = 3;
+        const FX_STATE = {};
+        let fxSeq = 0;
+
+        function fxAvantages() { return FX_AVANTAGES_BASE.concat(FX_CONF.extraAvantages || []); }
+        function fxAccrocs() { return FX_ACCROCS_BASE.concat(FX_CONF.extraAccrocs || []); }
+        function fxPick(list) { return list[Math.floor(Math.random() * list.length)]; }
+
+        // Résout les Accrocs (tirés et appliqués) et prépare le choix des Avantages.
+        // opts : { tens, ones, puissance, resName, spend(n), refund(n), rollExtra(), label, isPrivate }
+        function fxResolve(opts) {
+            const id = 'fx' + (++fxSeq);
+            const st = {
+                id, tens: Math.max(0, opts.tens || 0), ones: Math.max(0, opts.ones || 0),
+                base: Math.max(0, opts.puissance || 0), P: Math.max(0, opts.puissance || 0),
+                resName: opts.resName || 'ressource', spend: opts.spend || (() => 0), refund: opts.refund || (() => 0),
+                rollExtra: opts.rollExtra || null, label: opts.label || 'Sort', isPrivate: !!opts.isPrivate,
+                read: opts.read || null, binds: [],
+                accrocs: [], contrecoup: 0, picks: [], prodige: null, locked: false, pending: null
+            };
+            if (st.ones >= FX_CONTRECOUP_AT) {
+                st.contrecoup = st.ones;
+                try { FX_CONF.addWound(st.ones); } catch (e) { }
+            } else {
+                for (let i = 0; i < st.ones; i++) {
+                    const a = Object.assign({}, fxPick(fxAccrocs()));
+                    if (a.k === 'ampleur') a.col = fxPick(FX_COLS).k;
+                    if (a.k === 'cout') a.paid = st.spend(1);
+                    if (a.apply) try { a.apply(+1); } catch (e) { }
+                    st.accrocs.push(a);
+                }
+            }
+            if (st.tens === 0) st.locked = true;
+            FX_STATE[id] = st;
+            return st;
+        }
+
+        function fxOffsets(st) {
+            const off = { mass: 0, range: 0, zone: 0 };
+            st.picks.forEach(p => { if (p.k === 'ampleur' && p.col) off[p.col]++; });
+            st.accrocs.forEach(a => { if (a.k === 'ampleur' && a.col) off[a.col]--; });
+            return off;
+        }
+        function fxColLabel(k) { return (FX_COLS.find(c => c.k === k) || {}).l || k; }
+
+        function fxTags(st) {
+            const tags = [];
+            const dur = st.picks.filter(p => p.k === 'duree').length - st.accrocs.filter(a => a.k === 'fugacite').length;
+            if (dur > 0) tags.push(['ok', 'Durée ×' + Math.pow(2, dur)]);
+            if (dur < 0) tags.push(['ko', 'Durée ÷' + Math.pow(2, -dur)]);
+            if (st.picks.some(p => p.k === 'precision')) tags.push(['ok', 'Précis']);
+            if (st.picks.some(p => p.k === 'discretion')) tags.push(['ok', 'Sans trace']);
+            if (st.accrocs.some(a => a.k === 'debordement')) tags.push(['ko', 'Déborde']);
+            if (st.accrocs.some(a => a.k === 'trace')) tags.push(['ko', 'Détectable']);
+            if (st.prodige) tags.push(['ok', 'Effet remarquable']);
+            return tags;
+        }
+
+        function fxReadingRows(st) {
+            if (st.P <= 0) return null;
+            const off = fxOffsets(st);
+            const rows = (st.read || FX_CONF.read)(st.P, off);
+            return rows;
+        }
+
+        function fxDetailHtml(st) {
+            const rows = fxReadingRows(st);
+            if (!rows) return '';
+            const changed = rows.some(r => r[2]);
+            return `<div class="pw-detail${st.detailOpen ? ' open' : ''}">
+                <button type="button" class="pw-detail-btn" onclick="fxToggleDetail('${st.id}', this)">Détail de la Puissance${changed ? ' <span class="fx-mod-dot" title="Modifié par les Avantages ou les Accrocs">●</span>' : ''}</button>
+                <div class="pw-detail-body">
+                    <div class="pw-grid">${rows.map(r => `<div class="${r[2] > 0 ? 'fx-up' : r[2] < 0 ? 'fx-down' : ''}"><small>${r[0]}${r[2] ? (r[2] > 0 ? ' ▲' : ' ▼') : ''}</small><b>${r[1]}</b></div>`).join('')}</div>
+                    <div class="pw-note">${FX_CONF.readNote || 'Ordres de grandeur : le maximum accessible à cette Puissance, à ajuster par le MJ selon la situation.'}</div>
+                </div>
+            </div>`;
+        }
+        function fxToggleDetail(id, btn) {
+            const st = FX_STATE[id]; if (st) st.detailOpen = !st.detailOpen;
+            btn.parentElement.classList.toggle('open');
+        }
+
+        function fxPanelHtml(st) {
+            if (!st) return '';
+            let h = `<div class="fx" id="${st.id}">`;
+            if (st.contrecoup) {
+                h += `<div class="fx-row fx-bad"><span class="fx-title">▼ Contrecoup</span><span>${st.contrecoup} Accrocs : affliction de gravité <b>${st.contrecoup}</b> ajoutée</span></div>`;
+            } else if (st.accrocs.length) {
+                h += `<div class="fx-row fx-bad"><span class="fx-title">▼ Accroc${st.accrocs.length > 1 ? 's' : ''}</span><span class="fx-chips">`
+                    + st.accrocs.map(a => `<span class="fx-chip ko" title="${a.d}">${a.l}${a.k === 'ampleur' ? ' · ' + fxColLabel(a.col) + ' −1 ligne' : a.k === 'cout' ? ' · +1 ' + st.resName : ''}</span>`).join('')
+                    + `</span></div>`;
+            }
+            if (st.tens > 0) {
+                const left = st.prodige ? 0 : st.tens - st.picks.length;
+                h += `<div class="fx-row fx-good"><span class="fx-title">✦ Avantage${st.tens > 1 ? 's' : ''}</span>`;
+                if (st.prodige) {
+                    h += `<span class="fx-chips"><span class="fx-chip ok">Prodige · dé ${st.prodige.label} ${st.prodige.val >= 0 ? '+' : '−'}${Math.abs(st.prodige.val)} Puissance</span></span>`;
+                } else {
+                    h += `<span class="fx-chips">` + st.picks.map((p, i) => `<button type="button" class="fx-chip ok${st.locked ? ' locked' : ''}" ${st.locked ? 'disabled' : `onclick="fxUnpick('${st.id}', ${i})" title="Retirer ce choix"`}>${p.icon || '✦'} ${p.l}${p.col ? ' · ' + fxColLabel(p.col) : ''}${st.locked ? '' : ' ✕'}</button>`).join('')
+                        + (left > 0 ? `<span class="fx-left">${left} à choisir</span>` : '') + `</span>`;
+                }
+                h += `</div>`;
+                if (!st.locked && left > 0) {
+                    if (st.pending === 'ampleur') {
+                        h += `<div class="fx-options"><span class="fx-ask">Ampleur sur :</span>` + FX_COLS.map(c => `<button type="button" class="fx-opt" onclick="fxPickCol('${st.id}', '${c.k}')">${c.l}</button>`).join('')
+                            + `<button type="button" class="fx-opt ghost" onclick="fxCancelPending('${st.id}')">Annuler</button></div>`;
+                    } else {
+                        h += `<div class="fx-options">` + fxAvantages().filter(a => !a.available || a.available()).map(a =>
+                            `<button type="button" class="fx-opt" onclick="fxChoose('${st.id}', '${a.k}')" title="${a.d}"><span class="fx-ic">${a.icon}</span>${a.l}</button>`).join('')
+                            + (st.tens >= FX_PRODIGE_AT && st.picks.length === 0 && st.rollExtra ? `<button type="button" class="fx-opt prodige" onclick="fxProdige('${st.id}')" title="Convertit tous les Avantages : un dé de plus, hors plafond, et un effet secondaire remarquable">★ Prodige</button>` : '')
+                            + `</div>`;
+                    }
+                }
+                if (!st.locked && left === 0) {
+                    h += `<div class="fx-options"><button type="button" class="fx-validate" onclick="fxValidate('${st.id}')">✓ Valider les Avantages</button></div>`;
+                }
+            }
+            const tags = fxTags(st);
+            if (tags.length) h += `<div class="fx-tags">${tags.map(t => `<span class="fx-tag ${t[0]}">${t[1]}</span>`).join('')}</div>`;
+            if (!st.contrecoup && !st.accrocs.length && !st.tens) h += `<div class="fx-row fx-calm">Magie stable : ni Accroc ni Avantage</div>`;
+            h += fxDetailHtml(st) + `</div>`;
+            return h;
+        }
+
+        function fxRefresh(id) {
+            const st = FX_STATE[id];
+            const el = document.getElementById(id);
+            if (!st || !el) return;
+            el.outerHTML = fxPanelHtml(st);
+            // Valeurs liées à la Puissance ailleurs dans le résultat
+            const val = (kind, base) => kind === 'effect' ? (effectValue(st.P) || '-') : kind === 'sum' ? (base || 0) + st.P : st.P;
+            document.querySelectorAll(`[data-fx="${id}"]`).forEach(n => { n.textContent = val(n.dataset.fxKind, parseInt(n.dataset.fxBase) || 0); });
+            st.binds.forEach(b => { const n = document.querySelector(b.sel); if (n) n.textContent = val(b.kind, b.base); });
+            if (FX_CONF.onChange) try { FX_CONF.onChange(st); } catch (e) { }
+        }
+        // Balise une valeur dérivée de la Puissance pour qu'un Prodige la mette à jour
+        function fxBind(st, kind, value, base) {
+            if (!st) return String(value);
+            return `<span data-fx="${st.id}" data-fx-kind="${kind}"${base !== undefined ? ` data-fx-base="${base}"` : ''}>${value}</span>`;
+        }
+
+        function fxChoose(id, k) {
+            const st = FX_STATE[id]; if (!st || st.locked) return;
+            if (st.picks.length >= st.tens) return;
+            const a = fxAvantages().find(x => x.k === k); if (!a) return;
+            if (a.cols) { st.pending = 'ampleur'; fxRefresh(id); return; }
+            const p = Object.assign({}, a);
+            if (k === 'economie') p.refunded = st.refund(1);
+            if (a.apply) try { a.apply(+1); } catch (e) { }
+            st.picks.push(p);
+            fxRefresh(id);
+        }
+        function fxPickCol(id, col) {
+            const st = FX_STATE[id]; if (!st) return;
+            const a = fxAvantages().find(x => x.k === 'ampleur');
+            st.picks.push(Object.assign({}, a, { col }));
+            st.pending = null;
+            fxRefresh(id);
+        }
+        function fxCancelPending(id) { const st = FX_STATE[id]; if (st) { st.pending = null; fxRefresh(id); } }
+        function fxUnpick(id, i) {
+            const st = FX_STATE[id]; if (!st || st.locked) return;
+            const p = st.picks.splice(i, 1)[0];
+            if (p && p.k === 'economie' && p.refunded) st.spend(p.refunded);
+            if (p && p.apply) try { p.apply(-1); } catch (e) { }
+            fxRefresh(id);
+        }
+        function fxProdige(id) {
+            const st = FX_STATE[id]; if (!st || st.locked || !st.rollExtra) return;
+            const die = st.rollExtra();
+            st.prodige = die;
+            st.P = Math.max(0, st.P + die.val);
+            fxValidate(id);
+        }
+        function fxValidate(id) {
+            const st = FX_STATE[id]; if (!st || st.locked) return;
+            st.locked = true;
+            fxRefresh(id);
+            if (st.isPrivate || !FX_CONF.send) return;
+            const what = st.prodige
+                ? `★ Prodige : dé ${st.prodige.label}, Puissance portée à **${st.P}** · Valeur d'effet **${effectValue(st.P)}**`
+                : st.picks.map(p => p.l + (p.col ? ' (' + fxColLabel(p.col) + ')' : '')).join(', ');
+            try { FX_CONF.send(`✦ ${st.label} · Avantages : ${what}`); } catch (e) { }
+        }
+        // Texte court pour les messages Discord du lancer
+        function fxDiscordText(st) {
+            if (!st) return '';
+            const parts = [];
+            if (st.contrecoup) parts.push(`▼ Contrecoup : affliction de gravité ${st.contrecoup}`);
+            else if (st.accrocs.length) parts.push('▼ Accrocs : ' + st.accrocs.map(a => a.l + (a.k === 'ampleur' ? ' (' + fxColLabel(a.col) + ')' : '')).join(', '));
+            if (st.tens) parts.push(`✦ ${st.tens} Avantage${st.tens > 1 ? 's' : ''} à choisir`);
+            return parts.join(' · ');
+        }
+
+        // Réglages de la fiche Aequor pour les Avantages et les Accrocs
+        const FX_CONF = {
+            read(P, off) {
+                const r0 = powerReading(P);
+                const at = k => powerReading(Math.max(1, P + (off[k] || 0)))[k];
+                return [['Palier', r0.term, 0], ['Poids max', at('mass'), off.mass], ['Portée', at('range'), off.range],
+                    ['Zone (rayon)', at('zone'), off.zone], ['Résistance', 'DC ' + effectValue(P), 0]];
+            },
+            addWound(g) { applyMagicElanLoss(g); },
+            send(text) { fxPost(text); },
+            extraAccrocs: [{ k: 'perturbation', l: 'Perturbation', d: '+1 dé de Perturbation au MJ', apply: n => { addMjDice(n); perturbPulse(); } }],
+            extraAvantages: [{ k: 'stabilite', icon: '⚖', l: 'Stabilité', d: 'retire 1 dé de Perturbation au MJ',
+                available: () => getMjDice() > 0, apply: n => adjustMjDice(-n) }],
+            onChange(st) { if (lastMagicRoll && lastMagicRoll.fxId === st.id) lastMagicRoll.puissance = st.P; }
+        };
+        function fxPost(text) {
+            const name = (appState.profile && appState.profile.name) || 'Personnage';
+            fetch(DISCORD_WEBHOOK_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: name, content: text }) }).catch(() => { });
+        }
+        // Dés de Perturbation affichés en pastilles
+        function perturbPipsHtml(n) {
+            if (n <= 0) return '<span class="pp-empty">aucun dé</span>';
+            const shown = Math.min(n, 8);
+            return Array.from({ length: shown }, () => '<span class="pp-die"></span>').join('') + (n > shown ? `<span class="pp-more">+${n - shown}</span>` : '');
+        }
+        function perturbPulse() {
+            document.querySelectorAll('.rs-perturb, #mj-dice-block, #perturb-inject-bar').forEach(el => {
+                el.classList.remove('pp-pulse'); void el.offsetWidth; el.classList.add('pp-pulse');
+            });
+        }
+        function perturbInjectStep(d) {
+            const inp = document.getElementById('perturb-inject-count');
+            inp.value = Math.max(1, Math.min(getMjDice() || 1, (parseInt(inp.value) || 1) + d));
+            perturbInjectSync();
+        }
+        function perturbInjectToggle() {
+            const t = document.getElementById('perturb-inject-toggle');
+            t.checked = !t.checked; perturbInjectSync();
+        }
+        function perturbInjectSync() {
+            const t = document.getElementById('perturb-inject-toggle'), bar = document.getElementById('perturb-inject-bar');
+            const btn = document.getElementById('perturb-inject-btn'), n = parseInt(document.getElementById('perturb-inject-count').value) || 1;
+            if (!t || !bar || !btn) return;
+            bar.classList.toggle('armed', t.checked);
+            btn.textContent = t.checked ? `✓ ${n} dé${n > 1 ? 's' : ''} armé${n > 1 ? 's' : ''} pour ce jet` : 'Injecter dans ce jet';
         }
 
         function isPrivateRoll() {
@@ -7853,13 +8170,13 @@
             el.style.background = fc.bg;
             el.style.color = fc.text;
             el.style.border = `1.5px ${die.isBonus ? 'dashed' : 'solid'} ${fc.border}`;
-            const effectTag = die.effect
-                ? `<span class="md-effect">${die.effect.label}</span>`
+            const effectTag = die.left
+                ? `<span class="md-effect">${die.left}</span>`
                 : die.cancelled ? `<span class="md-effect" style="opacity:.55">annulé</span>` : '';
             el.innerHTML = `<span class="md-label">${labels[die.type] || die.type}</span><span class="md-value">${die.value}</span>${effectTag}`;
-            if (die.isBonus) el.title = 'Cascade · dé bonus';
+            if (die.isBonus) el.title = 'Dé bonus';
             else if (die.cancelled) el.title = 'Annulé par paire (Rupture contre Résonance)';
-            else if (die.effect) el.title = `d12 ${die.effect.d12} · ${die.effect.label} · ${die.effect.desc}`;
+            else if (die.left) el.title = die.left === 'Accroc' ? 'Rupture restante : un Accroc tiré' : 'Résonance restante : un Avantage à choisir';
             return el;
         }
 
@@ -7869,7 +8186,7 @@
             <span style="color:#27500A;">● Succès +1</span>
             <span style="color:#3C3489;">● Résonance +2</span>
             <span style="color:#5F5E5A;opacity:0.7;">annulé : Rupture et Résonance par paire</span>
-            <span style="color:#501313;opacity:0.7;">⋯ dé bonus (cascade)</span>
+            <span style="color:#501313;opacity:0.7;">⋯ dé bonus</span>
         </div>`;
 
         // ========== JET HYBRIDE ==========
@@ -7913,7 +8230,7 @@
             const magicResults = out ? out.results : [];
             const magicSuccesses = out ? out.successes : 0;
             const { basePower = 0, powerMod = 0, ruptures = 0, resonances = 0, pairs = 0,
-                energyCost = 0, mjGain = 0, elanLoss = 0, effects = [] } = out || {};
+                energyCost = 0, mjGain = 0, elanLoss = 0, effects = [], fx = null } = out || {};
             const actualMagic = out ? out.dice : 0;
             const paidMagicDice = out ? (out.fuel === 'qi' ? out.plan.base + out.plan.qi : out.plan.base) : 0;
             const usedEmotion = out ? out.emotion : emotion;
@@ -7934,7 +8251,7 @@
                 fuel: out ? out.fuel : 'energy', qiHtml: qiResultHtml(out),
                 basePower, powerMod, energyCostBase: paidMagicDice,
                 skillTotal, magicSuccesses, effect, perturb,
-                bonus, total, ruptures, resonances, pairs, mjGain, energyCost, elanLoss, effects, actualMagic
+                bonus, total, ruptures, resonances, pairs, mjGain, energyCost, elanLoss, effects, actualMagic, fx
             });
 
             if (!isPrivateRoll()) sendDiscordRoll(
@@ -7947,7 +8264,7 @@
                     bonus, mode, dc, perturb,
                     magic: {
                         level: canalLvl, results: magicResults, puissance: magicSuccesses, effect, emotion: usedEmotion,
-                        ruptures, resonances, pairs, mjGain, qiNotes: out ? out.qiNotes : [],
+                        ruptures, resonances, pairs, mjGain, qiNotes: out ? out.qiNotes : [], fxText: out ? fxDiscordText(out.fx) : '',
                         pair: `${pair.verb.name} × ${pair.target.name}`, cap,
                         canalName: ATTR_LABEL[getCanal()],
                         inTotal: hasSkill
@@ -7998,7 +8315,7 @@
                 setStat('stat-attribute-bonus', fmtMod(data.skillModV), true);
                 setStat('stat-skill-bonus', data.bonus ? fmtMod(data.bonus) : 0);
             } else {
-                setStatLabels(['Puissance', 'Valeur d\'effet', 'Ruptures', 'Résonances']);
+                setStatLabels(['Puissance', 'Valeur d\'effet', 'Accrocs', 'Avantages']);
                 setStat('stat-successes', data.magicSuccesses, true);
                 setStat('stat-explosions', data.effect || 0, true);
                 setStat('stat-attribute-bonus', data.ruptures);
@@ -8007,38 +8324,19 @@
 
             let mag = `<div class="magnitude-result">`;
             if (data.actualMagic > 0) {
-                mag += `<div class="magnitude-label">✨ Puissance du sort : <strong>${data.magicSuccesses}</strong> · Valeur d'effet <strong>${data.effect || '-'}</strong></div>`;
-                mag += powerReadingHtml(data.magicSuccesses);
+                mag += `<div class="magnitude-label">✨ Puissance du sort : <strong>${fxBind(data.fx, 'p', data.magicSuccesses)}</strong> · Valeur d'effet <strong>${fxBind(data.fx, 'effect', data.effect || '-')}</strong></div>`;
                 mag += `<div style="font-size:0.76em;color:var(--silver-mist);margin-bottom:8px;">${data.hasSkill
-                    ? `Amplification : compétence ${data.skillTotal} + Puissance ${data.magicSuccesses} · si le sort agit seul, Application ${data.skillTotal} contre la Complexité · Valeur d'effet = DC de résistance`
+                    ? `Amplification : compétence ${data.skillTotal} + Puissance · si le sort agit seul, Application ${data.skillTotal} contre la Complexité · Valeur d'effet = DC de résistance`
                     : `Valeur d'effet = 5 + Puissance : DC de résistance, gravité, portée, durée, zone`}</div>`;
 
                 mag += `<div class="power-recap">`;
                 mag += `<div class="pr-row pr-base"><span>Puissance des dés</span><strong>${data.basePower}</strong></div>`;
                 if (data.pairs) mag += `<div class="pr-row"><span>Ruptures et Résonances annulées par paires</span><strong>${data.pairs}</strong></div>`;
-                (data.effects || []).forEach(e => {
-                    let delta = null;
-                    if (e.key === 'amplification') delta = '+1';
-                    else if (e.key === 'dissipation') delta = '−1';
-                    if (delta === null) return;
-                    mag += `<div class="pr-row ${e.key === 'amplification' ? 'pr-plus' : 'pr-minus'}" title="d12 ${e.d12} · ${e.desc}"><span>${e.label}</span><strong>${delta}</strong></div>`;
-                });
-                mag += `<div class="pr-row pr-total"><span>Puissance finale</span><strong>${data.magicSuccesses}</strong></div>`;
+                mag += `<div class="pr-row pr-total"><span>Puissance finale</span><strong>${fxBind(data.fx, 'p', data.magicSuccesses)}</strong></div>`;
                 mag += `</div>`;
+                mag += fxPanelHtml(data.fx);
 
-                if (data.effects && data.effects.length) {
-                    mag += `<div class="d8-effects">` + data.effects.map(e =>
-                        `<span class="d8-eff ${e.from === 'rupture' ? 'bad' : 'good'}" title="${e.desc}">${e.from === 'rupture' ? 'Rupture' : 'Résonance'} · d12 ${e.d12} · ${e.label}</span>`
-                    ).join('') + `</div>`;
-                }
-
-                const effets = [];
-                if (data.mjGain > 0) effets.push(`⚠ ${data.mjGain} dé(s) de Perturbation au MJ`);
-                if (data.energyCost !== undefined) effets.push(`${data.fuel === 'qi' ? '☯' : '⚡'} ${data.energyCost} ${data.fuel === 'qi' ? 'Qi' : 'énergie'}${data.energyCostBase && data.energyCost !== data.energyCostBase ? ` (base ${data.energyCostBase})` : ''}`);
-                if (data.elanLoss > 0) effets.push(`💔 −${data.elanLoss} Élan`);
-                mag += effets.length
-                    ? `<div class="magnitude-status failure">${effets.join(' · ')}</div>`
-                    : `<div class="magnitude-status">Magie stable, aucun effet secondaire</div>`;
+                if (data.energyCost !== undefined) mag += `<div class="magnitude-status">${data.fuel === 'qi' ? '☯' : '⚡'} ${data.energyCost} ${data.fuel === 'qi' ? 'Qi' : 'énergie'} dépensé${data.energyCost > 1 ? 's' : ''}</div>`;
             }
             mag += `</div>`;
             const notes = data.hasSkill ? checkNotesHtml(data.total, data.dc, data.check.nat) : '';
@@ -8064,6 +8362,10 @@
                 totalEl.title = `Valeur d'effet ${data.effect || 0}`;
                 if (powerBox) powerBox.style.display = 'none';
             }
+            if (data.fx) data.fx.binds = data.hasSkill
+                ? [{ sel: '#result-total', kind: 'sum', base: data.skillTotal }, { sel: '#result-power-value', kind: 'p' }]
+                : [{ sel: '#result-total', kind: 'p' }, { sel: '#stat-successes', kind: 'p' }, { sel: '#stat-explosions', kind: 'effect' }];
+            if (data.fx && !data.hasSkill) { setStat('stat-attribute-bonus', data.fx.contrecoup ? 'Contrecoup' : data.fx.accrocs.length); setStat('stat-skill-bonus', data.fx.tens); }
             document.getElementById('result-overlay').classList.add('active');
         }
 
@@ -9083,7 +9385,7 @@
                 // Effets négatifs
                 const effets = [];
                 if (m.pairs > 0) effets.push(`${m.pairs} paire(s) Rupture/Résonance annulée(s)`);
-                if (m.mjGain > 0) effets.push(`⚠ +${m.mjGain} dé(s) de Perturbation au MJ`);
+                if (m.fxText) effets.push(m.fxText);
                 if (effets.length) lines.push(`┈ Effets : ${effets.join(' · ')}`);
                 if (m.qiNotes && m.qiNotes.length) lines.push(`┈ ${m.qiNotes.join(' · ')}`);
             }
@@ -9202,6 +9504,9 @@
                   dec: () => adjustReserve(-1), inc: () => adjustReserve(1), reset: () => resetReserve(), resetTitle: 'Repos : réserve pleine' },
                 { id: 'qi', label: 'Qi', title: 'Qi partagé',
                   get: () => { const p = $('qi-panel'); return (p && p.style.display !== 'none') ? [val('qi-value')] : null; } },
+                { id: 'perturb', label: 'Perturbation', title: 'Dés de Perturbation du MJ',
+                  get: () => (typeof hasMagic === 'function' && !hasMagic()) ? null : [String(getMjDice())],
+                  dec: () => adjustMjDice(-1), inc: () => adjustMjDice(1) },
                 { id: 'foc', label: 'Focalisation', get: () => [val('focalisation-current'), val('focalisation-max')],
                   dec: () => modFocalisation(-1), inc: () => modFocalisation(1), reset: () => refillFocalisation(), resetTitle: 'Nouveau round' }
             ],
@@ -9239,7 +9544,7 @@
                 foot.classList.add('roll-foot');
                 const place = () => {
                     const btn = document.querySelector('#page-rolls .roll-panel.active .perform-roll-btn');
-                    if (btn) btn.after(foot);
+                    if (btn) { btn.after(foot); const pb = document.getElementById('perturb-inject-bar'); if (pb) btn.before(pb); }
                 };
                 ['simple', 'hybrid'].forEach(m => { const b = $('perform-' + m + '-roll-btn'), h = $(m + '-stats'); if (b && h) b.before(h); });
                 const orig = switchRollMode;
