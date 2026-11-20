@@ -224,71 +224,13 @@
         }
 
         /* ─── ROSTER ─── */
-        .qi-strip {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin: 0 12px 12px;
-            padding: 6px 9px;
-            background: rgba(74, 155, 110, 0.13);
-            border: 1px solid rgba(74, 155, 110, 0.35);
-            border-radius: 8px;
-            font-size: 0.68rem;
-        }
 
-        .qi-strip-label {
-            color: #7fd4a5;
-            font-weight: 600;
-            letter-spacing: 0.03em;
-        }
 
-        .qi-strip-val {
-            font-family: var(--font-display);
-            font-size: 1.35em;
-            font-weight: 700;
-            color: #a5e8c4;
-            line-height: 1;
-        }
 
-        .qi-strip-meta {
-            margin-left: auto;
-            color: var(--silver-mist);
-            font-style: italic;
-            font-size: 0.92em;
-        }
 
-        .qi-tile {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 13px;
-            background: rgba(74, 155, 110, 0.14);
-            border: 1px solid rgba(74, 155, 110, 0.4);
-            border-radius: 9px;
-        }
 
-        .qi-tile-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-            color: #7fd4a5;
-        }
 
-        .qi-tile-val {
-            font-family: var(--font-display);
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #a5e8c4;
-            line-height: 1;
-        }
 
-        .qi-tile-meta {
-            font-size: 0.66rem;
-            color: var(--silver-mist);
-            font-style: italic;
-        }
 
         .roster-head {
             display: flex;
@@ -438,18 +380,8 @@
             margin-top: 1px;
         }
 
-        .keystat.perturb .kl {
-            color: var(--danger);
-        }
 
-        .keystat.perturb.active {
-            background: rgba(163, 45, 45, 0.14);
-            border-color: rgba(163, 45, 45, 0.4);
-        }
 
-        .keystat.perturb.active .kv {
-            color: var(--danger);
-        }
 
         .keystat.magnitude {
             flex: 1.6;
@@ -470,7 +402,7 @@
             line-height: 1.25;
         }
 
-        /* Bandeau magie : canal + profil de faces + réserve */
+        /* Bandeau magie : dés à Magnitude max + réserve */
         .magic-strip {
             display: flex;
             align-items: center;
@@ -1189,33 +1121,39 @@
            toutes les valeurs dérivées (Élan, passifs, vitesse) coïncident.
         =================================================================== */
         const ATTRIBUTE_LEVELS = {
-            1: { name: 'Déficient', faces: 1, bonus: 0, color: '#c45c5c' },
-            2: { name: 'Faible', faces: 2, bonus: 1, color: '#d97a4a' },
-            3: { name: 'Médiocre', faces: 3, bonus: 1, color: '#c9a227' },
-            4: { name: 'Commun', faces: 4, bonus: 2, color: '#8b9dc3' },
-            5: { name: 'Élevé', faces: 5, bonus: 2, color: '#4a9b6e' },
-            6: { name: 'Supérieur', faces: 6, bonus: 3, color: '#4a90c2' },
-            7: { name: 'Exceptionnel', faces: 7, bonus: 3, color: '#6b4c9a' },
-            8: { name: 'Prodigieux', faces: 9, bonus: 4, color: '#d4a84b' }
+            1: { name: 'Déficient', color: '#c45c5c' },
+            2: { name: 'Faible', color: '#d97a4a' },
+            3: { name: 'Médiocre', color: '#c9a227' },
+            4: { name: 'Commun', color: '#8b9dc3' },
+            5: { name: 'Élevé', color: '#4a9b6e' },
+            6: { name: 'Supérieur', color: '#4a90c2' },
+            7: { name: 'Exceptionnel', color: '#6b4c9a' },
+            8: { name: 'Prodigieux', color: '#d4a84b' }
         };
         const SKILL_LEVELS = {
-            1: { name: 'Inapte', dice: 1, explosion: 12, bonus: 0, color: '#c45c5c' },
-            2: { name: 'Maladroit', dice: 2, explosion: 12, bonus: 0, color: '#d97a4a' },
-            3: { name: 'Ordinaire', dice: 3, explosion: 12, bonus: 1, color: '#c9a227' },
-            4: { name: 'Qualifié', dice: 4, explosion: 11, bonus: 1, color: '#8b9dc3' },
-            5: { name: 'Excellent', dice: 5, explosion: 11, bonus: 2, color: '#4a9b6e' },
-            6: { name: 'Expert', dice: 6, explosion: 10, bonus: 2, color: '#4a90c2' },
-            7: { name: 'Maître', dice: 8, explosion: 10, bonus: 3, color: '#6b4c9a' },
-            8: { name: 'Absolue', dice: 10, explosion: 8, bonus: 4, color: '#d4a84b' }
+            1: { name: 'Inapte', color: '#c45c5c' },
+            2: { name: 'Maladroit', color: '#d97a4a' },
+            3: { name: 'Ordinaire', color: '#c9a227' },
+            4: { name: 'Qualifié', color: '#8b9dc3' },
+            5: { name: 'Excellent', color: '#4a9b6e' },
+            6: { name: 'Expert', color: '#4a90c2' },
+            7: { name: 'Maître', color: '#6b4c9a' },
+            8: { name: 'Absolue', color: '#d4a84b' }
         };
+        // Jet : 2d4 + (attribut − 4) + (compétence − 3), contre une DC
+        function attrMod(v) { return clampLvl(v) - 4; }
+        function skillMod(v) { return Math.min(8, Math.max(1, parseInt(v) || 1)) - 3; }
+        const DC_SCALE = [
+            ['Très facile', 3], ['Facile', 5], ['Standard', 8], ['Difficile', 11],
+            ['Très difficile', 14], ['Quasi impossible', 17], ['Absurde', 20]
+        ];
         const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
         const VITESSE_TABLE = { 1: 10, 2: 15, 3: 20, 4: 30, 5: 35, 6: 40, 7: 50, 8: 60 };
 
         /* ── Référentiel magique : Verbes × Cibles (miroir de la fiche joueur) ──
            Un sort est un verbe appliqué à une cible. La somme des deux échelons
-           donne la Magnitude max, donc le nombre de dés engageables. Le canal
-           (un attribut) donne aux dés leur profil de faces. Plus aucune
-           compétence ne commande la magie. */
+           donne la Magnitude max. La magie se lance avec le jet : chaque point de
+           Magnitude fait grandir un des 2d4 (d4 → d8 → d10), dés abyssaux. */
         const MAX_RANK = 5;
         const MAGIC_RANKS = {
             0: { name: 'Profane', color: '#8b9dc3' },
@@ -1252,19 +1190,15 @@
             { id: 'vie', name: 'Vie', glyph: '✺', desc: 'Vitalité, souffle, santé, vieillissement.' }
         ];
 
-        // Composition du d12 magique selon le niveau du canal : [Résonance, Succès, Vide, Rupture]
-        const MAGIC_FACE_COUNTS = {
-            1: [1, 2, 5, 4], 2: [1, 3, 4, 4], 3: [1, 4, 4, 3], 4: [1, 5, 3, 3],
-            5: [2, 4, 3, 3], 6: [2, 5, 3, 2], 7: [3, 4, 3, 2], 8: [3, 5, 2, 2]
-        };
-        function describeFaces(level) {
-            const [res, succ, vide, rupt] = MAGIC_FACE_COUNTS[clampLvl(level)];
-            const parts = [];
-            if (res) parts.push(`✧${res}`);
-            if (succ) parts.push(`✦${succ}`);
-            if (vide) parts.push(`○${vide}`);
-            if (rupt) parts.push(`✗${rupt}`);
-            return parts.join(' ');
+        // Dés abyssaux (miroir de la fiche) : plafond deux d10 à Magnitude 4,
+        // puis +1 par tranche de 2 points (surcharge)
+        const ABYSS_SIZES = [4, 8, 10];
+        const ABYSS_CAP = 4;
+        function abyssLabel(M) {
+            let a = 0, b = 0;
+            for (let i = 0; i < Math.min(Math.max(0, M || 0), ABYSS_CAP); i++) { if (a <= b) a++; else b++; }
+            const sur = Math.floor(Math.max(0, (M || 0) - ABYSS_CAP) / 2);
+            return `d${ABYSS_SIZES[Math.max(a, b)]} + d${ABYSS_SIZES[Math.min(a, b)]}` + (sur ? ` + ${sur}` : '');
         }
 
         // Référentiel des blessures (copié de la fiche joueur)
@@ -1277,11 +1211,12 @@
             { g: 6, name: 'Critique', conval: '1 mois', guerison: '2 mois' },
             { g: 7, name: 'Terminale', conval: '2 mois', guerison: 'Ne guérit pas' }
         ];
-        const WOUND_DC_TABLE = { 1: 5, 2: 7, 3: 10, 4: 13, 5: 16, 6: 19 };
-        const WOUND_STAB_TABLE = { 1: 2, 2: 5, 3: 7, 4: 10, 5: 13, 6: 15 };
+        // Une DC par blessure, sur l'échelle des DC ; stabilisation 2 points en dessous (comme la fiche)
+        const WOUND_DC_TABLE = { 1: 3, 2: 5, 3: 8, 4: 11, 5: 14, 6: 17 };
+        const STAB_MARGIN = 2;
         function getWoundRef(g) { return WOUND_REFERENCE[Math.min(7, Math.max(1, g)) - 1]; }
-        function getWoundDC(g) { return g >= 7 ? g * 3 : (WOUND_DC_TABLE[Math.max(1, g)] || WOUND_DC_TABLE[1]); }
-        function getStabDC(g) { return g >= 7 ? 14 : (WOUND_STAB_TABLE[Math.max(1, g)] || WOUND_STAB_TABLE[1]); }
+        function getWoundDC(g) { return g >= 7 ? 20 : (WOUND_DC_TABLE[Math.max(1, g)] || WOUND_DC_TABLE[1]); }
+        function getStabDC(g) { return getWoundDC(g) - STAB_MARGIN; }
 
         const ATTR_ORDER = ['puissance', 'vivacite', 'precision', 'endurance', 'intelligence', 'intuition', 'volonte', 'presence'];
         const ATTR_LABEL = {
@@ -1334,7 +1269,7 @@
                 rec.skills.forEach(s => {
                     const attrId = getPassiveAttr(s.name, s.defaultAttr);
                     const pass = getPassiveValue(rec, s.name, attrId);
-                    const pColor = pass >= 7 ? '#D4AF37' : pass >= 5 ? '#4a9b6e' : 'var(--silver-mist)';
+                    const pColor = passColor(pass);
                     // Update passive value cell
                     const passEl = document.querySelector(`#pc-${key} [data-skill-pass="${norm(s.name)}"]`);
                     if (passEl) { passEl.textContent = pass; passEl.style.color = pColor; }
@@ -1395,7 +1330,7 @@
         // Une vieille sauvegarde peut porter une compétence à 0 : on la tolère
         function clampSkill(v) { const n = parseInt(v); return Math.min(8, Math.max(0, isNaN(n) ? 1 : n)); }
         function getAttributeLevel(v) { return ATTRIBUTE_LEVELS[clampLvl(v)] || ATTRIBUTE_LEVELS[4]; }
-        const SKILL_LEVEL_NONE = { name: 'Aucune', dice: 0, explosion: 12, bonus: 0, color: '#8b9dc3' };
+        const SKILL_LEVEL_NONE = { name: 'Aucune', color: '#8b9dc3' };
         function getSkillLevel(v) { return (v <= 0) ? SKILL_LEVEL_NONE : (SKILL_LEVELS[clampSkill(v)] || SKILL_LEVELS[1]); }
 
         function toast(msg, isErr) {
@@ -1449,9 +1384,7 @@
                 verbs: readRanks(obj.verbs, VERBS),
                 targets: readRanks(obj.targets, TARGETS),
                 reserveUsed: parseInt(magic.reserveUsed) || 0,
-                mjDice: parseInt(magic.mjDice) || 0,
                 reserveMaxOverride: (magic.reserveMaxOverride != null) ? parseInt(magic.reserveMaxOverride) || null : null,
-                qiShared: !!(obj.qiShared || (obj.profile && obj.profile.qiShared)),
                 vitesseBonus: parseInt(obj.vitesseBonus) || 0,
                 updatedAt: obj.ts || Date.now()
             };
@@ -1486,13 +1419,6 @@
 
         function hasMagic(rec) { return getBestPair(rec).cap > 0; }
 
-        // Le canal donne aux dés de Puissance leur profil de faces
-        function getCanalId(rec) {
-            const id = rec.canal;
-            return (id && rec.attributes[id] !== undefined) ? id : 'volonte';
-        }
-        function getCanalLevel(rec) { return clampLvl(rec.attributes[getCanalId(rec)] || 4); }
-
         function getReserveMax(rec) {
             if (rec.reserveMaxOverride != null && rec.reserveMaxOverride > 0) return rec.reserveMaxOverride;
             const cap = getBestPair(rec).cap;
@@ -1520,10 +1446,11 @@
         function getPassiveValue(rec, skillName, attrId) {
             const skill = rec.skills.find(s => norm(s.name) === norm(skillName));
             if (!skill) return null;
-            const attrLevel = getAttributeLevel(rec.attributes[attrId] || 4);
-            const skillLevel = getSkillLevel(skill.level);
-            return attrLevel.bonus + Math.floor(skillLevel.dice / 2);
+            // Le scénario ordinaire : 2d4 pris à 5 (comme la fiche joueur)
+            return 5 + attrMod(rec.attributes[attrId] || 4) + skillMod(skill.level);
         }
+        // Couleur d'une passive selon la DC qu'elle franchit d'office
+        function passColor(p) { return p >= 11 ? '#D4AF37' : p >= 8 ? '#4a9b6e' : 'var(--silver-mist)'; }
 
         /* ===================================================================
            STOCKAGE DU ROSTER
@@ -1568,8 +1495,6 @@
         function renderPlayerCard(key, rec) {
             const pair = getBestPair(rec);
             const magic = pair.cap > 0;
-            const canalId = getCanalId(rec);
-            const canalLvl = getCanalLevel(rec);
             const resMax = getReserveMax(rec);
             const resLeft = getReserveLeft(rec);
             const elanMax = getElanMax(rec);
@@ -1630,7 +1555,7 @@
                 const lvl = getSkillLevel(s.level);
                 const attrId = getPassiveAttr(s.name, s.defaultAttr);
                 const pass = getPassiveValue(rec, s.name, attrId);
-                const pColor = pass >= 7 ? '#D4AF37' : pass >= 5 ? '#4a9b6e' : 'var(--silver-mist)';
+                const pColor = passColor(pass);
                 const safeName = s.name.replace(/'/g, "\\'");
                 const nk = norm(s.name);
                 skillHtml += `<div class="skill-row">
@@ -1675,10 +1600,6 @@
                         <div class="kl">Vitesse</div>
                         <div class="kv">${vitesse}<span style="font-size:0.5em;opacity:0.6;">ft</span></div>
                     </div>
-                    <div class="keystat perturb ${rec.mjDice > 0 ? 'active' : ''}">
-                        <div class="kl">⚠ Perturbation</div>
-                        <div class="kv">${rec.mjDice}<span style="font-size:0.5em;opacity:0.6;"> dés</span></div>
-                    </div>
                     ${magic ? `<div class="keystat magnitude">
                         <div class="kl">✨ Magnitude</div>
                         <div class="kv">${pair.cap}</div>
@@ -1686,14 +1607,12 @@
                     </div>` : ''}
                 </div>
                 ${magic ? `<div class="magic-strip">
-                    <span class="ms-label">✨ Canal ${ATTR_LABEL[canalId]}</span>
-                    <span class="ms-lvl">${canalLvl}</span>
-                    <span class="ms-faces" title="Faces du d12 magique : ✧ Résonance · ✦ Succès · ○ Vide · ✗ Rupture">${describeFaces(canalLvl)}</span>
+                    <span class="ms-label">✨ Dés à M${pair.cap}</span>
+                    <span class="ms-faces" title="Dés du jet à Magnitude max (dés abyssaux : face − 1, faces 1 et 2 = −2 et −1)">${abyssLabel(pair.cap)}</span>
                     <span class="ms-res">Réserve ${resLeft}/${resMax}</span>
                     <div class="ms-bar"><div class="ms-fill" style="width:${resMax > 0 ? (resLeft / resMax) * 100 : 0}%"></div></div>
                 </div>` : ''}
                 ${vtHtml}
-                ${qiTileHtml(rec)}
                 <button class="pcard-detail-toggle" onclick="(function(el){el.classList.toggle('open'); if(el.classList.contains('open')) expandedCards.add(el.id); else expandedCards.delete(el.id);})(document.getElementById('pc-${key}'))">
                     Blessures · Attributs · Compétences ▾
                 </button>
@@ -1747,7 +1666,10 @@
             });
             const note = document.createElement('div');
             note.className = 'ref-passive-note';
-            note.innerHTML = 'Passif = bonus d\'attribut + ⌊dés de compétence ÷ 2⌋. Chaque compétence a désormais un passif, calculé sur un attribut par défaut que tu peux changer directement sur la carte du joueur (le choix s\'applique à tout le groupe et reste mémorisé).';
+            note.innerHTML = 'Jet = <strong>2d4 + (attribut − 4) + (compétence − 3)</strong> + modificateur, contre une DC. '
+                + 'Passif = 5 + ces bonus (le scénario ordinaire). DC : '
+                + DC_SCALE.map(([n, v]) => `${n} ${v}${v === 20 ? '+' : ''}`).join(' · ') + '. '
+                + 'Chaque compétence a un passif, calculé sur un attribut par défaut que tu peux changer directement sur la carte du joueur (le choix s\'applique à tout le groupe et reste mémorisé).';
             sEl.appendChild(note);
 
             renderMagicReference();
@@ -1760,12 +1682,15 @@
             const intro = document.createElement('div');
             intro.className = 'ref-note';
             intro.innerHTML =
-                'Un sort est un <strong>Verbe × Cible</strong>. La somme des deux échelons donne la ' +
-                '<strong>Magnitude max</strong>, donc le nombre de dés engageables ; chaque dé payé coûte ' +
-                '1 point de réserve. Le <strong>canal</strong> (un attribut) fixe le profil de faces du d12 : ' +
-                '✧ Résonance +2 · ✦ Succès +1 · ○ Vide · ✗ Rupture. La <strong>Puissance</strong> obtenue ' +
-                's\'ajoute au Résultat Final du jet de compétence qui accompagne le sort. ' +
-                'Il n\'y a plus de compétence dédiée : le sort emprunte celle que l\'action appelle.';
+                'Un sort est un <strong>Verbe × Cible</strong> : la somme des deux échelons donne la ' +
+                '<strong>Magnitude max</strong>. <strong>Un seul lancer</strong> : chaque point de Magnitude fait ' +
+                'grandir un des 2d4 du jet, l\'un après l\'autre (d4 → d8 → d10, deux d10 à M4), puis +1 par ' +
+                'tranche de 2 points (surcharge). Un dé qui a grandi se lit face − 1 ; ses faces 1 et 2 sont ' +
+                'l\'<strong>abîme</strong> (−2 et −1). Coût : 1 énergie par point. ' +
+                '<strong>Émotion</strong> : +1 Magnitude gratuite et +1 au jet, mais les faces 1 à 3 valent −3, −2, −1. ' +
+                '<strong>Puissance</strong> = dés gardés + surcharge − 5 (au moins 1 si aucun dé n\'est dans l\'abîme) ; ' +
+                '<strong>Valeur d\'effet</strong> = 5 + Puissance, la DC de résistance. Sans compétence, on compare ' +
+                'la Valeur d\'effet à la DC. Ni Accroc, ni Avantage de sort, ni dés de Perturbation.';
             mEl.appendChild(intro);
 
             const ranks = document.createElement('div');
@@ -1860,13 +1785,6 @@
                         if (rec) { upsertRecord(rec); ok++; }
                     } catch (e) { console.warn('Fichier illisible', f.name, e); }
                 }
-                // Pool de Qi partagé (Shu & Yue), dans son sous-dossier dédié
-                try {
-                    const qUrl = `https://api.github.com/repos/${GH_CFG.owner}/${GH_CFG.repo}/contents/${GH_CFG.dir}/shared/qi_pool.json?ref=${GH_CFG.branch}&t=${Date.now()}`;
-                    const qraw = await fetch(qUrl, { headers: rawHeaders, cache: 'no-store' });
-                    renderQiTile(qraw.ok ? JSON.parse(await qraw.text()) : null);
-                } catch (e) { renderQiTile(null); console.warn('Qi illisible', e); }
-
                 render();
                 const now = new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
                 if (files.length && ok === 0) {
@@ -1881,26 +1799,6 @@
                 if (manual) toast('Impossible de joindre GitHub', true);
                 console.error(e);
             }
-        }
-
-        // Pool de Qi partagé, affiché seulement sur les cartes concernées
-        let qiPoolData = null;
-
-        function renderQiTile(data) {
-            qiPoolData = data;
-        }
-
-        function qiTileHtml(rec) {
-            if (!qiPoolData || !rec.qiShared) return '';
-            const when = qiPoolData.updated
-                ? new Date(qiPoolData.updated).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
-                : '';
-            const who = qiPoolData.by || '';
-            return `<div class="qi-strip">
-                <span class="qi-strip-label">☯ Qi partagé</span>
-                <span class="qi-strip-val">${qiPoolData.qi ?? 0}</span>
-                <span class="qi-strip-meta">${[who, when].filter(Boolean).join(' · ')}</span>
-            </div>`;
         }
 
         function toggleAutoPoll(on) {

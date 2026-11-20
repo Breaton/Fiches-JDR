@@ -867,6 +867,8 @@
         }
             .attr-ico { display: inline-block; vertical-align: -3px; flex: none; margin-right: 6px; }
         .attr-cell .an .attr-ico { margin-right: 5px; vertical-align: -2px; }
+        @media (max-width: 1200px) { .roster { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 640px) { .roster { grid-template-columns: minmax(0, 1fr); } body { padding: 24px 8px 48px; } }
         .ref-item .rt .attr-ico { margin-right: 5px; vertical-align: -2px; }
     </style>
 </head>
@@ -942,29 +944,34 @@
            RÉFÉRENTIELS : copiés à l'identique de la fiche joueur pour que
            toutes les valeurs dérivées (Élan, passifs, vitesse) coïncident.
         =================================================================== */
-        // Faces du d12, pondérées par l'attribut : [Éclat, Succès, Vide, Revers, Revers+]
         const ATTRIBUTE_LEVELS = {
-            1: { name: 'Déficient', faces: [0, 1, 4, 4, 3], color: '#c45c5c' },
-            2: { name: 'Faible', faces: [0, 3, 6, 2, 1], color: '#d97a4a' },
-            3: { name: 'Médiocre', faces: [0, 4, 7, 1, 0], color: '#c9a227' },
-            4: { name: 'Commun', faces: [1, 5, 6, 0, 0], color: '#8b9dc3' },
-            5: { name: 'Élevé', faces: [1, 6, 5, 0, 0], color: '#4a9b6e' },
-            6: { name: 'Supérieur', faces: [2, 6, 4, 0, 0], color: '#4a90c2' },
-            7: { name: 'Exceptionnel', faces: [2, 7, 3, 0, 0], color: '#6b4c9a' },
-            8: { name: 'Prodigieux', faces: [3, 7, 2, 0, 0], color: '#d4a84b' }
+            1: { name: 'Déficient', color: '#c45c5c' },
+            2: { name: 'Faible', color: '#d97a4a' },
+            3: { name: 'Médiocre', color: '#c9a227' },
+            4: { name: 'Commun', color: '#8b9dc3' },
+            5: { name: 'Élevé', color: '#4a9b6e' },
+            6: { name: 'Supérieur', color: '#4a90c2' },
+            7: { name: 'Exceptionnel', color: '#6b4c9a' },
+            8: { name: 'Prodigieux', color: '#d4a84b' }
         };
-        // add : dés ajoutés au socle de 3. Ordinaire (3) est le niveau de départ.
-        const SOCLE_DICE = 3;
+        // Ordinaire (3) est le niveau de départ
         const SKILL_LEVELS = {
-            1: { name: 'Inapte', add: -1, color: '#c45c5c' },
-            2: { name: 'Maladroit', add: -1, color: '#d97a4a' },
-            3: { name: 'Ordinaire', add: 1, color: '#c9a227' },
-            4: { name: 'Qualifié', add: 2, color: '#8b9dc3' },
-            5: { name: 'Excellent', add: 3, color: '#4a9b6e' },
-            6: { name: 'Expert', add: 4, color: '#4a90c2' },
-            7: { name: 'Maître', add: 5, color: '#6b4c9a' },
-            8: { name: 'Absolue', add: 7, color: '#d4a84b' }
+            1: { name: 'Inapte', color: '#c45c5c' },
+            2: { name: 'Maladroit', color: '#d97a4a' },
+            3: { name: 'Ordinaire', color: '#c9a227' },
+            4: { name: 'Qualifié', color: '#8b9dc3' },
+            5: { name: 'Excellent', color: '#4a9b6e' },
+            6: { name: 'Expert', color: '#4a90c2' },
+            7: { name: 'Maître', color: '#6b4c9a' },
+            8: { name: 'Absolue', color: '#d4a84b' }
         };
+        // Jet : 2d4 + (attribut − 4) + (compétence − 3), contre une DC (comme la fiche)
+        function attrMod(v) { return clampLvl(v) - 4; }
+        function skillMod(v) { return clampSkill(v) - 3; }
+        const DC_SCALE = [
+            ['Très facile', 3], ['Facile', 5], ['Standard', 8], ['Difficile', 11],
+            ['Très difficile', 14], ['Quasi impossible', 17], ['Absurde', 20]
+        ];
         const ELAN_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
         const VITESSE_TABLE = { 1: 10, 2: 15, 3: 20, 4: 30, 5: 35, 6: 40, 7: 50, 8: 60 };
 
@@ -978,11 +985,12 @@
             { g: 6, name: 'Critique', conval: '1 mois', guerison: '2 mois' },
             { g: 7, name: 'Terminale', conval: '2 mois', guerison: 'Ne guérit pas' }
         ];
-        const WOUND_DC_TABLE = { 1: 5, 2: 7, 3: 10, 4: 13, 5: 16, 6: 19 };
-        const WOUND_STAB_TABLE = { 1: 2, 2: 5, 3: 7, 4: 10, 5: 13, 6: 15 };
+        // Une DC par blessure, sur l'échelle des DC ; stabilisation 2 points en dessous (comme la fiche)
+        const WOUND_DC_TABLE = { 1: 3, 2: 5, 3: 8, 4: 11, 5: 14, 6: 17 };
+        const STAB_MARGIN = 2;
         function getWoundRef(g) { return WOUND_REFERENCE[Math.min(7, Math.max(1, g)) - 1]; }
-        function getWoundDC(g) { return g >= 7 ? g * 3 : (WOUND_DC_TABLE[Math.max(1, g)] || WOUND_DC_TABLE[1]); }
-        function getStabDC(g) { return g >= 7 ? 14 : (WOUND_STAB_TABLE[Math.max(1, g)] || WOUND_STAB_TABLE[1]); }
+        function getWoundDC(g) { return g >= 7 ? 20 : (WOUND_DC_TABLE[Math.max(1, g)] || WOUND_DC_TABLE[1]); }
+        function getStabDC(g) { return getWoundDC(g) - STAB_MARGIN; }
 
         // Ordre par axe : Imposer, Tenir, Réagir, Maîtriser (corps puis esprit)
         const ATTR_ORDER = ['puissance', 'presence', 'endurance', 'volonte', 'vivacite', 'intuition', 'precision', 'intelligence'];
@@ -1200,17 +1208,21 @@
         function getVitesse(rec) {
             return (VITESSE_TABLE[clampLvl(rec.attributes.vivacite)] || 30) + (rec.vitesseBonus || 0) * 5;
         }
-        // Passif = moyenne attendue du jet, arrondie :
-        // (3 + dés de compétence) × (Éclat + Succès - Revers - Revers+) / (12 - Éclat - Revers+)
+        // Passif = le scénario ordinaire : 2d4 pris à 5, plus les bonus (comme la fiche)
         function getPassiveValue(rec, skillName, attrId) {
             const skill = rec.skills.find(s => norm(s.name) === norm(skillName));
             if (!skill) return null;
-            const [e, sc, , r, x] = getAttributeLevel(rec.attributes[attrId] || 4).faces;
-            const add = Math.max(0, getSkillLevel(skill.level).add || 0);
-            return Math.round((SOCLE_DICE + add) * (e + sc - r - x) / (12 - e - x));
+            return 5 + attrMod(rec.attributes[attrId] || 4) + skillMod(skill.level);
         }
+        // Couleur selon la DC franchie d'office : Difficile (11), Standard (8), sous Facile (5)
         function passColor(pass) {
-            return pass >= 5 ? '#D4AF37' : pass >= 3 ? '#4a9b6e' : pass < 0 ? '#c45c5c' : 'var(--silver-mist)';
+            return pass >= 11 ? '#D4AF37' : pass >= 8 ? '#4a9b6e' : pass < 5 ? '#c45c5c' : 'var(--silver-mist)';
+        }
+        // Magnitude maximale d'un pouvoir de Force : meilleur verbe + meilleure cible (comme la fiche)
+        function forceCap(rec) {
+            const v = (rec.forceVerbs || []).reduce((m, x) => Math.max(m, x.level), 0);
+            const t = (rec.forceTargets || []).reduce((m, x) => Math.max(m, x.level), 0);
+            return v && t ? v + t : 0;
         }
         function migrateSkills(list, legacyScale) {
             return list.filter(s => s && s.name).map(s => {
@@ -1341,7 +1353,7 @@
                 const nk = norm(s.name);
                 skillHtml += `<div class="skill-row">
                     <span class="sr-name" title="${s.name}">${isPow ? '✨ ' : ''}${s.name}</span>
-                    <span class="sr-lvl" style="color:${lvl.color}" title="Niveau ${s.level} · ${SOCLE_DICE + Math.max(0, lvl.add)} dé(s)${lvl.add < 0 ? ' + ' + (-lvl.add) + ' dé(s) de faiblesse' : ''}">${lvl.name}<sub>${s.level}</sub></span>
+                    <span class="sr-lvl" style="color:${lvl.color}" title="Niveau ${s.level} · bonus ${skillMod(s.level) >= 0 ? '+' : '−'}${Math.abs(skillMod(s.level))}">${lvl.name}<sub>${s.level}</sub></span>
                     <select class="pl-attr" data-skill-sel="${nk}" onchange="setPassiveAttr('${safeName}', this.value)" title="Attribut du passif">${attrOptions(attrId)}</select>
                     <span class="sr-pass" data-skill-pass="${nk}" style="color:${pColor}" title="Valeur passive">${pass}</span>
                 </div>`;
@@ -1388,6 +1400,10 @@
                         <div class="kl">Points de Force</div>
                         <div class="kv">${rec.forcePoints ? rec.forcePoints.current : '-'}<span style="font-size:0.5em;opacity:0.6;">${rec.forcePoints ? ' / ' + rec.forcePoints.max : ''}</span></div>
                     </div>
+                    ${forceCap(rec) ? `<div class="keystat">
+                        <div class="kl">Magnitude max</div>
+                        <div class="kv" style="color:#00a8ff;">${forceCap(rec)}</div>
+                    </div>` : ''}
                 </div>
                 <button class="pcard-detail-toggle" onclick="(function(el){el.classList.toggle('open'); if(el.classList.contains('open')) expandedCards.add(el.id); else expandedCards.delete(el.id);})(document.getElementById('pc-${key}'))">
                     Blessures · Attributs · Force · Compétences ▾
@@ -1445,7 +1461,12 @@
             });
             const note = document.createElement('div');
             note.className = 'ref-passive-note';
-            note.innerHTML = 'Passif = moyenne attendue du jet : (3 + dés de compétence) × (Éclat + Succès - Revers - Revers+) ÷ (12 - Éclat - Revers+), arrondi. Niveaux : Inapte, Maladroit, Ordinaire (socle), Qualifié, Excellent, Expert, Maître, Absolue. Chaque compétence a désormais un passif, calculé sur un attribut par défaut que tu peux changer directement sur la carte du joueur (le choix s\'applique à tout le groupe et reste mémorisé).';
+            note.innerHTML = 'Jet = <strong>2d4 + (attribut − 4) + (compétence − 3)</strong> + modificateur, contre une DC. '
+                + 'Avantage / désavantage : 3d4, on garde les 2 meilleurs / pires. Passif = 5 + ces bonus (le scénario ordinaire). DC : '
+                + DC_SCALE.map(([n, v]) => `${n} ${v}${v === 20 ? '+' : ''}`).join(' · ') + '. '
+                + 'Blessures : DC de soin sur la même échelle, stabilisation 2 points en dessous. '
+                + 'Force : 1 d10 par point de Magnitude (max = verbe + cible), Puissance ajoutée au jet ; Valeur d\'effet = 5 + Puissance. '
+                + 'Niveaux : Inapte, Maladroit, Ordinaire (socle), Qualifié, Excellent, Expert, Maître, Absolue. Chaque compétence a un passif, calculé sur un attribut par défaut que tu peux changer directement sur la carte du joueur (le choix s\'applique à tout le groupe et reste mémorisé).';
             sEl.appendChild(note);
         }
 
