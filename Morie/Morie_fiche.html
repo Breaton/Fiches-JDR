@@ -8398,7 +8398,7 @@
         }
 
         window.addEventListener('message', e => {
-            if (e.source !== window || !e.data || e.data.jdrPont !== 'pont') return;
+            if (!e.data || e.data.jdrPont !== 'pont') return;
             const m = e.data;
             if (m.type === 'hello' || m.type === 'status') {
                 const was = bridgeRoll20;
