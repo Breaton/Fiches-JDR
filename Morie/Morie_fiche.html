@@ -3855,7 +3855,356 @@
             --fx-opt-bg: #fff; --fx-on-good: #fff; }
         /* === PERTURBATION DU MJ === */
         @keyframes ppPulse { 0% { box-shadow: 0 0 0 0 rgba(163,45,45,0.55); } 100% { box-shadow: 0 0 0 10px rgba(163,45,45,0); } }
-    </style>
+    
+        /* === QI DES JUMELLES (pool commun à Shu et Yue) === */
+        .qi-panel .ctx-panel-title {
+            background: rgba(29, 158, 117, 0.1);
+            color: #085041;
+        }
+        .qi-pool-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .qi-pool-num {
+            font-family: var(--font-display);
+            font-size: 1.9em;
+            font-weight: 700;
+            color: #1D9E75;
+            min-width: 44px;
+            text-align: center;
+            line-height: 1;
+        }
+        .qi-step {
+            width: 21px;
+            height: 21px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(29, 158, 117, 0.1);
+            border: 1px solid rgba(29, 158, 117, 0.3);
+            border-radius: 5px;
+            color: #1D9E75;
+            font-size: 0.85em;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .qi-step:hover {
+            background: rgba(29, 158, 117, 0.2);
+        }
+        .qi-domain {
+            font-size: 0.68em;
+            color: var(--silver-mist);
+            font-style: italic;
+            margin-left: auto;
+            text-align: right;
+            max-width: 110px;
+            line-height: 1.3;
+        }
+        .qi-inject-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-wrap: wrap;
+            padding: 8px 10px;
+            background: rgba(29, 158, 117, 0.06);
+            border: 1px solid rgba(29, 158, 117, 0.2);
+            border-radius: 7px;
+        }
+        .qi-inject-row label {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--deep-navy);
+            flex: 1;
+        }
+        .qi-inject-row input {
+            width: 46px;
+            padding: 4px 5px;
+            border: 1px solid var(--moonlight);
+            border-radius: 5px;
+            text-align: center;
+            font-family: var(--font-body);
+            font-size: 0.9em;
+        }
+        .qi-hint {
+            font-size: 0.68em;
+            color: var(--silver-mist);
+            white-space: nowrap;
+        }
+        .qi-note {
+            font-size: 0.68em;
+            color: var(--silver-mist);
+            line-height: 1.4;
+            margin: 6px 0 10px;
+        }
+        .qi-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-top: 9px;
+            border-top: 1px solid rgba(29, 158, 117, 0.15);
+        }
+        .qi-action-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .qi-action-row label {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--deep-navy);
+        }
+        .qi-action-row input {
+            width: 44px;
+            padding: 4px 5px;
+            border: 1px solid var(--moonlight);
+            border-radius: 5px;
+            text-align: center;
+            font-family: var(--font-body);
+            font-size: 0.85em;
+        }
+        .qi-btn {
+            flex: 1;
+            padding: 6px 10px;
+            background: rgba(29, 158, 117, 0.12);
+            border: 1px solid rgba(29, 158, 117, 0.35);
+            border-radius: 6px;
+            color: #085041;
+            font-size: 0.78em;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: var(--font-body);
+        }
+        .qi-btn:hover {
+            background: rgba(29, 158, 117, 0.22);
+        }
+        .qi-btn.kill {
+            background: rgba(163, 45, 45, 0.1);
+            border-color: rgba(163, 45, 45, 0.32);
+            color: var(--vitality-red);
+        }
+        .qi-result-actions {
+            display: flex;
+            gap: 7px;
+            margin-top: 9px;
+            flex-wrap: wrap;
+        }
+        .qi-result-actions .qi-btn {
+            flex: 1;
+            min-width: 130px;
+        }
+        .qi-done {
+            flex: 1;
+            min-width: 130px;
+            padding: 6px 10px;
+            background: rgba(29, 158, 117, 0.14);
+            border: 1px solid rgba(29, 158, 117, 0.35);
+            border-radius: 6px;
+            color: #085041;
+            font-size: 0.78em;
+            font-weight: 700;
+            text-align: center;
+        }
+        .qi-btn.kill:hover {
+            background: rgba(163, 45, 45, 0.2);
+        }
+        .qi-cap {
+            font-size: 0.5em;
+            opacity: 0.55;
+            margin-left: 2px;
+        }
+        .qi-cycle-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 9px;
+        }
+        .qi-result {
+            margin-top: 8px;
+            padding: 7px 11px;
+            background: rgba(29, 158, 117, 0.07);
+            border: 1px solid rgba(29, 158, 117, 0.25);
+            border-radius: 8px;
+            color: #085041;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        .qi-kill {
+            margin-top: 8px;
+            padding: 10px 12px;
+            background: rgba(80, 19, 19, 0.06);
+            border: 1px solid rgba(80, 19, 19, 0.28);
+            border-left: 3px solid #501313;
+            border-radius: 9px;
+        }
+        .qi-kill-title {
+            font-weight: 700;
+            font-size: 0.86em;
+            color: #501313;
+        }
+        .qi-kill-sub {
+            font-size: 0.74em;
+            color: var(--silver-mist);
+            margin: 2px 0 7px;
+        }
+        .qi-kill-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 0.8em;
+        }
+        .qi-kill-row input {
+            width: 56px;
+            padding: 4px 6px;
+            border: 1px solid var(--moonlight);
+            border-radius: 5px;
+            text-align: center;
+        }
+        .qi-kill-row .qi-btn {
+            flex: 0 0 auto;
+        }
+        .qi-panel .ctx-panel-title {
+            background: rgba(29, 158, 117, 0.1);
+            color: #085041;
+        }
+        .qi-refresh {
+            width: 22px;
+            height: 22px;
+            background: rgba(29, 158, 117, 0.12);
+            border: 1px solid rgba(29, 158, 117, 0.3);
+            border-radius: 5px;
+            color: #1D9E75;
+            font-size: 0.85em;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .qi-refresh:hover {
+            background: rgba(29, 158, 117, 0.25);
+        }
+        .qi-pool-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .qi-pool-num {
+            font-family: var(--font-display);
+            font-size: 2em;
+            font-weight: 700;
+            color: #1D9E75;
+            min-width: 46px;
+            text-align: center;
+            line-height: 1;
+        }
+        .qi-step {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(29, 158, 117, 0.1);
+            border: 1px solid rgba(29, 158, 117, 0.32);
+            border-radius: 5px;
+            color: #1D9E75;
+            font-size: 0.95em;
+            font-weight: 700;
+            cursor: pointer;
+            line-height: 1;
+            font-family: var(--font-body);
+        }
+        .qi-step:hover {
+            background: rgba(29, 158, 117, 0.22);
+        }
+        .qi-stepper {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: auto;
+        }
+        .qi-amount {
+            width: 46px;
+            padding: 4px 5px;
+            border: 1px solid rgba(29, 158, 117, 0.3);
+            border-radius: 5px;
+            text-align: center;
+            font-size: 0.85em;
+            font-family: var(--font-body);
+            color: #085041;
+            background: white;
+        }
+        .qi-amount:focus {
+            outline: none;
+            border-color: #1D9E75;
+        }
+        .qi-status {
+            margin-top: 7px;
+            font-size: 0.7em;
+            color: var(--silver-mist);
+            font-style: italic;
+        }
+        .qi-note {
+            margin-top: 5px;
+            font-size: 0.7em;
+            color: var(--silver-mist);
+            line-height: 1.4;
+        }
+        .qi-perso {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(29, 158, 117, 0.22);
+        }
+        .qi-perso-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        .qi-perso-name {
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #085041;
+        }
+        .qi-perso-refresh {
+            width: 20px;
+            height: 20px;
+            background: rgba(29, 158, 117, 0.12);
+            border: 1px solid rgba(29, 158, 117, 0.3);
+            border-radius: 5px;
+            color: #1D9E75;
+            font-size: 0.8em;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .qi-perso-body {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .qi-perso-num {
+            font-family: var(--font-display);
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #1D9E75;
+            min-width: 38px;
+            text-align: center;
+            line-height: 1;
+        }
+        .qi-perso-status {
+            font-size: 0.66em;
+            color: var(--silver-mist);
+            font-style: italic;
+            margin-left: auto;
+            text-align: right;
+        }
+        #page-rolls #qi-panel { display: none !important; }
+        </style>
 </head>
 
 <body>
@@ -4032,6 +4381,25 @@
                             <button onclick="resetReserve()"
                                 style="margin-top:10px; width:100%; padding:6px; background:rgba(107,76,154,0.12); border:1px solid rgba(107,76,154,0.3); border-radius:6px; color:var(--ombre-purple); font-size:0.8em; font-weight:600; cursor:pointer;">↺
                                 Repos · Réserve pleine</button>
+
+                            <!-- Qi partagé -->
+                            <div id="qi-perso-block" class="qi-perso" style="display:none;">
+                                <div class="qi-perso-head">
+                                    <span class="qi-perso-name">☯ Qi partagé</span>
+                                    <button class="qi-perso-refresh" onclick="qiPull()"
+                                        title="Relire depuis GitHub">↻</button>
+                                </div>
+                                <div class="qi-perso-body">
+                                    <span class="qi-perso-num" id="qi-value-perso">0</span>
+                                    <div class="qi-stepper">
+                                        <button class="qi-step" onclick="qiStep(-1, 'qi-amount-perso')">−</button>
+                                        <input type="number" id="qi-amount-perso" value="1" min="1" class="qi-amount">
+                                        <button class="qi-step" onclick="qiStep(1, 'qi-amount-perso')">+</button>
+                                    </div>
+                                    <span class="qi-perso-status" id="qi-status-perso"></span>
+                                </div>
+                                <div id="qi-cycle-perso"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -4398,6 +4766,28 @@
             <!-- COLONNE CONTEXTE -->
             <div class="rolls-sidebar">
 
+                <!-- Qi partagé -->
+                <div class="ctx-panel qi-panel" id="qi-panel" style="display:none;">
+                    <div class="ctx-panel-title"
+                        style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+                        <span>☯ Qi partagé</span>
+                        <button class="qi-refresh" onclick="qiPull()" title="Relire depuis GitHub">↻</button>
+                    </div>
+                    <div class="ctx-panel-body">
+                        <div class="qi-pool-row">
+                            <div class="qi-pool-num" id="qi-value">0</div>
+                            <div class="qi-stepper">
+                                <button class="qi-step" onclick="qiStep(-1, 'qi-amount')">−</button>
+                                <input type="number" id="qi-amount" value="1" min="1" class="qi-amount">
+                                <button class="qi-step" onclick="qiStep(1, 'qi-amount')">+</button>
+                            </div>
+                        </div>
+                        <div id="qi-cycle"></div>
+                        <div class="qi-status" id="qi-status"></div>
+                        <div class="qi-note" id="qi-note">Commun à Shu et Yue.</div>
+                    </div>
+                </div>
+
                 <!-- Ressources personnalisées -->
                 <div class="ctx-panel" id="ctx-resources-panel">
                     <div class="ctx-panel-title">◈ Ressources</div>
@@ -4756,6 +5146,7 @@
 
         // ========== GESTION DES PAGES ==========
         function switchPage(pageName, tabEl) {
+            if (pageName === 'rolls' && appState.qiShared) qiPull(true);
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
             document.getElementById(`page-${pageName}`).classList.add('active');
@@ -5396,6 +5787,17 @@
             const s = (appState.activeSpells || []).find(x => x.id === id);
             if (!s) return;
             const cost = getTurnCost(s.initialDice);
+            if (s.fuel === 'qi') {
+                if (cost > qiAvailable()) {
+                    showNotification(`⚠ Qi insuffisant (${qiAvailable()} restants, ${cost} requis) : « ${s.name || 'Sort'} » se dissipe`);
+                    appState.activeSpells = appState.activeSpells.filter(x => x.id !== id);
+                } else {
+                    qiSpend(cost);
+                    showNotification(`↻ ${s.name || 'Sort'} : −${cost} Qi`);
+                }
+                renderActiveSpells();
+                return;
+            }
             const left = getReserveLeft();
             if (cost > left) {
                 showNotification(`⚠ Réserve insuffisante (${left} restants, ${cost} requis) : « ${s.name || 'Sort'} » se dissipe`);
@@ -5409,7 +5811,17 @@
         }
 
         function applyAllTurnCosts() {
-            const spells = appState.activeSpells || [];
+            // Sorts de Yue payés en Qi : chacun puise dans le pool ou se dissipe
+            const qiLost = [];
+            (appState.activeSpells || []).filter(s => s.fuel === 'qi').forEach(s => {
+                const c = getTurnCost(s.initialDice);
+                if (c > qiAvailable()) qiLost.push(s); else qiSpend(c);
+            });
+            if (qiLost.length) {
+                appState.activeSpells = appState.activeSpells.filter(s => !qiLost.includes(s));
+                showNotification(`⚠ Qi insuffisant : ${qiLost.map(s => s.name || 'Sans nom').join(', ')} se dissipe`);
+            }
+            const spells = (appState.activeSpells || []).filter(s => s.fuel !== 'qi');
             if (spells.length === 0) { renderActiveSpells(); return; }
             const total = spells.reduce((sum, s) => sum + getTurnCost(s.initialDice), 0);
             const left = getReserveLeft();
@@ -5425,7 +5837,7 @@
                     dissipated.push(s);
                 }
                 const keptIds = new Set(spells.filter(s => !dissipated.includes(s)).map(s => s.id));
-                appState.activeSpells = appState.activeSpells.filter(s => keptIds.has(s.id));
+                appState.activeSpells = appState.activeSpells.filter(s => s.fuel === 'qi' || keptIds.has(s.id));
                 spendReserve(running);
                 renderActiveSpells();
                 showNotification(`⚠ Réserve insuffisante : ${dissipated.length} sort(s) dissipé(s) : ${dissipated.map(s => s.name || 'Sans nom').join(', ')}`);
@@ -6337,7 +6749,8 @@
 
         // Ajustement manuel du maximum de réserve (override)
         function getReserveMaxBase() {
-            const lvl = bestPair().cap;
+            // La réserve de Yue ne sert qu'au drain : elle suit ce couple
+            const lvl = qiRole() === 'yue' ? magnitudeMax('absorber', 'vie') : bestPair().cap;
             if (lvl <= 0) return 0;
             return RESERVE_PER_MAGNITUDE * lvl;
         }
@@ -6478,18 +6891,32 @@
         // Puissance = dés gardés + surcharge − 5, plancher 1 si aucun dé gardé n'est dans l'abîme, 0 sinon.
         function castAbyss({ requested, bonusDice, emotion, mode, cap, verbId, targetId }) {
             const want = Math.min(Math.max(0, requested || 0), cap);
-            const paid = Math.max(0, Math.min(want, getReserveLeft()));
-            if (paid < want) showNotification(`⚠ Réserve : Magnitude payée ramenée à ${paid}`);
+            // Shu et Yue : une partie (ou tout) se paie en Qi
+            const plan = qiRole() ? planMagic({ requested, cap, verbId, targetId }) : null;
+            const energyPaid = plan ? plan.energy : Math.max(0, Math.min(want, getReserveLeft()));
+            const qiPaid = plan ? plan.qi : 0;
+            const paid = energyPaid + qiPaid;
+            if (paid < want) showNotification(plan ? `⚠ Qi ou réserve insuffisants : Magnitude payée ramenée à ${paid}` : `⚠ Réserve : Magnitude payée ramenée à ${paid}`);
             let M = paid + Math.max(0, bonusDice || 0);
             const emoBonus = (emotion && M > 0) ? ABYSS_EMOTION_BONUS : 0;
             M += emoBonus;
             const r = rollAbyss(M, mode, emotion);
-            r.paid = paid; r.emoBonus = emoBonus;
-            if (paid) spendReserve(paid);
-            if (M <= 0) return { r, M: 0, P: 0 };
+            r.paid = paid; r.emoBonus = emoBonus; r.energyPaid = energyPaid; r.qiPaid = qiPaid;
+            if (energyPaid) spendReserve(energyPaid);
+            const qiNotes = [];
+            if (qiPaid) { qiSpend(qiPaid); qiNotes.push(`☯ −${qiPaid} Qi`); }
+            if (M <= 0) return { r, M: 0, P: 0, plan, qiNotes };
             const P = Math.max(r.abyss ? 0 : 1, r.nat + r.surcharge + r.emoFlat - 5);
-            lastMagicRoll = { puissance: P, dice: M, fuel: 'energy' };
-            return { r, M, P };
+            // Drain de Yue : la vie prise remplit le pool
+            if (plan && plan.role === 'yue' && plan.siphon) {
+                const gain = Math.ceil(P / 2);
+                if (gain > 0) {
+                    const h = qiGain(gain);
+                    qiNotes.push(`☯ Drain : +${h.gained} Qi` + (h.lost ? ` (${h.lost} perdu${h.lost > 1 ? 's' : ''}, pool plein)` : ''));
+                } else qiNotes.push('☯ Drain sans prise : aucun Qi');
+            }
+            lastMagicRoll = { puissance: P, dice: M, fuel: plan && plan.yueQi ? 'qi' : 'energy' };
+            return { r, M, P, plan, qiNotes };
         }
 
         // Couleur neutre de la magie d'Aequor (le canal ne colore plus rien)
@@ -6595,7 +7022,8 @@
                 return;
             }
             const emo = isEmotionOn();
-            let M = Math.min(requested, cap, left) + bonusD;
+            const plan = qiRole() ? planMagic({ requested, cap, verbId: pair.verbId, targetId: pair.targetId }) : null;
+            let M = (plan ? plan.paid : Math.min(requested, cap, left)) + bonusD;
             if (emo && M > 0) M += ABYSS_EMOTION_BONUS;
             const sh = abyssShape(M);
             infoEl.innerHTML = `
@@ -6605,9 +7033,10 @@
                     ? `Dés du jet : <strong style="color:var(--ombre-purple);">${abyssLabel(M)}</strong>${sh.surcharge ? ` · surcharge +${sh.surcharge}` : ''}`
                     : 'Magnitude 0 : 2d4, sans magie'}
                 ${emo && M > 0 ? `<br><span style="color:#8a6d00;font-weight:600;">🔥 Émotion : +${ABYSS_EMOTION_BONUS} Magnitude gratuite et +${ABYSS_EMOTION_FLAT} au jet, mais l'abîme s'élargit (faces 1 à 3 = −3, −2, −1)</span>` : ''}
+                ${planInfoHtml(plan)}
                 <br><span style="font-size:0.92em;color:var(--silver-mist);">Un dé qui a grandi se lit face − 1 ; ses faces 1 et 2 sont l'abîme (−2 et −1).</span>
                 ${requested > cap ? `<br><span style="color:var(--vitality-red)">⚠ Magnitude max ${cap} pour ce couple</span>` : ''}
-                ${Math.min(requested, cap) > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
+                ${!plan && Math.min(requested, cap) > left ? `<br><span style="color:var(--vitality-red)">⚠ Réserve insuffisante (${left} restants)</span>` : ''}
                 ${bonusD > 0 ? `<br><span style="color:var(--ombre-purple);font-weight:600;">+${bonusD} cran${bonusD > 1 ? 's' : ''} bonus, sans coût d'énergie</span>` : ''}
             `;
         }
@@ -6731,6 +7160,7 @@
             renderActiveSpells();
             renderFocalisation();
             renderReceivedBuffs();
+            renderQiPanel();
             renderMagicPage();
         }
 
@@ -6761,8 +7191,10 @@
             const cap = pair.cap;
             const requested = Math.max(0, parseInt(document.getElementById('hybrid-magic-dice')?.value) || 0);
             const bonusDice = Math.max(0, parseInt(document.getElementById('hybrid-bonus-dice')?.value) || 0);
-            if (requested > 0 && Math.min(requested, cap, getReserveLeft()) <= 0 && bonusDice <= 0) {
-                showNotification('⚠ Réserve magique épuisée'); return;
+            const plan0 = qiRole() ? planMagic({ requested, cap, verbId: pair.verbId, targetId: pair.targetId }) : null;
+            const canPay = plan0 ? plan0.paid : Math.min(requested, cap, getReserveLeft());
+            if (requested > 0 && canPay <= 0 && bonusDice <= 0) {
+                showNotification(plan0 && plan0.yueQi ? '⚠ Plus de Qi : il faut drainer' : '⚠ Réserve magique épuisée'); return;
             }
             if (!hasSkill && Math.min(requested, cap) + bonusDice <= 0) { showNotification('⚠ Choisis une Magnitude, ou une compétence'); return; }
 
@@ -6780,7 +7212,7 @@
             const effect = effectValue(P);
 
             displayHybridResult({
-                hasSkill, dc, r, magic, M: out.M, paid: r.paid, cap,
+                hasSkill, dc, r, magic, M: out.M, paid: r.paid, cap, out,
                 skillName: hasSkill ? skill.name : null,
                 attrName: hasSkill ? (ATTR_LABEL[attrName] || capitalize(attrName)) : null,
                 attrModV: hasSkill ? attrMod(attrValue) : 0, skillModV: hasSkill ? skillMod(skill.level) : 0,
@@ -6797,7 +7229,8 @@
                     nat: magic ? null : r.nat, diceSum: r.nat + r.surcharge + r.emoFlat, checkBonus: cb, bonus, mode, dc,
                     magic: magic ? {
                         pure: !hasSkill, pair: `${pair.verb.name} × ${pair.target.name}`, cap, M: out.M, label: r.label,
-                        diceText: abyssDiscordText(r), puissance: P, effect, emotion: r.emotion, inTotal: hasSkill
+                        diceText: abyssDiscordText(r), puissance: P, effect, emotion: r.emotion, inTotal: hasSkill,
+                        qiText: out.qiNotes && out.qiNotes.length ? out.qiNotes.join(' · ') : ''
                     } : null
                 });
 
@@ -6844,7 +7277,8 @@
                         ? `Un seul lancer : les dés de magie sont déjà dans le résultat. Puissance = dés gardés + surcharge − 5 (au moins 1 si aucun dé n'est dans l'abîme) · Valeur d'effet = 5 + Puissance (0 si la Puissance est nulle), DC de résistance.`
                         : `Puissance = dés gardés + surcharge − 5 (au moins 1 si aucun dé n'est dans l'abîme) · Valeur d'effet = 5 + Puissance (0 si la Puissance est nulle) : DC de résistance, gravité, portée, durée, zone.`}</div>
                     ${powerDetailHtml(data.P)}
-                    <div class="magnitude-status">⚡ ${data.paid} énergie dépensée${data.paid > 1 ? 's' : ''}${data.M > data.paid ? ` · ${data.M - data.paid} Magnitude gratuite${r.emoBonus ? ' (dont ' + r.emoBonus + ' d\'émotion)' : ''}` : ''}</div>
+                    ${qiResultHtml(data.out)}
+                    <div class="magnitude-status">${(r.energyPaid ?? data.paid) || !r.qiPaid ? `⚡ ${r.energyPaid ?? data.paid} énergie dépensée${(r.energyPaid ?? data.paid) > 1 ? 's' : ''}` : '☯ Payé en Qi'}${data.M > data.paid ? ` · ${data.M - data.paid} Magnitude gratuite${r.emoBonus ? ' (dont ' + r.emoBonus + ' d\'émotion)' : ''}` : ''}</div>
                 </div>`;
             }
             const notes = checkNotesHtml(data.total, data.dc, data.magic ? null : r.nat);
@@ -6953,6 +7387,7 @@
                 'X-GitHub-Api-Version': '2022-11-28'
             };
             const toSave = { ...appState };
+            delete toSave.qiPool;   // le pool partagé vit dans son propre fichier
             const content = btoa(unescape(encodeURIComponent(JSON.stringify(toSave, null, 2))));
 
             updateGhStatus('Envoi…');
@@ -6989,6 +7424,322 @@
                 showNotification('⚠️ Impossible de joindre GitHub (réseau ?)');
                 console.error(e);
             }
+        }
+
+        // ===== QI DES JUMELLES (Shu & Yue) =====
+        // Shu et Yue partagent un même corps, donc un seul pool de Qi, synchronisé par GitHub.
+        // L'énergie fait les petites choses, le Qi les grandes :
+        //  · Yue : son énergie sert au drain (Absorber × Vie) ; chaque drain rend ⌈Puissance ÷ 2⌉ Qi,
+        //    une mort bue +5. Ses autres sorts (se renforcer, se soigner) se paient entièrement en Qi.
+        //  · Shu : un soin (Restaurer) se paie en énergie jusqu'à Magnitude 2 ; chaque point au-delà en Qi.
+        //    Ses autres sorts se lancent en énergie seule. Elle ne peut pas soigner leur propre corps.
+        // Pool : 10 au maximum, le trop-plein est perdu. Tombée de la nuit : −5 Qi.
+        const QI_PATH = `${GH_CFG.dir}/shared/qi_pool.json`;
+        const QI_NIGHTFALL_LOSS = 5;   // à la tombée de la nuit
+        const QI_MAX = 10;             // contenance du corps : le trop-plein est perdu
+        const QI_HEAL_ENERGY_CAP = 2;  // Shu : l'énergie paie un soin jusqu'à Magnitude 2
+        const QI_DEATH_BONUS = 5;      // une mort bue
+        let qiSha = null;
+        let qiBusy = false;
+        let qiRemote = { qi: 0 };              // dernier état lu sur GitHub
+        let qiPending = [];                                 // opérations locales pas encore écrites
+
+        function qiApi() {
+            return `https://api.github.com/repos/${GH_CFG.owner}/${GH_CFG.repo}/contents/${QI_PATH}`;
+        }
+
+        function qiHeaders(token) {
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Accept': 'application/vnd.github+json',
+                'X-GitHub-Api-Version': '2022-11-28'
+            };
+        }
+
+        // Qui tient la fiche : 'yue', 'shuhui' ou null. `qiRole` dans le .json prime sur le nom.
+        function qiRole() {
+            if (!appState.qiShared) return null;
+            if (appState.qiRole === 'yue' || appState.qiRole === 'shuhui') return appState.qiRole;
+            const n = ((appState.profile && appState.profile.name) || '')
+                .toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+            if (n.includes('yue')) return 'yue';
+            if (n.includes('shu')) return 'shuhui';
+            return null;
+        }
+
+        function isSiphonPair(verbId, targetId) {
+            return verbId === 'absorber' && targetId === 'vie';
+        }
+
+        function qiCap() { return QI_MAX; }
+
+        function qiApplyOps(state, ops) {
+            const s = { qi: Math.min(QI_MAX, Math.max(0, state.qi || 0)), cap: QI_MAX };
+            ops.forEach(op => {
+                if (op.k === 'qi') s.qi = Math.min(QI_MAX, Math.max(0, s.qi + op.n));
+            });
+            return s;
+        }
+
+        function qiState() { return qiApplyOps(qiRemote, qiPending); }
+        function qiAvailable() { return qiState().qi; }
+
+        function syncQiMirror() {
+            const s = qiState();
+            appState.qiPool = s.qi;
+        }
+
+        function qiQueue(op) {
+            qiPending.push(op);
+            syncQiMirror();
+            renderQiPanel();
+            updateHybridMagicInfo();
+            scheduleQiPush();
+        }
+
+        function qiSpend(n) { if (n > 0) qiQueue({ k: 'qi', n: -n }); }
+
+        // Ajoute du Qi ; ce qui dépasse la contenance est perdu
+        function qiGain(n) {
+            const s = qiState();
+            const cap = qiCap();
+            const room = Math.max(0, cap - s.qi);
+            const gained = Math.min(n, room);
+            qiQueue({ k: 'qi', n });
+            return { gained, lost: n - gained };
+        }
+
+        function qiNightfall() {
+            if (!confirm(`Tombée de la nuit : le pool perd ${QI_NIGHTFALL_LOSS} Qi.\nUne seule fois par nuit, sur une seule des deux fiches.`)) return;
+            const before = qiAvailable();
+            qiQueue({ k: 'qi', n: -QI_NIGHTFALL_LOSS });
+            showNotification(`🌙 La nuit tombe : −${Math.min(before, QI_NIGHTFALL_LOSS)} Qi`);
+        }
+
+        function setQiStatus(msg) {
+            document.querySelectorAll('#qi-status, #qi-status-perso').forEach(el => el.textContent = msg || '');
+        }
+
+        function renderQiPanel() {
+            const on = !!appState.qiShared;
+            const panel = document.getElementById('qi-panel');
+            const perso = document.getElementById('qi-perso-block');
+            if (panel) panel.style.display = on ? 'block' : 'none';
+            if (perso) perso.style.display = on ? 'block' : 'none';
+            if (!on) return;
+
+            const s = qiState();
+            const cap = qiCap();
+            const role = qiRole();
+            document.querySelectorAll('#qi-value, #qi-value-perso').forEach(el =>
+                el.innerHTML = `${s.qi}<span class="qi-cap">/${cap}</span>`);
+
+            const cycle = `<div class="qi-cycle-row">
+                <button class="qi-btn" onclick="qiNightfall()" title="Le Qi se dissipe à la nuit tombée">🌙 Tombée de la nuit −${QI_NIGHTFALL_LOSS}</button>
+            </div>`;
+            document.querySelectorAll('#qi-cycle, #qi-cycle-perso').forEach(el => el.innerHTML = cycle);
+
+            const note = document.getElementById('qi-note');
+            if (note) note.textContent = role === 'yue'
+                ? 'Ton énergie ne sert qu\'au drain (Absorber × Vie) : chaque drain rend ⌈Puissance ÷ 2⌉ Qi, une mort bue +5. Te renforcer et te soigner se paie entièrement en Qi.'
+                : role === 'shuhui'
+                    ? 'Un soin (Restaurer) se paie en énergie jusqu\'à Magnitude 2 ; chaque point au-delà se paie en Qi. Tes autres sorts se lancent en énergie seule.'
+                    : 'Commun à Shu et Yue.';
+        }
+
+        async function qiFetchRemote(token) {
+            const res = await fetch(`${qiApi()}?ref=${GH_CFG.branch}&t=${Date.now()}`, { headers: qiHeaders(token), cache: 'no-store' });
+            if (res.status === 404) return { sha: null, data: { qi: 0 } };
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const j = await res.json();
+            const d = JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g, '')))));
+            return {
+                sha: j.sha,
+                data: { qi: Math.min(QI_MAX, Math.max(0, parseInt(d.qi) || 0)) }
+            };
+        }
+
+        async function qiPull(silent) {
+            if (!appState.qiShared) return;
+            const token = ghToken();
+            if (!token) { setQiStatus('jeton requis'); return; }
+            if (qiBusy) return;
+            if (!silent) setQiStatus('lecture…');
+            try {
+                const r = await qiFetchRemote(token);
+                qiSha = r.sha;
+                qiRemote = r.data;
+                syncQiMirror();
+                renderQiPanel();
+                updateHybridMagicInfo();
+                setQiStatus('à jour ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                if (qiPending.length) scheduleQiPush();
+            } catch (e) { setQiStatus('réseau'); console.error(e); }
+        }
+
+        let qiPushTimer = null;
+
+        function scheduleQiPush() {
+            setQiStatus('modifié…');
+            if (qiPushTimer) clearTimeout(qiPushTimer);
+            qiPushTimer = setTimeout(() => { qiPushTimer = null; qiPush(); }, 500);
+        }
+
+        // Écrit les opérations en attente par-dessus la dernière version de GitHub :
+        // si l'autre fiche a écrit entre-temps, on relit et on rejoue, rien n'est perdu.
+        async function qiPush() {
+            if (!appState.qiShared) return;
+            const token = ghToken();
+            if (!token) { setQiStatus('jeton requis'); return; }
+            if (qiBusy) { scheduleQiPush(); return; }
+            if (!qiPending.length) return;
+
+            qiBusy = true;
+            setQiStatus('envoi…');
+            let ok = false;
+            try {
+                for (let attempt = 0; attempt < 4 && !ok; attempt++) {
+                    const r = await qiFetchRemote(token);
+                    const batch = qiPending.length;
+                    const next = qiApplyOps(r.data, qiPending.slice(0, batch));
+                    const by = (appState.profile && appState.profile.name) || '';
+                    const payload = { ...next, updated: new Date().toISOString(), by };
+                    const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+                    const res = await fetch(qiApi(), {
+                        method: 'PUT',
+                        headers: qiHeaders(token),
+                        body: JSON.stringify({
+                            message: `qi ${next.qi} · ${by}`,
+                            content, branch: GH_CFG.branch,
+                            ...(r.sha ? { sha: r.sha } : {})
+                        })
+                    });
+                    if (res.ok) {
+                        qiSha = (await res.json()).content.sha;
+                        qiRemote = next;
+                        qiPending = qiPending.slice(batch);
+                        ok = true;
+                    } else if (res.status !== 409) {
+                        setQiStatus('échec ' + res.status);
+                        showNotification('⚠️ Qi non synchronisé (' + res.status + ')');
+                        break;
+                    }
+                }
+                if (ok) setQiStatus('synchronisé ' + new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                else if (qiPending.length) setQiStatus('en attente, réessai au retour sur la fiche');
+            } catch (e) { setQiStatus('réseau'); console.error(e); }
+            qiBusy = false;
+            syncQiMirror();
+            renderQiPanel();
+            // Des opérations sont arrivées pendant l'envoi : on les pousse aussi
+            if (ok && qiPending.length) scheduleQiPush();
+        }
+
+        // Correction manuelle : applique ± le montant saisi
+        function qiStep(sign, fieldId) {
+            const n = Math.max(1, parseInt(document.getElementById(fieldId)?.value) || 1);
+            qiAdjust(sign * n);
+        }
+
+        function qiAdjust(delta) {
+            qiQueue({ k: 'qi', n: delta });
+        }
+
+        // ── Comment un sort est financé ──
+        // Yue : drain en énergie, tout le reste en Qi. Shu : soin en énergie jusqu'à M2, au-delà en Qi.
+        function planMagic({ requested, cap, verbId, targetId }) {
+            const role = qiRole();
+            const siphon = isSiphonPair(verbId, targetId);
+            const heal = role === 'shuhui' && verbId === 'restaurer';
+            const yueQi = role === 'yue' && !siphon;
+            const want = Math.max(0, Math.min(requested || 0, cap || 0));
+            const qiLeft = role ? qiAvailable() : 0;
+            let energy = 0, qi = 0;
+            if (yueQi) qi = Math.min(want, qiLeft);
+            else if (heal) {
+                energy = Math.min(want, QI_HEAL_ENERGY_CAP, getReserveLeft());
+                qi = Math.min(Math.max(0, want - QI_HEAL_ENERGY_CAP), qiLeft);
+                if (energy < Math.min(want, QI_HEAL_ENERGY_CAP)) qi = 0;   // sans la base en énergie, pas de supplément
+            } else energy = Math.min(want, getReserveLeft());
+            return { role, siphon, heal, yueQi, want, energy, qi, paid: energy + qi };
+        }
+
+        // Ligne d'aide affichée sous les champs de magie
+        function planInfoHtml(plan) {
+            if (!plan || !plan.role) return '';
+            let t = '';
+            if (plan.yueQi) t = `☯ Payé en Qi : ${plan.qi}/${plan.want} (pool ${qiAvailable()}/${QI_MAX})`;
+            else if (plan.siphon && plan.role === 'yue') t = `☯ Drain : payé en énergie, rend ⌈Puissance ÷ 2⌉ Qi (pool ${qiAvailable()}/${QI_MAX})`;
+            else if (plan.heal) t = `✚ Soin : ${QI_HEAL_ENERGY_CAP} max en énergie, la suite en Qi`
+                + (plan.want > QI_HEAL_ENERGY_CAP ? ` · ${plan.energy} énergie + ${plan.qi} Qi` : '') + ` (pool ${qiAvailable()}/${QI_MAX})`;
+            else if (plan.role === 'shuhui') t = 'Sort hors soin : énergie seule';
+            const short = plan.paid < plan.want ? ` · <span style="color:var(--vitality-red)">Magnitude ramenée à ${plan.paid}</span>` : '';
+            return t ? `<br><span style="color:#085041;font-weight:600;">${t}</span>${short}` : '';
+        }
+
+        // Bloc de mise à mort, proposé après un drain de Yue
+        function killBlockHtml() {
+            return `<div class="qi-kill" id="qi-kill">
+                <div class="qi-kill-title">☠ La cible meurt ?</div>
+                <div class="qi-kill-sub">Yue boit la mort : +${QI_DEATH_BONUS} Qi. Ce qui dépasse ${QI_MAX} est perdu.</div>
+                <div class="qi-kill-row">
+                    <button class="qi-btn kill" onclick="drinkDeath()">Boire la mort</button>
+                </div>
+            </div>`;
+        }
+
+        function drinkDeath() {
+            const h = qiGain(QI_DEATH_BONUS);
+            const block = document.getElementById('qi-kill');
+            if (block) block.innerHTML = `<div class="qi-kill-title">☠ Mort bue : +${h.gained} Qi`
+                + (h.lost ? ` (${h.lost} perdu${h.lost > 1 ? 's' : ''}, pool plein)` : '') + `</div>`;
+            showNotification(`☠ Mort bue : +${h.gained} Qi`);
+            if (!isPrivateRoll()) {
+                const name = appState.profile.name || 'Yue';
+                fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: name,
+                        embeds: [{
+                            description: `☠ **${name} boit la mort** · +${h.gained} Qi` + (h.lost ? ` (${h.lost} perdu(s), pool plein)` : ''),
+                            color: 0x501313, author: { name }
+                        }]
+                    })
+                }).catch(() => { });
+            }
+        }
+
+        function qiResultHtml(out) {
+            if (!out || !out.plan || !out.plan.role) return '';
+            let h = '';
+            if (out.qiNotes && out.qiNotes.length) h += `<div class="qi-result">${out.qiNotes.join(' · ')}</div>`;
+            if (out.plan.role === 'yue' && out.plan.siphon && out.M > 0) h += killBlockHtml();
+            return h;
+        }
+
+        // Relecture automatique : retour sur l'onglet, focus fenêtre, et toutes les 60 s
+        let qiPollTimer = null;
+
+        function startQiAutoSync() {
+            if (qiPollTimer) clearInterval(qiPollTimer);
+            if (!appState.qiShared) return;
+            qiPollTimer = setInterval(() => {
+                if (!document.hidden && appState.qiShared) qiPull(true);
+            }, 60000);
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && appState.qiShared) qiPull(true);
+        });
+        window.addEventListener('focus', () => {
+            if (appState.qiShared) { qiPull(true); startQiAutoSync(); }
+        });
+
+        function qiSetShared(on) {
+            appState.qiShared = !!on;
+            renderQiPanel();
+            if (on) { qiPull(); startQiAutoSync(); }
         }
 
         // ----- Chargement depuis les sauvegardes en ligne -----
@@ -7122,9 +7873,13 @@
             replaceState(loaded);
             applyBackwardCompatDefaults();
 
-            // Le don appartient au personnage : ses compteurs repartent à zéro
+            // Le don et le Qi appartiennent au personnage : leurs compteurs repartent à zéro
             lastVisionAt = 0;
             visionCount = 0;
+            qiSha = null;
+            qiRemote = { qi: 0 };
+            qiPending = [];
+            if (qiPollTimer) { clearInterval(qiPollTimer); qiPollTimer = null; }
 
             const notesEl = document.getElementById('notes-textarea');
             if (notesEl) notesEl.value = appState.notes || '';
@@ -7132,6 +7887,8 @@
             renderPassives();
             restoreProfileUI();
             renderMagicPage();
+            renderQiPanel();
+            if (appState.qiShared) { qiPull(true); startQiAutoSync(); }
 
             updateAllAttributes();
             updateCounterDisplay('power');
@@ -7212,10 +7969,12 @@
             if (appState.magic.reserveUsed === undefined) appState.magic.reserveUsed = 0;
             delete appState.magic.mjDice;   // la Perturbation du MJ est retirée
             if (appState.magic.reserveMaxOverride === undefined) appState.magic.reserveMaxOverride = null;
-            // Le Qi partagé des jumelles est retiré : on efface ce qu'une ancienne sauvegarde en portait
-            delete appState.qiShared; delete appState.qiPool; delete appState.qiRole;
-            if (appState.profile) delete appState.profile.qiShared;
-            (appState.activeSpells || []).forEach(sp => { if (sp.fuel === 'qi') sp.fuel = 'energy'; });
+            // Qi des jumelles : activé par `"qiShared": true` dans la sauvegarde de Shu et de Yue
+            if (appState.profile?.qiShared !== undefined) appState.qiShared = !!appState.profile.qiShared;
+            if (appState.qiShared === undefined) appState.qiShared = false;
+            // La valeur du pool fait toujours autorité côté GitHub : on repart de 0 en attendant qiPull()
+            if (appState.qiShared) appState.qiPool = appState.qiPool ?? 0;
+            if (appState.qiPool === undefined) appState.qiPool = 0;
             if (!appState.focalisation) appState.focalisation = { current: 1, max: 1 };
             if (!appState.receivedBuffs) appState.receivedBuffs = [];
             if (!appState.masteries) appState.masteries = [];
@@ -7250,9 +8009,10 @@
            Un don subi, pas un pouvoir lancé : à chaque jet (compétence, magie
            ou les deux), une chance qu'une vision la traverse. 10 % au départ,
            +5 % à chaque jet sans vision, retour à 10 % après chaque vision.
-           Le compteur est sauvegardé avec la fiche. Le contenu (quand, qui,
-           quoi) est du pur hasard ; seules la Pertinence et la Clarté suivent
-           son couple Percevoir × Destin. Côté joueuse, rien d'autre qu'une
+           Le compteur est sauvegardé avec la fiche. Tout le contenu est du pur
+           hasard, Pertinence et Clarté comprises : elle n'a aucun contrôle sur
+           ces visions. Quand elle cherche elle-même (sort Percevoir × Destin),
+           c'est son jet de magie qui décide de ce qu'elle obtient. Côté joueuse, rien d'autre qu'une
            notification : le détail part directement chez la MJ.
         =================================================================== */
         const VISION_WEBHOOK_URL = 'https://discord.com/api/webhooks/1550973882742083624/M9R-zET2kmT5zQQIuB6gGHDgiBOY965W_g6_fOAYBb6PDoSKdieKKZNhsClu2hS1mtgV';
@@ -7326,21 +8086,20 @@
             'Magie, arcane'
         ];
 
-        // ── Les deux axes pondérés par son don ──
-        // Destin dit à quoi elle est reliée, Percevoir dit ce qu'elle arrive à lire.
+        // ── Pertinence et Clarté : un d12 seul, sans bonus ──
         const VISION_RELEVANCE = [
-            { min: 13, name: 'Central', desc: 'Concerne ce qui se joue là, maintenant. C\'est un avertissement.' },
-            { min: 10, name: 'Lié', desc: 'Concerne l\'intrigue en cours.' },
-            { min: 7, name: 'Tangent', desc: 'Touche un PNJ, un lieu ou un objet déjà croisés.' },
-            { min: 4, name: 'Lointain', desc: 'Quelque chose qui servira, peut être.' },
+            { min: 11, name: 'Central', desc: 'Concerne ce qui se joue là, maintenant. C\'est un avertissement.' },
+            { min: 9, name: 'Lié', desc: 'Concerne l\'intrigue en cours.' },
+            { min: 6, name: 'Tangent', desc: 'Touche un PNJ, un lieu ou un objet déjà croisés.' },
+            { min: 3, name: 'Lointain', desc: 'Quelque chose qui servira, peut être.' },
             { min: 0, name: 'Parasite', desc: 'Bullshit' }
         ];
 
         const VISION_CLARITY = [
-            { min: 13, name: 'Limpide', desc: 'La scène, les visages, et une phrase prononcée.' },
-            { min: 10, name: 'Nette', desc: 'Une scène complète, mais sans son contexte.' },
-            { min: 7, name: 'Fragmentaire', desc: 'Un détail parfaitement net dans un ensemble flou.' },
-            { min: 4, name: 'Symbolique', desc: 'Des images qui tiennent, mais métaphoriques. Aucun nom, aucun visage.' },
+            { min: 11, name: 'Limpide', desc: 'La scène, les visages, et une phrase prononcée.' },
+            { min: 8, name: 'Nette', desc: 'Une scène complète, mais sans son contexte.' },
+            { min: 5, name: 'Fragmentaire', desc: 'Un détail parfaitement net dans un ensemble flou.' },
+            { min: 3, name: 'Symbolique', desc: 'Des images qui tiennent, mais métaphoriques. Aucun nom, aucun visage.' },
             { min: 0, name: 'Flashs', desc: 'Des images d\'une fraction de seconde. Deux ou trois impressions brutes, aucune scène.' }
         ];
 
@@ -7355,8 +8114,6 @@
 
         function rollVision() {
             const tD = d12(), wD = d12(), sD = d12(), rD = d12(), cD = d12();
-            const destin = targetLevel('destin');
-            const percevoir = verbLevel('percevoir');
 
             let who = VISION_WHO[wD - 1];
             if (VISION_CREW.length && who === 'Un membre de l\'équipage') {
@@ -7367,8 +8124,8 @@
                 time: VISION_TIME[tD - 1], timeD: tD,
                 who, whoD: wD,
                 topic: VISION_TOPIC[sD - 1], topicD: sD,
-                relevance: visionTier(VISION_RELEVANCE, rD + destin), relD: rD, destin,
-                clarity: visionTier(VISION_CLARITY, cD + percevoir), clarD: cD, percevoir
+                relevance: visionTier(VISION_RELEVANCE, rD), relD: rD,
+                clarity: visionTier(VISION_CLARITY, cD), clarD: cD
             };
         }
 
@@ -7381,9 +8138,9 @@
                 `**Temporalité** · ${v.time.deg}, ${v.time.dist}  \`d12 ${v.timeD}\``,
                 `**Qui** · ${v.who}  \`d12 ${v.whoD}\``,
                 `**Sujet** · ${v.topic}  \`d12 ${v.topicD}\``,
-                `**Pertinence** · ${v.relevance.name}  \`${v.relD} + Destin ${v.destin} = ${v.relD + v.destin}\``,
+                `**Pertinence** · ${v.relevance.name}  \`d12 ${v.relD}\``,
                 `┈ ${v.relevance.desc}`,
-                `**Clarté** · ${v.clarity.name}  \`${v.clarD} + Percevoir ${v.percevoir} = ${v.clarD + v.percevoir}\``,
+                `**Clarté** · ${v.clarity.name}  \`d12 ${v.clarD}\``,
                 `┈ ${v.clarity.desc}`
             ];
 
@@ -7436,7 +8193,7 @@
                 : `${visionCount} vision${visionCount > 1 ? 's' : ''} depuis l'ouverture de la fiche`;
             sub.textContent = `Prochain jet : ${fmtPct(visionChance())} de vision`
                 + (misses ? ` (${fmtPct(VISION_BASE_CHANCE)} + ${misses} jet${misses > 1 ? 's' : ''} sans vision)` : '')
-                + ` · Clarté + Percevoir ${verbLevel('percevoir')} · Pertinence + Destin ${targetLevel('destin')} · ${seen}`;
+                + ` · contenu entièrement aléatoire · ${seen}`;
         }
 
         // Vérifier que le canal de la MJ reçoit bien, sans attendre un vrai tirage
@@ -7500,6 +8257,7 @@
                 lines.push(`✨ **${m.pair || 'Magie'}** · Magnitude ${m.M}${m.cap ? '/' + m.cap : ''} · ${m.label}${m.emotion ? ' · 🔥 *Émotion*' : ''}`);
                 lines.push(`┈ Dés : ${m.diceText}`);
                 lines.push(`┈ Puissance **${m.puissance}** · Valeur d'effet **${m.effect || 0}**` + (m.inTotal ? ' *(dés de magie compris dans le résultat)*' : ''));
+                if (m.qiText) lines.push(`┈ ${m.qiText}`);
             }
 
             const embed = {
@@ -7563,6 +8321,7 @@
 
             renderAll();
             updateGhStatus();
+            if (appState.qiShared) { qiPull(true); startQiAutoSync(); }
 
             if (pendingPB) showNotification('✓ Personnage importé depuis le point-buy');
             else if (restoredFromAutosave) showNotification('💾 Session précédente restaurée automatiquement');
@@ -7613,6 +8372,8 @@
                 { id: 'magie', label: 'Magie', title: "Réserve d'énergie magique",
                   get: () => (typeof hasMagic === 'function' && !hasMagic()) ? null : [val('magic-reserve-val'), val('magic-reserve-max')],
                   dec: () => adjustReserve(-1), inc: () => adjustReserve(1), reset: () => resetReserve(), resetTitle: 'Repos : réserve pleine' },
+                { id: 'qi', label: 'Qi', title: 'Qi partagé de Shu et Yue',
+                  get: () => { const p = $('qi-panel'); return (p && p.style.display !== 'none') ? [val('qi-value')] : null; } },
                 { id: 'foc', label: 'Focalisation', get: () => [val('focalisation-current'), val('focalisation-max')],
                   dec: () => modFocalisation(-1), inc: () => modFocalisation(1), reset: () => refillFocalisation(), resetTitle: 'Nouveau round' }
             ],
