@@ -7433,9 +7433,9 @@
         //    une mort bue +5. Ses autres sorts (se renforcer, se soigner) se paient entièrement en Qi.
         //  · Shu : un soin (Restaurer) se paie en énergie jusqu'à Magnitude 2 ; chaque point au-delà en Qi.
         //    Ses autres sorts se lancent en énergie seule. Elle ne peut pas soigner leur propre corps.
-        // Pool : 10 au maximum, le trop-plein est perdu. Tombée de la nuit : −5 Qi.
+        // Pool : 10 au maximum, le trop-plein est perdu. Tombée de la nuit : −2 Qi.
         const QI_PATH = `${GH_CFG.dir}/shared/qi_pool.json`;
-        const QI_NIGHTFALL_LOSS = 5;   // à la tombée de la nuit
+        const QI_NIGHTFALL_LOSS = 2;   // à la tombée de la nuit
         const QI_MAX = 10;             // contenance du corps : le trop-plein est perdu
         const QI_HEAL_ENERGY_CAP = 2;  // Shu : l'énergie paie un soin jusqu'à Magnitude 2
         const QI_DEATH_BONUS = 5;      // une mort bue
