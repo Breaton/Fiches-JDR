@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="jdr-fiche" content="aequor">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="lesbian.png">
     <link rel="apple-touch-icon" href="lesbian.png">
@@ -4204,7 +4205,13 @@
             text-align: right;
         }
         #page-rolls #qi-panel { display: none !important; }
-        </style>
+                .roll20-badge { position: fixed; left: 12px; bottom: 12px; z-index: 9000; padding: 5px 11px; border-radius: 999px;
+            font-size: 0.75em; font-weight: 600; letter-spacing: .02em; background: rgba(20, 16, 30, 0.88); color: #b9a8d8;
+            border: 1px solid rgba(107, 76, 154, 0.7); box-shadow: 0 2px 10px rgba(0,0,0,.3); pointer-events: auto; cursor: default; transition: background .2s; }
+        .roll20-badge[data-state="off"] { color: #8a8a98; border-color: rgba(138,138,152,.5); }
+        .roll20-badge[data-state="warn"] { color: #e0a04a; border-color: rgba(224,160,74,.7); }
+        .roll20-badge.flash { background: rgba(29, 158, 117, 0.95); color: #fff; border-color: transparent; }
+</style>
 </head>
 
 <body>
@@ -6624,6 +6631,13 @@
             });
             if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, attrLabel,
                 { nat: chk.nat, checkBonus: chk.bonus, bonus, mode, dc });
+            bridgeEmit('roll', {
+                type: 'skill', title: skill.name, attr: attrLabel, total, dc, mode, private: isPrivateRoll(),
+                dice: bridgeDice(chk.dice, false), bonus: chk.bonus,
+                scenario: scenarioOf(chk.nat).label,
+                event: chk.nat === NAT_TOP ? 'Opportunité' : chk.nat === NAT_LOW ? 'Complication' : null,
+                res: bridgeResources()
+            });
 
             if (maybeVision(skill.name)) appendVisionBanner();
         }
@@ -6923,6 +6937,7 @@
         const ABYSS_COLOR = { color: '#3C3489', bg: 'rgba(83,74,183,0.1)', border: '#534AB7' };
 
         function updateMagicState() {
+            bridgeState();
             const bp = bestPair();
             const maxDice = bp.cap;                       // Magnitude du meilleur couple
             const col = ABYSS_COLOR;
@@ -7234,6 +7249,23 @@
                     } : null
                 });
 
+            bridgeEmit('roll', {
+                type: !hasSkill ? 'pure' : magic ? 'hybrid' : 'skill',
+                title: hasSkill ? skill.name : `${pair.verb.name} × ${pair.target.name}`,
+                attr: hasSkill ? (ATTR_LABEL[attrName] || capitalize(attrName)) : null,
+                total, dc, mode, private: isPrivateRoll(),
+                dice: bridgeDice(r.dice, magic), bonus: cb,
+                scenario: magic ? null : scenarioOf(r.nat).label,
+                event: !magic && r.nat === NAT_TOP ? 'Opportunité' : !magic && r.nat === NAT_LOW ? 'Complication' : null,
+                magic: magic ? {
+                    pair: `${pair.verb.name} × ${pair.target.name}`, M: out.M, cap, label: r.label,
+                    surcharge: r.surcharge, emoFlat: r.emoFlat, emotion: r.emotion, abyss: r.abyss,
+                    P, effect, energy: r.energyPaid ?? r.paid ?? 0, qi: r.qiPaid || 0,
+                    notes: out.qiNotes || []
+                } : null,
+                res: bridgeResources()
+            });
+
             // Tout jet compte, magie pure comprise (Zaya lance surtout sa magie seule)
             if (maybeVision(hasSkill ? skill.name : `${pair.verb.name} × ${pair.target.name}`)) appendVisionBanner();
         }
@@ -7519,6 +7551,7 @@
             const before = qiAvailable();
             qiQueue({ k: 'qi', n: -QI_NIGHTFALL_LOSS });
             showNotification(`🌙 La nuit tombe : −${Math.min(before, QI_NIGHTFALL_LOSS)} Qi`);
+            bridgeEmit('event', { icon: '🌙', text: `la nuit tombe · −${Math.min(before, QI_NIGHTFALL_LOSS)} Qi`, private: false, res: bridgeResources() });
         }
 
         function setQiStatus(msg) {
@@ -7527,6 +7560,7 @@
 
         function renderQiPanel() {
             const on = !!appState.qiShared;
+            bridgeState();
             const panel = document.getElementById('qi-panel');
             const perso = document.getElementById('qi-perso-block');
             if (panel) panel.style.display = on ? 'block' : 'none';
@@ -7699,6 +7733,8 @@
             if (block) block.innerHTML = `<div class="qi-kill-title">☠ Mort bue : +${h.gained} Qi`
                 + (h.lost ? ` (${h.lost} perdu${h.lost > 1 ? 's' : ''}, pool plein)` : '') + `</div>`;
             showNotification(`☠ Mort bue : +${h.gained} Qi`);
+            bridgeEmit('event', { icon: '☠', text: `boit la mort · +${h.gained} Qi` + (h.lost ? ` (${h.lost} perdu${h.lost > 1 ? 's' : ''}, pool plein)` : ''),
+                private: isPrivateRoll(), res: bridgeResources() });
             if (!isPrivateRoll()) {
                 const name = appState.profile.name || 'Yue';
                 fetch(DISCORD_WEBHOOK_URL, {
@@ -8158,6 +8194,13 @@
                 author: { name: charName }
             };
 
+            bridgeEmit('vision', {
+                test: !!isTest, skill: skillName || 'compétence',
+                time: `${v.time.deg}, ${v.time.dist}`, who: v.who, topic: v.topic,
+                relevance: v.relevance.name, relevanceDesc: v.relevance.desc,
+                clarity: v.clarity.name, clarityDesc: v.clarity.desc
+            });
+
             fetch(VISION_WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -8292,6 +8335,83 @@
                 }).catch(() => { });
             }
         }
+
+
+        // ========== PONT ROLL20 ==========
+        // Le script de navigateur « Pont Fiches JDR → Roll20 » (Tampermonkey) marque la page
+        // (data-jdr-pont="1") et relaie ce que la fiche envoie ici vers l'onglet Roll20,
+        // où le Mod « FicheJDR » affiche le jet et met à jour les jetons.
+        // Sans le script, rien ne change : tout part seulement sur Discord.
+        const BRIDGE_SHEET = 'aequor';
+        let bridgeRoll20 = false, bridgeChat = true, bridgeSeq = 0, bridgeLastState = '', bridgeStateTimer = null;
+
+        function bridgeActive() { return document.documentElement.dataset.jdrPont === '1'; }
+
+        function bridgeEmit(kind, data) {
+            if (!bridgeActive()) return null;
+            const id = Date.now().toString(36) + '-' + (++bridgeSeq) + '-' + Math.random().toString(36).slice(2, 7);
+            const char = (appState.profile && appState.profile.name) || 'Personnage';
+            window.postMessage({ jdrPont: 'fiche', v: 1, id, sheet: BRIDGE_SHEET, kind, char, data }, '*');
+            return id;
+        }
+
+        // Ressources affichées sur les jetons : énergie, et Qi partagé pour Shu et Yue
+        function bridgeResources() {
+            const res = { energie: [getReserveLeft(), getReserveMax()] };
+            if (appState.qiShared) res.qi = [qiAvailable(), QI_MAX];
+            return res;
+        }
+
+        function bridgeState(force) {
+            if (!bridgeActive()) return;
+            try { void bridgeStateTimer; } catch (e) { return; }   // appel trop tôt, pendant le chargement
+            clearTimeout(bridgeStateTimer);
+            bridgeStateTimer = setTimeout(() => {
+                const st = JSON.stringify(bridgeResources());
+                if (!force && st === bridgeLastState) return;
+                bridgeLastState = st;
+                bridgeEmit('state', JSON.parse(st));
+            }, 600);
+        }
+
+        function bridgeDice(dice, grown) {
+            return dice.map(d => grown ? { s: d.size, v: d.v, k: d.kept } : { s: 4, v: d.v, k: d.kept });
+        }
+
+        function renderBridgeBadge(flash) {
+            let el = document.getElementById('roll20-badge');
+            if (!bridgeActive()) { if (el) el.remove(); return; }
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'roll20-badge';
+                el.className = 'roll20-badge';
+                document.body.appendChild(el);
+            }
+            const state = !bridgeRoll20 ? 'off' : !bridgeChat ? 'warn' : 'on';
+            el.dataset.state = state;
+            el.textContent = flash || (state === 'on' ? '⬢ Roll20' : state === 'warn' ? '⬢ Roll20 : chat introuvable' : '⬡ Roll20 fermé');
+            el.title = state === 'on' ? 'Les jets partent aussi dans le chat Roll20'
+                : state === 'warn' ? 'L\'onglet Roll20 est ouvert, mais le script ne trouve pas la zone de chat'
+                : 'Ouvre la partie Roll20 dans ce navigateur pour y envoyer les jets';
+            el.classList.toggle('flash', !!flash);
+            if (flash) { clearTimeout(el._t); el._t = setTimeout(() => renderBridgeBadge(), 1800); }
+        }
+
+        window.addEventListener('message', e => {
+            if (e.source !== window || !e.data || e.data.jdrPont !== 'pont') return;
+            const m = e.data;
+            if (m.type === 'hello' || m.type === 'status') {
+                const was = bridgeRoll20;
+                bridgeRoll20 = !!m.roll20;
+                bridgeChat = m.chat !== false;
+                renderBridgeBadge();
+                if (m.type === 'hello' || (!was && bridgeRoll20)) { bridgeLastState = ''; bridgeState(true); }
+            } else if (m.type === 'ack' && m.kind !== 'state') {
+                if (m.ok) renderBridgeBadge('✓ Envoyé sur Roll20');
+                else showNotification(m.reason === 'roll20' ? '⬡ Roll20 fermé : jet envoyé sur Discord seulement'
+                    : m.reason === 'chat' ? '⚠ Roll20 : zone de chat introuvable' : '⚠ Roll20 n\'a pas répondu');
+            }
+        });
 
         function capitalize(str) { const _ATTR_DISPLAY = { puissance: 'Force', presence: 'Charisme', precision: 'Finesse', vivacite: 'Vivacité', volonte: 'Volonté' }; if (_ATTR_DISPLAY[str]) return _ATTR_DISPLAY[str];
             return str.charAt(0).toUpperCase() + str.slice(1);
