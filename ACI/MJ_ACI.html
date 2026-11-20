@@ -258,6 +258,25 @@
         /* Icônes d'axe des attributs */
         .attr-ico { display: inline-block; vertical-align: -3px; flex: none; margin-right: 6px; }
         .attr-cell .an .attr-ico { margin-right: 5px; vertical-align: -2px; }
+
+        /* ===== VOLET DES DC ===== */
+        .dcp { margin-bottom: 22px; border: 1px solid #3f9fe0; border-radius: 3px; background: #121a24; overflow: hidden; }
+        .dcp-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+            padding: 14px 18px; background: transparent; border: none; cursor: pointer; color: #dde6f0;
+            font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em; text-align: left; }
+        .dcp-toggle:hover { background: rgba(255,255,255,0.04); }
+        .dcp-toggle .dcp-hint { font-size: 0.72rem; font-weight: 600; color: #3f9fe0; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
+        .dcp-toggle .dcp-chev { display: inline-block; transition: transform 0.2s; margin-left: 6px; }
+        .dcp.open .dcp-chev { transform: rotate(180deg); }
+        .dcp-body { display: none; padding: 4px 18px 18px; }
+        .dcp.open .dcp-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 18px; }
+        .dcp-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; color: #dde6f0; }
+        .dcp-table caption { text-align: left; font-weight: 700; color: #3f9fe0; font-size: 0.74rem; letter-spacing: 0.1em;
+            text-transform: uppercase; padding-bottom: 6px; }
+        .dcp-table th { text-align: left; font-size: 0.7rem; font-weight: 600; color: #6a7d92; padding: 4px 8px; border-bottom: 1px solid #24354a; }
+        .dcp-table td { padding: 5px 8px; border-bottom: 1px solid #24354a; }
+        .dcp-table td.dcp-v { font-weight: 800; color: #3f9fe0; font-size: 1rem; }
+        .dcp-note { font-size: 0.74rem; color: #6a7d92; margin-top: 6px; line-height: 1.45; }
     </style>
 </head>
 
@@ -286,51 +305,51 @@
             <span class="status" id="pull-status"></span>
         </div>
 
+        <!-- VOLET DES DC -->
+        <section class="dcp" id="dc-panel">
+            <button class="dcp-toggle" onclick="document.getElementById('dc-panel').classList.toggle('open')">
+                <span>📏 Table des DC</span>
+                <span class="dcp-hint">Afficher / masquer<span class="dcp-chev">▼</span></span>
+            </button>
+            <div class="dcp-body">
+                <div>
+                    <table class="dcp-table">
+                        <caption>Échelle des DC</caption>
+                        <tr><th>Difficulté</th><th>DC</th><th>Puissance seule</th></tr>
+                        <tr><td>Très facile</td><td class="dcp-v">3</td><td>-</td></tr>
+                        <tr><td>Facile</td><td class="dcp-v">5</td><td>1</td></tr>
+                        <tr><td>Standard</td><td class="dcp-v">8</td><td>3</td></tr>
+                        <tr><td>Difficile</td><td class="dcp-v">11</td><td>6</td></tr>
+                        <tr><td>Très difficile</td><td class="dcp-v">14</td><td>9</td></tr>
+                        <tr><td>Quasi impossible</td><td class="dcp-v">17</td><td>12</td></tr>
+                        <tr><td>Absurde</td><td class="dcp-v">20+</td><td>15</td></tr>
+                    </table>
+                    <div class="dcp-note">Jet : 2d4 + (attribut − 4) + (compétence − 3) + modificateur. Passive = 5 + bonus.
+                        « Puissance seule » : magie sans compétence, on compare la Valeur d'effet (5 + Puissance) à la DC.</div>
+                </div>
+                <div>
+                    <table class="dcp-table">
+                        <caption>Blessures</caption>
+                        <tr><th>Gravité</th><th>Blessure</th><th>DC soin</th><th>Stabilisation</th></tr>
+                        <tr><td>1</td><td>Superficielle</td><td class="dcp-v">3</td><td>1</td></tr>
+                        <tr><td>2</td><td>Légère</td><td class="dcp-v">5</td><td>3</td></tr>
+                        <tr><td>3</td><td>Modérée</td><td class="dcp-v">8</td><td>6</td></tr>
+                        <tr><td>4</td><td>Sérieuse</td><td class="dcp-v">11</td><td>9</td></tr>
+                        <tr><td>5</td><td>Grave</td><td class="dcp-v">14</td><td>12</td></tr>
+                        <tr><td>6</td><td>Critique</td><td class="dcp-v">17</td><td>15</td></tr>
+                        <tr><td>7+</td><td>Terminale</td><td class="dcp-v">20</td><td>18</td></tr>
+                    </table>
+                    <div class="dcp-note">Marge −3 ou pire : échec · −2 à −1 : stabilisée · 0 et plus : soignée
+                        (sans magie −1 cran, avec magie 1 + ⌊marge ÷ 2⌋ crans).</div>
+                </div>
+            </div>
+        </section>
+
         <div class="roster-head">
             <h2>Effectif suivi</h2>
             <span class="count" id="roster-count">0 agent</span>
         </div>
         <div class="roster" id="roster"></div>
-
-        <section class="ref" id="ref">
-            <button class="ref-toggle" onclick="document.getElementById('ref').classList.toggle('open')">
-                <span>Mémento · attributs, aptitudes, vecteurs et domaines</span>
-                <span class="chev">▼</span>
-            </button>
-            <div class="ref-body">
-                <div class="ref-grid">
-                    <div class="ref-col"><h3>Attributs</h3><div id="ref-attr"></div></div>
-                    <div class="ref-col"><h3>Aptitudes</h3><div id="ref-skill"></div></div>
-                    <div class="ref-col"><h3>Vecteurs d'effet</h3><div id="ref-vec"></div></div>
-                    <div class="ref-col"><h3>Domaines d'application</h3><div id="ref-dom"></div></div>
-                </div>
-                <div class="ref-item" style="margin-top:18px;border-top:1px solid var(--line);padding-top:12px;">
-                    <b>Jet d'aptitude</b> <span>- 2d4 + (attribut − 4) + (aptitude − 3) + modificateur, contre
-                    une DC : Très facile 3 · Facile 5 · Standard 8 · Difficile 11 · Très difficile 14 · Quasi
-                    impossible 17 · Absurde 20+. Avantage / désavantage : 3d4, on garde les 2 meilleurs / pires.
-                    Valeur passive = 5 + bonus. Blessures : DC de soin sur la même échelle (gravité 1 à 7+ :
-                    3 · 5 · 8 · 11 · 14 · 17 · 20), stabilisation 2 points en dessous.</span>
-                </div>
-                <div class="ref-item">
-                    <b>Résolution d'un pouvoir</b> <span>- l'agent choisit un canal unique, l'attribut par
-                    lequel passent tous ses vecteurs. Les échelons d'habilitation vont de 0 à 5 et le couple
-                    Vecteur + Domaine fixe la Magnitude maximum, 10 au sommet. La Magnitude déclarée est le
-                    nombre de d10 lancés, réussis sur 10 − niveau du canal : réussite +1, 10 = +2, 1 = −1. La
-                    somme est la Puissance (plancher 0). Les 1 et les 10 s'annulent par paires ; chaque 10 restant
-                    donne un Avantage choisi par le joueur, chaque 1 restant un Accroc tiré au hasard (3 Accrocs :
-                    Contrecoup). Sur un jet combiné, la Puissance s'ajoute au total d'aptitude ; Valeur d'effet =
-                    5 + Puissance. Coût : 1 Charge par dé engagé.</span>
-                </div>
-                <div class="ref-item">
-                    <b>Charge</b> <span>- la dotation dépend de la classe : ε 10 · δ 22 · γ 34 · β 46 ·
-                    α 58 · Ω 70. Un pouvoir coûte 1 Charge par dé engagé.</span>
-                </div>
-                <div class="ref-item">
-                    <b>Réserve à sec</b> <span>- la Charge plafonne à zéro et n'entame jamais l'Élan. Un
-                    agent à sec ne peut plus rien engager avant d'avoir récupéré.</span>
-                </div>
-            </div>
-        </section>
 
         <p class="footer">Poste de coordination ACI · lecture seule des dossiers déposés sur le dépôt de sauvegardes</p>
     </div>
@@ -872,7 +891,6 @@
         }
 
         /* ========================== INIT ========================== */
-        renderReference();
         render();
         shrinkStoredPortraits().finally(() => pullFromGitHub(false));
     </script>
