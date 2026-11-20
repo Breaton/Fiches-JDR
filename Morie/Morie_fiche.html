@@ -4294,7 +4294,7 @@
                             <strong>2d4 + Attribut + Compétence</strong> contre une DC. Commun et Ordinaire valent +0.<br>
                             Les 2d4 sont le scénario : double 1 = le pire (Complication), double 4 = le meilleur (Opportunité).
                             Avantage et Désavantage : 3d4, on garde les 2 meilleurs ou les 2 pires.<br>
-                            DC : Très facile 4 · Facile 6 · Standard 8 · Difficile 11 · Très difficile 13 · Quasi impossible 15 · Absurde 18.<br>
+                            DC : Très facile 3 · Facile 5 · Standard 8 · Difficile 11 · Très difficile 14 · Quasi impossible 17 · Absurde 20+.<br>
                             Après le jet, un <strong>jet de magie</strong> peut être ajouté pour amplifier l'effet.
                         </div>
                     </div>
@@ -4977,11 +4977,11 @@
         // Une seule DC par blessure. C'est la marge du jet qui décide :
         // −3 ou pire = échec · −2 à −1 = stabilisée · 0 et plus = soignée.
         // Sans magie : −1 cran. Avec magie : 1 cran, plus 1 tous les 2 points de marge.
-        const WOUND_DC_TABLE = { 1: 4, 2: 6, 3: 8, 4: 11, 5: 13, 6: 15 };
+        const WOUND_DC_TABLE = { 1: 3, 2: 5, 3: 8, 4: 11, 5: 14, 6: 17 };
         const STAB_MARGIN = 2;
 
         function getWoundDC(gravity) {
-            if (gravity >= 7) return 18;
+            if (gravity >= 7) return 20;
             return WOUND_DC_TABLE[Math.max(1, gravity)] || WOUND_DC_TABLE[1];
         }
 
@@ -5990,8 +5990,8 @@
         }
 
         const DC_SCALE = [
-            ['Très facile', 4], ['Facile', 6], ['Standard', 8], ['Difficile', 11],
-            ['Très difficile', 13], ['Quasi impossible', 15], ['Absurde', 18]
+            ['Très facile', 3], ['Facile', 5], ['Standard', 8], ['Difficile', 11],
+            ['Très difficile', 14], ['Quasi impossible', 17], ['Absurde', 20]
         ];
         function dcLabel(dc) {
             let name = 'Trivial';

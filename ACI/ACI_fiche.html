@@ -4010,8 +4010,8 @@
         }
 
         const DC_SCALE = [
-            ['Très facile', 4], ['Facile', 6], ['Standard', 8], ['Difficile', 11],
-            ['Très difficile', 13], ['Quasi impossible', 15], ['Absurde', 18]
+            ['Très facile', 3], ['Facile', 5], ['Standard', 8], ['Difficile', 11],
+            ['Très difficile', 14], ['Quasi impossible', 17], ['Absurde', 20]
         ];
         function dcLabel(dc) {
             let name = 'Trivial';
@@ -4866,10 +4866,10 @@
             { g: 6, name: 'Critique', conval: '1 mois', guerison: '2 mois', aggr: '12 heures' },
             { g: 7, name: 'Terminale', conval: '2 mois', guerison: 'Ne guérit pas', aggr: '1 heure' },
         ];
-        const WOUND_DC_TABLE = { 1: 4, 2: 6, 3: 8, 4: 11, 5: 13, 6: 15 };
+        const WOUND_DC_TABLE = { 1: 3, 2: 5, 3: 8, 4: 11, 5: 14, 6: 17 };
         const STAB_MARGIN = 2;
         function getWoundRef(gravity) { return WOUND_REFERENCE[Math.min(7, Math.max(1, gravity)) - 1]; }
-        function getWoundDC(gravity) { return gravity >= 7 ? 18 : (WOUND_DC_TABLE[Math.max(1, gravity)] || WOUND_DC_TABLE[1]); }
+        function getWoundDC(gravity) { return gravity >= 7 ? 20 : (WOUND_DC_TABLE[Math.max(1, gravity)] || WOUND_DC_TABLE[1]); }
         function getStabDC(gravity) { return getWoundDC(gravity) - STAB_MARGIN; }
         // Crans retirés selon la marge : null = échec, 0 = stabilisée seulement
         function healOutcome(result, gravity, isMagic) {
