@@ -4388,7 +4388,7 @@
                             <strong>Moment d'émotion :</strong> +1 Magnitude gratuite et +1 au jet, mais l'abîme
                             s'élargit : les faces 1 à 3 valent −3, −2, −1.<br>
                             <strong>Puissance</strong> = dés gardés + surcharge − 5, au moins 1 si aucun dé gardé n'est dans
-                            l'abîme · <strong>Valeur d'effet</strong> = 5 + Puissance (DC de résistance). Avec une compétence, les dés de magie sont déjà dans le résultat.<br>
+                            l'abîme · <strong>Valeur d'effet</strong> = 5 + Puissance, 0 si la Puissance est nulle (DC de résistance). Avec une compétence, les dés de magie sont déjà dans le résultat.<br>
                             <strong>Coût :</strong> 1 point d'énergie par point de Magnitude (les crans bonus sont gratuits).
                         </div>
                     </div>
@@ -6775,8 +6775,8 @@
             const cb = hasSkill ? checkBonus(attrValue, skill.level, bonus) : 0;
             const value = r.nat + r.surcharge + r.emoFlat;     // dés gardés + surcharge + émotion
             const P = out.P;
-            // Sans compétence, le résultat est la Valeur d'effet (relevée à 6 par le plancher de Puissance)
-            const total = hasSkill ? value + cb : (P > 0 ? 5 + P : value);
+            // Sans compétence, le résultat est la Valeur d'effet : 5 + Puissance, et 0 quand la Puissance est nulle
+            const total = hasSkill ? value + cb : effectValue(P);
             const effect = effectValue(P);
 
             displayHybridResult({
@@ -6801,8 +6801,8 @@
                     } : null
                 });
 
-            // Une magie pure n'est pas un jet de compétence : le don ne s'y déclenche pas
-            if (hasSkill && maybeVision(skill.name)) appendVisionBanner();
+            // Tout jet compte, magie pure comprise (Zaya lance surtout sa magie seule)
+            if (maybeVision(hasSkill ? skill.name : `${pair.verb.name} × ${pair.target.name}`)) appendVisionBanner();
         }
 
         function displayHybridResult(data) {
@@ -6822,10 +6822,13 @@
                 { l: 'Mod.', v: data.bonus }
             ] : [];
             parts.push({ l: 'Surcharge', v: r.surcharge }, { l: 'Émotion', v: r.emoFlat });
-            const floorGap = data.total - (r.nat + r.surcharge + r.emoFlat);
+            // Magie pure sans Puissance : la ligne montre la somme des dés, la Valeur d'effet est 0
+            const rawSum = r.nat + r.surcharge + r.emoFlat;
+            const eqTotal = data.hasSkill ? data.total : (data.P > 0 ? data.total : rawSum);
+            const floorGap = eqTotal - rawSum;
             if (!data.hasSkill && floorGap > 0) parts.push({ l: 'Plancher', v: floorGap });
-            diceArea.innerHTML = `<div class="dice-section">` + abyssEquationHtml(r, parts, data.total, 0,
-                data.hasSkill ? 'Résultat' : 'Valeur d\'effet') + `</div>`;
+            diceArea.innerHTML = `<div class="dice-section">` + abyssEquationHtml(r, parts, eqTotal, 0,
+                data.hasSkill ? 'Résultat' : (data.P > 0 ? 'Valeur d\'effet' : 'Dés')) + `</div>`;
 
             setStatLabels(['Dés', 'Magnitude', 'Dés dans l\'abîme', 'Puissance']);
             setStat('stat-successes', fmtSigned(r.nat), true);
@@ -6836,10 +6839,10 @@
             let mag = '';
             if (data.magic) {
                 mag = `<div class="magnitude-result">
-                    <div class="magnitude-label">✨ Puissance du sort : <strong>${data.P}</strong> · Valeur d'effet <strong>${data.effect || '-'}</strong>${r.abyss ? ` · <span style="color:#b8382e;">${r.abyss === 2 ? 'les deux dés' : 'un dé'} dans l'abîme</span>` : ''}</div>
+                    <div class="magnitude-label">✨ Puissance du sort : <strong>${data.P}</strong> · Valeur d'effet <strong>${data.effect}</strong>${r.abyss ? ` · <span style="color:#b8382e;">${r.abyss === 2 ? 'les deux dés' : 'un dé'} dans l'abîme</span>` : ''}</div>
                     <div style="font-size:0.76em;color:var(--silver-mist);margin-bottom:8px;">${data.hasSkill
-                        ? `Un seul lancer : les dés de magie sont déjà dans le résultat. Puissance = dés gardés + surcharge − 5 (au moins 1 si aucun dé n'est dans l'abîme) · Valeur d'effet = 5 + Puissance, DC de résistance.`
-                        : `Puissance = dés gardés + surcharge − 5 (au moins 1 si aucun dé n'est dans l'abîme) · Valeur d'effet = 5 + Puissance : DC de résistance, gravité, portée, durée, zone.`}</div>
+                        ? `Un seul lancer : les dés de magie sont déjà dans le résultat. Puissance = dés gardés + surcharge − 5 (au moins 1 si aucun dé n'est dans l'abîme) · Valeur d'effet = 5 + Puissance (0 si la Puissance est nulle), DC de résistance.`
+                        : `Puissance = dés gardés + surcharge − 5 (au moins 1 si aucun dé n'est dans l'abîme) · Valeur d'effet = 5 + Puissance (0 si la Puissance est nulle) : DC de résistance, gravité, portée, durée, zone.`}</div>
                     ${powerDetailHtml(data.P)}
                     <div class="magnitude-status">⚡ ${data.paid} énergie dépensée${data.paid > 1 ? 's' : ''}${data.M > data.paid ? ` · ${data.M - data.paid} Magnitude gratuite${r.emoBonus ? ' (dont ' + r.emoBonus + ' d\'émotion)' : ''}` : ''}</div>
                 </div>`;
@@ -7244,8 +7247,10 @@
         // ========== UTILITAIRES ==========
         /* ===================================================================
            VISIONS DE ZAYA
-           Un don subi, pas un pouvoir lancé : à chaque jet de compétence, une
-           chance sur dix qu'une vision la traverse. Le contenu (quand, qui,
+           Un don subi, pas un pouvoir lancé : à chaque jet (compétence, magie
+           ou les deux), une chance qu'une vision la traverse. 10 % au départ,
+           +5 % à chaque jet sans vision, retour à 10 % après chaque vision.
+           Le compteur est sauvegardé avec la fiche. Le contenu (quand, qui,
            quoi) est du pur hasard ; seules la Pertinence et la Clarté suivent
            son couple Percevoir × Destin. Côté joueuse, rien d'autre qu'une
            notification : le détail part directement chez la MJ.
@@ -7255,8 +7260,8 @@
         // Le don est reconnu sur le nom de la sauvegarde.
         // Une fiche peut aussi le forcer avec `"visionsEnabled": true` à la racine du .json.
         const VISION_SEER_NAME = 'zaya';
-        const VISION_TRIGGER_DIE = 10;   // dé du déclencheur : 1 sur 10, soit 10 %
-        const VISION_TRIGGER_FACE = 1;   // face qui déclenche
+        const VISION_BASE_CHANCE = 0.10;   // chance au départ et après chaque vision
+        const VISION_STEP = 0.05;          // +5 % à chaque jet sans vision
         const VISION_COOLDOWN_MS = 0;    // verrou entre deux visions ; 600000 = 10 minutes
 
         // Équipage nommé : si la liste est remplie, le tirage désigne quelqu'un.
@@ -7340,7 +7345,12 @@
         ];
 
         function d12() { return Math.floor(Math.random() * 12) + 1; }
-        function visionTriggerRoll() { return Math.floor(Math.random() * VISION_TRIGGER_DIE) + 1; }
+        // Chance du prochain jet : la pression monte tant que rien ne vient
+        function visionChance() {
+            const misses = Math.max(0, parseInt(appState.visionMisses) || 0);
+            return Math.min(1, VISION_BASE_CHANCE + VISION_STEP * misses);
+        }
+        function fmtPct(p) { return String(Math.round(p * 100)) + ' %'; }
         function visionTier(table, total) { return table.find(t => total >= t.min) || table[table.length - 1]; }
 
         function rollVision() {
@@ -7396,9 +7406,16 @@
             if (!isVisionSeer()) return false;
             // Un jet privé masque le jet, pas le don : la vision part quand même à la MJ.
             if (VISION_COOLDOWN_MS && Date.now() - lastVisionAt < VISION_COOLDOWN_MS) return false;
-            if (visionTriggerRoll() !== VISION_TRIGGER_FACE) return false;
+            if (Math.random() >= visionChance()) {
+                appState.visionMisses = (parseInt(appState.visionMisses) || 0) + 1;
+                renderSeerBanner();
+                scheduleAutosave();
+                return false;
+            }
+            appState.visionMisses = 0;          // retour à la chance de départ
             lastVisionAt = Date.now();
             visionCount++;
+            scheduleAutosave();
             sendVisionToMJ(rollVision(), skillName);
             renderSeerBanner();
             showNotification('✦ Une vision te traverse');
@@ -7414,11 +7431,12 @@
             if (!on) return;
             const sub = document.getElementById('seer-sub');
             if (!sub) return;
-            const pct = (100 / VISION_TRIGGER_DIE).toFixed(1).replace('.', ',').replace(',0', '');
-            const seen = visionCount === 0 ? 'aucune vision pour l\'instant'
+            const misses = parseInt(appState.visionMisses) || 0;
+            const seen = visionCount === 0 ? 'aucune vision depuis l\'ouverture de la fiche'
                 : `${visionCount} vision${visionCount > 1 ? 's' : ''} depuis l'ouverture de la fiche`;
-            sub.textContent = `1 jet de compétence sur ${VISION_TRIGGER_DIE} (${pct} %) · `
-                + `Clarté + Percevoir ${verbLevel('percevoir')} · Pertinence + Destin ${targetLevel('destin')} · ${seen}`;
+            sub.textContent = `Prochain jet : ${fmtPct(visionChance())} de vision`
+                + (misses ? ` (${fmtPct(VISION_BASE_CHANCE)} + ${misses} jet${misses > 1 ? 's' : ''} sans vision)` : '')
+                + ` · Clarté + Percevoir ${verbLevel('percevoir')} · Pertinence + Destin ${targetLevel('destin')} · ${seen}`;
         }
 
         // Vérifier que le canal de la MJ reçoit bien, sans attendre un vrai tirage
