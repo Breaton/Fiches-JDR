@@ -6333,13 +6333,13 @@
         }
 
         // Réserve d'énergie magique disponible par jour, selon le meilleur couple
-        const MAGIC_RESERVE = { 1: 3, 2: 6, 3: 10, 4: 14, 5: 18, 6: 22, 7: 28, 8: 35, 9: 43, 10: 52 };
+        const RESERVE_PER_MAGNITUDE = 3;   // réserve par jour = 3 × Magnitude max (meilleur couple)
 
         // Ajustement manuel du maximum de réserve (override)
         function getReserveMaxBase() {
             const lvl = bestPair().cap;
             if (lvl <= 0) return 0;
-            return MAGIC_RESERVE[Math.min(10, lvl)] || 0;
+            return RESERVE_PER_MAGNITUDE * lvl;
         }
 
         function setReserveOverride(val) {
