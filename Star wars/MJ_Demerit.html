@@ -865,30 +865,144 @@
             margin-top: 40px;
             letter-spacing: 0.06em;
         }
-            .attr-ico { display: inline-block; vertical-align: -3px; flex: none; margin-right: 6px; }
-        .attr-cell .an .attr-ico { margin-right: 5px; vertical-align: -2px; }
-        @media (max-width: 1200px) { .roster { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-        @media (max-width: 640px) { .roster { grid-template-columns: minmax(0, 1fr); } body { padding: 24px 8px 48px; } }
-        .ref-item .rt .attr-ico { margin-right: 5px; vertical-align: -2px; }
+
+        .attr-ico {
+            display: inline-block;
+            vertical-align: -3px;
+            flex: none;
+            margin-right: 6px;
+        }
+
+        .attr-cell .an .attr-ico {
+            margin-right: 5px;
+            vertical-align: -2px;
+        }
+
+        @media (max-width: 1200px) {
+            .roster {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 640px) {
+            .roster {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            body {
+                padding: 24px 8px 48px;
+            }
+        }
+
+        .ref-item .rt .attr-ico {
+            margin-right: 5px;
+            vertical-align: -2px;
+        }
 
         /* ===== VOLET DES DC ===== */
-        .dcp { margin-bottom: 22px; border: 1px solid #2d8a8a; border-radius: 12px; background: rgba(26, 39, 68, 0.7); overflow: hidden; }
-        .dcp-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px;
-            padding: 14px 18px; background: transparent; border: none; cursor: pointer; color: #f8fafc;
-            font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.04em; text-align: left; }
-        .dcp-toggle:hover { background: rgba(255,255,255,0.04); }
-        .dcp-toggle .dcp-hint { font-size: 0.72rem; font-weight: 600; color: #2d8a8a; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap; }
-        .dcp-toggle .dcp-chev { display: inline-block; transition: transform 0.2s; margin-left: 6px; }
-        .dcp.open .dcp-chev { transform: rotate(180deg); }
-        .dcp-body { display: none; padding: 4px 18px 18px; }
-        .dcp.open .dcp-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 18px; }
-        .dcp-table { width: 100%; border-collapse: collapse; font-size: 0.86rem; color: #f8fafc; }
-        .dcp-table caption { text-align: left; font-weight: 700; color: #2d8a8a; font-size: 0.74rem; letter-spacing: 0.1em;
-            text-transform: uppercase; padding-bottom: 6px; }
-        .dcp-table th { text-align: left; font-size: 0.7rem; font-weight: 600; color: #8b9dc3; padding: 4px 8px; border-bottom: 1px solid rgba(139,157,195,0.15); }
-        .dcp-table td { padding: 5px 8px; border-bottom: 1px solid rgba(139,157,195,0.15); }
-        .dcp-table td.dcp-v { font-weight: 800; color: #2d8a8a; font-size: 1rem; }
-        .dcp-note { font-size: 0.74rem; color: #8b9dc3; margin-top: 6px; line-height: 1.45; }
+        .dcp {
+            margin-bottom: 22px;
+            border: 1px solid #2d8a8a;
+            border-radius: 12px;
+            background: rgba(26, 39, 68, 0.7);
+            overflow: hidden;
+        }
+
+        .dcp-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 14px 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #f8fafc;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-align: left;
+        }
+
+        .dcp-toggle:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .dcp-toggle .dcp-hint {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: #2d8a8a;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .dcp-toggle .dcp-chev {
+            display: inline-block;
+            transition: transform 0.2s;
+            margin-left: 6px;
+        }
+
+        .dcp.open .dcp-chev {
+            transform: rotate(180deg);
+        }
+
+        .dcp-body {
+            display: none;
+            padding: 4px 18px 18px;
+        }
+
+        .dcp.open .dcp-body {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+            gap: 18px;
+        }
+
+        .dcp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.86rem;
+            color: #f8fafc;
+        }
+
+        .dcp-table caption {
+            text-align: left;
+            font-weight: 700;
+            color: #2d8a8a;
+            font-size: 0.74rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding-bottom: 6px;
+        }
+
+        .dcp-table th {
+            text-align: left;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #8b9dc3;
+            padding: 4px 8px;
+            border-bottom: 1px solid rgba(139, 157, 195, 0.15);
+        }
+
+        .dcp-table td {
+            padding: 5px 8px;
+            border-bottom: 1px solid rgba(139, 157, 195, 0.15);
+        }
+
+        .dcp-table td.dcp-v {
+            font-weight: 800;
+            color: #2d8a8a;
+            font-size: 1rem;
+        }
+
+        .dcp-note {
+            font-size: 0.74rem;
+            color: #8b9dc3;
+            margin-top: 6px;
+            line-height: 1.45;
+        }
     </style>
 </head>
 
@@ -934,32 +1048,104 @@
                 <div>
                     <table class="dcp-table">
                         <caption>Échelle des DC</caption>
-                        <tr><th>Difficulté</th><th>DC</th><th>Puissance seule</th></tr>
-                        <tr><td>Très facile</td><td class="dcp-v">3</td><td>-</td></tr>
-                        <tr><td>Facile</td><td class="dcp-v">5</td><td>1</td></tr>
-                        <tr><td>Standard</td><td class="dcp-v">8</td><td>3</td></tr>
-                        <tr><td>Difficile</td><td class="dcp-v">11</td><td>6</td></tr>
-                        <tr><td>Très difficile</td><td class="dcp-v">14</td><td>9</td></tr>
-                        <tr><td>Quasi impossible</td><td class="dcp-v">17</td><td>12</td></tr>
-                        <tr><td>Absurde</td><td class="dcp-v">20+</td><td>15</td></tr>
+                        <tr>
+                            <th>Difficulté</th>
+                            <th>DC</th>
+                            <th>Puissance seule</th>
+                        </tr>
+                        <tr>
+                            <td>Très facile</td>
+                            <td class="dcp-v">3</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Facile</td>
+                            <td class="dcp-v">5</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>Standard</td>
+                            <td class="dcp-v">8</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>Difficile</td>
+                            <td class="dcp-v">11</td>
+                            <td>6</td>
+                        </tr>
+                        <tr>
+                            <td>Très difficile</td>
+                            <td class="dcp-v">14</td>
+                            <td>9</td>
+                        </tr>
+                        <tr>
+                            <td>Quasi impossible</td>
+                            <td class="dcp-v">17</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>Absurde</td>
+                            <td class="dcp-v">20+</td>
+                            <td>15</td>
+                        </tr>
                     </table>
-                    <div class="dcp-note">Jet : 2d4 + (attribut − 4) + (compétence − 3) + modificateur. Passive = 5 + bonus.
-                        « Puissance seule » : magie sans compétence, on compare la Valeur d'effet (5 + Puissance) à la DC.</div>
+                    <div class="dcp-note">Jet : 2d4 + (attribut − 4) + (compétence − 3) + modificateur.</div>
                 </div>
                 <div>
                     <table class="dcp-table">
                         <caption>Blessures</caption>
-                        <tr><th>Gravité</th><th>Blessure</th><th>DC soin</th><th>Stabilisation</th></tr>
-                        <tr><td>1</td><td>Superficielle</td><td class="dcp-v">3</td><td>1</td></tr>
-                        <tr><td>2</td><td>Légère</td><td class="dcp-v">5</td><td>3</td></tr>
-                        <tr><td>3</td><td>Modérée</td><td class="dcp-v">8</td><td>6</td></tr>
-                        <tr><td>4</td><td>Sérieuse</td><td class="dcp-v">11</td><td>9</td></tr>
-                        <tr><td>5</td><td>Grave</td><td class="dcp-v">14</td><td>12</td></tr>
-                        <tr><td>6</td><td>Critique</td><td class="dcp-v">17</td><td>15</td></tr>
-                        <tr><td>7+</td><td>Terminale</td><td class="dcp-v">20</td><td>18</td></tr>
+                        <tr>
+                            <th>Gravité</th>
+                            <th>Blessure</th>
+                            <th>DC soin</th>
+                            <th>Stabilisation</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Superficielle</td>
+                            <td class="dcp-v">3</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Légère</td>
+                            <td class="dcp-v">5</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Modérée</td>
+                            <td class="dcp-v">8</td>
+                            <td>6</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Sérieuse</td>
+                            <td class="dcp-v">11</td>
+                            <td>9</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Grave</td>
+                            <td class="dcp-v">14</td>
+                            <td>12</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Critique</td>
+                            <td class="dcp-v">17</td>
+                            <td>15</td>
+                        </tr>
+                        <tr>
+                            <td>7+</td>
+                            <td>Terminale</td>
+                            <td class="dcp-v">20</td>
+                            <td>18</td>
+                        </tr>
                     </table>
-                    <div class="dcp-note">Marge −3 ou pire : échec · −2 à −1 : stabilisée · 0 et plus : soignée
-                        (sans magie −1 cran, avec magie 1 + ⌊marge ÷ 2⌋ crans).</div>
+                    <div class="dcp-note">Pour stabiliser, il faut réussir au moins DC de soin -2
+                        Une magie de soin va soigner plusieurs cran pour chaque 3 points de DC battu.
+                    </div>
                 </div>
             </div>
         </section>
