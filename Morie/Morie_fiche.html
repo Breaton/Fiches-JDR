@@ -7456,6 +7456,11 @@
             };
         }
 
+        function isTwinName(name) {
+            const n = (name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+            return /\byue\b/.test(n) || n.includes('shuhui');
+        }
+
         // Qui tient la fiche : 'yue', 'shuhui' ou null. `qiRole` dans le .json prime sur le nom.
         function qiRole() {
             if (!appState.qiShared) return null;
@@ -7972,6 +7977,8 @@
             // Qi des jumelles : activé par `"qiShared": true` dans la sauvegarde de Shu et de Yue
             if (appState.profile?.qiShared !== undefined) appState.qiShared = !!appState.profile.qiShared;
             if (appState.qiShared === undefined) appState.qiShared = false;
+            // Shu et Yue ont toujours le Qi, même si la sauvegarde a perdu le drapeau
+            if (isTwinName(appState.profile && appState.profile.name)) appState.qiShared = true;
             // La valeur du pool fait toujours autorité côté GitHub : on repart de 0 en attendant qiPull()
             if (appState.qiShared) appState.qiPool = appState.qiPool ?? 0;
             if (appState.qiPool === undefined) appState.qiPool = 0;

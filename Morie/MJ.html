@@ -1671,7 +1671,7 @@
                 reserveUsed: parseInt(magic.reserveUsed) || 0,
                 reserveMaxOverride: (magic.reserveMaxOverride != null) ? parseInt(magic.reserveMaxOverride) || null : null,
                 vitesseBonus: parseInt(obj.vitesseBonus) || 0,
-                qiShared: !!(obj.qiShared || (obj.profile && obj.profile.qiShared)),
+                qiShared: !!(obj.qiShared || (obj.profile && obj.profile.qiShared) || /\byue\b|shuhui/.test(((obj.profile && obj.profile.name) || obj.name || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''))),
                 updatedAt: obj.ts || Date.now()
             };
         }
