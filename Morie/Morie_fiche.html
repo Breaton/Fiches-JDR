@@ -6631,12 +6631,11 @@
             });
             if (!isPrivateRoll()) sendDiscordRoll(skill.name, skill.baseName, total, attrLabel,
                 { nat: chk.nat, checkBonus: chk.bonus, bonus, mode, dc });
-            bridgeEmit('roll', {
-                type: 'skill', title: skill.name, attr: attrLabel, total, dc, mode, private: isPrivateRoll(),
-                dice: bridgeDice(chk.dice, false), bonus: chk.bonus,
-                scenario: scenarioOf(chk.nat).label,
-                event: chk.nat === NAT_TOP ? 'Opportunité' : chk.nat === NAT_LOW ? 'Complication' : null,
-                res: bridgeResources()
+            bridgeRoll({
+                tag: 'Jet de compétence', title: `${skill.name} (${attrLabel})`, private: isPrivateRoll(), mode,
+                total, totalLabel: 'résultat', dc,
+                groups: [bridgeCheckGroup(chk)],
+                ...bridgeNat(chk.nat)
             });
 
             if (maybeVision(skill.name)) appendVisionBanner();
@@ -7249,22 +7248,32 @@
                     } : null
                 });
 
-            bridgeEmit('roll', {
-                type: !hasSkill ? 'pure' : magic ? 'hybrid' : 'skill',
-                title: hasSkill ? skill.name : `${pair.verb.name} × ${pair.target.name}`,
-                attr: hasSkill ? (ATTR_LABEL[attrName] || capitalize(attrName)) : null,
-                total, dc, mode, private: isPrivateRoll(),
-                dice: bridgeDice(r.dice, magic), bonus: cb,
-                scenario: magic ? null : scenarioOf(r.nat).label,
-                event: !magic && r.nat === NAT_TOP ? 'Opportunité' : !magic && r.nat === NAT_LOW ? 'Complication' : null,
-                magic: magic ? {
-                    pair: `${pair.verb.name} × ${pair.target.name}`, M: out.M, cap, label: r.label,
-                    surcharge: r.surcharge, emoFlat: r.emoFlat, emotion: r.emotion, abyss: r.abyss,
-                    P, effect, energy: r.energyPaid ?? r.paid ?? 0, qi: r.qiPaid || 0,
-                    notes: out.qiNotes || []
-                } : null,
-                res: bridgeResources()
-            });
+            {
+                const pairName = `${pair.verb.name} × ${pair.target.name}`;
+                const terms = [];
+                if (magic && r.surcharge) terms.push(`+${r.surcharge} surcharge`);
+                if (magic && r.emoFlat) terms.push(`+${r.emoFlat} émotion`);
+                if (hasSkill) terms.push(bridgeSigned(cb));
+                const pay = [];
+                const energy = r.energyPaid ?? r.paid ?? 0;
+                if (magic && energy) pay.push(`⚡ −${energy}`);
+                (out.qiNotes || []).forEach(n => pay.push(n));
+                bridgeRoll({
+                    tag: !hasSkill ? 'Magie pure' : magic ? 'Jet + magie' : 'Jet de compétence',
+                    title: hasSkill ? `${skill.name} (${ATTR_LABEL[attrName] || capitalize(attrName)})` : pairName,
+                    private: isPrivateRoll(), mode,
+                    total, totalLabel: hasSkill ? 'résultat' : 'Valeur d\'effet', dc,
+                    groups: [{
+                        label: magic ? r.label : '2d4',
+                        dice: r.dice.map(d => ({ s: magic ? d.size : 4, v: d.v, t: d.kept === false ? 'x' : d.v < 0 ? 'a' : (magic && d.size > 4) ? 'm' : 'n' })),
+                        terms
+                    }],
+                    stats: magic ? [{ l: 'Puissance', v: P, hi: true }, { l: 'Valeur d\'effet', v: effect }] : [],
+                    magic: magic ? `✨ ${pairName} · Magnitude ${out.M}${cap ? '/' + cap : ''}${r.emotion ? ' · 🔥 Émotion' : ''}${r.abyss ? ' · abîme' : ''}` : null,
+                    notes: pay,
+                    ...(magic ? {} : bridgeNat(r.nat))
+                });
+            }
 
             // Tout jet compte, magie pure comprise (Zaya lance surtout sa magie seule)
             if (maybeVision(hasSkill ? skill.name : `${pair.verb.name} × ${pair.target.name}`)) appendVisionBanner();
@@ -8194,11 +8203,10 @@
                 author: { name: charName }
             };
 
-            bridgeEmit('vision', {
-                test: !!isTest, skill: skillName || 'compétence',
-                time: `${v.time.deg}, ${v.time.dist}`, who: v.who, topic: v.topic,
-                relevance: v.relevance.name, relevanceDesc: v.relevance.desc,
-                clarity: v.clarity.name, clarityDesc: v.clarity.desc
+            bridgeEmit('whisper', {
+                title: isTest ? '✦ Vision · TEST' : '✦ Vision', tag: 'pendant ' + (skillName || 'compétence'),
+                rows: [['Temporalité', `${v.time.deg}, ${v.time.dist}`], ['Qui', v.who], ['Sujet', v.topic],
+                    ['Pertinence', v.relevance.name, v.relevance.desc], ['Clarté', v.clarity.name, v.clarity.desc]]
             });
 
             fetch(VISION_WEBHOOK_URL, {
@@ -8340,8 +8348,9 @@
         // ========== PONT ROLL20 ==========
         // Le script de navigateur « Pont Fiches JDR → Roll20 » (Tampermonkey) marque la page
         // (data-jdr-pont="1") et relaie ce que la fiche envoie ici vers l'onglet Roll20,
-        // où le Mod « FicheJDR » affiche le jet et met à jour les jetons.
+        // où le Mod FicheJDR de la partie affiche le jet et met à jour les jetons.
         // Sans le script, rien ne change : tout part seulement sur Discord.
+        // Format commun aux trois univers (carte v2) : chaque fiche décrit son jet, le Mod l'affiche tel quel.
         const BRIDGE_SHEET = 'aequor';
         let bridgeRoll20 = false, bridgeChat = true, bridgeSeq = 0, bridgeLastState = '', bridgeStateTimer = null;
 
@@ -8350,16 +8359,8 @@
         function bridgeEmit(kind, data) {
             if (!bridgeActive()) return null;
             const id = Date.now().toString(36) + '-' + (++bridgeSeq) + '-' + Math.random().toString(36).slice(2, 7);
-            const char = (appState.profile && appState.profile.name) || 'Personnage';
-            window.postMessage({ jdrPont: 'fiche', v: 1, id, sheet: BRIDGE_SHEET, kind, char, data }, '*');
+            window.postMessage({ jdrPont: 'fiche', v: 2, id, sheet: BRIDGE_SHEET, kind, char: bridgeCharName(), data }, '*');
             return id;
-        }
-
-        // Ressources affichées sur les jetons : énergie, et Qi partagé pour Shu et Yue
-        function bridgeResources() {
-            const res = { energie: [getReserveLeft(), getReserveMax()] };
-            if (appState.qiShared) res.qi = [qiAvailable(), QI_MAX];
-            return res;
         }
 
         function bridgeState(force) {
@@ -8374,8 +8375,24 @@
             }, 600);
         }
 
-        function bridgeDice(dice, grown) {
-            return dice.map(d => grown ? { s: d.size, v: d.v, k: d.kept } : { s: 4, v: d.v, k: d.kept });
+        // Outils de carte. Tons des dés : n normal · z nul · x écarté · a abîme · c critique · f échec critique · m magie
+        const bridgeSigned = n => (n > 0 ? '+' : n < 0 ? '−' : '+') + Math.abs(n);
+        const bridgePlain = t => String(t || '').replace(/\*\*|__|\*/g, '').trim();
+        function bridgeCheckGroup(chk, terms) {
+            return {
+                label: chk.dice.length > 2 ? '3d4' : '2d4',
+                dice: chk.dice.map(d => ({ s: 4, v: d.v, t: d.kept === false ? 'x' : 'n' })),
+                terms: [bridgeSigned(chk.bonus)].concat(terms || [])
+            };
+        }
+        function bridgeNat(nat) {
+            return {
+                scenario: scenarioOf(nat).label,
+                event: nat === NAT_TOP ? 'Opportunité' : nat === NAT_LOW ? 'Complication' : null
+            };
+        }
+        function bridgeRoll(card) {
+            return bridgeEmit('roll', Object.assign({ v: 2, res: bridgeResources() }, card));
         }
 
         function renderBridgeBadge(flash) {
@@ -8408,10 +8425,19 @@
                 if (m.type === 'hello' || (!was && bridgeRoll20)) { bridgeLastState = ''; bridgeState(true); }
             } else if (m.type === 'ack' && m.kind !== 'state') {
                 if (m.ok) renderBridgeBadge('✓ Envoyé sur Roll20');
-                else showNotification(m.reason === 'roll20' ? '⬡ Roll20 fermé : jet envoyé sur Discord seulement'
+                else bridgeNotify(m.reason === 'roll20' ? '⬡ Roll20 fermé : jet envoyé sur Discord seulement'
                     : m.reason === 'chat' ? '⚠ Roll20 : zone de chat introuvable' : '⚠ Roll20 n\'a pas répondu');
             }
         });
+
+        function bridgeCharName() { return (appState.profile && appState.profile.name) || 'Personnage'; }
+        function bridgeNotify(msg) { showNotification(msg); }
+        // Ressources affichées sur les jetons : énergie, et Qi partagé pour Shu et Yue
+        function bridgeResources() {
+            const res = { energie: [getReserveLeft(), getReserveMax()] };
+            if (appState.qiShared) res.qi = [qiAvailable(), QI_MAX];
+            return res;
+        }
 
         function capitalize(str) { const _ATTR_DISPLAY = { puissance: 'Force', presence: 'Charisme', precision: 'Finesse', vivacite: 'Vivacité', volonte: 'Volonté' }; if (_ATTR_DISPLAY[str]) return _ATTR_DISPLAY[str];
             return str.charAt(0).toUpperCase() + str.slice(1);

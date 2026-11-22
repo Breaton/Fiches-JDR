@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="jdr-fiche" content="aci">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ACI - Dossier d'Agent Habilité</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -2903,6 +2904,12 @@
             --fx-good: #d9a441; --fx-good-bg: rgba(217,164,65,0.07); --fx-good-bg2: rgba(217,164,65,0.16); --fx-good-line: rgba(217,164,65,0.4);
             --fx-opt-bg: var(--panel-2); --fx-on-good: #1a1204; grid-column: 1 / -1; font-family: var(--font-mono); font-size: 0.78em; }
         #overlay .fx-title { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.92em; }
+            .roll20-badge { position: fixed; left: 12px; bottom: 12px; z-index: 9000; padding: 5px 11px; border-radius: 999px;
+            font-size: 0.75em; font-weight: 600; letter-spacing: .02em; background: rgba(20, 16, 30, 0.88); color: #b9a8d8;
+            border: 1px solid rgba(107, 76, 154, 0.7); box-shadow: 0 2px 10px rgba(0,0,0,.3); pointer-events: auto; cursor: default; transition: background .2s; }
+        .roll20-badge[data-state="off"] { color: #8a8a98; border-color: rgba(138,138,152,.5); }
+        .roll20-badge[data-state="warn"] { color: #e0a04a; border-color: rgba(224,160,74,.7); }
+        .roll20-badge.flash { background: rgba(29, 158, 117, 0.95); color: #fff; border-color: transparent; }
     </style>
 </head>
 
@@ -4241,6 +4248,7 @@
 
 
         function renderGauges() {
+            bridgeState();
             const elanMax = getElanMax();
             const elanCur = Math.max(0, elanMax - totalGravity());
             const pct = elanMax ? (elanCur / elanMax) * 100 : 0;
@@ -5326,6 +5334,12 @@
                 ], r.total, dc, 'Résultat')
                 + chipsHtml([naturalChip(r.nat)])
             );
+            bridgeRoll({
+                tag: 'Jet d\'aptitude', title: `${sk.name} (${attrName})`, private: isPrivate(), mode,
+                total: r.total, totalLabel: 'résultat', dc,
+                groups: [bridgeCheckGroup(r)],
+                ...bridgeNat(r.nat)
+            });
             transmit({
                 kind: 'Aptitude',
                 line: `**${sk.name}** [${attrName}] - Résultat : **${r.total}**${dc ? (r.total >= dc ? ` ✅ DC ${dc}` : ` ❌ DC ${dc}`) : ''}`,
@@ -5621,6 +5635,13 @@
                     r.puissance > 0 ? `5 + Puissance · ${dcLabel(r.effect)} · DC de résistance` : 'Aucun effet')
                 + chipsHtml(magicChips(r.m)) + fxPanelHtml(r.fx)
             );
+            bridgeRoll({
+                tag: 'Activation de pouvoir', title: `${v.name} × ${d.name}`, private: isPrivate(),
+                total: r.puissance, totalLabel: 'Puissance',
+                groups: [bridgePowerGroup(Object.assign({ mod: powerMod }, r), attrName)],
+                stats: [{ l: 'Valeur d\'effet', v: r.effect, hi: true }, { l: 'Magnitude', v: r.magnitude + ' / ' + r.cap }],
+                notes: [`⚡ Charge −${r.paid}`]
+            });
             transmit({
                 kind: 'Pouvoir',
                 line: `⚡ **${v.name} × ${d.name}** - Puissance **${r.puissance}** · Valeur d'effet **${r.effect}**`,
@@ -5675,6 +5696,14 @@
                 + verdictHtml('Valeur d\'effet', fxBind(r.fx, 'effect', r.effect || '-'), r.puissance > 0 ? `5 + Puissance · DC de résistance` : 'Aucun effet', r.puissance > 0)
                 + chipsHtml([naturalChip(chk.nat), ...magicChips(r.m)]) + fxPanelHtml(r.fx)
             );
+            bridgeRoll({
+                tag: 'Intervention combinée', title: `${sk.name} (${sName}) + ${v.name} × ${d.name}`, private: isPrivate(), mode,
+                total: amp, totalLabel: 'Amplification', dc,
+                groups: [bridgeCheckGroup(chk), bridgePowerGroup(Object.assign({ mod: powerMod }, r), pName)],
+                stats: [{ l: 'Puissance', v: r.puissance, hi: true }, { l: 'Application', v: chk.total }, { l: 'Valeur d\'effet', v: r.effect }, { l: 'Magnitude', v: r.magnitude + ' / ' + r.cap }],
+                notes: [`⚡ Charge −${r.paid}`],
+                ...bridgeNat(chk.nat)
+            });
             transmit({
                 kind: 'Combiné',
                 line: `**${sk.name}** [${sName}] + ⚡ **${v.name} × ${d.name}** - Amplification **${amp}** · Application **${chk.total}** · Effet **${r.effect}**`,
@@ -5717,6 +5746,104 @@
                     }).catch(() => { });
                 }
             } catch (e) { /* la transmission ne doit jamais bloquer un jet */ }
+        }
+
+        // ========== PONT ROLL20 ==========
+        // Le script de navigateur « Pont Fiches JDR → Roll20 » (Tampermonkey) marque la page
+        // (data-jdr-pont="1") et relaie ce que la fiche envoie ici vers l'onglet Roll20,
+        // où le Mod FicheJDR de la partie affiche le jet et met à jour les jetons.
+        // Sans le script, rien ne change : tout part seulement sur Discord.
+        // Format commun aux trois univers (carte v2) : chaque fiche décrit son jet, le Mod l'affiche tel quel.
+        const BRIDGE_SHEET = 'aci';
+        let bridgeRoll20 = false, bridgeChat = true, bridgeSeq = 0, bridgeLastState = '', bridgeStateTimer = null;
+
+        function bridgeActive() { return document.documentElement.dataset.jdrPont === '1'; }
+
+        function bridgeEmit(kind, data) {
+            if (!bridgeActive()) return null;
+            const id = Date.now().toString(36) + '-' + (++bridgeSeq) + '-' + Math.random().toString(36).slice(2, 7);
+            window.postMessage({ jdrPont: 'fiche', v: 2, id, sheet: BRIDGE_SHEET, kind, char: bridgeCharName(), data }, '*');
+            return id;
+        }
+
+        function bridgeState(force) {
+            if (!bridgeActive()) return;
+            try { void bridgeStateTimer; } catch (e) { return; }   // appel trop tôt, pendant le chargement
+            clearTimeout(bridgeStateTimer);
+            bridgeStateTimer = setTimeout(() => {
+                const st = JSON.stringify(bridgeResources());
+                if (!force && st === bridgeLastState) return;
+                bridgeLastState = st;
+                bridgeEmit('state', JSON.parse(st));
+            }, 600);
+        }
+
+        // Outils de carte. Tons des dés : n normal · z nul · x écarté · a abîme · c critique · f échec critique · m magie
+        const bridgeSigned = n => (n > 0 ? '+' : n < 0 ? '−' : '+') + Math.abs(n);
+        const bridgePlain = t => String(t || '').replace(/\*\*|__|\*/g, '').trim();
+        function bridgeCheckGroup(chk, terms) {
+            return {
+                label: chk.dice.length > 2 ? '3d4' : '2d4',
+                dice: chk.dice.map(d => ({ s: 4, v: d.v, t: d.kept === false ? 'x' : 'n' })),
+                terms: [bridgeSigned(chk.bonus)].concat(terms || [])
+            };
+        }
+        function bridgeNat(nat) {
+            return {
+                scenario: scenarioOf(nat).label,
+                event: nat === NAT_TOP ? 'Opportunité' : nat === NAT_LOW ? 'Complication' : null
+            };
+        }
+        function bridgeRoll(card) {
+            return bridgeEmit('roll', Object.assign({ v: 2, res: bridgeResources() }, card));
+        }
+
+        function renderBridgeBadge(flash) {
+            let el = document.getElementById('roll20-badge');
+            if (!bridgeActive()) { if (el) el.remove(); return; }
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'roll20-badge';
+                el.className = 'roll20-badge';
+                document.body.appendChild(el);
+            }
+            const state = !bridgeRoll20 ? 'off' : !bridgeChat ? 'warn' : 'on';
+            el.dataset.state = state;
+            el.textContent = flash || (state === 'on' ? '⬢ Roll20' : state === 'warn' ? '⬢ Roll20 : chat introuvable' : '⬡ Roll20 fermé');
+            el.title = state === 'on' ? 'Les jets partent aussi dans le chat Roll20'
+                : state === 'warn' ? 'L\'onglet Roll20 est ouvert, mais le script ne trouve pas la zone de chat'
+                : 'Ouvre la partie Roll20 dans ce navigateur pour y envoyer les jets';
+            el.classList.toggle('flash', !!flash);
+            if (flash) { clearTimeout(el._t); el._t = setTimeout(() => renderBridgeBadge(), 1800); }
+        }
+
+        window.addEventListener('message', e => {
+            if (!e.data || e.data.jdrPont !== 'pont') return;
+            const m = e.data;
+            if (m.type === 'hello' || m.type === 'status') {
+                const was = bridgeRoll20;
+                bridgeRoll20 = !!m.roll20;
+                bridgeChat = m.chat !== false;
+                renderBridgeBadge();
+                if (m.type === 'hello' || (!was && bridgeRoll20)) { bridgeLastState = ''; bridgeState(true); }
+            } else if (m.type === 'ack' && m.kind !== 'state') {
+                if (m.ok) renderBridgeBadge('✓ Envoyé sur Roll20');
+                else bridgeNotify(m.reason === 'roll20' ? '⬡ Roll20 fermé : jet envoyé sur Discord seulement'
+                    : m.reason === 'chat' ? '⚠ Roll20 : zone de chat introuvable' : '⚠ Roll20 n\'a pas répondu');
+            }
+        });
+
+        function bridgeCharName() { return appState.file.codename || appState.file.civil || 'Agent non identifié'; }
+        function bridgeNotify(msg) { toast(msg); }
+        // Ressource affichée sur les jetons : la Charge
+        function bridgeResources() { return { charge: [getChargeLeft(), getChargeMax()] }; }
+        // Dés de pouvoir (d12) : valeur lue et ton
+        function bridgePowerGroup(r, canalName) {
+            return {
+                label: `${r.magnitude} d12${r.bonus ? ' + ' + r.bonus : ''} · canal ${canalName}`,
+                dice: r.m.dice.map(d => ({ s: 12, v: d.val, t: d.k === 'ten' ? 'c' : d.k === 'one' ? 'f' : d.val > 0 ? 'n' : 'z' })),
+                terms: r.mod ? [bridgeSigned(r.mod)] : []
+            };
         }
 
         function toast(msg) {

@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="jdr-fiche" content="demerit">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fiche de Personnage Demerit</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -3197,6 +3198,12 @@
             --fx-good: #c58cff; --fx-good-bg: rgba(179,102,255,0.08); --fx-good-bg2: rgba(179,102,255,0.18); --fx-good-line: rgba(179,102,255,0.45);
             --fx-opt-bg: rgba(0,0,0,0.25); --fx-on-good: #12051f; font-size: 0.82rem; }
         #result-overlay .fx-title { text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.9em; }
+            .roll20-badge { position: fixed; left: 12px; bottom: 12px; z-index: 9000; padding: 5px 11px; border-radius: 999px;
+            font-size: 0.75em; font-weight: 600; letter-spacing: .02em; background: rgba(20, 16, 30, 0.88); color: #b9a8d8;
+            border: 1px solid rgba(107, 76, 154, 0.7); box-shadow: 0 2px 10px rgba(0,0,0,.3); pointer-events: auto; cursor: default; transition: background .2s; }
+        .roll20-badge[data-state="off"] { color: #8a8a98; border-color: rgba(138,138,152,.5); }
+        .roll20-badge[data-state="warn"] { color: #e0a04a; border-color: rgba(224,160,74,.7); }
+        .roll20-badge.flash { background: rgba(29, 158, 117, 0.95); color: #fff; border-color: transparent; }
     </style>
 </head>
 
@@ -4509,6 +4516,7 @@
             if (typeof syncForceFatigue === 'function') syncForceFatigue();
         }
         function updateCounterDisplay(type) {
+            if (type === 'force') bridgeState();
             const counter = appState.counters[type];
             document.getElementById(`${type}-current`).value = counter.current;
             document.getElementById(`${type}-max`).value = counter.max;
@@ -6010,6 +6018,14 @@
             });
             immShowResult(roll);
             sendDiscordRoll(titre, null, puissance, attrLabel, { force: true, effect: effectValue(puissance), pairs: roll.pairs, bonus, extra: [immDiscordLine(roll), fxDiscordText(fx)].filter(Boolean).join(' · ') });
+            bridgeRoll({
+                tag: 'Force', title: titre, private: !!appState.privateRoll,
+                total: puissance, totalLabel: 'Puissance',
+                groups: bridgeForceGroups(roll, ctx, bonus),
+                stats: [{ l: 'Valeur d\'effet', v: effectValue(puissance), hi: true }, { l: 'Magnitude', v: ctx.nDice }],
+                magic: `◈ ${attrLabel} ${ctx.attrValue} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name} → ${etatLbl}`,
+                notes: [`⚡ PF −${coutTotal}`, bridgePlain(immDiscordLine(roll))].filter(Boolean)
+            });
         }
 
         function updateRollButtons() {
@@ -6213,6 +6229,12 @@
                 check: chk, attrModV: attrMod(attrValue), skillModV: skillMod(skill.level), mod, dc, total: chk.total
             });
             sendDiscordRoll(skill.name, skill.baseName, chk.total, attrDisplay(attrName), { nat: chk.nat, checkBonus: chk.bonus, mode, dc });
+            bridgeRoll({
+                tag: 'Jet de compétence', title: `${skill.name} (${attrDisplay(attrName)})`, private: !!appState.privateRoll, mode,
+                total: chk.total, totalLabel: 'résultat', dc,
+                groups: [bridgeCheckGroup(chk)],
+                ...bridgeNat(chk.nat)
+            });
         }
         function rollConjoint() {
             // --- Partie Force (d10 de Force) ---
@@ -6254,6 +6276,15 @@
             });
             immShowResult(rollF);
             sendDiscordRoll(skill.name, skill.baseName, finalTotal, attrDisplay(skillAttrName), { nat: chk.nat, checkBonus: chk.bonus, mode, dc, application: chk.total, spellBonus: spellPuissance, effect: effectValue(spellPuissance), extra: [immDiscordLine(rollF), fxDiscordText(fx)].filter(Boolean).join(' · ') });
+            bridgeRoll({
+                tag: 'Force + compétence', title: `${immTitleName(ctxF.verb)}${target ? ' + ' + target.name : ''} → ${skill.name}`, private: !!appState.privateRoll, mode,
+                total: finalTotal, totalLabel: 'Amplification', dc,
+                groups: [bridgeCheckGroup(chk)].concat(bridgeForceGroups(rollF, ctxF, puissanceMod)),
+                stats: [{ l: 'Puissance', v: spellPuissance, hi: true }, { l: 'Application', v: chk.total }, { l: 'Valeur d\'effet', v: effectValue(spellPuissance) }],
+                magic: `◈ ${attrDisplay(ctxF.attrName)} ${ctxF.attrValue} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name} → ${NV_ETAT_LABEL[ctxF.etat][0]}`,
+                notes: [`⚡ PF −${forceCout}`, bridgePlain(immDiscordLine(rollF))].filter(Boolean),
+                ...bridgeNat(chk.nat)
+            });
         }
         function setSkillStats(data) {
             setStatLabels(['Dé', 'Attribut', 'Compétence', 'Circonstances', 'Modificateur']);
@@ -6716,6 +6747,109 @@
                     body: JSON.stringify({ username: charName, embeds: [embed] })
                 }).catch(() => { });
             }
+        }
+
+        // ========== PONT ROLL20 ==========
+        // Le script de navigateur « Pont Fiches JDR → Roll20 » (Tampermonkey) marque la page
+        // (data-jdr-pont="1") et relaie ce que la fiche envoie ici vers l'onglet Roll20,
+        // où le Mod FicheJDR de la partie affiche le jet et met à jour les jetons.
+        // Sans le script, rien ne change : tout part seulement sur Discord.
+        // Format commun aux trois univers (carte v2) : chaque fiche décrit son jet, le Mod l'affiche tel quel.
+        const BRIDGE_SHEET = 'demerit';
+        let bridgeRoll20 = false, bridgeChat = true, bridgeSeq = 0, bridgeLastState = '', bridgeStateTimer = null;
+
+        function bridgeActive() { return document.documentElement.dataset.jdrPont === '1'; }
+
+        function bridgeEmit(kind, data) {
+            if (!bridgeActive()) return null;
+            const id = Date.now().toString(36) + '-' + (++bridgeSeq) + '-' + Math.random().toString(36).slice(2, 7);
+            window.postMessage({ jdrPont: 'fiche', v: 2, id, sheet: BRIDGE_SHEET, kind, char: bridgeCharName(), data }, '*');
+            return id;
+        }
+
+        function bridgeState(force) {
+            if (!bridgeActive()) return;
+            try { void bridgeStateTimer; } catch (e) { return; }   // appel trop tôt, pendant le chargement
+            clearTimeout(bridgeStateTimer);
+            bridgeStateTimer = setTimeout(() => {
+                const st = JSON.stringify(bridgeResources());
+                if (!force && st === bridgeLastState) return;
+                bridgeLastState = st;
+                bridgeEmit('state', JSON.parse(st));
+            }, 600);
+        }
+
+        // Outils de carte. Tons des dés : n normal · z nul · x écarté · a abîme · c critique · f échec critique · m magie
+        const bridgeSigned = n => (n > 0 ? '+' : n < 0 ? '−' : '+') + Math.abs(n);
+        const bridgePlain = t => String(t || '').replace(/\*\*|__|\*/g, '').trim();
+        function bridgeCheckGroup(chk, terms) {
+            return {
+                label: chk.dice.length > 2 ? '3d4' : '2d4',
+                dice: chk.dice.map(d => ({ s: 4, v: d.v, t: d.kept === false ? 'x' : 'n' })),
+                terms: [bridgeSigned(chk.bonus)].concat(terms || [])
+            };
+        }
+        function bridgeNat(nat) {
+            return {
+                scenario: scenarioOf(nat).label,
+                event: nat === NAT_TOP ? 'Opportunité' : nat === NAT_LOW ? 'Complication' : null
+            };
+        }
+        function bridgeRoll(card) {
+            return bridgeEmit('roll', Object.assign({ v: 2, res: bridgeResources() }, card));
+        }
+
+        function renderBridgeBadge(flash) {
+            let el = document.getElementById('roll20-badge');
+            if (!bridgeActive()) { if (el) el.remove(); return; }
+            if (!el) {
+                el = document.createElement('div');
+                el.id = 'roll20-badge';
+                el.className = 'roll20-badge';
+                document.body.appendChild(el);
+            }
+            const state = !bridgeRoll20 ? 'off' : !bridgeChat ? 'warn' : 'on';
+            el.dataset.state = state;
+            el.textContent = flash || (state === 'on' ? '⬢ Roll20' : state === 'warn' ? '⬢ Roll20 : chat introuvable' : '⬡ Roll20 fermé');
+            el.title = state === 'on' ? 'Les jets partent aussi dans le chat Roll20'
+                : state === 'warn' ? 'L\'onglet Roll20 est ouvert, mais le script ne trouve pas la zone de chat'
+                : 'Ouvre la partie Roll20 dans ce navigateur pour y envoyer les jets';
+            el.classList.toggle('flash', !!flash);
+            if (flash) { clearTimeout(el._t); el._t = setTimeout(() => renderBridgeBadge(), 1800); }
+        }
+
+        window.addEventListener('message', e => {
+            if (!e.data || e.data.jdrPont !== 'pont') return;
+            const m = e.data;
+            if (m.type === 'hello' || m.type === 'status') {
+                const was = bridgeRoll20;
+                bridgeRoll20 = !!m.roll20;
+                bridgeChat = m.chat !== false;
+                renderBridgeBadge();
+                if (m.type === 'hello' || (!was && bridgeRoll20)) { bridgeLastState = ''; bridgeState(true); }
+            } else if (m.type === 'ack' && m.kind !== 'state') {
+                if (m.ok) renderBridgeBadge('✓ Envoyé sur Roll20');
+                else bridgeNotify(m.reason === 'roll20' ? '⬡ Roll20 fermé : jet envoyé sur Discord seulement'
+                    : m.reason === 'chat' ? '⚠ Roll20 : zone de chat introuvable' : '⚠ Roll20 n\'a pas répondu');
+            }
+        });
+
+        function bridgeCharName() { return (appState.profile && appState.profile.name) || 'Personnage'; }
+        function bridgeNotify(msg) { showNotification(msg); }
+        // Ressource affichée sur les jetons : les Points de Force
+        function bridgeResources() { const f = appState.counters.force; return { force: [f.current, f.max] }; }
+        // Dés de Force (d12) lus en valeur, puis les dés de cascade
+        function bridgeForceGroups(roll, ctx, mod) {
+            const out = [{
+                label: `${ctx.nDice} d12${roll.elan ? ' + ' + roll.elan + ' Élan' : ''} · ${NV_ETAT_LABEL[ctx.etat][0]}`,
+                dice: roll.rolled.map(f => { const v = NV_FACE_VALUE[f] || 0; return { s: 12, v, t: f === 'Résonance' ? 'c' : f === 'Bad2' ? 'f' : v > 0 ? 'n' : 'z' }; }),
+                terms: mod ? [bridgeSigned(mod)] : []
+            }];
+            if (roll.casc && roll.casc.length) out.push({
+                label: roll.communion ? '☀️ Communion' : '🌑 Déferlante',
+                dice: roll.casc.map(ok => ({ s: 12, v: ok ? 1 : 0, t: ok ? 'c' : 'z' })), terms: []
+            });
+            return out;
         }
 
         function capitalize(str) { if (typeof ATTR_LABEL !== 'undefined' && ATTR_LABEL[str]) return ATTR_LABEL[str]; return str.charAt(0).toUpperCase() + str.slice(1); }
