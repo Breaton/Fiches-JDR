@@ -8352,7 +8352,7 @@
         // Sans le script, rien ne change : tout part seulement sur Discord.
         // Format commun aux trois univers (carte v2) : chaque fiche décrit son jet, le Mod l'affiche tel quel.
         const BRIDGE_SHEET = 'aequor';
-        let bridgeRoll20 = false, bridgeChat = true, bridgeSeq = 0, bridgeLastState = '', bridgeStateTimer = null;
+        let bridgeRoll20 = false, bridgeChat = true, bridgeOthers = false, bridgeGame = '', bridgeSeq = 0, bridgeLastState = '', bridgeStateTimer = null;
 
         function bridgeActive() { return document.documentElement.dataset.jdrPont === '1'; }
 
@@ -8405,10 +8405,13 @@
                 document.body.appendChild(el);
             }
             const state = !bridgeRoll20 ? 'off' : !bridgeChat ? 'warn' : 'on';
+            const game = bridgeGame ? ' ' + bridgeGame : '';
             el.dataset.state = state;
-            el.textContent = flash || (state === 'on' ? '⬢ Roll20' : state === 'warn' ? '⬢ Roll20 : chat introuvable' : '⬡ Roll20 fermé');
-            el.title = state === 'on' ? 'Les jets partent aussi dans le chat Roll20'
+            el.textContent = flash || (state === 'on' ? '⬢ Roll20' + game : state === 'warn' ? '⬢ Roll20 : chat introuvable'
+                : bridgeOthers ? '⬡ Pas de partie' + game + ' ouverte' : '⬡ Roll20 fermé');
+            el.title = state === 'on' ? 'Les jets partent aussi dans le chat de la partie Roll20' + game
                 : state === 'warn' ? 'L\'onglet Roll20 est ouvert, mais le script ne trouve pas la zone de chat'
+                : bridgeOthers ? 'Une partie Roll20 est ouverte, mais pas celle de' + game + ' (ou son Mod FicheJDR n\'a pas répondu)'
                 : 'Ouvre la partie Roll20 dans ce navigateur pour y envoyer les jets';
             el.classList.toggle('flash', !!flash);
             if (flash) { clearTimeout(el._t); el._t = setTimeout(() => renderBridgeBadge(), 1800); }
@@ -8421,11 +8424,13 @@
                 const was = bridgeRoll20;
                 bridgeRoll20 = !!m.roll20;
                 bridgeChat = m.chat !== false;
+                bridgeOthers = !!m.others;
+                bridgeGame = m.game || '';
                 renderBridgeBadge();
                 if (m.type === 'hello' || (!was && bridgeRoll20)) { bridgeLastState = ''; bridgeState(true); }
             } else if (m.type === 'ack' && m.kind !== 'state') {
                 if (m.ok) renderBridgeBadge('✓ Envoyé sur Roll20');
-                else bridgeNotify(m.reason === 'roll20' ? '⬡ Roll20 fermé : jet envoyé sur Discord seulement'
+                else bridgeNotify(m.reason === 'roll20' ? `⬡ Pas de partie ${m.game || 'Roll20'} ouverte : jet envoyé sur Discord seulement`
                     : m.reason === 'chat' ? '⚠ Roll20 : zone de chat introuvable' : '⚠ Roll20 n\'a pas répondu');
             }
         });
