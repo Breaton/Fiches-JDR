@@ -5762,7 +5762,9 @@
         function bridgeEmit(kind, data) {
             if (!bridgeActive()) return null;
             const id = Date.now().toString(36) + '-' + (++bridgeSeq) + '-' + Math.random().toString(36).slice(2, 7);
-            window.postMessage({ jdrPont: 'fiche', v: 2, id, sheet: BRIDGE_SHEET, kind, char: bridgeCharName(), data }, '*');
+            const img = appState.file && appState.file.image;
+            const imgUrl = typeof img === 'string' && /^https:\/\//.test(img) && img.length < 600 ? img : undefined;
+            window.postMessage({ jdrPont: 'fiche', v: 2, id, sheet: BRIDGE_SHEET, kind, char: bridgeCharName(), img: imgUrl, data }, '*');
             return id;
         }
 
