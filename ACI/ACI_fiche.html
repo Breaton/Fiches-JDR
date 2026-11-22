@@ -3197,7 +3197,7 @@
                     </div>
                     <div class="hint" style="margin-top:11px;">
                         Tous les vecteurs de l'agent passent par ce seul attribut : c'est lui qui fixe le seuil
-                        de réussite des d10 de Puissance (10 − niveau du canal), quel que soit le pouvoir employé. Chacun canalise à sa
+                        de réussite des d12 de Puissance (12 − niveau du canal), quel que soit le pouvoir employé. Chacun canalise à sa
                         manière : par la volonté, l'instinct, l'analyse ou la présence - et cette
                         manière ne change pas d'un vecteur à l'autre.
                     </div>
@@ -3934,7 +3934,7 @@
         }
 
         /* ==========================================================
-           C · MOTEUR DE DÉS (d10 du jet + d10 de pouvoir)
+           C · MOTEUR DE DÉS (2d4 du jet + d12 de pouvoir)
            ========================================================== */
         // Jet = 2d4 (le monde, le scénario) + Attribut + Aptitude + modificateur, contre une DC.
         // Commun et Ordinaire valent 0 : la personne moyenne lance 2d4 secs.
@@ -4020,18 +4020,20 @@
         }
 
         /* ----- Dés de pouvoir -----
-           1 d10 par point de Magnitude. Réussite sur 10 − niveau du canal.
-           1 = −1 et un Accroc s'il reste · 10 = +2 et un Avantage s'il reste.
-           Les 1 et les 10 s'annulent par paires : seuls ceux qui restent déclenchent leur effet. */
+           1 d12 par point de Magnitude. Réussite sur 12 − niveau du canal : chaque point d'attribut vaut une face.
+           1 = échec critique (−1) · 12 = réussite critique (+2). Les critiques ne changent que la valeur :
+           plus d'Accrocs, d'Avantages ni de Contrecoup (22 novembre 2026). */
         function magnitudeMax(vLv, dLv) {
             return Math.max(0, vLv) + Math.max(0, dLv);
         }
         function canalLevel(v) { return Math.min(8, Math.max(1, parseInt(v) || 4)); }
-        function magicThreshold(canalValue) { return 10 - canalLevel(canalValue); }
-        function magicYield(canalValue) { return (canalLevel(canalValue) + 1) / 10; }
+        const POWER_DIE = 12;
+        function powerDie() { return Math.floor(Math.random() * POWER_DIE) + 1; }
+        function magicThreshold(canalValue) { return POWER_DIE - canalLevel(canalValue); }
+        function magicYield(canalValue) { return (canalLevel(canalValue) + 1) / POWER_DIE; }
         function magicFace(v, T) {
             if (v === 1) return { k: 'one', val: -1 };
-            if (v === 10) return { k: 'ten', val: 2 };
+            if (v === POWER_DIE) return { k: 'ten', val: 2 };
             return v >= T ? { k: 'hit', val: 1 } : { k: 'miss', val: 0 };
         }
         function rollMagic(canalValue, n, bonusN) {
@@ -4039,23 +4041,22 @@
             const dice = [];
             const total = Math.max(0, n) + Math.max(0, bonusN || 0);
             for (let i = 0; i < total; i++) {
-                const v = d10();
+                const v = powerDie();
                 dice.push({ v, ...magicFace(v, T), bonus: i >= n });
             }
             const raw = dice.reduce((s, d) => s + d.val, 0);
             const ones = dice.filter(d => d.k === 'one').length;
             const tens = dice.filter(d => d.k === 'ten').length;
-            const pairs = Math.min(ones, tens);
-            return { dice, T, raw, ones, tens, pairs, mishaps: ones - pairs, surges: tens - pairs };
+            return { dice, T, raw, ones, tens, pairs: 0, mishaps: 0, surges: 0 };
         }
         // Valeur d'effet : ce que la Puissance vaut sur l'échelle des DC
         function effectValue(p) { return p > 0 ? 5 + POWER_FACTOR * p : 0; }
 
         const MAGIC_STYLE = {
-            one: { c: '#e05c52', s: '▼', l: '1 : −1, Accroc s\'il reste' },
+            one: { c: '#e05c52', s: '▼', l: '1 : échec critique, −1' },
             miss: { c: '#6a7d92', s: '○', l: 'Sans effet (0)' },
             hit: { c: '#8b7ae0', s: '●', l: 'Réussite (+1)' },
-            ten: { c: '#d9a441', s: '✦', l: '10 : +2, Avantage s\'il reste' }
+            ten: { c: '#d9a441', s: '✦', l: '12 : réussite critique, +2' }
         };
         /* ----- Lecture de la Puissance (ACI : l'Habilitation) -----
            L'effet double à chaque point, puis est multiplié par 10 par point au-delà de P12.
@@ -4120,7 +4121,7 @@
         function magicSummary(canalValue, noYield) {
             const T = magicThreshold(canalValue);
             return `<strong>Réussite sur ${T}+</strong> · <span style="color:${MAGIC_STYLE.one.c}">1 ▼ −1</span>`
-                + ` · <span style="color:${MAGIC_STYLE.ten.c}">10 ✦ +2</span>`
+                + ` · <span style="color:${MAGIC_STYLE.ten.c}">12 ✦ +2</span>`
                 + (noYield ? '' : ` · rendement ${magicYield(canalValue).toFixed(1).replace('.', ',')} par dé`);
         }
 
@@ -4491,7 +4492,7 @@
         }
 
         /* ---------- Canal de manifestation ---------- */
-        // Un seul attribut pour tous les vecteurs : il fixe le seuil de réussite des d10 de Puissance.
+        // Un seul attribut pour tous les vecteurs : il fixe le seuil de réussite des d12 de Puissance.
         function getCanal() {
             const id = appState.canal;
             return ATTRIBUTES.some(a => a.id === id) ? id : 'volonte';
@@ -4515,7 +4516,7 @@
                 const lv = getAttributeLevel(appState.attributes[getCanal()]);
                 const val = appState.attributes[getCanal()];
                 info.innerHTML = `<b style="color:${lv.color}">${a.name} ${lv.name}</b> · ${magicSummary(val)}`
-                    + `<br>Chaque d10 engagé rapporte en moyenne <b>${magicYield(val).toFixed(1).replace('.', ',')}</b> de Puissance. `
+                    + `<br>Chaque d12 engagé rapporte en moyenne <b>${magicYield(val).toFixed(1).replace('.', ',')}</b> de Puissance. `
                     + `Valeur d'effet = 5 + Puissance.`;
             }
         }
@@ -5176,7 +5177,7 @@
             const esp = Math.max(0, nb * magicYield(appState.attributes[attrId]) + (powerMod || 0));
             const canal = ATTRIBUTES.find(a => a.id === attrId);
             const espTxt = (Math.round(esp * 10) / 10).toString().replace('.', ',');
-            return `<span class="pb-n">${nb}</span><span class="pb-l">d10 de<br>puissance</span>`
+            return `<span class="pb-n">${nb}</span><span class="pb-l">d12 de<br>puissance</span>`
                 + `<span class="pb-chip">Canal <b style="color:${al.color}">${canal ? canal.name : '-'} ${al.name}</b></span>`
                 + `<span class="pb-chip${nb > left ? ' warn' : ''}" style="${nb > left ? '' : 'color:var(--charge)'}">`
                 + `Coût <b>${nb}</b> / ${left} Charge</span>`
@@ -5335,10 +5336,8 @@
 
         /* ===================== EFFETS DE MAGIE : AVANTAGES ET ACCROCS =====================
            Moteur commun aux trois fiches.
-           Chaque 10 qui reste après les paires donne un Avantage, choisi par le joueur dans le résultat.
-           Chaque 1 qui reste donne un Accroc, tiré automatiquement et appliqué tout de suite.
-           3 Accrocs ou plus : Contrecoup, une affliction de gravité égale au nombre d'Accrocs, à la place des Accrocs.
-           3 Avantages ou plus : le joueur peut les convertir en Prodige (un dé de plus, hors plafond).
+           Désactivé dans ACI (22 novembre 2026) : les critiques ne changent que la valeur des dés.
+           fxResolve ne produit plus ni Avantage ni Accroc ; le module ne sert plus qu'au détail de la Puissance.
            Chaque fiche fournit FX_CONF : lecture de la Puissance, blessures, Discord, entrées propres. */
         const FX_COLS = [
             { k: 'mass', l: 'poids' },
@@ -5373,7 +5372,7 @@
         function fxResolve(opts) {
             const id = 'fx' + (++fxSeq);
             const st = {
-                id, tens: Math.max(0, opts.tens || 0), ones: Math.max(0, opts.ones || 0),
+                id, tens: 0, ones: 0,   // les critiques ne changent que la valeur des dés
                 base: Math.max(0, opts.puissance || 0), P: Math.max(0, opts.puissance || 0),
                 resName: opts.resName || 'ressource', spend: opts.spend || (() => 0), refund: opts.refund || (() => 0),
                 rollExtra: opts.rollExtra || null, label: opts.label || 'Sort', isPrivate: !!opts.isPrivate,
@@ -5479,7 +5478,7 @@
             }
             const tags = fxTags(st);
             if (tags.length) h += `<div class="fx-tags">${tags.map(t => `<span class="fx-tag ${t[0]}">${t[1]}</span>`).join('')}</div>`;
-            if (!st.contrecoup && !st.accrocs.length && !st.tens) h += `<div class="fx-row fx-calm">Magie stable : ni Accroc ni Avantage</div>`;
+
             h += fxDetailHtml(st) + `</div>`;
             return h;
         }
@@ -5572,7 +5571,7 @@
         };
 
         /* ---------- Jet de pouvoir ---------- */
-        // La Magnitude est un nombre de d10, plafonné par Vecteur + Domaine.
+        // La Magnitude est un nombre de d12, plafonné par Vecteur + Domaine.
         // La Puissance est la somme des dés, plus le modificateur de puissance, plancher 0.
         function resolvePower(attrId, vector, domain, magnitude, bonusDice, powerMod) {
             const cap = magnitudeMax(vector.level, domain.level);
@@ -5588,7 +5587,7 @@
                 tens: m.surges, ones: m.mishaps, puissance, resName: 'Charge', label: `${vector.name} × ${domain.name}`, isPrivate: isPrivate(),
                 spend: n => { const q = Math.min(n, getChargeLeft()); spendCharge(q); return q; },
                 refund: n => { const before = appState.charge.used || 0; adjustCharge(n); return before - (appState.charge.used || 0); },
-                rollExtra: () => { const v = d10(); return { label: String(v), val: magicFace(v, magicThreshold(appState.attributes[attrId])).val }; }
+                rollExtra: () => { const v = powerDie(); return { label: String(v), val: magicFace(v, magicThreshold(appState.attributes[attrId])).val }; }
             });
             return { m, raw: m.raw, puissance, effect: effectValue(puissance), magnitude: mag, cap, bonus, cost, paid, fx };
         }
@@ -5610,14 +5609,14 @@
             showResult(
                 'Activation de pouvoir',
                 `${v.name} × ${d.name} · canal ${attrName} (${al.name}) · Magnitude ${r.magnitude}/${r.cap}`,
-                magicBlockHtml(`${r.magnitude} d10 de Magnitude${r.bonus ? ' + ' + r.bonus + ' bonus' : ''}`, appState.attributes[attrId], r.m),
+                magicBlockHtml(`${r.magnitude} d12 de Magnitude${r.bonus ? ' + ' + r.bonus + ' bonus' : ''}`, appState.attributes[attrId], r.m),
                 statsHtml([
                     { l: 'Dés', v: r.raw, always: true },
                     { l: 'Mod. puissance', v: powerMod ? fmtMod(powerMod) : 0, c: 'var(--vector)' },
                     { l: 'Charge', v: '−' + r.paid, always: true, c: 'var(--charge)' }
                 ]),
                 verdictHtml('Puissance', fxBind(r.fx, 'p', r.puissance),
-                    `${r.magnitude} d10 · canal ${al.name}` + (powerMod ? ` · ${r.raw} ${fmtMod(powerMod)}` : ''), r.puissance > 0)
+                    `${r.magnitude} d12 · canal ${al.name}` + (powerMod ? ` · ${r.raw} ${fmtMod(powerMod)}` : ''), r.puissance > 0)
                 + verdictHtml('Valeur d\'effet', fxBind(r.fx, 'effect', r.effect || '-'),
                     r.puissance > 0 ? `5 + Puissance · ${dcLabel(r.effect)} · DC de résistance` : 'Aucun effet')
                 + chipsHtml(magicChips(r.m)) + fxPanelHtml(r.fx)
@@ -5631,7 +5630,7 @@
         }
 
         /* ---------- Jet combiné ----------
-           Un seul d10 du jet et les d10 de pouvoir. Trois lectures :
+           Le 2d4 du jet et les d12 de pouvoir. Trois lectures :
            Amplification = aptitude + Puissance (la magie aide l'action) ;
            Application = aptitude seule, contre la Complexité (le pouvoir va-t-il où je veux ?) ;
            Valeur d'effet = 5 + Puissance (ce que fait le pouvoir une fois là). */
@@ -5661,7 +5660,7 @@
             showResult(
                 'Intervention combinée',
                 `${sk.name} (${sName}) + ${v.name} × ${d.name} (${pName} ${pAl.name}) · Magnitude ${r.magnitude}/${r.cap}`,
-                magicBlockHtml(`Pouvoir · ${r.magnitude} d10 de Magnitude${r.bonus ? ' + ' + r.bonus + ' bonus' : ''}`, appState.attributes[pAttrId], r.m),
+                magicBlockHtml(`Pouvoir · ${r.magnitude} d12 de Magnitude${r.bonus ? ' + ' + r.bonus + ' bonus' : ''}`, appState.attributes[pAttrId], r.m),
                 statsHtml([
                     { l: 'Puissance', v: fxBind(r.fx, 'p', r.puissance), always: true, c: 'var(--vector)' },
                     { l: 'Magnitude', v: r.magnitude + ' / ' + r.cap, always: true, c: 'var(--warn)' },

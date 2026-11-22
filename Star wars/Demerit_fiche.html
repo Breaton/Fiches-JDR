@@ -4013,12 +4013,21 @@
         }
 
         // ========== NIVEAUX DE MAGIE ==========
+        // Verbes et cibles : 0 à 10 (comme ACI). Magnitude max = verbe + cible, jusqu'à 20.
+        const FORCE_LEVEL_MAX = 10;
+        const FORCE_SCALE = 10;   // version de l'échelle enregistrée dans les sauvegardes (ancienne : 1 à 5)
         const MAGIC_LEVELS = {
-            1: { name: 'Initié', color: '#8b949e' },
-            2: { name: 'Praticien', color: '#3fb950' },
-            3: { name: 'Adepte', color: '#4dc3ff' },
-            4: { name: 'Expert', color: '#b366ff' },
-            5: { name: 'Virtuose', color: '#ffcc00' }
+            0: { name: 'Fermé', color: '#5a6270' },
+            1: { name: 'Éveillé', color: '#8b949e' },
+            2: { name: 'Initié', color: '#8b949e' },
+            3: { name: 'Apprenti', color: '#3fb950' },
+            4: { name: 'Praticien', color: '#3fb950' },
+            5: { name: 'Confirmé', color: '#4dc3ff' },
+            6: { name: 'Adepte', color: '#4dc3ff' },
+            7: { name: 'Accompli', color: '#b366ff' },
+            8: { name: 'Expert', color: '#b366ff' },
+            9: { name: 'Éminent', color: '#ffcc00' },
+            10: { name: 'Virtuose', color: '#ffcc00' }
         };
 
         // Fonctions utilitaires pour les niveaux
@@ -4128,6 +4137,7 @@
             counters: { health: { current: 10, max: 10 }, force: { current: 10, max: 10 } },
             skills: [],
             skillScale: 'aequor',
+            forceScale: 10,
             forceVerbs: JSON.parse(JSON.stringify(FORCE_VERBS)),
             forceTargets: JSON.parse(JSON.stringify(FORCE_TARGETS)),
             wounds: [],
@@ -4851,14 +4861,14 @@
             appState.forceVerbs.forEach((verb, index) => {
                 const item = document.createElement('div');
                 item.className = 'skill-item force-item';
-                const level = MAGIC_LEVELS[verb.level] || MAGIC_LEVELS[1];
+                const level = MAGIC_LEVELS[verb.level] || MAGIC_LEVELS[0];
                 const attrColor = ATTR_COLORS[verb.attr] || 'var(--saber-purple)';
                 const attrBadge = verb.attr ? `<span class="verb-attr" style="color:${attrColor};border-color:${attrColor}">${verb.attr}</span>` : '';
                 const desc = verb.desc ? `<div class="force-desc">${verb.desc}</div>` : '';
                 const faces = (verb.light && verb.dark)
                     ? `<div class="force-desc" style="margin-top:3px"><span style="color:${TEINTES.lumineux.color}">${verb.light}</span> <span style="opacity:0.4">·</span> <span style="color:${TEINTES.obscur.color}">${verb.dark}</span></div>`
                     : '';
-                item.innerHTML = `<div class="force-name-block"><div class="force-name-row"><span class="skill-name">${verb.name}</span>${attrBadge}</div>${desc}${faces}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceVerb(${index}, -1)" ${verb.level <= 1 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${verb.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${verb.level}</sub></span><button class="skill-level-btn" onclick="modifyForceVerb(${index}, 1)" ${verb.level >= 5 ? 'disabled' : ''}>+</button></div>`;
+                item.innerHTML = `<div class="force-name-block"><div class="force-name-row"><span class="skill-name">${verb.name}</span>${attrBadge}</div>${desc}${faces}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceVerb(${index}, -1)" ${verb.level <= 0 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${verb.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${verb.level}</sub></span><button class="skill-level-btn" onclick="modifyForceVerb(${index}, 1)" ${verb.level >= FORCE_LEVEL_MAX ? 'disabled' : ''}>+</button></div>`;
                 verbsList.appendChild(item);
             });
             const targetsList = document.getElementById('force-targets-list');
@@ -4866,14 +4876,14 @@
             appState.forceTargets.forEach((target, index) => {
                 const item = document.createElement('div');
                 item.className = 'skill-item force-item';
-                const level = MAGIC_LEVELS[target.level] || MAGIC_LEVELS[1];
+                const level = MAGIC_LEVELS[target.level] || MAGIC_LEVELS[0];
                 const desc = target.desc ? `<div class="force-desc">${target.desc}</div>` : '';
-                item.innerHTML = `<div class="force-name-block"><div class="force-name-row"><span class="skill-name">${target.name}</span></div>${desc}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceTarget(${index}, -1)" ${target.level <= 1 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${target.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${target.level}</sub></span><button class="skill-level-btn" onclick="modifyForceTarget(${index}, 1)" ${target.level >= 5 ? 'disabled' : ''}>+</button></div>`;
+                item.innerHTML = `<div class="force-name-block"><div class="force-name-row"><span class="skill-name">${target.name}</span></div>${desc}</div><div class="skill-level"><button class="skill-level-btn" onclick="modifyForceTarget(${index}, -1)" ${target.level <= 0 ? 'disabled' : ''}>−</button><span class="skill-level-value" title="Niveau ${target.level}" style="color: ${level.color}">${level.name}<sub style="opacity: 0.6; font-size: 0.7em; margin-left: 2px;">${target.level}</sub></span><button class="skill-level-btn" onclick="modifyForceTarget(${index}, 1)" ${target.level >= FORCE_LEVEL_MAX ? 'disabled' : ''}>+</button></div>`;
                 targetsList.appendChild(item);
             });
         }
-        function modifyForceVerb(index, delta) { appState.forceVerbs[index].level = Math.max(1, Math.min(5, appState.forceVerbs[index].level + delta)); renderForceSkills(); updateRollSelects(); }
-        function modifyForceTarget(index, delta) { appState.forceTargets[index].level = Math.max(1, Math.min(5, appState.forceTargets[index].level + delta)); renderForceSkills(); updateRollSelects(); }
+        function modifyForceVerb(index, delta) { appState.forceVerbs[index].level = Math.max(0, Math.min(FORCE_LEVEL_MAX, appState.forceVerbs[index].level + delta)); renderForceSkills(); updateRollSelects(); updateForceMax(); }
+        function modifyForceTarget(index, delta) { appState.forceTargets[index].level = Math.max(0, Math.min(FORCE_LEVEL_MAX, appState.forceTargets[index].level + delta)); renderForceSkills(); updateRollSelects(); updateForceMax(); }
         function renderSaberColors() {
             const grid = document.getElementById('saber-colors-grid');
             grid.innerHTML = '';
@@ -5085,33 +5095,35 @@
             if (typeof updateForcePreview === 'function') updateForcePreview();
         }
 
-        // ===================== SYSTÈME DE FORCE (d10) =====================
-        // Un d10 par point de Magnitude. Réussite sur 10 − niveau de l'attribut du verbe.
-        // 1 = Rupture (−1, un Accroc s'il reste) · 10 = Résonance (+2, un Avantage s'il reste).
-        // Sublimé : le seuil baisse d'un cran et le 9 devient aussi une Résonance.
-        // Corrompu (état Défavorable) : le seuil monte d'un cran et le 2 devient aussi une Rupture.
-        // Ruptures et Résonances s'annulent par paires : seules celles qui restent produisent leur effet.
+        // ===================== SYSTÈME DE FORCE (d12) =====================
+        // Un d12 par point de Magnitude. Réussite sur 12 − niveau de l'attribut du verbe :
+        // chaque point d'attribut vaut une face, et il reste toujours au moins deux faces neutres.
+        // 1 = Rupture, échec critique (−1) · 12 = Résonance, réussite critique (+2).
+        // Les critiques ne changent que la valeur : plus d'Accrocs, d'Avantages ni de Contrecoup.
+        // Sublimé : une face neutre devient une réussite (seuil −1) et le 11 devient aussi une Résonance.
+        // Corrompu : la plus basse réussite devient neutre (seuil +1) et le 2 devient aussi une Rupture.
         const NV_FACE_ORDER = ['Bad2', 'Bad1', 'Vide', 'Succès', 'Résonance', 'Transcendance'];
         const NV_FACE_VALUE = { 'Bad2': -1, 'Bad1': 0, 'Vide': 0, 'Succès': 1, 'Résonance': 2, 'Transcendance': 2 };
+        const NV_DIE = 12;
         function nvThreshold(attrValue, etat) {
             const L = Math.max(1, Math.min(8, parseInt(attrValue) || 4));
             const shift = etat === 'sublime' ? -1 : etat === 'corrompu' ? 1 : 0;
-            return Math.max(2, Math.min(10, 10 - L + shift));
+            return Math.max(2, Math.min(12, NV_DIE - L + shift));
         }
         function nvFaceOf(v, attrValue, etat) {
             if (v === 1) return 'Bad2';
-            if (v === 10 || (etat === 'sublime' && v === 9)) return 'Résonance';
+            if (v === NV_DIE || (etat === 'sublime' && v === NV_DIE - 1)) return 'Résonance';
             if (etat === 'corrompu' && v === 2) return 'Bad2';
             return v >= nvThreshold(attrValue, etat) ? 'Succès' : 'Vide';
         }
-        // Répartition des dix faces, dans l'ordre de NV_FACE_ORDER (sert aux aperçus)
+        // Répartition des douze faces, dans l'ordre de NV_FACE_ORDER (sert aux aperçus)
         function nvBuildFaces(attrValue, etat) {
             const counts = [0, 0, 0, 0, 0, 0];
-            for (let v = 1; v <= 10; v++) counts[NV_FACE_ORDER.indexOf(nvFaceOf(v, attrValue, etat))]++;
+            for (let v = 1; v <= NV_DIE; v++) counts[NV_FACE_ORDER.indexOf(nvFaceOf(v, attrValue, etat))]++;
             return counts;
         }
         function nvRollDie(faces) {
-            const tot = faces.reduce((a, b) => a + b, 0) || 10;
+            const tot = faces.reduce((a, b) => a + b, 0) || NV_DIE;
             let r = Math.floor(Math.random() * tot), acc = 0;
             for (let i = 0; i < faces.length; i++) { acc += faces[i]; if (r < acc) return NV_FACE_ORDER[i]; }
             return 'Vide';
@@ -5123,12 +5135,12 @@
         // Libellés affichés (les IDs internes restent Bad1/Bad2 pour le moteur) :
         // Dissonance = miroir négatif de Résonance (la Force se désaccorde, +coût) ; Rupture = la Force se déchire (effet incontrôlé).
         const NV_FACE_LABEL = { 'Transcendance': 'Transcendance', 'Résonance': 'Résonance', 'Succès': 'Succès', 'Vide': 'Vide', 'Bad1': 'Dissonance', 'Bad2': 'Rupture' };
-        // Résumé du d10 de Force (aperçus)
+        // Résumé du d12 de Force (aperçus)
         function nvFacesText(ctx) {
             const T = nvThreshold(ctx.attrValue, ctx.etat);
-            return `d10 · réussite sur <strong>${T}+</strong> · <span style="color:${NV_FACE_STYLE.Bad2}">1 Rupture −1</span>`
+            return `d12 · réussite sur <strong>${T}+</strong> · <span style="color:${NV_FACE_STYLE.Bad2}">1 Rupture −1</span>`
                 + (ctx.etat === 'corrompu' ? ` · <span style="color:${NV_FACE_STYLE.Bad2}">2 Rupture aussi</span>` : '')
-                + ` · <span style="color:${NV_FACE_STYLE['Résonance']}">${ctx.etat === 'sublime' ? '9-10' : '10'} Résonance +2</span>`
+                + ` · <span style="color:${NV_FACE_STYLE['Résonance']}">${ctx.etat === 'sublime' ? '11-12' : '12'} Résonance +2</span>`
                 + ` · Valeur d'effet = 5 + Puissance`;
         }
         // ── RÉSOLUTION DE L'ÉTAT ────────────────────────────────────────────
@@ -5146,9 +5158,9 @@
         //   · Sans charge, une teinte obscure reste composée, et la racine aussi.
         const LIGHT_SUBLIM_TIERS = [
             { align: 80, max: Infinity },
-            { align: 60, max: 7 },
-            { align: 40, max: 4 },
-            { align: 20, max: 2 }
+            { align: 60, max: 14 },
+            { align: 40, max: 8 },
+            { align: 20, max: 4 }
         ];
         const LIGHT_CORRUPT_FLOOR = -40;   // au-delà, les pouvoirs lumineux se corrompent
         function lightSublimCap() {
@@ -5289,12 +5301,17 @@
                 `<strong style="color:${col};font-size:1.15em;">${c.current}</strong> <span style="color:var(--silver-chrome)">/ ${c.max}</span>` +
                 `<div style="height:5px;background:rgba(255,255,255,0.08);border-radius:3px;margin-top:6px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${col};border-radius:3px;transition:width .3s;"></div></div>`;
         }
-        // Courbe de contribution partagée : Élan = Endurance + Volonté ; Points de Force = (Intuition + Charisme) × multiplicateur
+        // Courbe de contribution : Élan = Endurance + Volonté (les Points de Force suivent la Magnitude max)
         const ATTR_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
-        const FORCE_POOL_MULT = 3;   // réserve plus large : un sort coûte son nombre de dés, il faut pouvoir en lancer beaucoup
+        // Points de Force = 4 × Magnitude max (meilleur verbe + meilleure cible). Un pouvoir coûte 1 PF par dé.
+        const FORCE_PER_MAGNITUDE = 4;
+        function forceMagnitudeMaxBest() {
+            const best = arr => (arr || []).reduce((m, x) => Math.max(m, parseInt(x.level) || 0), 0);
+            return best(appState.forceVerbs) + best(appState.forceTargets);
+        }
         function updateForceMax() {
             const c = appState.counters.force;
-            const newMax = ((ATTR_CONTRIB[appState.attributes.intuition] || 5) + (ATTR_CONTRIB[appState.attributes.presence] || 5)) * FORCE_POOL_MULT;
+            const newMax = Math.max(1, FORCE_PER_MAGNITUDE * forceMagnitudeMaxBest());
             const wasFull = c.current >= c.max;       // si la réserve était pleine, elle suit le nouveau max
             c.max = newMax;
             c.current = wasFull ? newMax : Math.min(c.current, newMax);
@@ -5311,7 +5328,7 @@
             syncForceFatigue();
             showNotification('⚡ Points de Force rétablis au maximum');
         }
-        // Lance ctx.nDice d10 de Force et résout la Puissance, les paires et le coût ; Ruptures et Résonances restantes = Accrocs et Avantages
+        // Lance ctx.nDice d12 de Force et résout la Puissance et le coût. Ruptures et Résonances ne font que changer la valeur.
         function nvRoll(ctx) {
             const rolled = [];
             const immOn = immActive();
@@ -5328,11 +5345,11 @@
             const nB2 = rolled.filter(f => f === 'Bad2').length;
             const bad1 = rolled.filter(f => f === 'Bad1').length;
             const nResAll = rolled.filter(f => f === 'Résonance').length;
-            const pairs = Math.min(nB2, nResAll);
-            const bad2 = nB2 - pairs, nRes = nResAll - pairs;
+            const pairs = 0;
+            const bad2 = nB2, nRes = nResAll;
 
-            // Capstones d'alignement : à ±90, sublimer un pouvoir de SON camp ouvre une cascade sur chaque Résonance restante.
-            // Chaque dé de cascade rapporte +1 s'il atteint le seuil ; Communion allège aussi le coût, Déferlante relance sur 9-10.
+            // Capstones d'alignement : à ±90, sublimer un pouvoir de SON camp ouvre une cascade sur chaque Résonance.
+            // Chaque dé de cascade (d12) rapporte +1 s'il atteint le seuil ; Communion allège aussi le coût, Déferlante relance sur 11-12.
             const tSign = (TEINTES[appState.teinte] || TEINTES.neutre).sign;
             const subl = ctx.etat === 'sublime';
             const communion = subl && tSign > 0 && resonanceValue >= 90;
@@ -5341,11 +5358,11 @@
             const casc = []; let cascReduc = 0, pool = (communion || deferlante) ? nRes : 0, guard = 0;
             while (pool > 0 && guard < 200) {
                 pool--; guard++;
-                const d = Math.floor(Math.random() * 10) + 1;
+                const d = Math.floor(Math.random() * NV_DIE) + 1;
                 const success = d >= T;
                 casc.push(success);
                 if (success) { puissance++; if (communion) cascReduc++; }
-                if (d >= (deferlante ? 9 : 10)) pool++;
+                if (d >= (deferlante ? NV_DIE - 1 : NV_DIE)) pool++;
             }
             puissance = Math.max(0, puissance);
             // Coût : nombre de dés − allègement Communion ; +3 hors-attribut en amont. Les Accrocs et Avantages ajustent ensuite.
@@ -5451,7 +5468,7 @@
             const tEl = document.getElementById('mp-type');
             const name = (nameEl.value || '').trim();
             const puissance = parseInt(pEl.value) || 0;
-            const nDice = Math.max(1, Math.min(10, parseInt(dEl.value) || 1));
+            const nDice = Math.max(1, Math.min(22, parseInt(dEl.value) || 1));
             if (!name || puissance < 1) return;
             if (!Array.isArray(appState.activePowers)) appState.activePowers = [];
             appState.activePowers.push({
@@ -5590,17 +5607,31 @@
         // ----- Lecture de la Puissance (Demerit : la Force) -----
         // Ligne lue = Puissance + décalage d'alignement. L'alignement change l'ampleur de l'effet
         // (masse, zone, nombre de cibles), jamais la gravité individuelle ni la résistance.
-        // Tableau de lecture de Demerit : [poids max, portée, zone] par ligne lue
-        const FORCE_LINE_TABLE = {
-            1: ['60 kg', '5 ft', '5 ft'], 2: ['120 kg', '15 ft', '5 ft'], 3: ['250 kg', '30 ft', '10 ft'],
-            4: ['500 kg', '50 ft', '15 ft'], 5: ['1 t', '80 ft', '20 ft'], 6: ['2 t', '120 ft', '30 ft'],
-            7: ['4 t', '200 ft', '40 ft'], 8: ['8 t', '400 ft', '60 ft'], 9: ['15 t', '800 ft', '80 ft'],
-            10: ['150 t', '1 500 ft', '150 ft'], 11: ['1 500 t', '1 km', '300 ft'], 12: ['15 000 t', '3 km', '1 000 ft'],
-            13: ['150 000 t', '10 km', '1 km'], 14: ['1,5 Mt', '30 km', '5 km'], 15: ['15 Mt', '100 km', '20 km'],
-            16: ['une station', 'orbite basse', '500 km'], 17: ['une lune', 'orbite haute', '2 000 km'],
-            18: ['hors barème', 'système', 'une planète']
-        };
-        const FORCE_LINE_TERMS = [[18, 'Hors barème'], [15, 'Mythe'], [12, 'Grand Maître'], [10, 'Maître'], [7, 'Vétéran'], [6, 'Chevalier accompli'], [4, 'Chevalier'], [3, 'Initié'], [1, 'Éveil']];
+        // Lecture de Demerit (ligne lue = Puissance + alignement) :
+        //   rayon de zone = 10^(L/3) m (×10 tous les 3 points ; L20 ≈ le rayon d'une planète)
+        //   portée = 10 × le rayon de zone · masse = 60 kg × 10^((L−1)/2)
+        // Au-delà de la ligne 20 : la planète entière, puis le système.
+        function fmtMetric(m) {
+            const n = v => Number(v.toPrecision(2)).toLocaleString('fr-FR').replace(/ /g, ' ');
+            if (m >= 1e9) return n(m / 1e9) + ' millions de km';
+            if (m >= 1000) return n(m / 1000) + ' km';
+            return n(Math.max(1, m)) + ' m';
+        }
+        function fmtKg(kg) {
+            const n = v => Number(v.toPrecision(2)).toLocaleString('fr-FR').replace(/ /g, ' ');
+            if (kg >= 1e9) return n(kg / 1e9) + ' Mt';
+            if (kg >= 1e6) return n(kg / 1e6) + ' kt';
+            if (kg >= 1000) return n(kg / 1000) + ' t';
+            return n(kg) + ' kg';
+        }
+        const FORCE_LINE_LANDMARKS = [[26, 'le système stellaire'], [23, 'l\'orbite et les lunes'], [20, 'une planète entière'], [17, 'un continent'],
+            [14, 'une région'], [11, 'une ville'], [8, 'un quartier'], [5, 'un champ de bataille'], [3, 'une salle'], [1, 'à portée de main']];
+        function forceLine(L) {
+            const zone = Math.pow(10, L / 3), range = 10 * zone, kg = 60 * Math.pow(10, (L - 1) / 2);
+            const where = FORCE_LINE_LANDMARKS.find(t => L >= t[0])[1];
+            return [fmtKg(kg), fmtMetric(range), fmtMetric(zone) + ' (' + where + ')'];
+        }
+        const FORCE_LINE_TERMS = [[21, 'Hors barème'], [18, 'Mythe'], [15, 'Grand Maître'], [12, 'Maître'], [9, 'Vétéran'], [7, 'Chevalier accompli'], [5, 'Chevalier'], [3, 'Initié'], [1, 'Éveil']];
         const GRAVITY_NAMES = ['', 'Superficielle', 'Légère', 'Modérée', 'Sérieuse', 'Grave', 'Critique', 'Terminale'];
         // Décalage d'alignement : seul un pouvoir sublimé (de son camp) en profite
         function alignShift(etat) {
@@ -5620,9 +5651,9 @@
             return {
                 line, shift: al.shift, align: al.label,
                 term: FORCE_LINE_TERMS.find(t => line >= t[0])[1],
-                mass: FORCE_LINE_TABLE[Math.min(18, line)][0],
-                range: FORCE_LINE_TABLE[Math.min(18, line)][1],
-                zone: FORCE_LINE_TABLE[Math.min(18, line)][2],
+                mass: forceLine(line)[0],
+                range: forceLine(line)[1],
+                zone: forceLine(line)[2],
                 grav: g, gravName: GRAVITY_NAMES[g]
             };
         }
@@ -5658,9 +5689,8 @@
 
         /* ===================== EFFETS DE MAGIE : AVANTAGES ET ACCROCS =====================
            Moteur commun aux trois fiches.
-           Chaque 10 qui reste après les paires donne un Avantage, choisi par le joueur dans le résultat.
-           Chaque 1 qui reste donne un Accroc, tiré automatiquement et appliqué tout de suite.
-           3 Accrocs ou plus : Contrecoup, une affliction de gravité égale au nombre d'Accrocs, à la place des Accrocs.
+           Désactivé dans Demerit (22 novembre 2026) : les critiques ne changent que la valeur des dés.
+           fxResolve ne produit plus ni Avantage ni Accroc ; le module ne sert plus qu'au détail de la Puissance.
            3 Avantages ou plus : le joueur peut les convertir en Prodige (un dé de plus, hors plafond).
            Chaque fiche fournit FX_CONF : lecture de la Puissance, blessures, Discord, entrées propres. */
         const FX_COLS = [
@@ -5696,7 +5726,7 @@
         function fxResolve(opts) {
             const id = 'fx' + (++fxSeq);
             const st = {
-                id, tens: Math.max(0, opts.tens || 0), ones: Math.max(0, opts.ones || 0),
+                id, tens: 0, ones: 0,   // les critiques ne changent que la valeur des dés
                 base: Math.max(0, opts.puissance || 0), P: Math.max(0, opts.puissance || 0),
                 resName: opts.resName || 'ressource', spend: opts.spend || (() => 0), refund: opts.refund || (() => 0),
                 rollExtra: opts.rollExtra || null, label: opts.label || 'Sort', isPrivate: !!opts.isPrivate,
@@ -5802,7 +5832,7 @@
             }
             const tags = fxTags(st);
             if (tags.length) h += `<div class="fx-tags">${tags.map(t => `<span class="fx-tag ${t[0]}">${t[1]}</span>`).join('')}</div>`;
-            if (!st.contrecoup && !st.accrocs.length && !st.tens) h += `<div class="fx-row fx-calm">Magie stable : ni Accroc ni Avantage</div>`;
+
             h += fxDetailHtml(st) + `</div>`;
             return h;
         }
@@ -5926,12 +5956,12 @@
             });
             const cascSucc = r.casc.filter(Boolean).length;
             const cascTxt = cascSucc === 0 ? '-' : (r.communion ? `${cascSucc} → +${cascSucc} P & −${cascSucc} PA` : `${cascSucc} → +${cascSucc} Puiss.`);
-            setStatLabels(['Coût PF', 'Accrocs', 'État', 'Valeur d\'effet', 'Paires']);
+            setStatLabels(['Coût PF', 'Critiques', 'État', 'Valeur d\'effet', 'Cascade']);
             document.getElementById('stat-successes').textContent = data.coutTotal;
-            document.getElementById('stat-failures').textContent = data.fx.contrecoup ? 'Contrecoup ' + data.fx.contrecoup : (data.fx.accrocs.length || '-');
+            document.getElementById('stat-failures').textContent = (r.nRes || r.bad2) ? `✦ ${r.nRes} · ✕ ${r.bad2}` : '-';
             document.getElementById('stat-explosions').textContent = etatLbl;
             document.getElementById('stat-attribute-bonus').textContent = effectValue(data.puissance) || '-';
-            document.getElementById('stat-skill-bonus').textContent = `${r.pairs || 0}` + (cascSucc ? ` · cascade ${cascTxt}` : '');
+            document.getElementById('stat-skill-bonus').textContent = cascSucc ? cascTxt : '-';
             document.getElementById('result-total-label').textContent = 'PUISSANCE DU SORT';
             document.getElementById('result-total').textContent = data.puissance;
             document.getElementById('result-total').style.color = '';
@@ -6217,7 +6247,7 @@
 
             displayConjointResult({
                 title: `${immTitleName(ctxF.verb)}${target ? ' + ' + target.name : ''} → ${skill.name}`,
-                subtitle: `Force : ${attrDisplay(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name}${appState.intentionOk ? ' + charge' : ''} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence : ${attrDisplay(skillAttrName)} · ${getSkillLevel(skill.level).name} (d10 ${fmtMod(chk.bonus)})${appliedC.label}`,
+                subtitle: `Force : ${attrDisplay(ctxF.attrName)} ${ctxF.attrValue} (${ctxF.attrLevel.name})${ctxF.offAttribute ? ' +3 PA' : ''} · ${(TEINTES[appState.teinte] || TEINTES.neutre).name}${appState.intentionOk ? ' + charge' : ''} → ${NV_ETAT_LABEL[ctxF.etat][0]}${rollF.communion ? ' · ☀️ COMMUNION' : rollF.deferlante ? ' · 🌑 DÉFERLANTE' : ''} | Compétence : ${attrDisplay(skillAttrName)} · ${getSkillLevel(skill.level).name} (2d4 ${fmtMod(chk.bonus)})${appliedC.label}`,
                 forceRoll: rollF, forceEtat: ctxF.etat, spellPuissance, forceCout,
                 check: chk, attrModV: attrMod(skillAttrValue), skillModV: skillMod(skill.level), mod: bonus + appliedC.bonus,
                 dc, finalTotal, fx
@@ -6345,8 +6375,8 @@
                     // nouvelle entrée : plusieurs anciens peuvent fusionner, on garde le meilleur.
                     const cands = prev.filter(p => p.id === def.id || p.name === def.name ||
                         (legacy && legacy[p.id] === def.id));
-                    const lvl = cands.reduce((m, c) => Math.max(m, c.level || 1), 0);
-                    return { ...def, level: lvl ? Math.max(1, Math.min(5, lvl)) : def.level };
+                    const lvl = cands.reduce((m, c) => Math.max(m, parseInt(c.level) || 0), 0);
+                    return { ...def, level: cands.length ? Math.max(0, Math.min(FORCE_LEVEL_MAX, lvl)) : def.level };
                 });
             };
             appState.forceVerbs = carryLevel(FORCE_VERBS, appState.forceVerbs, LEGACY_VERB_MAP);
@@ -6376,10 +6406,20 @@
             loaded.skills = skills;
             loaded.skillScale = 'aequor';
         }
+        // Ancienne échelle des verbes et cibles (1 à 5) : niveaux doublés, Magnitude max jusqu'à 20
+        function migrateForceScale(loaded) {
+            if (loaded.forceScale === FORCE_SCALE) return;
+            ['forceVerbs', 'forceTargets'].forEach(k => {
+                (Array.isArray(loaded[k]) ? loaded[k] : []).forEach(x => { x.level = Math.min(FORCE_LEVEL_MAX, (parseInt(x.level) || 1) * 2); });
+            });
+            loaded.forceScale = FORCE_SCALE;
+        }
         function applyLoadedState(loaded) {
             migrateSkills(loaded);
+            migrateForceScale(loaded);
             Object.assign(appState, loaded);
             reconcileForceLists();
+            updateForceMax();
             // Combat de Force a été retiré du système : tout pouvoir se porte
             // désormais avec la compétence que la description justifie.
             appState.skills = (appState.skills || []).filter(sk =>
@@ -6722,7 +6762,7 @@
             { threshold: -70, group: 'no_conc', side: 'dark', icon: '🔗', text: "Les pouvoirs obscurs de type durée n'exigent plus de jet de concentration lors d'une perte d'Élan" },
             { threshold: -80, group: 'kill_pf', side: 'dark', icon: '🖤', text: "Chaque créature tuée par le personnage rend 5 Points de Force" },
             { threshold: -80, group: 'anti_obscurite', side: 'dark', kind: 'cost', icon: '☠️', text: "Les pouvoirs ciblant l'Obscurité employés contre le personnage infligent un minimum de blessure ou de résistance égal à leur Puissance" },
-            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: "Déferlante : lorsqu'un pouvoir obscur est sublimé, chaque Résonance restante lance un dé de cascade (+1 Puissance s'il atteint le seuil), qui se relance sur 9 ou 10" },
+            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: "Déferlante : lorsqu'un pouvoir obscur est sublimé, chaque Résonance lance un dé de cascade (+1 Puissance s'il atteint le seuil), qui se relance sur 11 ou 12" },
             // ─── Harmonie : récompense lente, sans contrepartie ───
             { threshold: 20, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse jusqu'à une magnitude de 2" },
             { threshold: 30, group: 'protect_half', side: 'light', icon: '🛡', text: "Lorsqu'un point de focalisation est dépensé pour protéger une créature, le coût en Points de Force du pouvoir lumineux employé est réduit de moitié (arrondi à l'inférieur)" },
@@ -6731,7 +6771,7 @@
             { threshold: 60, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse jusqu'à une magnitude de 7", updates: true },
             { threshold: 70, group: 'no_focus', side: 'light', icon: '🎯', text: "Un pouvoir lumineux sublimé de type durée n'immobilise pas de point de focalisation. Un seul pouvoir peut être maintenu de cette façon à la fois" },
             { threshold: 80, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse sans limite de magnitude", updates: true },
-            { threshold: 90, group: 'communion', side: 'light', icon: '☀️', text: "Communion : lorsqu'un pouvoir lumineux est sublimé, chaque Résonance restante lance un dé de cascade (+1 Puissance et −1 Point de Force s'il atteint le seuil), qui se relance sur 10" },
+            { threshold: 90, group: 'communion', side: 'light', icon: '☀️', text: "Communion : lorsqu'un pouvoir lumineux est sublimé, chaque Résonance lance un dé de cascade (+1 Puissance et −1 Point de Force s'il atteint le seuil), qui se relance sur 12" },
         ];
 
         function getResonanceStage(val) {
@@ -6962,10 +7002,10 @@
         ];
         // Défaire : ce que la Force ne permet pas, un aspect inversé par effet.
         const IMM_DEFAIRE = [
-            { id: 'defaire_presence', name: 'Défaire une présence', attr: 'Volonté', level: 1 },
-            { id: 'defaire_instant', name: 'Défaire un instant', attr: 'Intuition', level: 1 },
-            { id: 'defaire_lien', name: 'Défaire un lien', attr: 'Charisme', level: 1 },
-            { id: 'defaire_forme', name: 'Défaire une forme', attr: 'Intelligence', level: 1 }
+            { id: 'defaire_presence', name: 'Défaire une présence', attr: 'Volonté', level: 2 },
+            { id: 'defaire_instant', name: 'Défaire un instant', attr: 'Intuition', level: 2 },
+            { id: 'defaire_lien', name: 'Défaire un lien', attr: 'Charisme', level: 2 },
+            { id: 'defaire_forme', name: 'Défaire une forme', attr: 'Intelligence', level: 2 }
         ];
 
         function immActive() { return appState.immaterium === true; }
