@@ -2910,6 +2910,11 @@
         .roll20-badge[data-state="off"] { color: #8a8a98; border-color: rgba(138,138,152,.5); }
         .roll20-badge[data-state="warn"] { color: #e0a04a; border-color: rgba(224,160,74,.7); }
         .roll20-badge.flash { background: rgba(29, 158, 117, 0.95); color: #fff; border-color: transparent; }
+            .send-mode { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8em; font-weight: 600; white-space: nowrap; }
+        .send-mode-select { font: inherit; font-size: 1em; color: inherit; background: rgba(127,127,127,0.10); border: 1px solid rgba(127,127,127,0.45);
+            border-radius: 6px; padding: 3px 6px; cursor: pointer; max-width: 100%; }
+        .send-mode-select option:disabled { color: #888; }
+        .send-mode-select.warn { border-color: #e0a04a; color: #e0a04a; }
     </style>
 </head>
 
@@ -3420,9 +3425,7 @@
 
                         <div class="roll-foot">
                             <span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="3d4, on garde les 2 meilleurs">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="3d4, on garde les 2 pires">▼ Désavantage</button></span>
-                            <label class="private-toggle">
-                                <input type="checkbox" id="private-roll"> Jet confidentiel (pas de transmission)
-                            </label>
+                            <label class="send-mode" title="Où partent les jets">📡 <select class="send-mode-select" onchange="setSendMode(this.value)"></select></label>
                         </div>
                     </div>
                 </div>
@@ -5305,7 +5308,8 @@
         }
         function closeResult() { document.getElementById('overlay').classList.remove('active'); }
 
-        function isPrivate() { return document.getElementById('private-roll').checked; }
+        // « Confidentiel » = pas de transmission Discord (le sélecteur d'envoi décide)
+        function isPrivate() { return !sendsDiscord(); }
 
         function natTag(nat) { return nat === NAT_TOP ? ' · ✦ Opportunité' : nat === NAT_LOW ? ' · ▼ Complication' : ''; }
 
@@ -5761,6 +5765,10 @@
 
         function bridgeEmit(kind, data) {
             if (!bridgeActive()) return null;
+            if (kind !== 'state') {
+                if (!sendsRoll20()) return null;
+                if (kind === 'roll' || kind === 'event') data = Object.assign({}, data, { private: sendMode === 'r20gm' });
+            }
             const id = Date.now().toString(36) + '-' + (++bridgeSeq) + '-' + Math.random().toString(36).slice(2, 7);
             const img = appState.file && appState.file.image;
             const imgUrl = typeof img === 'string' && /^https:\/\//.test(img) && img.length < 600 ? img : undefined;
@@ -5822,6 +5830,44 @@
             if (flash) { clearTimeout(el._t); el._t = setTimeout(() => renderBridgeBadge(), 1800); }
         }
 
+        // ── Où partent les jets : Local · Discord · Roll20 MJ · Roll20 ouvert ──
+        // Préférence de l'appareil (localStorage), une par univers. Remplace l'ancienne case « jet privé ».
+        const SEND_MODES = [
+            { id: 'local', label: '🔒 Local', title: 'Le jet reste sur la fiche : rien n\'est envoyé' },
+            { id: 'discord', label: '💬 Discord', title: 'Le jet part sur le salon Discord de la partie' },
+            { id: 'r20gm', label: '⬢ Roll20 · MJ', title: 'Le jet part dans le chat Roll20, chuchoté à la MJ (et à toi)', r20: true },
+            { id: 'r20open', label: '⬢ Roll20 · ouvert', title: 'Le jet part dans le chat Roll20, visible de toute la table', r20: true }
+        ];
+        const SEND_MODE_KEY = 'jdr-send-mode-' + BRIDGE_SHEET;
+        let sendMode = (() => { try { return localStorage.getItem(SEND_MODE_KEY) || 'discord'; } catch (e) { return 'discord'; } })();
+        if (!SEND_MODES.some(m => m.id === sendMode)) sendMode = 'discord';
+        const sendsDiscord = () => sendMode === 'discord';
+        const sendsRoll20 = () => sendMode === 'r20gm' || sendMode === 'r20open';
+        function setSendMode(id) {
+            if (!SEND_MODES.some(m => m.id === id)) return;
+            sendMode = id;
+            try { localStorage.setItem(SEND_MODE_KEY, id); } catch (e) { }
+            refreshSendModeUI();
+            
+        }
+        function refreshSendModeUI() {
+            const on = bridgeActive();
+            document.querySelectorAll('.send-mode-select').forEach(sel => {
+                if (!sel.options.length) sel.innerHTML = SEND_MODES.map(m => `<option value="${m.id}" title="${m.title}">${m.label}</option>`).join('');
+                [...sel.options].forEach(o => {
+                    const m = SEND_MODES.find(x => x.id === o.value);
+                    o.disabled = !!m.r20 && !on;
+                    o.textContent = m.label + (m.r20 && !on ? ' (pont absent)' : '');
+                });
+                sel.value = sendMode;
+                sel.title = (SEND_MODES.find(m => m.id === sendMode) || {}).title || '';
+                sel.classList.toggle('warn', sendsRoll20() && !on);
+            });
+        }
+        function initSendMode() { refreshSendModeUI();  }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initSendMode);
+        else setTimeout(initSendMode, 0);
+
         window.addEventListener('message', e => {
             if (!e.data || e.data.jdrPont !== 'pont') return;
             const m = e.data;
@@ -5832,6 +5878,7 @@
                 bridgeOthers = !!m.others;
                 bridgeGame = m.game || '';
                 renderBridgeBadge();
+                refreshSendModeUI();
                 if (m.type === 'hello' || (!was && bridgeRoll20)) { bridgeLastState = ''; bridgeState(true); }
             } else if (m.type === 'ack' && m.kind !== 'state') {
                 if (m.ok) renderBridgeBadge('✓ Envoyé sur Roll20');
@@ -5848,7 +5895,7 @@
         function bridgePowerGroup(r, canalName) {
             return {
                 label: `${r.magnitude} d12${r.bonus ? ' + ' + r.bonus : ''} · canal ${canalName}`,
-                dice: r.m.dice.map(d => ({ s: 12, v: d.val, t: d.k === 'ten' ? 'c' : d.k === 'one' ? 'f' : d.val > 0 ? 'n' : 'z' })),
+                dice: r.m.dice.map(d => ({ s: 12, v: d.val, n: d.v, t: d.k === 'ten' ? 'c' : d.k === 'one' ? 'f' : d.val > 0 ? 'n' : 'z' })),
                 terms: r.mod ? [bridgeSigned(r.mod)] : []
             };
         }

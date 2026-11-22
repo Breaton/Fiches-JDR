@@ -3204,6 +3204,15 @@
         .roll20-badge[data-state="off"] { color: #8a8a98; border-color: rgba(138,138,152,.5); }
         .roll20-badge[data-state="warn"] { color: #e0a04a; border-color: rgba(224,160,74,.7); }
         .roll20-badge.flash { background: rgba(29, 158, 117, 0.95); color: #fff; border-color: transparent; }
+            .send-mode { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8em; font-weight: 600; white-space: nowrap; }
+        .send-mode-select { font: inherit; font-size: 1em; color: inherit; background: rgba(127,127,127,0.10); border: 1px solid rgba(127,127,127,0.45);
+            border-radius: 6px; padding: 3px 6px; cursor: pointer; max-width: 100%; }
+        .send-mode-select option:disabled { color: #888; }
+        .send-mode-select.warn { border-color: #e0a04a; color: #e0a04a; }
+            /* Dé de Force : chiffre du d12 au-dessus, symbole de la face en dessous */
+        .die.num { flex-direction: column; gap: 1px; }
+        .die.num .dv { font-family: var(--font-mono, monospace); font-size: 0.85em; font-weight: 700; line-height: 1; }
+        .die.num .ds { font-size: 0.62em; line-height: 1; opacity: 0.85; }
     </style>
 </head>
 
@@ -3481,7 +3490,7 @@
                             style="margin-top: 20px;">
                             ⚡⚔ Lancer le jet Force + Compétence
                         </button>
-                        <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="3d4, on garde les 2 meilleurs">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="3d4, on garde les 2 pires">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
+                        <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="3d4, on garde les 2 meilleurs">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="3d4, on garde les 2 pires">▼ Désavantage</button></span><label class="send-mode" title="Où partent les jets">📡 <select class="send-mode-select" onchange="setSendMode(this.value)"></select></label></div>
 
                     </div>
                     <div id="urm-panel-comp" class="force-roll-panel">
@@ -3508,7 +3517,7 @@
                             <button class="roll-btn skill" id="skill-page-roll-btn" onclick="rollSkillPage()"
                                 disabled>🎲 LANCER
                                 LE JET</button>
-                            <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="3d4, on garde les 2 meilleurs">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="3d4, on garde les 2 pires">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
+                            <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="3d4, on garde les 2 meilleurs">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="3d4, on garde les 2 pires">▼ Désavantage</button></span><label class="send-mode" title="Où partent les jets">📡 <select class="send-mode-select" onchange="setSendMode(this.value)"></select></label></div>
 
                         </div>
 
@@ -3557,7 +3566,7 @@
                                 disabled style="margin-top: 16px;">
                                 ⚡ Lancer le jet de Force
                             </button>
-                            <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="3d4, on garde les 2 meilleurs">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="3d4, on garde les 2 pires">▼ Désavantage</button></span><label class="private-roll-toggle"><input type="checkbox" class="private-roll-check" onchange="setPrivateRoll(this.checked)"> 🔒 Jet privé (pas d'envoi Discord)</label></div>
+                            <div class="roll-foot"><span class="circ-btns"><button type="button" class="circ-btn adv" data-circ="adv" onclick="toggleCirc('adv')" title="3d4, on garde les 2 meilleurs">▲ Avantage</button><button type="button" class="circ-btn dis" data-circ="dis" onclick="toggleCirc('dis')" title="3d4, on garde les 2 pires">▼ Désavantage</button></span><label class="send-mode" title="Où partent les jets">📡 <select class="send-mode-select" onchange="setSendMode(this.value)"></select></label></div>
                         </div>
 
                     </div>
@@ -5136,6 +5145,11 @@
             for (let i = 0; i < faces.length; i++) { acc += faces[i]; if (r < acc) return NV_FACE_ORDER[i]; }
             return 'Vide';
         }
+        // Lance un d12 de Force : le chiffre tiré, et la face qu'il donne selon l'attribut et l'état
+        function nvRollNum(ctx) {
+            const n = Math.floor(Math.random() * NV_DIE) + 1;
+            return { n, face: nvFaceOf(n, ctx.attrValue, ctx.etat) };
+        }
         const NV_FACE_STYLE = { 'Transcendance': '#ffcc00', 'Résonance': '#b366ff', 'Succès': '#3fb950', 'Vide': '#8b949e', 'Bad1': '#ff9944', 'Bad2': '#ff4444' };
         const NV_ATTR_KEY = { 'Charisme': 'presence', 'Présence': 'presence', 'Intelligence': 'intelligence', 'Intuition': 'intuition', 'Volonté': 'volonte' };
         const NV_ETAT_LABEL = { compose: ['Composé', '#8b949e'], sublime: ['Sublimé', '#ffcc00'], corrompu: ['Corrompu', '#ff4444'] };
@@ -5338,14 +5352,14 @@
         }
         // Lance ctx.nDice d12 de Force et résout la Puissance et le coût. Ruptures et Résonances ne font que changer la valeur.
         function nvRoll(ctx) {
-            const rolled = [];
+            const rolled = [], nums = [], cascNums = [];
             const immOn = immActive();
             const immDefaire = immOn && !!(ctx.verb && /^defaire_/.test(ctx.verb.id));
             let total = ctx.nDice; const elanFlags = [], riskFaces = [];
             // Défaire : un dé de risque supplémentaire, lancé avant les autres
             if (immDefaire) { const rf = immRiskFace(); rf.extra = true; riskFaces.push(rf); if (rf.aspire) total++; }
             for (let i = 0; i < total; i++) {
-                rolled.push(nvRollDie(ctx.faces)); elanFlags.push(i >= ctx.nDice);
+                { const d = nvRollNum(ctx); rolled.push(d.face); nums.push(d.n); } elanFlags.push(i >= ctx.nDice);
                 // Chaque dé de Force tiré de l'Immaterium lance son dé de risque ; une Aspiration en appelle un autre
                 if (immOn) { const rf = immRiskFace(); riskFaces.push(rf); if (rf.aspire && total < IMM_ELAN_CAP) total++; }
             }
@@ -5368,13 +5382,13 @@
                 pool--; guard++;
                 const d = Math.floor(Math.random() * NV_DIE) + 1;
                 const success = d >= T;
-                casc.push(success);
+                casc.push(success); cascNums.push(d);
                 if (success) { puissance++; if (communion) cascReduc++; }
                 if (d >= (deferlante ? NV_DIE - 1 : NV_DIE)) pool++;
             }
             puissance = Math.max(0, puissance);
             // Coût : nombre de dés − allègement Communion ; +3 hors-attribut en amont. Les Accrocs et Avantages ajustent ensuite.
-            return { rolled, casc, puissance, bad1, bad2, pairs, nRes, nTr: 0, communion, deferlante, cascReduc, coutDelta: -cascReduc, effet: 0, etat: ctx.etat, nDiceTotal: total, elanFlags, elan: total - ctx.nDice, imm: immOn ? immResolve(riskFaces) : null };
+            return { rolled, nums, casc, cascNums, puissance, bad1, bad2, pairs, nRes, nTr: 0, communion, deferlante, cascReduc, coutDelta: -cascReduc, effet: 0, etat: ctx.etat, nDiceTotal: total, elanFlags, elan: total - ctx.nDice, imm: immOn ? immResolve(riskFaces) : null };
         }
         // Choisir un verbe pré-remplit son attribut par défaut + son niveau en dés (modifiables ensuite)
         function onForceSimpleVerbChange() {
@@ -5427,9 +5441,13 @@
                 `<span style="font-size:0.9em">Dé : ${facesTxt}</span>`;
         }
         // ----- Affichage via la modale de résultat existante -----
-        function nvDieEl(face, i) {
+        // Un dé de Force : le chiffre tiré sur le d12, et le symbole de sa face en dessous
+        function nvDieEl(face, i, n) {
             const d = document.createElement('div');
-            d.className = 'die'; d.textContent = NV_FACE_GLYPH[face] || '?'; d.title = NV_FACE_LABEL[face] || face;
+            d.className = 'die' + (n ? ' num' : '');
+            if (n) d.innerHTML = `<span class="dv">${n}</span><span class="ds">${NV_FACE_GLYPH[face] || '?'}</span>`;
+            else d.textContent = NV_FACE_GLYPH[face] || '?';
+            d.title = (n ? 'd12 : ' + n + ' · ' : '') + (NV_FACE_LABEL[face] || face);
             d.style.animationDelay = `${i * 0.08}s`;
             d.style.background = NV_FACE_STYLE[face] + '22'; d.style.color = NV_FACE_STYLE[face];
             d.style.border = '1px solid ' + NV_FACE_STYLE[face];
@@ -5957,9 +5975,9 @@
             document.getElementById('result-title').textContent = data.title;
             document.getElementById('result-subtitle').textContent = data.subtitle;
             const container = document.getElementById('dice-container'); container.innerHTML = '';
-            r.rolled.forEach((f, i) => { const d = nvDieEl(f, i); if (r.elanFlags && r.elanFlags[i]) { d.classList.add('imm-elan-die'); d.title += ' · aspiré'; } container.appendChild(d); });
+            r.rolled.forEach((f, i) => { const d = nvDieEl(f, i, r.nums && r.nums[i]); if (r.elanFlags && r.elanFlags[i]) { d.classList.add('imm-elan-die'); d.title += ' · aspiré'; } container.appendChild(d); });
             r.casc.forEach((s, i) => {
-                const d = nvDieEl(s ? 'Succès' : 'Vide', r.rolled.length + i); d.style.opacity = '0.5';
+                const d = nvDieEl(s ? 'Succès' : 'Vide', r.rolled.length + i, r.cascNums && r.cascNums[i]); d.style.opacity = '0.5';
                 container.appendChild(d);
             });
             const cascSucc = r.casc.filter(Boolean).length;
@@ -6331,9 +6349,9 @@
             container.appendChild(forceLabel);
             const forceDiceDiv = document.createElement('div');
             forceDiceDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; width: 100%;';
-            data.forceRoll.rolled.forEach((f, i) => { const d = nvDieEl(f, i); if (data.forceRoll.elanFlags && data.forceRoll.elanFlags[i]) { d.classList.add('imm-elan-die'); d.title += ' · aspiré'; } forceDiceDiv.appendChild(d); });
+            data.forceRoll.rolled.forEach((f, i) => { const d = nvDieEl(f, i, data.forceRoll.nums && data.forceRoll.nums[i]); if (data.forceRoll.elanFlags && data.forceRoll.elanFlags[i]) { d.classList.add('imm-elan-die'); d.title += ' · aspiré'; } forceDiceDiv.appendChild(d); });
             data.forceRoll.casc.forEach((s, i) => {
-                const d = nvDieEl(s ? 'Succès' : 'Vide', data.forceRoll.rolled.length + i); d.style.opacity = '0.5';
+                const d = nvDieEl(s ? 'Succès' : 'Vide', data.forceRoll.rolled.length + i, data.forceRoll.cascNums && data.forceRoll.cascNums[i]); d.style.opacity = '0.5';
                 forceDiceDiv.appendChild(d);
             });
             container.appendChild(forceDiceDiv);
@@ -6483,7 +6501,7 @@
             resonanceValue = (typeof appState.resonance === 'number') ? appState.resonance : 0;
             if (typeof syncCharAlignment === 'function') syncCharAlignment();
             renderResonance();
-            setPrivateRoll(!!appState.privateRoll);
+            setPrivateRoll();
             immSetActive(appState.immaterium === true);
         }
         function handleFileLoad(event) {
@@ -6503,7 +6521,8 @@
         function showNotification(msg) {
             const el = document.createElement('div');
             el.textContent = msg;
-            el.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(0,168,255,0.95);color:white;padding:10px 20px;border-radius:8px;font-size:0.85em;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);';
+            // En bas de l'écran : en haut, la notification masquait les onglets de pages
+            el.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:calc(100% - 32px);text-align:center;pointer-events:none;background:rgba(0,168,255,0.95);color:white;padding:10px 20px;border-radius:8px;font-size:0.85em;font-weight:600;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);';
             document.body.appendChild(el);
             setTimeout(() => el.remove(), 3000);
         }
@@ -6693,12 +6712,12 @@
         // ========== DISCORD WEBHOOK ==========
         const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1509003659407524041/plYUTg3J6tuwaSDM32dEhjjH3n9kj9JQm1e-Okit0vFT66ivfBuIsH6DULNJgkIR9iiN';
 
-        function setPrivateRoll(checked) {
-            appState.privateRoll = !!checked;
-            document.querySelectorAll('.private-roll-check').forEach(cb => { cb.checked = appState.privateRoll; });
+        // L'ancienne case « jet privé » est remplacée par le sélecteur d'envoi : appState.privateRoll en suit l'état
+        function setPrivateRoll() {
+            appState.privateRoll = !sendsDiscord();
         }
         function sendDiscordRoll(skillName, baseName, total, attrName, details) {
-            if (appState.privateRoll) return;   // jets privés : aucun envoi Discord
+            if (!sendsDiscord()) return;   // envoi Local ou Roll20 : rien sur Discord
             const charName = appState.profile.name || 'Personnage';
             const charImage = appState.profile.image;
             const base = baseName || skillName;
@@ -6762,6 +6781,10 @@
 
         function bridgeEmit(kind, data) {
             if (!bridgeActive()) return null;
+            if (kind !== 'state') {
+                if (!sendsRoll20()) return null;
+                if (kind === 'roll' || kind === 'event') data = Object.assign({}, data, { private: sendMode === 'r20gm' });
+            }
             const id = Date.now().toString(36) + '-' + (++bridgeSeq) + '-' + Math.random().toString(36).slice(2, 7);
             const img = appState.profile && appState.profile.image;
             const imgUrl = typeof img === 'string' && /^https:\/\//.test(img) && img.length < 600 ? img : undefined;
@@ -6823,6 +6846,44 @@
             if (flash) { clearTimeout(el._t); el._t = setTimeout(() => renderBridgeBadge(), 1800); }
         }
 
+        // ── Où partent les jets : Local · Discord · Roll20 MJ · Roll20 ouvert ──
+        // Préférence de l'appareil (localStorage), une par univers. Remplace l'ancienne case « jet privé ».
+        const SEND_MODES = [
+            { id: 'local', label: '🔒 Local', title: 'Le jet reste sur la fiche : rien n\'est envoyé' },
+            { id: 'discord', label: '💬 Discord', title: 'Le jet part sur le salon Discord de la partie' },
+            { id: 'r20gm', label: '⬢ Roll20 · MJ', title: 'Le jet part dans le chat Roll20, chuchoté à la MJ (et à toi)', r20: true },
+            { id: 'r20open', label: '⬢ Roll20 · ouvert', title: 'Le jet part dans le chat Roll20, visible de toute la table', r20: true }
+        ];
+        const SEND_MODE_KEY = 'jdr-send-mode-' + BRIDGE_SHEET;
+        let sendMode = (() => { try { return localStorage.getItem(SEND_MODE_KEY) || 'discord'; } catch (e) { return 'discord'; } })();
+        if (!SEND_MODES.some(m => m.id === sendMode)) sendMode = 'discord';
+        const sendsDiscord = () => sendMode === 'discord';
+        const sendsRoll20 = () => sendMode === 'r20gm' || sendMode === 'r20open';
+        function setSendMode(id) {
+            if (!SEND_MODES.some(m => m.id === id)) return;
+            sendMode = id;
+            try { localStorage.setItem(SEND_MODE_KEY, id); } catch (e) { }
+            refreshSendModeUI();
+            setPrivateRoll();
+        }
+        function refreshSendModeUI() {
+            const on = bridgeActive();
+            document.querySelectorAll('.send-mode-select').forEach(sel => {
+                if (!sel.options.length) sel.innerHTML = SEND_MODES.map(m => `<option value="${m.id}" title="${m.title}">${m.label}</option>`).join('');
+                [...sel.options].forEach(o => {
+                    const m = SEND_MODES.find(x => x.id === o.value);
+                    o.disabled = !!m.r20 && !on;
+                    o.textContent = m.label + (m.r20 && !on ? ' (pont absent)' : '');
+                });
+                sel.value = sendMode;
+                sel.title = (SEND_MODES.find(m => m.id === sendMode) || {}).title || '';
+                sel.classList.toggle('warn', sendsRoll20() && !on);
+            });
+        }
+        function initSendMode() { refreshSendModeUI(); setPrivateRoll(); }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initSendMode);
+        else setTimeout(initSendMode, 0);
+
         window.addEventListener('message', e => {
             if (!e.data || e.data.jdrPont !== 'pont') return;
             const m = e.data;
@@ -6833,6 +6894,7 @@
                 bridgeOthers = !!m.others;
                 bridgeGame = m.game || '';
                 renderBridgeBadge();
+                refreshSendModeUI();
                 if (m.type === 'hello' || (!was && bridgeRoll20)) { bridgeLastState = ''; bridgeState(true); }
             } else if (m.type === 'ack' && m.kind !== 'state') {
                 if (m.ok) renderBridgeBadge('✓ Envoyé sur Roll20');
@@ -6849,12 +6911,12 @@
         function bridgeForceGroups(roll, ctx, mod) {
             const out = [{
                 label: `${ctx.nDice} d12${roll.elan ? ' + ' + roll.elan + ' Élan' : ''} · ${NV_ETAT_LABEL[ctx.etat][0]}`,
-                dice: roll.rolled.map(f => { const v = NV_FACE_VALUE[f] || 0; return { s: 12, v, t: f === 'Résonance' ? 'c' : f === 'Bad2' ? 'f' : v > 0 ? 'n' : 'z' }; }),
+                dice: roll.rolled.map((f, i) => { const v = NV_FACE_VALUE[f] || 0; return { s: 12, v, n: roll.nums && roll.nums[i], t: f === 'Résonance' ? 'c' : f === 'Bad2' ? 'f' : v > 0 ? 'n' : 'z' }; }),
                 terms: mod ? [bridgeSigned(mod)] : []
             }];
             if (roll.casc && roll.casc.length) out.push({
                 label: roll.communion ? '☀️ Communion' : '🌑 Déferlante',
-                dice: roll.casc.map(ok => ({ s: 12, v: ok ? 1 : 0, t: ok ? 'c' : 'z' })), terms: []
+                dice: roll.casc.map((ok, i) => ({ s: 12, v: ok ? 1 : 0, n: roll.cascNums && roll.cascNums[i], t: ok ? 'c' : 'z' })), terms: []
             });
             return out;
         }
