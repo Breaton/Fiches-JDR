@@ -1213,15 +1213,15 @@
             })).filter(w => w.gravity > 0);
             const storedHealth = (obj.counters && obj.counters.health) ? obj.counters.health : null;
             const forcePoints = (obj.counters && obj.counters.force) ? obj.counters.force : null;
-            // Verbes et cibles sur 0 à 10 ; une sauvegarde de l'ancienne échelle (1 à 5) est doublée, comme dans la fiche
-            const forceMul = obj.forceScale === 10 ? 1 : 2;
-            const forceLvl = v => Math.min(10, Math.max(0, (parseInt(v) || 0) * forceMul));
+            // Verbes et cibles sur 0 à 10 ; les anciennes sauvegardes (1 à 5) gardent leurs chiffres, comme dans la fiche
+            const oldScale = obj.forceScale !== 10;
+            const forceLvl = v => Math.min(10, Math.max(0, parseInt(v) || 0));
             const forceVerbs = (obj.forceVerbs || []).filter(v => v && v.name).map(v => ({ name: v.name, attr: v.attr || '', level: forceLvl(v.level) }));
             const forceTargets = (obj.forceTargets || []).filter(t => t && t.name).map(t => ({ name: t.name, level: forceLvl(t.level) }));
-            // Ancienne sauvegarde : les Points de Force suivent déjà la nouvelle règle (4 × Magnitude max)
-            if (forceMul === 2 && forcePoints) {
+            // Ancienne sauvegarde : les Points de Force suivent déjà la nouvelle règle (7 × Magnitude max)
+            if (oldScale && forcePoints) {
                 const best = arr => arr.reduce((m, x) => Math.max(m, x.level), 0);
-                const newMax = 4 * (best(forceVerbs) + best(forceTargets));
+                const newMax = 7 * (best(forceVerbs) + best(forceTargets));
                 forcePoints.current = forcePoints.current >= forcePoints.max ? newMax : Math.min(forcePoints.current, newMax);
                 forcePoints.max = newMax;
             }

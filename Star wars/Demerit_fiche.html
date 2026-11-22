@@ -5158,9 +5158,9 @@
         //   · Sans charge, une teinte obscure reste composée, et la racine aussi.
         const LIGHT_SUBLIM_TIERS = [
             { align: 80, max: Infinity },
-            { align: 60, max: 14 },
-            { align: 40, max: 8 },
-            { align: 20, max: 4 }
+            { align: 60, max: 7 },
+            { align: 40, max: 4 },
+            { align: 20, max: 2 }
         ];
         const LIGHT_CORRUPT_FLOOR = -40;   // au-delà, les pouvoirs lumineux se corrompent
         function lightSublimCap() {
@@ -5303,8 +5303,8 @@
         }
         // Courbe de contribution : Élan = Endurance + Volonté (les Points de Force suivent la Magnitude max)
         const ATTR_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
-        // Points de Force = 4 × Magnitude max (meilleur verbe + meilleure cible). Un pouvoir coûte 1 PF par dé.
-        const FORCE_PER_MAGNITUDE = 4;
+        // Points de Force = 7 × Magnitude max (meilleur verbe + meilleure cible). Un pouvoir coûte 1 PF par dé.
+        const FORCE_PER_MAGNITUDE = 7;
         function forceMagnitudeMaxBest() {
             const best = arr => (arr || []).reduce((m, x) => Math.max(m, parseInt(x.level) || 0), 0);
             return best(appState.forceVerbs) + best(appState.forceTargets);
@@ -6406,12 +6406,9 @@
             loaded.skills = skills;
             loaded.skillScale = 'aequor';
         }
-        // Ancienne échelle des verbes et cibles (1 à 5) : niveaux doublés, Magnitude max jusqu'à 20
+        // Ancienne échelle des verbes et cibles (1 à 5) : les niveaux gardent leurs chiffres (décision de Loïc),
+        // les niveaux 6 à 10 sont la marge de progression.
         function migrateForceScale(loaded) {
-            if (loaded.forceScale === FORCE_SCALE) return;
-            ['forceVerbs', 'forceTargets'].forEach(k => {
-                (Array.isArray(loaded[k]) ? loaded[k] : []).forEach(x => { x.level = Math.min(FORCE_LEVEL_MAX, (parseInt(x.level) || 1) * 2); });
-            });
             loaded.forceScale = FORCE_SCALE;
         }
         function applyLoadedState(loaded) {
@@ -7002,10 +6999,10 @@
         ];
         // Défaire : ce que la Force ne permet pas, un aspect inversé par effet.
         const IMM_DEFAIRE = [
-            { id: 'defaire_presence', name: 'Défaire une présence', attr: 'Volonté', level: 2 },
-            { id: 'defaire_instant', name: 'Défaire un instant', attr: 'Intuition', level: 2 },
-            { id: 'defaire_lien', name: 'Défaire un lien', attr: 'Charisme', level: 2 },
-            { id: 'defaire_forme', name: 'Défaire une forme', attr: 'Intelligence', level: 2 }
+            { id: 'defaire_presence', name: 'Défaire une présence', attr: 'Volonté', level: 1 },
+            { id: 'defaire_instant', name: 'Défaire un instant', attr: 'Intuition', level: 1 },
+            { id: 'defaire_lien', name: 'Défaire un lien', attr: 'Charisme', level: 1 },
+            { id: 'defaire_forme', name: 'Défaire une forme', attr: 'Intelligence', level: 1 }
         ];
 
         function immActive() { return appState.immaterium === true; }

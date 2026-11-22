@@ -845,7 +845,21 @@
       color: #3fb950;
       font-weight: 700;
     }
-  </style>
+      /* Téléphone : la barre de budget passe sur plusieurs lignes, les lignes de stats se resserrent */
+    @media (max-width: 640px) {
+      .budget-bar { flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
+      .budget-track { flex: 1 1 100%; order: 3; }
+      .columns { grid-template-columns: minmax(0, 1fr) !important; }
+      .columns > div, .section { min-width: 0; }
+      .section-header { flex-wrap: wrap; gap: 4px; }
+      .pyramid-counters { flex-wrap: wrap; }
+      .stat-row { flex-wrap: wrap; padding: 7px 10px; row-gap: 4px; }
+      .stat-row .stat-name-wrapper { flex: 1 1 60%; min-width: 0; }
+      .stat-row .dots { order: 5; flex: 1 1 100%; }
+      .stat-row .stat-cost { display: none; }
+      .stat-alt { white-space: normal; }
+    }
+</style>
 </head>
 
 <body>
@@ -859,12 +873,13 @@
       <div class="budget-numbers" id="budgetNumbers">
         <span class="spent" id="spentDisplay">0</span>
         <span class="sep">/</span>
-        <span class="total" id="totalDisplay">130</span>
+        <span class="total" id="totalDisplay">100</span>
       </div>
-      <div class="budget-remaining" id="budgetRemaining">130 restants</div>
+      <div class="budget-remaining" id="budgetRemaining">100 restants</div>
       <select id="profileSelect" class="settings-toggle" style="cursor:pointer" onchange="applyProfile(this.value)">
         <option value="classique" selected>⚙️ Personnage · 100 pts</option>
-        <option value="elysaria">🎖️ Élysaria · 175 pts</option>
+        <option value="veteran">🛡️ Vétéran · 160 pts</option>
+        <option value="elysaria">🎖️ Élysaria · 230 pts</option>
       </select>
       <button class="settings-toggle" onclick="importFromFile()">↑ Importer un perso</button>
       <button class="settings-toggle" onclick="exportToFiche()">↓ Exporter vers Fiche</button>
@@ -875,7 +890,7 @@
       <h3>Paramètres : Coûts & Limites (Timeskip)</h3>
       <div class="settings-grid">
         <div class="settings-section-title">Budget total</div>
-        <div class="setting-item"><label>Budget total</label><input type="number" id="s_budget" value="130" min="10"
+        <div class="setting-item"><label>Budget total</label><input type="number" id="s_budget" value="100" min="10"
             max="400" onchange="updateSettings()"></div>
         <div class="settings-section-title">Coûts : Attributs</div>
         <div class="setting-item"><label>Déficient (1) remboursé</label><input type="number" id="s_ac1" value="-3"
@@ -905,14 +920,24 @@
             onchange="updateSettings()"></div>
         <div class="setting-item"><label>Maître (7)</label><input type="number" id="s_cc7" value="12" min="0" max="50"
             onchange="updateSettings()"></div>
-        <div class="settings-section-title teal">Coûts : Force (verbes et cibles)</div>
-        <div class="setting-item"><label>Praticien (2)</label><input type="number" id="s_mc2" value="2" min="0" max="50"
+        <div class="settings-section-title teal">Coûts : Force (verbes et cibles, Éveillé 1 offert)</div>
+        <div class="setting-item"><label>Initié (2)</label><input type="number" id="s_mc2" value="1" min="0" max="80"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Expert (3)</label><input type="number" id="s_mc3" value="3" min="0" max="50"
+        <div class="setting-item"><label>Apprenti (3)</label><input type="number" id="s_mc3" value="3" min="0" max="80"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Maître (4)</label><input type="number" id="s_mc4" value="5" min="0" max="50"
+        <div class="setting-item"><label>Praticien (4)</label><input type="number" id="s_mc4" value="5" min="0" max="80"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Virtuose (5)</label><input type="number" id="s_mc5" value="9" min="0" max="50"
+        <div class="setting-item"><label>Confirmé (5)</label><input type="number" id="s_mc5" value="8" min="0" max="80"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Adepte (6)</label><input type="number" id="s_mc6" value="11" min="0" max="80"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Accompli (7)</label><input type="number" id="s_mc7" value="15" min="0" max="80"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Expert (8)</label><input type="number" id="s_mc8" value="19" min="0" max="80"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Éminent (9)</label><input type="number" id="s_mc9" value="24" min="0" max="80"
+            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Virtuose (10)</label><input type="number" id="s_mc10" value="30" min="0" max="80"
             onchange="updateSettings()"></div>
         <div class="settings-section-title gold">Limites pyramide : Attributs</div>
         <div class="setting-item"><label>Max Prodigieux (8)</label><input type="number" id="s_max_a8" value="1" min="0"
@@ -929,12 +954,7 @@
         <div class="setting-item"><label>Max Excellent (5)</label><input type="number" id="s_max_c5" value="4" min="0"
             max="21" onchange="updateSettings()"></div>
         <div class="settings-section-title teal">Limites pyramide : Force</div>
-        <div class="setting-item"><label>Max Virtuose (5), global</label><input type="number" id="s_max_virt" value="1"
-            min="0" max="20" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Max Maître (4), verbes</label><input type="number" id="s_max_mverbe" value="2"
-            min="0" max="10" onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Max Maître (4), domaines</label><input type="number" id="s_max_mdom" value="2"
-            min="0" max="8" onchange="updateSettings()"></div>
+        <div class="setting-item" style="grid-column:1/-1"><label>Fixées par le profil. Personnage : Praticien (4) au plus, 1 verbe et 1 domaine à 4. Vétéran : Adepte (6), 1 et 1 à 6, 1 et 1 à 5, 2 et 2 à 4. Élysaria : Expert (8) une fois en tout, 1 et 1 à 7, 2 et 2 à 6. Les niveaux au-delà se gagnent en jeu.</label></div>
       </div>
     </div>
 
@@ -991,7 +1011,11 @@
     // Ordinaire (3) est le socle : ce que sait faire un adulte fonctionnel.
     // En dessous, le personnage a un véritable empêchement.
     const COMP_LEVELS = [{ val: 1, label: 'Inapte' }, { val: 2, label: 'Maladroit' }, { val: 3, label: 'Ordinaire' }, { val: 4, label: 'Qualifié' }, { val: 5, label: 'Excellent' }, { val: 6, label: 'Expert' }, { val: 7, label: 'Maître' }];
-    const FORCE_LEVELS = [{ val: 1, label: 'Initié' }, { val: 2, label: 'Praticien' }, { val: 3, label: 'Expert' }, { val: 4, label: 'Maître' }, { val: 5, label: 'Virtuose' }];
+    const FORCE_LEVELS = [{ val: 0, label: 'Fermé' }, { val: 1, label: 'Éveillé' }, { val: 2, label: 'Initié' }, { val: 3, label: 'Apprenti' }, { val: 4, label: 'Praticien' }, { val: 5, label: 'Confirmé' }, { val: 6, label: 'Adepte' }, { val: 7, label: 'Accompli' }, { val: 8, label: 'Expert' }, { val: 9, label: 'Éminent' }, { val: 10, label: 'Virtuose' }];
+    const FORCE_MIN = 1;   // socle offert : Éveillé
+    const FORCE_SCALE = 10;   // échelle de la fiche (verbes et cibles 0 à 10, Magnitude max jusqu'à 20)
+    // Attribut de chaque verbe (fiche Demerit) : il fixe le seuil des d12 de Force
+    const VERB_ATTR = { absorber: 'presence', amplifier: 'presence', lier: 'presence', dissimuler: 'volonte', manifester: 'volonte', mouvoir: 'volonte', dissiper: 'intelligence', faconner: 'intelligence', percevoir: 'intuition', regenerer: 'intuition' };
 
     // ── Axes des attributs : Imposer / Tenir / Réagir / Maîtriser (corps = disque plein, esprit = cercle) ──
     const ATTR_AXES = [
@@ -1113,24 +1137,23 @@
       budget: 100, attrMax: 7, compMax: 6, magicMax: 4,
       attrCosts: [0, -4, -3, -2, 0, 5, 8, 12, 18],
       compCosts: [0, -3, -1, 0, 3, 5, 8, 12], // index = niveau, socle = Ordinaire (3)
-      magicCosts: [0, 0, 2, 3, 5, 9],
+      magicCosts: [0, 0, 1, 3, 5, 8, 11, 15, 19, 24, 30],   // index = niveau 0 à 10, socle Éveillé (1) offert
       maxAttr: { 7: 2, 6: 3 },
       maxComp: { 6: 1, 5: 3 },
-      // Force : Virtuose (5) compté globalement ; Maître (4) séparé par catégorie.
-      maxVirtuose: 0,
-      maxVerbMaitre: 1,
-      maxTargetMaitre: 1,
+      // Force : plafonds par niveau, comptés sur les verbes, sur les domaines, ou sur les deux (global)
+      forceCaps: { global: {}, verb: { 4: 1 }, target: { 4: 1 } },
     };
     const PROFILES = {
-      classique: { label: 'Personnage', budget: 100, attrMax: 7, compMax: 6, magicMax: 4, maxAttr: { 7: 2, 6: 3 }, maxComp: { 6: 1, 5: 3 }, maxVirtuose: 0, maxVerbMaitre: 1, maxTargetMaitre: 1 },
-      elysaria: { label: 'Élysaria', budget: 175, attrMax: 8, compMax: 7, magicMax: 5, maxAttr: { 8: 1, 7: 2, 6: 3 }, maxComp: { 7: 1, 6: 2, 5: 4 }, maxVirtuose: 1, maxVerbMaitre: 2, maxTargetMaitre: 2 },
+      classique: { label: 'Personnage', budget: 100, attrMax: 7, compMax: 6, magicMax: 4, maxAttr: { 7: 2, 6: 3 }, maxComp: { 6: 1, 5: 3 }, forceCaps: { global: {}, verb: { 4: 1 }, target: { 4: 1 } } },
+      veteran: { label: 'Vétéran', budget: 160, attrMax: 7, compMax: 7, magicMax: 6, maxAttr: { 7: 2, 6: 4 }, maxComp: { 7: 1, 6: 2, 5: 3 }, forceCaps: { global: {}, verb: { 6: 1, 5: 1, 4: 2 }, target: { 6: 1, 5: 1, 4: 2 } } },
+      elysaria: { label: 'Élysaria', budget: 230, attrMax: 8, compMax: 7, magicMax: 8, maxAttr: { 8: 1, 7: 2, 6: 3 }, maxComp: { 7: 1, 6: 2, 5: 4 }, forceCaps: { global: { 8: 1 }, verb: { 7: 1, 6: 2 }, target: { 7: 1, 6: 2 } } },
     };
     let currentProfile = 'classique';
     function applyProfile(pid) {
       const p = PROFILES[pid]; if (!p) return;
       currentProfile = pid;
       config.budget = p.budget; config.attrMax = p.attrMax; config.compMax = p.compMax; config.magicMax = p.magicMax;
-      config.maxAttr = { ...p.maxAttr }; config.maxComp = { ...p.maxComp }; config.maxVirtuose = p.maxVirtuose; config.maxVerbMaitre = p.maxVerbMaitre; config.maxTargetMaitre = p.maxTargetMaitre;
+      config.maxAttr = { ...p.maxAttr }; config.maxComp = { ...p.maxComp }; config.forceCaps = JSON.parse(JSON.stringify(p.forceCaps));
       // redescendre les valeurs au-dessus des nouveaux plafonds
       ATTRIBUTES.forEach(a => { if (attrValues[a.id] > p.attrMax) attrValues[a.id] = p.attrMax; });
       COMPETENCES.forEach(c => { if (compValues[c.id] > p.compMax) compValues[c.id] = p.compMax; });
@@ -1141,7 +1164,7 @@
       const setv = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
       setv('s_max_a8', p.maxAttr[8] || 0); setv('s_max_a7', p.maxAttr[7] || 0); setv('s_max_a6', p.maxAttr[6] || 0);
       setv('s_max_c7', p.maxComp[7] || 0); setv('s_max_c6', p.maxComp[6] || 0); setv('s_max_c5', p.maxComp[5] || 0);
-      setv('s_max_virt', p.maxVirtuose); setv('s_max_mverbe', p.maxVerbMaitre); setv('s_max_mdom', p.maxTargetMaitre);
+
       const sel = document.getElementById('profileSelect'); if (sel) sel.value = pid;
       render();
     }
@@ -1149,7 +1172,7 @@
     const expandedVerbs = new Set();
     function toggleVerbFaces(id) { if (expandedVerbs.has(id)) expandedVerbs.delete(id); else expandedVerbs.add(id); renderVerbList(); }
     ATTRIBUTES.forEach(a => attrValues[a.id] = 4); COMPETENCES.forEach(c => compValues[c.id] = 3);
-    FORCE_VERBS.forEach(v => verbValues[v.id] = 1); FORCE_TARGETS.forEach(t => targetValues[t.id] = 1);
+    FORCE_VERBS.forEach(v => verbValues[v.id] = FORCE_MIN); FORCE_TARGETS.forEach(t => targetValues[t.id] = FORCE_MIN);
 
     const attrCost = v => config.attrCosts[v] || 0;
     const compCost = v => config.compCosts[v] || 0;
@@ -1168,18 +1191,38 @@
     function upBtnTitle(c) { return c.ok ? (c.skipped ? 'Palier saturé : monte directement au niveau ' + c.next : '') : c.reason; }
     function upBtnLabel(c) { return c.ok && c.skipped ? '⇈' : '+'; }
     const magicCountAt = lv => verbCountAt(lv) + targetCountAt(lv);
-    function canIncreaseVerb(id) { const cur = verbValues[id], next = cur + 1; if (next > (config.magicMax || 5)) return { ok: false, reason: 'Maximum atteint' }; if (next === 5) { if (magicCountAt(5) >= config.maxVirtuose) return { ok: false, reason: config.maxVirtuose === 0 ? 'Virtuose réservé aux Elysarias' : `Limite Virtuose (${config.maxVirtuose} max, verbes et cibles confondus)` }; } else if (next === 4) { if (verbCountAt(4) >= config.maxVerbMaitre) return { ok: false, reason: `Limite Maître verbes (${config.maxVerbMaitre} max)` }; } if (totalSpent() + magicCost(next) - magicCost(cur) > config.budget) return { ok: false, reason: 'Budget insuffisant' }; return { ok: true }; }
-    function canIncreaseTarget(id) { const cur = targetValues[id], next = cur + 1; if (next > (config.magicMax || 5)) return { ok: false, reason: 'Maximum atteint' }; if (next === 5) { if (magicCountAt(5) >= config.maxVirtuose) return { ok: false, reason: config.maxVirtuose === 0 ? 'Virtuose réservé aux Elysarias' : `Limite Virtuose (${config.maxVirtuose} max, verbes et cibles confondus)` }; } else if (next === 4) { if (targetCountAt(4) >= config.maxTargetMaitre) return { ok: false, reason: `Limite Maître domaines (${config.maxTargetMaitre} max)` }; } if (totalSpent() + magicCost(next) - magicCost(cur) > config.budget) return { ok: false, reason: 'Budget insuffisant' }; return { ok: true }; }
+    function forceCanRaise(kind, id) {
+      const values = kind === 'verb' ? verbValues : targetValues, cur = values[id], next = cur + 1;
+      if (next > (config.magicMax || 10)) return { ok: false, reason: 'Maximum du profil atteint' };
+      const g = config.forceCaps.global[next], k = config.forceCaps[kind][next];
+      const name = FORCE_LEVELS.find(l => l.val === next).label;
+      if (g !== undefined && magicCountAt(next) >= g) return { ok: false, reason: g === 0 ? `${name} fermé à ce profil` : `Limite ${name} (${g}, verbes et domaines confondus)` };
+      const kc = kind === 'verb' ? verbCountAt(next) : targetCountAt(next);
+      if (k !== undefined && kc >= k) return { ok: false, reason: `Limite ${name} (${k} ${kind === 'verb' ? 'verbe' : 'domaine'}${k > 1 ? 's' : ''})` };
+      if (totalSpent() + magicCost(next) - magicCost(cur) > config.budget) return { ok: false, reason: 'Budget insuffisant' };
+      return { ok: true };
+    }
+    function canIncreaseVerb(id) { return forceCanRaise('verb', id); }
+    function canIncreaseTarget(id) { return forceCanRaise('target', id); }
 
     function renderAttrPyramid() { document.getElementById('attrPyramid').innerHTML = [[8, 'Prodigieux', true], [7, 'Exceptionnel', true], [6, 'Supérieur', false]].map(([lv, lb, isN]) => { const c = attrCountAt(lv), m = config.maxAttr[lv] ?? 0; return `<span class="pyramid-counter">${lb} : <span class="count ${isN ? 'tier-new' : ''} ${c >= m ? 'maxed' : 'ok'}">${c}/${m}</span></span>`; }).join(''); }
     function renderCompPyramid() { document.getElementById('compPyramid').innerHTML = [[7, 'Maître', true], [6, 'Expert', false], [5, 'Excellent', false]].map(([lv, lb, isN]) => { const c = compCountAt(lv), m = config.maxComp[lv] ?? 0; return `<span class="pyramid-counter">${lb} : <span class="count ${isN ? 'tier-new' : ''} ${c >= m ? 'maxed' : 'ok'}">${c}/${m}</span></span>`; }).join(''); }
-    function renderVerbPyramid() { document.getElementById('verbPyramid').innerHTML = [['virt', 'Virtuose'], ['maitre', 'Maître']].map(([kind, lb]) => { let c, m, tip; if (kind === 'virt') { c = magicCountAt(5); m = config.maxVirtuose; tip = 'Virtuose : verbes et domaines confondus'; } else { c = verbCountAt(4); m = config.maxVerbMaitre; tip = 'Maître : compté séparément pour les verbes'; } return `<span class="pyramid-counter" title="${tip}">${lb} : <span class="count ${c >= m ? 'maxed' : 'ok'}">${c}/${m}</span></span>`; }).join(''); }
-    function renderTargetPyramid() { document.getElementById('targetPyramid').innerHTML = [['virt', 'Virtuose'], ['maitre', 'Maître']].map(([kind, lb]) => { let c, m, tip; if (kind === 'virt') { c = magicCountAt(5); m = config.maxVirtuose; tip = 'Virtuose : verbes et domaines confondus'; } else { c = targetCountAt(4); m = config.maxTargetMaitre; tip = 'Maître : compté séparément pour les domaines'; } return `<span class="pyramid-counter" title="${tip}">${lb} : <span class="count ${c >= m ? 'maxed' : 'ok'}">${c}/${m}</span></span>`; }).join(''); }
+    function forcePyramidHtml(kind) {
+      const caps = config.forceCaps, lvls = [...new Set([...Object.keys(caps.global), ...Object.keys(caps[kind])].map(Number))].sort((a, b) => b - a);
+      return lvls.map(lv => {
+        const name = FORCE_LEVELS.find(l => l.val === lv).label;
+        const glob = caps.global[lv] !== undefined;
+        const c = glob ? magicCountAt(lv) : (kind === 'verb' ? verbCountAt(lv) : targetCountAt(lv)), m = glob ? caps.global[lv] : caps[kind][lv];
+        return `<span class="pyramid-counter" title="${glob ? 'Compté sur les verbes et les domaines' : 'Compté séparément'}">${name} (${lv}) : <span class="count ${c >= m ? 'maxed' : 'ok'}">${c}/${m}</span></span>`;
+      }).join('') || '<span class="pyramid-counter">Aucun plafond</span>';
+    }
+    function renderVerbPyramid() { document.getElementById('verbPyramid').innerHTML = forcePyramidHtml('verb'); }
+    function renderTargetPyramid() { document.getElementById('targetPyramid').innerHTML = forcePyramidHtml('target'); }
 
-    function buildAttrRow(a) { const val = attrValues[a.id], label = ATTR_LEVELS.find(l => l.val === val)?.label || '', cost = attrCost(val), canUp = canIncreaseAttr(a.id), isElite = val >= 7; const costHtml = cost < 0 ? `<span class="cost-neg">${cost}</span> pts` : `<span class="cost-num">${cost}</span> pts`; const dots = ATTR_LEVELS.map(l => `<div class="dot ${l.val <= val ? 'filled' + (l.val >= 8 ? ' elite' : '') : ''}"></div>`).join(''); return `<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${attrIcon(a.id)}${a.name}</div><div class="stat-alt">${a.alt}</div></div><div class="dots">${dots}</div><div class="stat-level${isElite ? ' elite' : ''}">${label}</div><div class="stat-cost">${costHtml}</div><div class="controls"><button class="btn" onclick="changeAttr('${a.id}',-1)" ${val <= 1 ? 'disabled' : ''}>−</button><span class="value-display${isElite ? ' elite' : ''}">${val}</span><button class="btn" onclick="changeAttr('${a.id}',1)" ${!canUp.ok ? 'disabled' : ''} title="${upBtnTitle(canUp)}">${upBtnLabel(canUp)}</button></div></div>`; }
+    function buildAttrRow(a) { const val = attrValues[a.id], label = ATTR_LEVELS.find(l => l.val === val)?.label || '', cost = attrCost(val), canUp = canIncreaseAttr(a.id), isElite = val >= 7; const costHtml = cost < 0 ? `<span class="cost-neg">${cost}</span> pts` : `<span class="cost-num">${cost}</span> pts`; const dots = ATTR_LEVELS.map(l => `<div class="dot ${l.val <= val ? 'filled' + (l.val >= 6 ? ' elite' : '') : ''}"></div>`).join(''); return `<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${attrIcon(a.id)}${a.name}</div><div class="stat-alt">${a.alt}</div></div><div class="dots">${dots}</div><div class="stat-level${isElite ? ' elite' : ''}">${label}</div><div class="stat-cost">${costHtml}</div><div class="controls"><button class="btn" onclick="changeAttr('${a.id}',-1)" ${val <= 1 ? 'disabled' : ''}>−</button><span class="value-display${isElite ? ' elite' : ''}">${val}</span><button class="btn" onclick="changeAttr('${a.id}',1)" ${!canUp.ok ? 'disabled' : ''} title="${upBtnTitle(canUp)}">${upBtnLabel(canUp)}</button></div></div>`; }
     function buildCompRow(c) { const val = compValues[c.id], label = COMP_LEVELS.find(l => l.val === val)?.label || '', cost = compCost(val), canUp = canIncreaseComp(c.id), isElite = val >= 6; const dots = COMP_LEVELS.map(l => `<div class="dot ${l.val <= val ? 'filled' + (l.val >= 7 ? ' elite' : '') : ''}"></div>`).join(''); return `<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${c.name}</div><div class="stat-alt">${c.alt}</div></div><div class="dots">${dots}</div><div class="stat-level${isElite ? ' elite' : ''}">${label}</div><div class="stat-cost">${cost < 0 ? `<span class="cost-neg-num">${cost}</span>` : `<span class="cost-num">${cost}</span>`} pts</div><div class="controls"><button class="btn" onclick="changeComp('${c.id}',-1)" ${val <= 1 ? 'disabled' : ''}>−</button><span class="value-display${isElite ? ' elite' : ''}">${val}</span><button class="btn" onclick="changeComp('${c.id}',1)" ${!canUp.ok ? 'disabled' : ''} title="${upBtnTitle(canUp)}">${upBtnLabel(canUp)}</button></div></div>`; }
-    function buildVerbRow(v) { const val = verbValues[v.id], label = FORCE_LEVELS.find(l => l.val === val)?.label || '', cost = magicCost(val), canUp = canIncreaseVerb(v.id), isElite = val >= 4; const dots = FORCE_LEVELS.map(l => `<div class="dot ${l.val <= val ? 'filled force' + (l.val >= 5 ? ' elite' : '') : ''}"></div>`).join(''); const open = expandedVerbs.has(v.id); const faces = `<div class="verb-faces" style="display:${open ? 'block' : 'none'}"><div class="verb-face neutre"><span class="vf-label">Neutre</span> ${v.neutre}</div><div class="verb-face light"><span class="vf-label">☀ ${v.light}</span> ${v.lightDesc}</div><div class="verb-face dark"><span class="vf-label">☾ ${v.dark}</span> ${v.darkDesc}</div></div>`; return `<div class="stat-block"><div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${v.name} <span class="verb-toggle" onclick="toggleVerbFaces('${v.id}')" title="Voir les trois faces selon la teinte">${open ? '▾' : '▸'}</span></div><div class="stat-alt">${v.alt}</div></div><div class="dots">${dots}</div><div class="stat-level">${label}</div><div class="stat-cost"><span class="cost-num">${cost}</span> pts</div><div class="controls"><button class="btn" onclick="changeVerb('${v.id}',-1)" ${val <= 1 ? 'disabled' : ''}>−</button><span class="value-display">${val}</span><button class="btn" onclick="changeVerb('${v.id}',1)" ${!canUp.ok ? 'disabled' : ''} title="${canUp.ok ? '' : canUp.reason}">+</button></div></div>${faces}</div>`; }
-    function buildTargetRow(t) { const val = targetValues[t.id], label = FORCE_LEVELS.find(l => l.val === val)?.label || '', cost = magicCost(val), canUp = canIncreaseTarget(t.id), isElite = val >= 4; const dots = FORCE_LEVELS.map(l => `<div class="dot ${l.val <= val ? 'filled force' + (l.val >= 5 ? ' elite' : '') : ''}"></div>`).join(''); return `<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${t.name}</div><div class="stat-alt">${t.alt}</div></div><div class="dots">${dots}</div><div class="stat-level">${label}</div><div class="stat-cost"><span class="cost-num">${cost}</span> pts</div><div class="controls"><button class="btn" onclick="changeTarget('${t.id}',-1)" ${val <= 1 ? 'disabled' : ''}>−</button><span class="value-display">${val}</span><button class="btn" onclick="changeTarget('${t.id}',1)" ${!canUp.ok ? 'disabled' : ''} title="${canUp.ok ? '' : canUp.reason}">+</button></div></div>`; }
+    function buildVerbRow(v) { const val = verbValues[v.id], label = FORCE_LEVELS.find(l => l.val === val)?.label || '', cost = magicCost(val), canUp = canIncreaseVerb(v.id), isElite = val >= 6; const dots = FORCE_LEVELS.filter(l => l.val > 0).map(l => `<div class="dot ${l.val <= val ? 'filled force' + (l.val >= 6 ? ' elite' : '') : ''}"></div>`).join(''); const open = expandedVerbs.has(v.id); const faces = `<div class="verb-faces" style="display:${open ? 'block' : 'none'}"><div class="verb-face neutre"><span class="vf-label">Neutre</span> ${v.neutre}</div><div class="verb-face light"><span class="vf-label">☀ ${v.light}</span> ${v.lightDesc}</div><div class="verb-face dark"><span class="vf-label">☾ ${v.dark}</span> ${v.darkDesc}</div></div>`; return `<div class="stat-block"><div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${v.name} <span class="verb-toggle" onclick="toggleVerbFaces('${v.id}')" title="Voir les trois faces selon la teinte">${open ? '▾' : '▸'}</span></div><div class="stat-alt">${v.alt}</div></div><div class="dots">${dots}</div><div class="stat-level">${label}</div><div class="stat-cost"><span class="cost-num">${cost}</span> pts</div><div class="controls"><button class="btn" onclick="changeVerb('${v.id}',-1)" ${val <= FORCE_MIN ? 'disabled' : ''}>−</button><span class="value-display">${val}</span><button class="btn" onclick="changeVerb('${v.id}',1)" ${!canUp.ok ? 'disabled' : ''} title="${canUp.ok ? '' : canUp.reason}">+</button></div></div>${faces}</div>`; }
+    function buildTargetRow(t) { const val = targetValues[t.id], label = FORCE_LEVELS.find(l => l.val === val)?.label || '', cost = magicCost(val), canUp = canIncreaseTarget(t.id), isElite = val >= 6; const dots = FORCE_LEVELS.filter(l => l.val > 0).map(l => `<div class="dot ${l.val <= val ? 'filled force' + (l.val >= 6 ? ' elite' : '') : ''}"></div>`).join(''); return `<div class="stat-row"><div class="stat-name-wrapper"><div class="stat-name">${t.name}</div><div class="stat-alt">${t.alt}</div></div><div class="dots">${dots}</div><div class="stat-level">${label}</div><div class="stat-cost"><span class="cost-num">${cost}</span> pts</div><div class="controls"><button class="btn" onclick="changeTarget('${t.id}',-1)" ${val <= FORCE_MIN ? 'disabled' : ''}>−</button><span class="value-display">${val}</span><button class="btn" onclick="changeTarget('${t.id}',1)" ${!canUp.ok ? 'disabled' : ''} title="${canUp.ok ? '' : canUp.reason}">+</button></div></div>`; }
 
     function renderAttrList() { document.getElementById('attrList').innerHTML = axisGroupedHtml(ATTRIBUTES, buildAttrRow); }
     function renderCompList() { document.getElementById('compList').innerHTML = COMPETENCES.map(buildCompRow).join(''); }
@@ -1189,39 +1232,43 @@
     function renderBudget() { const spent = totalSpent(), over = spent > config.budget, rem = config.budget - spent; document.getElementById('budgetFill').style.width = Math.min((spent / config.budget) * 100, 100) + '%'; document.getElementById('budgetFill').classList.toggle('over', over); document.getElementById('spentDisplay').textContent = spent; document.getElementById('totalDisplay').textContent = config.budget; document.getElementById('budgetNumbers').classList.toggle('over', over); document.getElementById('budgetRemaining').textContent = over ? `${Math.abs(rem)} de trop` : `${rem} restants`; document.getElementById('budgetRemaining').classList.toggle('over', over); }
 
     const ATTR_CONTRIB = { 1: 1, 2: 2, 3: 3, 4: 5, 5: 7, 6: 9, 7: 12, 8: 15 };
-    function forceMax() { return ((ATTR_CONTRIB[attrValues.intuition] || 5) + (ATTR_CONTRIB[attrValues.presence] || 5)) * 3; }
+    function bestForce() {
+      const bv = Math.max(...FORCE_VERBS.map(v => verbValues[v.id])), bt = Math.max(...FORCE_TARGETS.map(t => targetValues[t.id]));
+      // Puissance moyenne du meilleur pouvoir : (verbe + meilleure cible) × (attribut du verbe + 1) ÷ 12
+      const avg = Math.max(...FORCE_VERBS.map(v => (verbValues[v.id] + bt) * ((attrValues[VERB_ATTR[v.id]] || 4) + 1) / 12));
+      return { mag: bv + bt, avg };
+    }
+    function forceMax() { return 7 * bestForce().mag; }
     function elanMax() { return (ATTR_CONTRIB[attrValues.endurance] || 5) + (ATTR_CONTRIB[attrValues.volonte] || 5); }
     function renderSummary() {
       const ai = ATTRIBUTES.filter(a => attrValues[a.id] !== 4).sort((a, b) => attrValues[b.id] - attrValues[a.id]);
       const ci = COMPETENCES.filter(c => compValues[c.id] !== 3).sort((a, b) => compValues[b.id] - compValues[a.id]);
       const vi = FORCE_VERBS.filter(v => verbValues[v.id] > 0).sort((a, b) => verbValues[b.id] - verbValues[a.id]);
       const ti = FORCE_TARGETS.filter(t => targetValues[t.id] > 0).sort((a, b) => targetValues[b.id] - targetValues[a.id]);
-      let html = `<div class="summary-reserves">⚡ Points de Force max : <strong>${forceMax()}</strong> &nbsp;·&nbsp; 💪 Élan : <strong>${elanMax()}</strong></div>`;
+      const bf = bestForce();
+      let html = `<div class="summary-reserves">◈ Magnitude max : <strong>${bf.mag}</strong> &nbsp;·&nbsp; Puissance moyenne : <strong>${(Math.round(bf.avg * 10) / 10).toString().replace('.', ',')}</strong> &nbsp;·&nbsp; ⚡ Points de Force max : <strong>${forceMax()}</strong> &nbsp;·&nbsp; 💪 Élan : <strong>${elanMax()}</strong></div>`;
       html += '<div class="summary-cols">';
       if (ai.length) { html += '<div><div class="summary-section-label gold">Attributs</div><div class="summary-grid">'; ai.forEach(a => { const v = attrValues[a.id], l = ATTR_LEVELS.find(x => x.val === v)?.label || '', isE = v >= 7; html += `<div class="summary-item"><span class="s-name">${a.name}</span><span><span class="s-val${isE ? ' elite' : ''}">${v}</span><span class="s-level">${l}</span></span></div>`; }); html += '</div></div>'; }
       if (ci.length) { html += '<div><div class="summary-section-label gold">Compétences</div><div class="summary-grid">'; ci.forEach(c => { const v = compValues[c.id], l = COMP_LEVELS.find(x => x.val === v)?.label || '', isE = v >= 6; html += `<div class="summary-item"><span class="s-name">${c.name}</span><span><span class="s-val${isE ? ' elite' : ''}">${v}</span><span class="s-level">${l}</span></span></div>`; }); html += '</div></div>'; }
-      if (vi.length) { html += '<div><div class="summary-section-label teal">Verbes de la Force</div><div class="summary-grid">'; vi.forEach(v => { const val = verbValues[v.id], l = FORCE_LEVELS.find(x => x.val === val)?.label || '', isE = val >= 4; html += `<div class="summary-item"><span class="s-name">${v.name}</span><span><span class="s-val force${isE ? ' elite' : ''}">${val}</span><span class="s-level">${l}</span></span></div>`; }); html += '</div></div>'; }
-      if (ti.length) { html += '<div><div class="summary-section-label teal">Domaines de la Force</div><div class="summary-grid">'; ti.forEach(t => { const val = targetValues[t.id], l = FORCE_LEVELS.find(x => x.val === val)?.label || '', isE = val >= 4; html += `<div class="summary-item"><span class="s-name">${t.name}</span><span><span class="s-val force${isE ? ' elite' : ''}">${val}</span><span class="s-level">${l}</span></span></div>`; }); html += '</div></div>'; }
+      if (vi.length) { html += '<div><div class="summary-section-label teal">Verbes de la Force</div><div class="summary-grid">'; vi.forEach(v => { const val = verbValues[v.id], l = FORCE_LEVELS.find(x => x.val === val)?.label || '', isE = val >= 6; html += `<div class="summary-item"><span class="s-name">${v.name}</span><span><span class="s-val force${isE ? ' elite' : ''}">${val}</span><span class="s-level">${l}</span></span></div>`; }); html += '</div></div>'; }
+      if (ti.length) { html += '<div><div class="summary-section-label teal">Domaines de la Force</div><div class="summary-grid">'; ti.forEach(t => { const val = targetValues[t.id], l = FORCE_LEVELS.find(x => x.val === val)?.label || '', isE = val >= 6; html += `<div class="summary-item"><span class="s-name">${t.name}</span><span><span class="s-val force${isE ? ' elite' : ''}">${val}</span><span class="s-level">${l}</span></span></div>`; }); html += '</div></div>'; }
       html += '</div>'; document.getElementById('summaryContent').innerHTML = html;
     }
 
     function render() { renderBudget(); renderAttrPyramid(); renderCompPyramid(); renderVerbPyramid(); renderTargetPyramid(); renderAttrList(); renderCompList(); renderVerbList(); renderTargetList(); renderSummary(); }
     function changeAttr(id, delta) { if (delta > 0) { const c = canIncreaseAttr(id); if (!c.ok) return; attrValues[id] = c.next; } else { const cur = attrValues[id]; if (cur <= 1) return; let t = cur - 1; while (t > 1) { const lim = config.maxAttr[t]; if (lim === undefined || attrCountAt(t) < lim) break; t--; } attrValues[id] = t; } render(); }
     function changeComp(id, delta) { if (delta > 0) { const c = canIncreaseComp(id); if (!c.ok) return; compValues[id] = c.next; } else { const cur = compValues[id]; if (cur <= 1) return; let t = cur - 1; while (t > 1) { const lim = config.maxComp[t]; if (lim === undefined || compCountAt(t) < lim) break; t--; } compValues[id] = t; } render(); }
-    function changeVerb(id, delta) { if (delta > 0) { if (!canIncreaseVerb(id).ok) return; verbValues[id]++; } else { if (verbValues[id] <= 1) return; verbValues[id]--; } render(); }
-    function changeTarget(id, delta) { if (delta > 0) { if (!canIncreaseTarget(id).ok) return; targetValues[id]++; } else { if (targetValues[id] <= 1) return; targetValues[id]--; } render(); }
-    function resetAll() { ATTRIBUTES.forEach(a => attrValues[a.id] = 4); COMPETENCES.forEach(c => compValues[c.id] = 3); FORCE_VERBS.forEach(v => verbValues[v.id] = 1); FORCE_TARGETS.forEach(t => targetValues[t.id] = 1); render(); }
+    function changeVerb(id, delta) { if (delta > 0) { if (!canIncreaseVerb(id).ok) return; verbValues[id]++; } else { if (verbValues[id] <= FORCE_MIN) return; verbValues[id]--; } render(); }
+    function changeTarget(id, delta) { if (delta > 0) { if (!canIncreaseTarget(id).ok) return; targetValues[id]++; } else { if (targetValues[id] <= FORCE_MIN) return; targetValues[id]--; } render(); }
+    function resetAll() { ATTRIBUTES.forEach(a => attrValues[a.id] = 4); COMPETENCES.forEach(c => compValues[c.id] = 3); FORCE_VERBS.forEach(v => verbValues[v.id] = FORCE_MIN); FORCE_TARGETS.forEach(t => targetValues[t.id] = FORCE_MIN); render(); }
     function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('open'); }
     function updateSettings() {
       config.budget = parseInt(document.getElementById('s_budget').value) || 150;
       config.attrCosts = [0, parseInt(document.getElementById('s_ac1').value) || 0, parseInt(document.getElementById('s_ac2').value) || 0, parseInt(document.getElementById('s_ac3').value) || 0, 0, parseInt(document.getElementById('s_ac5').value) || 0, parseInt(document.getElementById('s_ac6').value) || 0, parseInt(document.getElementById('s_ac7').value) || 0, parseInt(document.getElementById('s_ac8').value) || 0];
       config.compCosts = [0, parseInt(document.getElementById('s_cc1').value) || 0, parseInt(document.getElementById('s_cc2').value) || 0, 0, parseInt(document.getElementById('s_cc4').value) || 0, parseInt(document.getElementById('s_cc5').value) || 0, parseInt(document.getElementById('s_cc6').value) || 0, parseInt(document.getElementById('s_cc7').value) || 0];
-      config.magicCosts = [0, 0, parseInt(document.getElementById('s_mc2').value) || 0, parseInt(document.getElementById('s_mc3').value) || 0, parseInt(document.getElementById('s_mc4').value) || 0, parseInt(document.getElementById('s_mc5').value) || 0];
+      config.magicCosts = [0, 0].concat([2, 3, 4, 5, 6, 7, 8, 9, 10].map(l => parseInt(document.getElementById('s_mc' + l).value) || 0));
       config.maxAttr = { 8: parseInt(document.getElementById('s_max_a8').value) || 0, 7: parseInt(document.getElementById('s_max_a7').value) || 0, 6: parseInt(document.getElementById('s_max_a6').value) || 0 };
       config.maxComp = { 7: parseInt(document.getElementById('s_max_c7').value) || 0, 6: parseInt(document.getElementById('s_max_c6').value) || 0, 5: parseInt(document.getElementById('s_max_c5').value) || 0 };
-      config.maxVirtuose = parseInt(document.getElementById('s_max_virt').value) || 0;
-      config.maxVerbMaitre = parseInt(document.getElementById('s_max_mverbe').value) || 0;
-      config.maxTargetMaitre = parseInt(document.getElementById('s_max_mdom').value) || 0;
       render();
     }
     function exportToFiche() {
@@ -1230,7 +1277,7 @@
       const forceVerbs = FORCE_VERBS.map(v => ({ id: v.id, name: v.name, level: verbValues[v.id] }));
       const forceTargets = FORCE_TARGETS.map(t => ({ id: t.id, name: t.name, level: targetValues[t.id] }));
       const powerMax = forceMax(), elan = elanMax();
-      const state = { profile: { name: '', image: null }, attributes: { puissance: attrValues['puissance'], vivacite: attrValues['vivacite'], precision: attrValues['precision'], endurance: attrValues['endurance'], intelligence: attrValues['intelligence'], intuition: attrValues['intuition'], volonte: attrValues['volonte'], presence: attrValues['presence'] }, counters: { health: { current: elan, max: elan }, force: { current: powerMax, max: powerMax } }, skills, skillScale: 'aequor', forceVerbs, forceTargets, pbProfile: currentProfile, wounds: [], objects: [], saber: { colors: [], form: '', type: 'standard' }, registre: 'neutre', currentModal: null };
+      const state = { profile: { name: '', image: null }, attributes: { puissance: attrValues['puissance'], vivacite: attrValues['vivacite'], precision: attrValues['precision'], endurance: attrValues['endurance'], intelligence: attrValues['intelligence'], intuition: attrValues['intuition'], volonte: attrValues['volonte'], presence: attrValues['presence'] }, counters: { health: { current: elan, max: elan }, force: { current: powerMax, max: powerMax } }, skills, skillScale: 'aequor', forceScale: FORCE_SCALE, forceVerbs, forceTargets, pbProfile: currentProfile, wounds: [], objects: [], saber: { colors: [], form: '', type: 'standard' }, registre: 'neutre', currentModal: null };
       const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'personnage_starwars_veteran.json'; a.click(); URL.revokeObjectURL(url);
     }
@@ -1243,12 +1290,13 @@
     }
     function applyImport(data) {
       if (data.pbProfile && PROFILES[data.pbProfile]) applyProfile(data.pbProfile);
-      const aMax = config.attrMax, cMax = config.compMax, fMax = config.magicMax || FORCE_LEVELS[FORCE_LEVELS.length - 1].val;
+      const aMax = config.attrMax, cMax = config.compMax, fMax = 10;   // la Force importée garde son niveau, même au-dessus du profil
       const cl = (v, mx) => Math.max(1, Math.min(mx, parseInt(v) || 1));
       if (data.attributes) { ATTRIBUTES.forEach(a => { if (data.attributes[a.id] != null) attrValues[a.id] = cl(data.attributes[a.id], aMax); }); }
       if (Array.isArray(data.skills)) { const legacyScale = data.skillScale !== 'aequor'; const nameToId = { bagarre: 'combat' }; COMPETENCES.forEach(c => nameToId[c.name.toLowerCase().trim()] = c.id); data.skills.forEach(sk => { let id = null; const nm = (sk.baseName || sk.name || '').toLowerCase().trim(); if (nm && nameToId[nm]) id = nameToId[nm]; else if (sk.id && /^skill_\d+$/.test(sk.id)) { const i = parseInt(sk.id.slice(6)); if (COMPETENCES[i]) id = COMPETENCES[i].id; } else if (sk.id && compValues[sk.id] != null) id = sk.id; if (id) { let lv = parseInt(sk.level) || 3; if (legacyScale && lv < 3) lv = 3; compValues[id] = cl(lv, cMax); } }); }
       const cl0 = (v, mx) => Math.max(0, Math.min(mx, parseInt(v) || 0));
-      const cl1 = (v, max) => Math.max(1, Math.min(max, v));
+      // Les anciennes fiches (1 à 5) gardent leurs chiffres, comme dans la fiche Demerit
+      const cl1 = (v, max) => Math.max(FORCE_MIN, Math.min(max, v));
       // Remapping des anciens identifiants vers la nomenclature actuelle (10 verbes, 8 cibles).
       const LEGACY_VERB_MAP = { harmoniser: 'regenerer', transformer: 'faconner', proteger: 'dissimuler', proteger_old: 'dissimuler' };
       const LEGACY_TARGET_MAP = { bete: 'esprit', flore: 'nature', mecanismes: 'matiere', corruption: 'obscurite' };
