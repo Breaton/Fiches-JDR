@@ -8367,7 +8367,8 @@
             const id = Date.now().toString(36) + '-' + (++bridgeSeq) + '-' + Math.random().toString(36).slice(2, 7);
             const img = appState.profile && appState.profile.image;
             const imgUrl = typeof img === 'string' && /^https:\/\//.test(img) && img.length < 600 ? img : undefined;
-            window.postMessage({ jdrPont: 'fiche', v: 2, id, sheet: BRIDGE_SHEET, kind, char: bridgeCharName(), img: imgUrl, data }, '*');
+            const alias = typeof bridgeCharAliases === 'function' ? bridgeCharAliases() : undefined;
+            window.postMessage({ jdrPont: 'fiche', v: 2, id, sheet: BRIDGE_SHEET, kind, char: bridgeCharName(), alias, img: imgUrl, data }, '*');
             return id;
         }
 

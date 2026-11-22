@@ -5772,7 +5772,8 @@
             const id = Date.now().toString(36) + '-' + (++bridgeSeq) + '-' + Math.random().toString(36).slice(2, 7);
             const img = appState.file && appState.file.image;
             const imgUrl = typeof img === 'string' && /^https:\/\//.test(img) && img.length < 600 ? img : undefined;
-            window.postMessage({ jdrPont: 'fiche', v: 2, id, sheet: BRIDGE_SHEET, kind, char: bridgeCharName(), img: imgUrl, data }, '*');
+            const alias = typeof bridgeCharAliases === 'function' ? bridgeCharAliases() : undefined;
+            window.postMessage({ jdrPont: 'fiche', v: 2, id, sheet: BRIDGE_SHEET, kind, char: bridgeCharName(), alias, img: imgUrl, data }, '*');
             return id;
         }
 
@@ -5887,7 +5888,9 @@
             }
         });
 
-        function bridgeCharName() { return appState.file.codename || appState.file.civil || 'Agent non identifié'; }
+        // Le Mod cherche d'abord le personnage Roll20 à l'état civil, puis au nom de code
+        function bridgeCharName() { return (appState.file.civil || '').trim() || (appState.file.codename || '').trim() || 'Agent non identifié'; }
+        function bridgeCharAliases() { const c = (appState.file.codename || '').trim(); return c && c !== bridgeCharName() ? [c] : []; }
         function bridgeNotify(msg) { toast(msg); }
         // Ressource affichée sur les jetons : la Charge
         function bridgeResources() { return { charge: [getChargeLeft(), getChargeMax()] }; }
