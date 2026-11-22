@@ -845,21 +845,63 @@
       color: #3fb950;
       font-weight: 700;
     }
-      /* Téléphone : la barre de budget passe sur plusieurs lignes, les lignes de stats se resserrent */
+
+    /* Téléphone : la barre de budget passe sur plusieurs lignes, les lignes de stats se resserrent */
     @media (max-width: 640px) {
-      .budget-bar { flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
-      .budget-track { flex: 1 1 100%; order: 3; }
-      .columns { grid-template-columns: minmax(0, 1fr) !important; }
-      .columns > div, .section { min-width: 0; }
-      .section-header { flex-wrap: wrap; gap: 4px; }
-      .pyramid-counters { flex-wrap: wrap; }
-      .stat-row { flex-wrap: wrap; padding: 7px 10px; row-gap: 4px; }
-      .stat-row .stat-name-wrapper { flex: 1 1 60%; min-width: 0; }
-      .stat-row .dots { order: 5; flex: 1 1 100%; }
-      .stat-row .stat-cost { display: none; }
-      .stat-alt { white-space: normal; }
+      .budget-bar {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 10px 12px;
+      }
+
+      .budget-track {
+        flex: 1 1 100%;
+        order: 3;
+      }
+
+      .columns {
+        grid-template-columns: minmax(0, 1fr) !important;
+      }
+
+      .columns>div,
+      .section {
+        min-width: 0;
+      }
+
+      .section-header {
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .pyramid-counters {
+        flex-wrap: wrap;
+      }
+
+      .stat-row {
+        flex-wrap: wrap;
+        padding: 7px 10px;
+        row-gap: 4px;
+      }
+
+      .stat-row .stat-name-wrapper {
+        flex: 1 1 60%;
+        min-width: 0;
+      }
+
+      .stat-row .dots {
+        order: 5;
+        flex: 1 1 100%;
+      }
+
+      .stat-row .stat-cost {
+        display: none;
+      }
+
+      .stat-alt {
+        white-space: normal;
+      }
     }
-</style>
+  </style>
 </head>
 
 <body>
@@ -879,7 +921,7 @@
       <select id="profileSelect" class="settings-toggle" style="cursor:pointer" onchange="applyProfile(this.value)">
         <option value="classique" selected>⚙️ Personnage · 100 pts</option>
         <option value="veteran">🛡️ Vétéran · 160 pts</option>
-        <option value="elysaria">🎖️ Élysaria · 230 pts</option>
+        <option value="elysaria">🎖️ Élysaria · 215 pts</option>
       </select>
       <button class="settings-toggle" onclick="importFromFile()">↑ Importer un perso</button>
       <button class="settings-toggle" onclick="exportToFiche()">↓ Exporter vers Fiche</button>
@@ -937,8 +979,8 @@
             onchange="updateSettings()"></div>
         <div class="setting-item"><label>Éminent (9)</label><input type="number" id="s_mc9" value="24" min="0" max="80"
             onchange="updateSettings()"></div>
-        <div class="setting-item"><label>Virtuose (10)</label><input type="number" id="s_mc10" value="30" min="0" max="80"
-            onchange="updateSettings()"></div>
+        <div class="setting-item"><label>Virtuose (10)</label><input type="number" id="s_mc10" value="30" min="0"
+            max="80" onchange="updateSettings()"></div>
         <div class="settings-section-title gold">Limites pyramide : Attributs</div>
         <div class="setting-item"><label>Max Prodigieux (8)</label><input type="number" id="s_max_a8" value="1" min="0"
             max="8" onchange="updateSettings()"></div>
@@ -954,7 +996,9 @@
         <div class="setting-item"><label>Max Excellent (5)</label><input type="number" id="s_max_c5" value="4" min="0"
             max="21" onchange="updateSettings()"></div>
         <div class="settings-section-title teal">Limites pyramide : Force</div>
-        <div class="setting-item" style="grid-column:1/-1"><label>Fixées par le profil. Personnage : Praticien (4) au plus, 1 verbe et 1 domaine à 4. Vétéran : Adepte (6), 1 et 1 à 6, 1 et 1 à 5, 2 et 2 à 4. Élysaria : Expert (8) une fois en tout, 1 et 1 à 7, 2 et 2 à 6. Les niveaux au-delà se gagnent en jeu.</label></div>
+        <div class="setting-item" style="grid-column:1/-1"><label>Fixées par le profil. Personnage : Praticien (4) au
+            plus, 1 verbe et 1 domaine à 4. Vétéran : Adepte (6), 1 et 1 à 6, 1 et 1 à 5, 2 et 2 à 4. Élysaria : Expert
+            (8) une fois en tout, 1 et 1 à 7, 2 et 2 à 6. Les niveaux au-delà se gagnent en jeu.</label></div>
       </div>
     </div>
 
@@ -1146,7 +1190,7 @@
     const PROFILES = {
       classique: { label: 'Personnage', budget: 100, attrMax: 7, compMax: 6, magicMax: 4, maxAttr: { 7: 2, 6: 3 }, maxComp: { 6: 1, 5: 3 }, forceCaps: { global: {}, verb: { 4: 1 }, target: { 4: 1 } } },
       veteran: { label: 'Vétéran', budget: 160, attrMax: 7, compMax: 7, magicMax: 6, maxAttr: { 7: 2, 6: 4 }, maxComp: { 7: 1, 6: 2, 5: 3 }, forceCaps: { global: {}, verb: { 6: 1, 5: 1, 4: 2 }, target: { 6: 1, 5: 1, 4: 2 } } },
-      elysaria: { label: 'Élysaria', budget: 230, attrMax: 8, compMax: 7, magicMax: 8, maxAttr: { 8: 1, 7: 2, 6: 3 }, maxComp: { 7: 1, 6: 2, 5: 4 }, forceCaps: { global: { 8: 1 }, verb: { 7: 1, 6: 2 }, target: { 7: 1, 6: 2 } } },
+      elysaria: { label: 'Élysaria', budget: 215, attrMax: 8, compMax: 7, magicMax: 8, maxAttr: { 8: 1, 7: 2, 6: 3 }, maxComp: { 7: 1, 6: 2, 5: 4 }, forceCaps: { global: { 8: 1 }, verb: { 7: 1, 6: 2 }, target: { 7: 1, 6: 2 } } },
     };
     let currentProfile = 'classique';
     function applyProfile(pid) {
