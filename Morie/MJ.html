@@ -254,10 +254,55 @@
 
         .roster {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
             gap: 14px;
             margin-bottom: 40px;
         }
+        @media (max-width: 1180px) { .roster { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @media (max-width: 860px) { .roster { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        @media (max-width: 540px) { .roster { grid-template-columns: minmax(0, 1fr); } }
+
+        /* Toutes les cartes d'une même rangée partagent les mêmes lignes :
+           en-tête, stats, réserve, verbes, bouton de détail tombent au même niveau */
+        @supports (grid-template-rows: subgrid) {
+            .roster .pcard {
+                display: grid;
+                grid-row: span 6;
+                grid-template-rows: subgrid;
+                row-gap: 0;
+            }
+            .roster .pcard > .pcard-detail-toggle { align-self: end; }
+        }
+        .pcard-slot { min-height: 0; }
+        /* À cinq de front, la carte se resserre pour garder les noms entiers */
+        @media (min-width: 1181px) {
+            .roster.cols-5 .pcard-top { padding: 11px 10px 9px; gap: 8px; }
+            .roster.cols-5 .pcard-portrait { width: 38px; height: 38px; }
+            .roster.cols-5 .pcard-name { font-size: 1.12rem; }
+            .roster.cols-5 .keystats, .roster.cols-5 .pcard-detail { padding-left: 9px; padding-right: 9px; }
+            .roster.cols-5 .magic-strip, .roster.cols-5 .vt-strip { margin-left: 9px; margin-right: 9px; }
+            .roster.cols-5 .pcard-detail-toggle { font-size: 0.64rem; letter-spacing: 0.02em; }
+            .roster.cols-5 .keystat { min-width: 0; }
+            .roster.cols-5 .keystat.magnitude { min-width: 0; }
+        }
+
+        /* Jumelles : sélecteur de disposition et bascule */
+        .twin-mode { display: inline-flex; border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; }
+        .twin-mode button { font: inherit; font-size: 0.72rem; font-weight: 600; color: var(--silver-mist); background: none;
+            border: none; padding: 6px 11px; cursor: pointer; white-space: nowrap; }
+        .twin-mode button + button { border-left: 1px solid var(--card-border); }
+        .twin-mode button.on { background: rgba(74, 155, 110, 0.22); color: #a5e8c4; }
+        .pcard.twin { border-top: 2px solid rgba(74, 155, 110, 0.55); }
+        .twin-switch { font: inherit; font-size: 0.66rem; font-weight: 600; color: #a5e8c4; background: rgba(74, 155, 110, 0.14);
+            border: 1px solid rgba(74, 155, 110, 0.4); border-radius: 6px; padding: 3px 7px; cursor: pointer; white-space: nowrap;
+            margin-top: 4px; display: inline-flex; gap: 5px; align-items: baseline; }
+        .twin-switch:hover { background: rgba(74, 155, 110, 0.26); }
+        .twin-switch small { font-size: 0.92em; color: var(--silver-mist); font-weight: 400; }
+        .qi-pill { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding: 3px 8px; border-radius: 8px;
+            background: rgba(74, 155, 110, 0.14); border: 1px solid rgba(74, 155, 110, 0.4); line-height: 1; }
+        .qi-pill .ql { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #7fd4a5; }
+        .qi-pill .qv { font-family: var(--font-display); font-size: 1.15rem; font-weight: 700; color: #a5e8c4; margin-top: 2px; }
+        .qi-pill .qv span { font-size: 0.6em; opacity: 0.6; }
 
         .empty-state {
             text-align: center;
@@ -1370,6 +1415,7 @@
         <div class="roster-head">
             <h2>Groupe</h2>
             <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                <span id="twin-control"></span>
                 <span class="count" id="roster-count">0 personnage</span>
                 <button class="act danger" onclick="clearRoster()" style="font-size:0.74rem;padding:6px 12px;">🗑 Tout
                     vider</button>
@@ -1778,7 +1824,7 @@
                 ' ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
         }
 
-        function renderPlayerCard(key, rec) {
+        function renderPlayerCard(key, rec, opts = {}) {
             const pair = getBestPair(rec);
             const magic = pair.cap > 0;
             const resMax = getReserveMax(rec);
@@ -1867,13 +1913,15 @@
                 ? `<img class="pcard-portrait" src="${rec.image}" alt="">`
                 : `<div class="pcard-portrait placeholder">👤</div>`;
 
-            return `<div class="pcard" id="pc-${key}">
+            return `<div class="pcard${rec.qiShared ? ' twin' : ''}" id="pc-${key}">
                 <div class="pcard-top">
                     ${portrait}
                     <div class="pcard-id">
                         <div class="pcard-name">${rec.name}</div>
                         <div class="pcard-updated">${timeAgo(rec.updatedAt)}</div>
+                        ${opts.switchTo ? twinSwitchHtml(opts.switchTo) : ''}
                     </div>
+                    ${qiPillHtml(rec)}
                     <button class="pcard-remove" title="Retirer du suivi" onclick="removeRecord('${key}')">✕</button>
                 </div>
                 <div class="keystats">
@@ -1895,9 +1943,8 @@
                 ${magic ? `<div class="magic-strip">
                     <span class="ms-res">Réserve ${resLeft}/${resMax}</span>
                     <div class="ms-bar"><div class="ms-fill" style="width:${resMax > 0 ? (resLeft / resMax) * 100 : 0}%"></div></div>
-                </div>` : ''}
-                ${vtHtml}
-                ${qiTileHtml(rec)}
+                </div>` : '<div class="pcard-slot"></div>'}
+                ${vtHtml || '<div class="pcard-slot"></div>'}
                 <button class="pcard-detail-toggle" onclick="(function(el){el.classList.toggle('open'); if(el.classList.contains('open')) expandedCards.add(el.id); else expandedCards.delete(el.id);})(document.getElementById('pc-${key}'))">
                     Blessures · Attributs · Compétences ▾
                 </button>
@@ -1920,12 +1967,32 @@
             const countEl = document.getElementById('roster-count');
             countEl.textContent = keys.length + ' personnage' + (keys.length > 1 ? 's' : '');
             if (!keys.length) {
+                renderTwinControl([], roster, 'both');
                 container.innerHTML = '<div class="empty-state">Aucune fiche suivie pour l\'instant.<br>Clique sur <strong>🔄 Rafraîchir depuis GitHub</strong> une fois que tes joueurs ont sauvegardé en ligne.</div>';
                 return;
             }
+            // Les jumelles (Qi partagé) restent côte à côte, à la place de la première
+            const twins = keys.filter(k => roster[k].qiShared);
+            let order = keys;
+            if (twins.length > 1) {
+                const at = keys.indexOf(twins[0]);
+                const rest = keys.filter(k => !twins.includes(k));
+                order = [...rest.slice(0, at), ...twins, ...rest.slice(at)];
+            }
+            const tw = getTwinPrefs();
+            const single = twins.length > 1 && tw.mode === 'one';
+            const shown = single ? (twins.includes(tw.show) ? tw.show : twins[0]) : null;
+            const visible = single ? order.filter(k => !twins.includes(k) || k === shown) : order;
+            renderTwinControl(twins, roster, tw.mode);
+            const cols = Math.max(1, Math.min(5, visible.length));
+            container.style.setProperty('--cols', cols);
+            container.classList.toggle('cols-5', cols === 5);
             // Sauvegarder l'état des cartes déroulées avant de reconstruire
             container.querySelectorAll('.pcard.open').forEach(el => expandedCards.add(el.id));
-            container.innerHTML = keys.map(k => renderPlayerCard(k, roster[k])).join('');
+            container.innerHTML = visible.map(k => {
+                const other = single && k === shown ? twins.find(t => t !== k) : null;
+                return renderPlayerCard(k, roster[k], other ? { switchTo: { key: other, rec: roster[other] } } : {});
+            }).join('');
             // Restaurer l'état déroulé
             expandedCards.forEach(id => {
                 const el = document.getElementById(id);
@@ -2071,6 +2138,44 @@
 
         function renderQiTile(data) {
             qiPoolData = data;
+        }
+
+        // ── Jumelles : les deux cartes côte à côte, ou une seule avec bascule ──
+        const TWIN_KEY = 'aequor_mj_twins';
+        function getTwinPrefs() {
+            try { return Object.assign({ mode: 'both', show: '' }, JSON.parse(localStorage.getItem(TWIN_KEY)) || {}); }
+            catch (e) { return { mode: 'both', show: '' }; }
+        }
+        function setTwinPrefs(patch) {
+            const p = Object.assign(getTwinPrefs(), patch);
+            try { localStorage.setItem(TWIN_KEY, JSON.stringify(p)); } catch (e) { }
+            render();
+        }
+        function setTwinMode(mode) { setTwinPrefs({ mode }); }
+        function showTwin(key) { setTwinPrefs({ mode: 'one', show: key }); }
+        function renderTwinControl(twins, roster, mode) {
+            const el = document.getElementById('twin-control');
+            if (!el) return;
+            if (twins.length < 2) { el.innerHTML = ''; return; }
+            const first = n => (roster[n].name || '').split(/\s+/).pop();
+            el.innerHTML = `<div class="twin-mode" title="Disposition de ${twins.map(first).join(' et ')}">
+                <button class="${mode !== 'one' ? 'on' : ''}" onclick="setTwinMode('both')">☯ Les deux jumelles</button>
+                <button class="${mode === 'one' ? 'on' : ''}" onclick="setTwinMode('one')">Une seule</button>
+            </div>`;
+        }
+        function twinSwitchHtml(t) {
+            const max = getElanMax(t.rec);
+            const cur = getElanCurrent(t.rec, max);
+            const short = (t.rec.name || '').split(/\s+/).pop();
+            return `<button class="twin-switch" onclick="showTwin('${t.key}')" title="Afficher ${t.rec.name} à la place">⇄ ${short} <small>Élan ${cur}/${max}</small></button>`;
+        }
+        function qiPillHtml(rec) {
+            if (!qiPoolData || !rec.qiShared) return '';
+            const when = qiPoolData.updated
+                ? new Date(qiPoolData.updated).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
+                : '';
+            const meta = ['Qi partagé', qiPoolData.by || '', when].filter(Boolean).join(' · ');
+            return `<div class="qi-pill" title="${meta}"><span class="ql">☯ Qi</span><span class="qv">${qiPoolData.qi ?? 0}<span> / 10</span></span></div>`;
         }
 
         function qiTileHtml(rec) {
