@@ -5115,23 +5115,33 @@
         // ===================== SYSTÈME DE FORCE (d12) =====================
         // Un d12 par point de Magnitude. Réussite sur 12 − niveau de l'attribut du verbe :
         // chaque point d'attribut vaut une face, et il reste toujours au moins deux faces neutres.
-        // 1 = Rupture, échec critique (−1) · 12 = Résonance, réussite critique (+2).
-        // Les critiques ne changent que la valeur : plus d'Accrocs, d'Avantages ni de Contrecoup.
-        // Sublimé : une face neutre devient une réussite (seuil −1) et le 11 devient aussi une Résonance.
-        // Corrompu : la plus basse réussite devient neutre (seuil +1) et le 2 devient aussi une Rupture.
+        // Lecture du d12 de Force (26 novembre 2026) : d12 + attribut du verbe, lu sur une table fixe.
+        //   4 ou moins = Rupture (−1) · 5 à 10 = 0 · 11 à 16 = +1 · 17 et plus = Résonance (+2).
+        // Un cran = 3 points : sublimé +3, corrompu −3. La sublimation est une montée en puissance
+        // (elle ne décale plus la ligne de lecture). Les critiques ne changent que la valeur.
         const NV_FACE_ORDER = ['Bad2', 'Bad1', 'Vide', 'Succès', 'Résonance', 'Transcendance'];
         const NV_FACE_VALUE = { 'Bad2': -1, 'Bad1': 0, 'Vide': 0, 'Succès': 1, 'Résonance': 2, 'Transcendance': 2 };
         const NV_DIE = 12;
-        function nvThreshold(attrValue, etat) {
+        const NV_CRAN = 3;                          // un cran de sublimation ou de corruption
+        const NV_BANDS = { rupture: 4, vide: 10, succes: 16 };   // bornes hautes de chaque palier du total
+        function nvBonus(attrValue, etat) {
             const L = Math.max(1, Math.min(8, parseInt(attrValue) || 4));
-            const shift = etat === 'sublime' ? -1 : etat === 'corrompu' ? 1 : 0;
-            return Math.max(2, Math.min(12, NV_DIE - L + shift));
+            return L + (etat === 'sublime' ? NV_CRAN : etat === 'corrompu' ? -NV_CRAN : 0);
+        }
+        // Plus petit chiffre du d12 qui donne une réussite (+1 ou mieux)
+        function nvThreshold(attrValue, etat) {
+            return Math.max(1, Math.min(NV_DIE + 1, NV_BANDS.vide + 1 - nvBonus(attrValue, etat)));
+        }
+        // Plus petit chiffre du d12 qui donne une Résonance
+        function nvResThreshold(attrValue, etat) {
+            return Math.max(1, Math.min(NV_DIE + 1, NV_BANDS.succes + 1 - nvBonus(attrValue, etat)));
         }
         function nvFaceOf(v, attrValue, etat) {
-            if (v === 1) return 'Bad2';
-            if (v === NV_DIE || (etat === 'sublime' && v === NV_DIE - 1)) return 'Résonance';
-            if (etat === 'corrompu' && v === 2) return 'Bad2';
-            return v >= nvThreshold(attrValue, etat) ? 'Succès' : 'Vide';
+            const S = v + nvBonus(attrValue, etat);
+            if (S <= NV_BANDS.rupture) return 'Bad2';
+            if (S <= NV_BANDS.vide) return 'Vide';
+            if (S <= NV_BANDS.succes) return 'Succès';
+            return 'Résonance';
         }
         // Répartition des douze faces, dans l'ordre de NV_FACE_ORDER (sert aux aperçus)
         function nvBuildFaces(attrValue, etat) {
@@ -5159,11 +5169,16 @@
         const NV_FACE_LABEL = { 'Transcendance': 'Transcendance', 'Résonance': 'Résonance', 'Succès': 'Succès', 'Vide': 'Vide', 'Bad1': 'Dissonance', 'Bad2': 'Rupture' };
         // Résumé du d12 de Force (aperçus)
         function nvFacesText(ctx) {
-            const T = nvThreshold(ctx.attrValue, ctx.etat);
-            return `d12 · réussite sur <strong>${T}+</strong> · <span style="color:${NV_FACE_STYLE.Bad2}">1 Rupture −1</span>`
-                + (ctx.etat === 'corrompu' ? ` · <span style="color:${NV_FACE_STYLE.Bad2}">2 Rupture aussi</span>` : '')
-                + ` · <span style="color:${NV_FACE_STYLE['Résonance']}">${ctx.etat === 'sublime' ? '11-12' : '12'} Résonance +2</span>`
-                + ` · Valeur d'effet = 5 + Puissance`;
+            const b = nvBonus(ctx.attrValue, ctx.etat);
+            const T = nvThreshold(ctx.attrValue, ctx.etat), R = nvResThreshold(ctx.attrValue, ctx.etat);
+            const rupt = NV_BANDS.rupture - b;   // plus grand chiffre qui donne une Rupture
+            const parts = [];
+            if (rupt >= 1) parts.push(`<span style="color:${NV_FACE_STYLE.Bad2}">${rupt > 1 ? '1-' + Math.min(12, rupt) : '1'} Rupture −1</span>`);
+            if (T > Math.max(1, rupt + 1)) parts.push(`${Math.max(1, rupt + 1)}${T - 1 > Math.max(1, rupt + 1) ? '-' + (T - 1) : ''} : 0`);
+            if (T <= 12 && R > T) parts.push(`<span style="color:${NV_FACE_STYLE['Succès']}">${T}${Math.min(12, R - 1) > T ? '-' + Math.min(12, R - 1) : ''} : +1</span>`);
+            if (R <= 12) parts.push(`<span style="color:${NV_FACE_STYLE['Résonance']}">${R}${R < 12 ? '-12' : ''} Résonance +2</span>`);
+            return `d12 ${b >= 0 ? '+' : '−'} ${Math.abs(b)}` + (ctx.etat === 'sublime' ? ' (sublimé +3)' : ctx.etat === 'corrompu' ? ' (corrompu −3)' : '')
+                + ' · ' + parts.join(' · ') + ` · Valeur d'effet = 5 + Puissance`;
         }
         // ── RÉSOLUTION DE L'ÉTAT ────────────────────────────────────────────
         // La lumière et l'ombre n'empruntent pas le même chemin.
@@ -5376,15 +5391,17 @@
             const subl = ctx.etat === 'sublime';
             const communion = subl && tSign > 0 && resonanceValue >= 90;
             const deferlante = subl && tSign < 0 && resonanceValue <= -90;
-            const T = nvThreshold(ctx.attrValue, ctx.etat);
-            const casc = []; let cascReduc = 0, pool = (communion || deferlante) ? nRes : 0, guard = 0;
+            const T = nvThreshold(ctx.attrValue, ctx.etat), R = nvResThreshold(ctx.attrValue, ctx.etat);
+            // Cascade : chaque 12 naturel (la Résonance pure, quel que soit le bonus) lance un dé de cascade
+            const nat12 = nums.filter(n => n === NV_DIE).length;
+            const casc = []; let cascReduc = 0, pool = (communion || deferlante) ? nat12 : 0, guard = 0;
             while (pool > 0 && guard < 200) {
                 pool--; guard++;
                 const d = Math.floor(Math.random() * NV_DIE) + 1;
                 const success = d >= T;
                 casc.push(success); cascNums.push(d);
                 if (success) { puissance++; if (communion) cascReduc++; }
-                if (d >= (deferlante ? NV_DIE - 1 : NV_DIE)) pool++;
+                if (d >= (deferlante ? NV_DIE - 1 : NV_DIE)) pool++;   // Communion relance sur 12, Déferlante sur 11-12
             }
             puissance = Math.max(0, puissance);
             // Coût : nombre de dés − allègement Communion ; +3 hors-attribut en amont. Les Accrocs et Avantages ajustent ensuite.
@@ -5621,66 +5638,32 @@
         // ── ÉCHELLES DÉRIVÉES DE LA PUISSANCE ───────────────────────────────
         // Portée et masse ne coûtent rien : elles dérivent directement de la
         // Puissance finale du pouvoir (sublimation et modificateurs inclus).
-        const POWER_RANGE = {
-            1: 'Contact / 5 ft', 2: '15 ft', 3: '30 ft', 4: '50 ft',
-            5: '80 ft', 6: '120 ft', 7: '200 ft', 8: '400 ft'
-        };
-        function powerRange(p) {
-            if (p <= 0) return '-';
-            if (p >= 9) return 'À vue';
-            return POWER_RANGE[p] || '-';
-        }
+        function powerRange(p) { return p > 0 ? fmtFt(FORCE_RANGE_FT * p) : '-'; }
         // ----- Lecture de la Puissance (Demerit : la Force) -----
-        // Ligne lue = Puissance + décalage d'alignement. L'alignement change l'ampleur de l'effet
-        // (masse, zone, nombre de cibles), jamais la gravité individuelle ni la résistance.
-        // Lecture de Demerit (ligne lue = Puissance + alignement) :
-        //   rayon de zone = 10^(L/3) m (×10 tous les 3 points ; L20 ≈ le rayon d'une planète)
-        //   portée = 10 × le rayon de zone · masse = 60 kg × 10^((L−1)/2)
-        // Au-delà de la ligne 20 : la planète entière, puis le système.
-        function fmtMetric(m) {
-            const n = v => Number(v.toPrecision(2)).toLocaleString('fr-FR').replace(/ /g, ' ');
-            if (m >= 1e9) return n(m / 1e9) + ' millions de km';
-            if (m >= 1000) return n(m / 1000) + ' km';
-            return n(Math.max(1, m)) + ' m';
+        // Lecture de Demerit (26 novembre 2026) : ordres de grandeur proportionnels à la Puissance.
+        //   portée = Puissance × 30 ft · rayon de zone = Puissance × 5 ft · poids max = 100 kg × Puissance²
+        // Les effets d'une autre échelle (une ville, une flotte, une planète) passent par une autre façon de lancer,
+        // qui demande préparation et temps. La sublimation ne décale plus la lecture : elle monte la Puissance.
+        const FORCE_RANGE_FT = 30, FORCE_ZONE_FT = 5, FORCE_MASS_KG = 100;
+        function fmtFt(ft) {
+            const m = ft * 0.3048;
+            return Math.round(ft).toLocaleString('fr-FR').replace(/\u202f/g, ' ') + ' ft' + (ft >= 100 ? ' (≈ ' + (m >= 1000 ? Number((m / 1000).toPrecision(2)).toString().replace('.', ',') + ' km' : Math.round(m) + ' m') + ')' : '');
         }
         function fmtKg(kg) {
-            const n = v => Number(v.toPrecision(2)).toLocaleString('fr-FR').replace(/ /g, ' ');
-            if (kg >= 1e9) return n(kg / 1e9) + ' Mt';
+            const n = v => Number(v.toPrecision(2)).toLocaleString('fr-FR').replace(/\u202f/g, ' ');
             if (kg >= 1e6) return n(kg / 1e6) + ' kt';
             if (kg >= 1000) return n(kg / 1000) + ' t';
             return n(kg) + ' kg';
         }
-        const FORCE_LINE_LANDMARKS = [[26, 'le système stellaire'], [23, 'l\'orbite et les lunes'], [20, 'une planète entière'], [17, 'un continent'],
-            [14, 'une région'], [11, 'une ville'], [8, 'un quartier'], [5, 'un champ de bataille'], [3, 'une salle'], [1, 'à portée de main']];
-        function forceLine(L) {
-            const zone = Math.pow(10, L / 3), range = 10 * zone, kg = 60 * Math.pow(10, (L - 1) / 2);
-            const where = FORCE_LINE_LANDMARKS.find(t => L >= t[0])[1];
-            return [fmtKg(kg), fmtMetric(range), fmtMetric(zone) + ' (' + where + ')'];
-        }
-        const FORCE_LINE_TERMS = [[21, 'Hors barème'], [18, 'Mythe'], [15, 'Grand Maître'], [12, 'Maître'], [9, 'Vétéran'], [7, 'Chevalier accompli'], [5, 'Chevalier'], [3, 'Initié'], [1, 'Éveil']];
-        const GRAVITY_NAMES = ['', 'Superficielle', 'Légère', 'Modérée', 'Sérieuse', 'Grave', 'Critique', 'Terminale'];
-        // Décalage d'alignement : seul un pouvoir sublimé (de son camp) en profite
-        function alignShift(etat) {
-            if (etat === 'corrompu') return { shift: -2, label: 'Corrompu' };
-            if (etat !== 'sublime') return { shift: 0, label: 'Neutre' };
-            const a = Math.abs(resonanceValue || 0);
-            if (a >= 90) return { shift: 6, label: 'Absolu' };
-            if (a >= 60) return { shift: 4, label: 'Fervent' };
-            if (a >= 30) return { shift: 2, label: 'Engagé' };
-            return { shift: 0, label: 'Neutre' };
-        }
-        function forceReading(puissance, etat) {
+        function forceReading(puissance) {
             if (!puissance || puissance <= 0) return null;
-            const al = alignShift(etat);
-            const line = Math.max(1, puissance + al.shift);
-            const g = Math.min(7, Math.ceil(2 * puissance / 3));
+            const P = puissance;
             return {
-                line, shift: al.shift, align: al.label,
-                term: FORCE_LINE_TERMS.find(t => line >= t[0])[1],
-                mass: forceLine(line)[0],
-                range: forceLine(line)[1],
-                zone: forceLine(line)[2],
-                grav: g, gravName: GRAVITY_NAMES[g]
+                line: P,
+                mass: fmtKg(FORCE_MASS_KG * P * P),
+                range: fmtFt(FORCE_RANGE_FT * P),
+                zone: fmtFt(FORCE_ZONE_FT * P) + ' de rayon',
+                grav: Math.min(7, Math.ceil(2 * P / 3))
             };
         }
         function fmtDist(ft) {
@@ -5700,17 +5683,14 @@
         }
         // Encart d'échelle inséré dans le résumé d'un pouvoir : replié par défaut.
         function powerScaleHtml(puissance, spellName, etat) {
-            const r = forceReading(puissance, etat);
+            const r = forceReading(puissance);
             if (!r) return '';
-            const shiftTxt = r.shift ? ` (${r.align} ${r.shift > 0 ? '+' : '−'}${Math.abs(r.shift)})` : ` (${r.align})`;
             return powerDetailHtml([
-                ['Ligne lue', r.line + shiftTxt],
-                ['Palier', r.term],
                 ['Poids max', r.mass],
                 ['Portée', r.range],
                 ['Zone', r.zone],
                 ['Résistance', 'DC ' + effectValue(puissance)]
-            ], 'Ordres de grandeur maximum. La ligne lue = Puissance + alignement ; la résistance se calcule sur la Puissance.');
+            ], 'Ordres de grandeur maximum pour un pouvoir lancé dans l\'instant : portée Puissance × 30 ft, rayon Puissance × 5 ft, poids 100 kg × Puissance².');
         }
 
         /* ===================== EFFETS DE MAGIE : AVANTAGES ET ACCROCS =====================
@@ -5935,7 +5915,7 @@
 
         // Réglages de la fiche Demerit pour les Avantages et les Accrocs (aucune entrée propre)
         const FX_CONF = {
-            readNote: 'Ordres de grandeur maximum. La ligne lue = Puissance + alignement ; la résistance se calcule sur la Puissance.',
+            readNote: 'Ordres de grandeur maximum pour un pouvoir lancé dans l\'instant : portée Puissance × 30 ft, rayon Puissance × 5 ft, poids 100 kg × Puissance².',
             read(P, off) { return fxForceRows(P, off, 'compose'); },
             addWound(g) {
                 appState.wounds.push({ id: 'w' + Date.now().toString(36), name: 'Contrecoup de Force', type: 'Force', gravity: g,
@@ -5946,10 +5926,8 @@
             send(text) { fxPost(text); }
         };
         function fxForceRows(P, off, etat) {
-            const r0 = forceReading(P, etat);
-            const at = k => forceReading(Math.max(1, P + (off[k] || 0)), etat)[k];
-            const shiftTxt = r0.shift ? ` (${r0.align} ${r0.shift > 0 ? '+' : '−'}${Math.abs(r0.shift)})` : ` (${r0.align})`;
-            return [['Ligne lue', r0.line + shiftTxt, 0], ['Palier', r0.term, 0], ['Poids max', at('mass'), off.mass],
+            const at = k => forceReading(Math.max(1, P + (off[k] || 0)))[k];
+            return [['Poids max', at('mass'), off.mass],
                 ['Portée', at('range'), off.range], ['Zone', at('zone'), off.zone], ['Résistance', 'DC ' + effectValue(P), 0]];
         }
         function fxPost(text) {
@@ -6963,7 +6941,7 @@
             { threshold: -70, group: 'no_conc', side: 'dark', icon: '🔗', text: "Les pouvoirs obscurs de type durée n'exigent plus de jet de concentration lors d'une perte d'Élan" },
             { threshold: -80, group: 'kill_pf', side: 'dark', icon: '🖤', text: "Chaque créature tuée par le personnage rend 5 Points de Force" },
             { threshold: -80, group: 'anti_obscurite', side: 'dark', kind: 'cost', icon: '☠️', text: "Les pouvoirs ciblant l'Obscurité employés contre le personnage infligent un minimum de blessure ou de résistance égal à leur Puissance" },
-            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: "Déferlante : lorsqu'un pouvoir obscur est sublimé, chaque Résonance lance un dé de cascade (+1 Puissance s'il atteint le seuil), qui se relance sur 11 ou 12" },
+            { threshold: -90, group: 'deferlante', side: 'dark', icon: '🌑', text: "Déferlante : lorsqu'un pouvoir obscur est sublimé, chaque 12 naturel lance un dé de cascade (+1 Puissance s'il donne une réussite), qui se relance sur 11 ou 12" },
             // ─── Harmonie : récompense lente, sans contrepartie ───
             { threshold: 20, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse jusqu'à une magnitude de 2" },
             { threshold: 30, group: 'protect_half', side: 'light', icon: '🛡', text: "Lorsqu'un point de focalisation est dépensé pour protéger une créature, le coût en Points de Force du pouvoir lumineux employé est réduit de moitié (arrondi à l'inférieur)" },
@@ -6972,7 +6950,7 @@
             { threshold: 60, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse jusqu'à une magnitude de 7", updates: true },
             { threshold: 70, group: 'no_focus', side: 'light', icon: '🎯', text: "Un pouvoir lumineux sublimé de type durée n'immobilise pas de point de focalisation. Un seul pouvoir peut être maintenu de cette façon à la fois" },
             { threshold: 80, group: 'sublim_light', side: 'light', icon: '✨', text: "Sublimation lumineuse sans limite de magnitude", updates: true },
-            { threshold: 90, group: 'communion', side: 'light', icon: '☀️', text: "Communion : lorsqu'un pouvoir lumineux est sublimé, chaque Résonance lance un dé de cascade (+1 Puissance et −1 Point de Force s'il atteint le seuil), qui se relance sur 12" },
+            { threshold: 90, group: 'communion', side: 'light', icon: '☀️', text: "Communion : lorsqu'un pouvoir lumineux est sublimé, chaque 12 naturel lance un dé de cascade (+1 Puissance et −1 Point de Force s'il donne une réussite), qui se relance sur 12" },
         ];
 
         function getResonanceStage(val) {
