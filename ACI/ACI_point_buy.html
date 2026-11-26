@@ -1151,8 +1151,8 @@
             8: { name: 'Majeur', color: '#d9a441' }, 9: { name: 'Souverain', color: '#e0a23c' },
             10: { name: 'Absolu', color: '#f0d27a' }
         };
-        // Puissance moyenne par classe (fiche ACI) : ε 1 · δ 2-3 · γ 4-6 · β 7-10 · α 11-14 · Ω 15+
-        const POWER_BANDS = [[15, 'omega'], [11, 'alpha'], [7, 'beta'], [4, 'gamma'], [2, 'delta'], [1, 'epsilon']];
+        // Puissance moyenne par classe (fiche ACI, 26 novembre 2026) : ε 1-2 · δ 3-5 · γ 6-9 · β 10-15 · α 16-21 · Ω 22+
+        const POWER_BANDS = [[22, 'omega'], [16, 'alpha'], [10, 'beta'], [6, 'gamma'], [3, 'delta'], [1, 'epsilon']];
         // Classes ouvertes à la création : échelon le plus haut, plafonds (vecteurs et domaines réunis)
         // et points réservés aux habilitations, en plus de la dotation.
         const CLASS_PROFILES = {
@@ -1345,7 +1345,8 @@
         const classProfile = () => CLASS_PROFILES[classId()];
         const powerBonus = () => classProfile().bonus;
         function canalLevel() { return Math.max(1, Math.min(8, attrValues[chosenCanal()] || 4)); }
-        const powerYield = () => (canalLevel() + 1) / 12;
+        // Valeur moyenne d'un d12 de pouvoir : d12 + canal, lu sur la table de la fiche (≤4 −1 · 5-10 0 · 11-16 +1 · 17+ +2)
+        const powerYield = () => { let t = 0; for (let n = 1; n <= 12; n++) { const S = n + canalLevel(); t += S <= 4 ? -1 : S <= 10 ? 0 : S <= 16 ? 1 : 2; } return t / 12; };
         function powerClassOf(p) {
             const hit = POWER_BANDS.find(b => p >= b[0]);
             return CLASSES.find(c => c.id === (hit ? hit[1] : 'epsilon'));

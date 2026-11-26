@@ -3209,7 +3209,7 @@
                     </div>
                     <div class="hint" style="margin-top:11px;">
                         Tous les vecteurs de l'agent passent par ce seul attribut : c'est lui qui fixe le seuil
-                        de réussite des d12 de Puissance (12 − niveau du canal), quel que soit le pouvoir employé. Chacun canalise à sa
+                        des d12 de Puissance : on ajoute le canal au d12 et on lit le total (4 ou moins −1, 5 à 10 : 0, 11 à 16 : +1, 17 et plus : +2), quel que soit le pouvoir employé. Chacun canalise à sa
                         manière : par la volonté, l'instinct, l'analyse ou la présence - et cette
                         manière ne change pas d'un vecteur à l'autre.
                     </div>
@@ -4030,8 +4030,8 @@
         }
 
         /* ----- Dés de pouvoir -----
-           1 d12 par point de Magnitude. Réussite sur 12 − niveau du canal : chaque point d'attribut vaut une face.
-           1 = échec critique (−1) · 12 = réussite critique (+2). Les critiques ne changent que la valeur :
+           1 d12 par point de Magnitude, plus le canal, lu sur une table (voir magicFace).
+           Rupture −1 · 0 · +1 · Résonance +2. Les critiques ne changent que la valeur :
            plus d'Accrocs, d'Avantages ni de Contrecoup (22 novembre 2026). */
         function magnitudeMax(vLv, dLv) {
             return Math.max(0, vLv) + Math.max(0, dLv);
@@ -4039,12 +4039,24 @@
         function canalLevel(v) { return Math.min(8, Math.max(1, parseInt(v) || 4)); }
         const POWER_DIE = 12;
         function powerDie() { return Math.floor(Math.random() * POWER_DIE) + 1; }
-        function magicThreshold(canalValue) { return POWER_DIE - canalLevel(canalValue); }
-        function magicYield(canalValue) { return (canalLevel(canalValue) + 1) / POWER_DIE; }
-        function magicFace(v, T) {
-            if (v === 1) return { k: 'one', val: -1 };
-            if (v === POWER_DIE) return { k: 'ten', val: 2 };
-            return v >= T ? { k: 'hit', val: 1 } : { k: 'miss', val: 0 };
+        // Lecture du d12 de pouvoir (26 novembre 2026, comme Demerit) : d12 + canal, lu sur une table fixe.
+        //   4 ou moins = Rupture (−1) · 5 à 10 = 0 · 11 à 16 = +1 · 17 et plus = Résonance (+2)
+        const POWER_BANDS_SUM = { rupture: 4, vide: 10, succes: 16 };
+        function magicFace(v, canalValue) {
+            const S = v + canalLevel(canalValue);
+            if (S <= POWER_BANDS_SUM.rupture) return { k: 'one', val: -1 };
+            if (S <= POWER_BANDS_SUM.vide) return { k: 'miss', val: 0 };
+            if (S <= POWER_BANDS_SUM.succes) return { k: 'hit', val: 1 };
+            return { k: 'ten', val: 2 };
+        }
+        // Plus petit chiffre du d12 qui donne une réussite, une Résonance ; plus grand qui donne une Rupture
+        function magicThreshold(canalValue) { return Math.max(1, POWER_BANDS_SUM.vide + 1 - canalLevel(canalValue)); }
+        function magicResThreshold(canalValue) { return Math.max(1, POWER_BANDS_SUM.succes + 1 - canalLevel(canalValue)); }
+        function magicRuptureMax(canalValue) { return POWER_BANDS_SUM.rupture - canalLevel(canalValue); }
+        function magicYield(canalValue) {
+            let t = 0;
+            for (let v = 1; v <= POWER_DIE; v++) t += magicFace(v, canalValue).val;
+            return t / POWER_DIE;
         }
         function rollMagic(canalValue, n, bonusN) {
             const T = magicThreshold(canalValue);
@@ -4052,7 +4064,7 @@
             const total = Math.max(0, n) + Math.max(0, bonusN || 0);
             for (let i = 0; i < total; i++) {
                 const v = powerDie();
-                dice.push({ v, ...magicFace(v, T), bonus: i >= n });
+                dice.push({ v, ...magicFace(v, canalValue), bonus: i >= n });
             }
             const raw = dice.reduce((s, d) => s + d.val, 0);
             const ones = dice.filter(d => d.k === 'one').length;
@@ -4063,16 +4075,17 @@
         function effectValue(p) { return p > 0 ? 5 + POWER_FACTOR * p : 0; }
 
         const MAGIC_STYLE = {
-            one: { c: '#e05c52', s: '▼', l: '1 : échec critique, −1' },
-            miss: { c: '#6a7d92', s: '○', l: 'Sans effet (0)' },
-            hit: { c: '#8b7ae0', s: '●', l: 'Réussite (+1)' },
-            ten: { c: '#d9a441', s: '✦', l: '12 : réussite critique, +2' }
+            one: { c: '#e05c52', s: '▼', l: 'Rupture, −1 (d12 + canal ≤ 4)' },
+            miss: { c: '#6a7d92', s: '○', l: 'Sans effet, 0 (5 à 10)' },
+            hit: { c: '#8b7ae0', s: '●', l: 'Réussite, +1 (11 à 16)' },
+            ten: { c: '#d9a441', s: '✦', l: 'Résonance, +2 (17 et plus)' }
         };
         /* ----- Lecture de la Puissance (ACI : l'Habilitation) -----
            L'effet double à chaque point, puis est multiplié par 10 par point au-delà de P12.
            Gravité d'un pouvoir offensif : ⌈2P ÷ 3⌉, plafonnée à Terminale. */
         const GRAVITY_NAMES = ['', 'Superficielle', 'Légère', 'Modérée', 'Sérieuse', 'Grave', 'Critique', 'Terminale'];
-        const POWER_CLASSES = [[15, 'Ω Omega'], [11, 'α Alpha'], [7, 'β Beta'], [4, 'γ Gamma'], [2, 'δ Delta'], [1, 'ε Epsilon']];
+        // Classes par Puissance (26 novembre 2026, recalées pour la table par somme : environ ×1,5)
+        const POWER_CLASSES = [[22, 'Ω Omega'], [16, 'α Alpha'], [10, 'β Beta'], [6, 'γ Gamma'], [3, 'δ Delta'], [1, 'ε Epsilon']];
         function fmtMass(kg) {
             const n = v => Number(v.toPrecision(2)).toString().replace('.', ',');   // deux chiffres significatifs
             if (kg >= 1e9) return n(kg / 1e9) + ' Mt';
@@ -4129,10 +4142,14 @@
 
 
         function magicSummary(canalValue, noYield) {
-            const T = magicThreshold(canalValue);
-            return `<strong>Réussite sur ${T}+</strong> · <span style="color:${MAGIC_STYLE.one.c}">1 ▼ −1</span>`
-                + ` · <span style="color:${MAGIC_STYLE.ten.c}">12 ✦ +2</span>`
-                + (noYield ? '' : ` · rendement ${magicYield(canalValue).toFixed(1).replace('.', ',')} par dé`);
+            const L = canalLevel(canalValue), T = magicThreshold(canalValue), R = magicResThreshold(canalValue), rm = magicRuptureMax(canalValue);
+            const parts = [];
+            if (rm >= 1) parts.push(`<span style="color:${MAGIC_STYLE.one.c}">${rm > 1 ? '1-' + rm : '1'} ▼ −1</span>`);
+            if (T > Math.max(1, rm + 1)) parts.push(`${Math.max(1, rm + 1)}${T - 1 > Math.max(1, rm + 1) ? '-' + (T - 1) : ''} ○ 0`);
+            if (R > T) parts.push(`<span style="color:${MAGIC_STYLE.hit.c}">${T}${Math.min(12, R - 1) > T ? '-' + Math.min(12, R - 1) : ''} ● +1</span>`);
+            if (R <= 12) parts.push(`<span style="color:${MAGIC_STYLE.ten.c}">${R}${R < 12 ? '-12' : ''} ✦ +2</span>`);
+            return `<strong>d12 + ${L}</strong> · ` + parts.join(' · ')
+                + (noYield ? '' : ` · rendement ${magicYield(canalValue).toFixed(2).replace('.', ',')} par dé`);
         }
 
         const FACE_LEGEND = '<div class="legend">'
@@ -4527,7 +4544,7 @@
                 const lv = getAttributeLevel(appState.attributes[getCanal()]);
                 const val = appState.attributes[getCanal()];
                 info.innerHTML = `<b style="color:${lv.color}">${a.name} ${lv.name}</b> · ${magicSummary(val)}`
-                    + `<br>Chaque d12 engagé rapporte en moyenne <b>${magicYield(val).toFixed(1).replace('.', ',')}</b> de Puissance. `
+                    + `<br>Chaque d12 engagé rapporte en moyenne <b>${magicYield(val).toFixed(2).replace('.', ',')}</b> de Puissance. `
                     + `Valeur d'effet = 5 + Puissance.`;
             }
         }
@@ -5254,7 +5271,7 @@
                     <span class="dv">${d.v}</span><span class="ds">${st.s}</span></div>`;
             }).join('');
             return `<div class="dice-block">
-                <div class="dice-label">${label} · réussite sur ${magicThreshold(canalValue)}+</div>
+                <div class="dice-label">${label} · d12 + ${canalLevel(canalValue)} · réussite sur ${magicThreshold(canalValue)}+</div>
                 <div class="dice-row">${cells || '<span class="pb-empty">Aucun dé engagé</span>'}</div>
             </div>`;
         }
@@ -5605,7 +5622,7 @@
                 tens: m.surges, ones: m.mishaps, puissance, resName: 'Charge', label: `${vector.name} × ${domain.name}`, isPrivate: isPrivate(),
                 spend: n => { const q = Math.min(n, getChargeLeft()); spendCharge(q); return q; },
                 refund: n => { const before = appState.charge.used || 0; adjustCharge(n); return before - (appState.charge.used || 0); },
-                rollExtra: () => { const v = powerDie(); return { label: String(v), val: magicFace(v, magicThreshold(appState.attributes[attrId])).val }; }
+                rollExtra: () => { const v = powerDie(); return { label: String(v), val: magicFace(v, appState.attributes[attrId]).val }; }
             });
             return { m, raw: m.raw, puissance, effect: effectValue(puissance), magnitude: mag, cap, bonus, cost, paid, fx };
         }
